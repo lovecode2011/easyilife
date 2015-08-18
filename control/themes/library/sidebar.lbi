@@ -1,0 +1,53 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!-- sidebar -->
+<div id="sidebar">
+    <div id="sidebar-wrapper">
+        <ul id="main-nav">
+            <!-- main Menu -->
+            <li class="coin_1">
+                <a href="main.php" class="nav-top-item">
+                    <em class="icon">&#xe606;</em>首页
+                </a>
+            </li>
+            {foreach from=$menus item=menu}
+            <li class="coin_{$menu.key}">
+                {if $menu.count eq 1}
+                <a href="{$menu.url}" class="nav-top-item" >
+                    <em class="icon">{$menu.icon}</em>{$menu.title}
+                </a>
+                {else}
+                <a href="{$menu.url}" class="nav-top-item">
+                    <em class="icon">{$menu.icon}</em>{$menu.title}
+                </a>
+                <ul class="submenu" id="{$menu.key}" style="display: none">
+                    {foreach from=$menu.children item=child}
+                    <li><a href="{$child.url}">{$child.title}</a></li>
+                    {/foreach}
+                </ul>
+                {/if}
+            </li>
+
+            {/foreach}
+        </ul> <!-- End #main-nav -->
+    </div>
+</div>
+<!-- END sidebar -->
+{if $is_main eq false}
+<script type="text/javascript">
+    $(function () {
+        {if $menuMark.count gt 1}
+        menu1("#{$menuMark.name}", "#{$menuMark.name} a", ".coin_{$menuMark.name} a.nav-top-item");
+        {else}
+        menu1("", "", ".coin_{$menuMark.name} a.nav-top-item");
+        {/if}
+    })
+</script>
+{else}
+<script type="text/javascript">
+    $(function () {
+        menu1("", "", ".coin_1 a.nav-top-item");
+    })
+</script>
+
+{/if}
+
