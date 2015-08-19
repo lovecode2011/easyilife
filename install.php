@@ -28,7 +28,7 @@ $sql[] = 'create table if not exists '.$db->table('product_type').' (
 
 $table[] = '产品类型属性';
 $sql[] = 'create table if not exists '.$db->table('product_attributes').' (
-    `id` bigint not null auto_incrment primary key,
+    `id` bigint not null auto_increment primary key,
     `product_type_id` int not null,
     `type` varchar(255) not null,
     `options` text,
@@ -57,7 +57,7 @@ $sql[] = 'create table if not exists '.$db->table('brand').' (
 ) default charset=utf8;';
 
 $table[] = '库存';
-$sql[] = 'create table if not exist '.$db->table('inventory').' (
+$sql[] = 'create table if not exists '.$db->table('inventory').' (
     `id` bigint not null auto_increment primary key,
     `product_sn` varchar(255) not null,
     `attributes` varchar(255) not null,
@@ -175,7 +175,7 @@ $sql[] = 'create table if not exists '.$db->table('trade').' (
     `status` int not null default \'0\',
     `remark` varchar(255),
     `settle_time` int not null,
-    `solve_time` int
+    `solve_time` int,
     index (`business_account`)
 ) default charset=utf8;';
 
@@ -361,7 +361,7 @@ $sql[] = 'create table if not exists '.$db->table('admin').' (
     `mobile` varchar(255) not null,
     `sex` char(2) not null,
     `business_account` varchar(255) not null,
-    index (`business_accoutn`)
+    index (`business_account`)
 ) default charset=utf8;';
 
 $table[] = '角色';
@@ -370,7 +370,7 @@ $sql[] = 'create table if not exists '.$db->table('role').' (
     `name` varchar(255) not null,
     `purview` text not null,
     `business_account` varchar(255) not null,
-    index (`busienss_account`)
+    index (`business_account`)
 ) default charset=utf8;';
 
 $table[] = '站点参数';
@@ -393,7 +393,7 @@ $sql[] = 'create table if not exists '.$db->table('cart').' (
     `integral` decimal(18,2) not null,
     `number` int not null,
     `business_account` varchar(255) not null,
-    `add_time` int not null
+    `add_time` int not null,
     index (`openid`),
     index (`account`),
     index (`business_account`)
@@ -455,13 +455,13 @@ $sql[] = 'create table if not exists '.$db->table('product').' (
     `sale_count` int not null default \'0\',
     `order_view` int not null default \'50\',
     `free_delivery` tinyint(1) not null default \'0\'
-) defalut charset=utf8;';
+) default charset=utf8;';
 
 $table[] = '短链接';
 $sql[] = 'create table if not exists '.$db->table('short_link').' (
     `url` varchar(255) not null primary key,
     `hash` varchar(255) not null unique
-) default charset-utf8;';
+) default charset=utf8;';
 
 echo '创建数据库表:<br/>';
 foreach($table as $key=>$name)
