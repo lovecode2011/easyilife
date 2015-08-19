@@ -136,6 +136,32 @@ $sql[] = 'create table if not exists '.$db->table('withdraw_log').' (
     index (`withdraw_sn`)
 ) default charset=utf8;';
 
+$table[] = '商家提现申请';
+$sql[] = 'create table if not exists '.$db->table('business_withdraw').' (
+    `withdraw_sn` varchar(255) not null primary key,
+    `business_account` varchar(255) not null,
+    `amount` decimal(18,2) not null,
+    `fee` decimal(18,2) not null,
+    `status` int not null default \'0\',
+    `add_time` int not null,
+    `solve_time` int,
+    `remark` varchar(255),
+    `bank` varchar(255) not null,
+    `bank_account` varchar(255) not null,
+    `bank_card` varchar(255) not null
+) default charset=utf8;';
+
+$table[] = '商家提现操作记录';
+$sql[] = 'create table if not exists '.$db->table('business_withdraw_log').' (
+    `id` bigint not null auto_increment primary key,
+    `add_time` int not null,
+    `operator` varchar(255) not null,
+    `withdraw_sn` varchar(255) not null,
+    `status` int not null,
+    `remark` varchar(255),
+    index (`withdraw_sn`)
+) default charset=utf8;';
+
 $table[] = '商家';
 $sql[] = 'create table if not exists '.$db->table('business').' (
     `id` bigint not null auto_increment unique,
@@ -462,6 +488,8 @@ $sql[] = 'create table if not exists '.$db->table('short_link').' (
     `url` varchar(255) not null primary key,
     `hash` varchar(255) not null unique
 ) default charset=utf8;';
+
+
 
 echo '创建数据库表:<br/>';
 foreach($table as $key=>$name)
