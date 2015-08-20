@@ -1,0 +1,91 @@
+<div id="sidebar">
+    <div id="sidebar-wrapper">
+        <ul id="main-nav">
+            <li class="coin_1">
+                <a href="main.php" class="nav-top-item">
+                    <em class="icon">&#xe606;</em>首页
+                </a>
+            </li>
+
+            <li class="coin_2">
+                <a href="javascript:void(0);" class="nav-top-item" >
+                    <em class="icon">&#xe607;</em>商家信息管理
+                </a>
+                <ul class="submenu" id="ud1" style="display: none">
+                    <li><a href="profile.php">基本信息</a></li>
+                    <li><a href="profile.php?act=auth">认证信息</a></li>
+                </ul>
+            </li>
+
+            <li class="coin_3">
+                <a href="javascript:void(0);" class="nav-top-item">
+                    <em class="icon">&#xe602;</em>产品分类管理
+                </a>
+                <ul class="submenu" id="ud2" style="display: none">
+                    <li><a href="category.php">分类列表</a></li>
+                    <li><a href="category.php?act=add">增加分类</a></li>
+                </ul>
+            </li>
+
+            <li class="coin_4">
+                <a href="javascript:void(0);" class="nav-top-item">
+                    <em class="icon">&#xe605;</em>产品管理
+                </a>
+                <ul class="submenu" id="ud3" style="display: none">
+                    <li><a href="product.php">产品列表</a></li>
+                    <li><a href="product.php?act=add">增加产品</a></li>
+                    <li><a href="product.php?act=cycle">回收站</a></li>
+                </ul>
+            </li>
+
+            <li class="coin_5">
+                <a href="javascript:void(0);" class="nav-top-item">
+                    <em class="icon">&#xe601;</em>物流方式设置
+                </a>
+                <ul class="submenu" id="ud4" style="display: none">
+                    <li><a href="express.php">查看物流方式</a></li>
+                    <li><a href="express.php?act=add">新增物流方式</a></li>
+                </ul>
+            </li>
+
+            <li class="coin_6">
+                <a href="javascript:void(0);" class="nav-top-item">
+                    <em class="icon">&#xe603;</em>财务管理
+                </a>
+                <ul class="submenu" id="ud5" style="display: none">
+                    <li><a href="">账户明细</a></li>
+                    <li><a href="withdraw.php">提现申请</a></li>
+                </ul>
+            </li>
+            <li class="coin_7">
+                <a href="order.php" class="nav-top-item">
+                    <em class="icon">&#xe603;</em>订单管理
+                </a>
+            </li>
+            <li class="coin_8">
+                <a href="evaluation.php" class="nav-top-item">
+                    <em class="icon">&#xe603;</em>评价管理
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript" >
+$(function(){
+    $('#main-nav').children().click(function(){
+        var sub_menu = $(this).children('ul');
+        $('.select-hover').removeClass('select-hover');
+        if( sub_menu ) {
+            if( sub_menu.is(':visible') ) {
+                sub_menu.slideUp();
+                sub_menu.siblings('a').removeClass('select-hover');
+            } else {
+                sub_menu.slideDown();
+                sub_menu.siblings('a').addClass('select-hover');
+            }
+        }
+    });
+});
+</script>

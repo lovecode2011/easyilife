@@ -512,3 +512,11 @@ function rawPost($url, $data)
 
     return $data;
 }
+
+
+function business_base_init() {
+    $current_shop = $_SESSION['business_shop_name'];
+    assign('current_shop', $current_shop);
+
+    assign('pageTitle', '网店'.$current_shop.'管理后台');
+}

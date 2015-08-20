@@ -66,6 +66,15 @@ $purview = array(
         'pur_product_edit',
         'pur_product_del',
     ),
+
+    //产品分类
+    'pur_category' => array(
+        'pur_category_view',
+        'pur_category_add',
+        'pur_category_edit',
+        'pur_category_del',
+    ),
+
 );
 
 global $L_purview;

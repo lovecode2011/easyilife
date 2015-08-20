@@ -1,0 +1,129 @@
+{include file="library/header.lbi"}
+<!--<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=uFn8xlbwjrPfeCT2fZtl3hXw"></script>-->
+<body>
+{include file="library/navbar.lbi"}
+{include file="library/sidebar.lbi"}
+<script type="text/javascript">
+    var data_cities = {$json_cities};
+    var data_districts = {$json_districts};
+    var map_init = {$map_init};
+</script>
+<!-- content -->
+<div id="content">
+    <div class="content-title">
+        <h5 class="pull-left">基本信息</h5>
+<!--        <div class="pull-right"><a class="btn btn-primary" href="?act=passwd">修改密码</a></div>-->
+        <div class="clear"></div>
+    </div>
+    <div class="basicInfo-main">
+        <!--        <img class="avatar" src="http://tp2.sinaimg.cn/1687832373/180/5716713094/1">-->
+        <form id="profileBaseForm" method="post" action="">
+            <fieldset>
+                <p>
+                    <label class="l-title">店名：</label>
+                    <input class="text-input w300" type="text" maxlength="64" id="shop_name" name="shop_name" value="{$business.shop_name}" placeholder="请输入店名">
+                </p>
+                <p>
+                    <label class="l-title">Logo：</label>
+                    <input type="button" class="text-input" id="select-image" value="请选择栏目封面" style="cursor:pointer">
+                    <input type="hidden" class="" name="img" id="img" value="{$section.original}"/>
+                </p>
+                <p>
+                    <label class="l-title"></label>
+                    {if $business.shop_logo eq ''}
+                    <img id="show-image" alt="未选择图片" src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image">
+                    {else}
+                    <img id="show-image" alt="" src="..{$business.shop_logo}" />
+                    {/if}
+                </p>
+                <p>
+                    <label class="l-title">地址：</label>
+                    <select id="province" name="province" class="w150">
+                        {foreach from=$province_list item=province}
+                        <option value="{$province.id}" {if $business.province eq $province.id}selected="selected"{/if}>{$province.province_name}</option>
+                        {/foreach}
+                    </select>
+                    <select id="city" name="city" class="w150">
+                        {foreach from=$city_list item=city}
+                        <option value="{$city.id}" {if $business.city eq $city.id}selected="selected"{/if}>{$city.city_name}</option>
+                        {/foreach}
+                    </select>
+                    <select id="district" name="district" class="w150">
+                        {foreach from=$district_list item=district}
+                        <option value="{$district.id}" {if $business.district eq $district.id}selected="selected"{/if}>{$district.district_name}</option>
+                        {/foreach}
+                    </select>
+                </p>
+                <p>
+                    <label class="l-title">详细地址：</label>
+                    <input class="text-input w300" type="text" maxlength="64" id="address" name="address" value="{$business.address}" placeholder="请输入详细地址" ">
+                </p>
+                <p>
+                    <label class="l-title">经度:</label>
+                    <input class="text-input w150" type="text" maxlength="32" id="lng" name="lng" disabled="disabled" value="{$business.longitude}"/>
+                </p>
+                <p>
+                    <label class="l-title">纬度:</label>
+                    <input class="text-input w150" type="text" maxlength="32" id="lat" name="lat" disabled="disabled" value="{$business.latitude}"/>
+                </p>
+                <p>
+                    <div id="baidu-map" style="margin: 0 auto 50px;height: 400px ;width: 800px;"></div>
+                </p>
+                <p>
+                    <label class="l-title"></label>
+                    <button class="btn btn-primary" type="submit">保存</button>
+                    <input type="hidden" name="opera" value="base" />
+                </p>
+
+            </fieldset>
+        </form>
+    </div>
+</div>
+<!-- END content -->
+<link rel="stylesheet" type="text/css" href="../plugins/kindeditor/plugins/code/prettify.css"/>
+<link rel="stylesheet" type="text/css" href="../plugins/kindeditor/themes/default/default.css"/>
+<script type="text/javascript" src="../plugins/kindeditor/kindeditor-all-min.js"></script>
+<script type="text/javascript">
+    KindEditor.ready(function(K)
+    {
+        var editor = K.editor({
+            allowFileManager : true,
+            uploadJson : '../plugins/kindeditor/upload_json.php',
+            fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+        });
+        K('#select-image').click(function() {
+            editor.loadPlugin('image', function() {
+                editor.plugin.imageDialog({
+                    imageUrl : '{$business.business_account}',
+                    clickFn : function(url, title, width, height, border, align) {
+                        if( !width ) {
+                            width = (width == '') ? '75px' : width + 'px'
+                        }
+                        if( !height ) {
+                            height = (height == '') ? '75px' : height + 'px'
+                        }
+
+                        K('#img').val(url);
+//                        K('#select-image').val('');
+                        K('#show-image').attr('src', url);
+                        K('#show-image').css('width', width);
+                        K('#show-image').css('height', height);                        K('#show-image').css('display', 'block');
+//                        K('#show-image').css('display', 'block');
+                        editor.hideDialog();
+                    }
+                });
+            });
+        });
+//    prettyPrint();
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        menu1("#ud1", "#ud1 a", ".coin_2 a.nav-top-item");
+    })
+</script>
+<script type="text/javascript" src="js/base.js"></script>
+{include file="library/footer.lbi"}
+</body>
+</html>

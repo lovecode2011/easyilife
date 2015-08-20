@@ -6,7 +6,6 @@
  * @date 2015-8-5
  * @version 1.0.0
  */
-
 include 'library/init.inc.php';
 //global $purview;
 //var_dump(json_encode($purview));exit;
@@ -42,7 +41,6 @@ if( 'login' == $opera ) {
     } else {
         $password = md5($password.PASSWORD_END);
     }
-
     $checkAccount = 'select `password`,`role_id`,`name` from `'.DB_PREFIX.'admin` where `account`=\''.$account.'\' limit 1';
     $admin = $db->fetchRow($checkAccount);
 

@@ -28,7 +28,7 @@ $sql[] = 'create table if not exists '.$db->table('product_type').' (
 
 $table[] = '产品类型属性';
 $sql[] = 'create table if not exists '.$db->table('product_attributes').' (
-    `id` bigint not null auto_incrment primary key,
+    `id` bigint not null auto_increment primary key,
     `product_type_id` int not null,
     `type` varchar(255) not null,
     `options` text,
@@ -57,7 +57,7 @@ $sql[] = 'create table if not exists '.$db->table('brand').' (
 ) default charset=utf8;';
 
 $table[] = '库存';
-$sql[] = 'create table if not exist '.$db->table('inventory').' (
+$sql[] = 'create table if not exists '.$db->table('inventory').' (
     `id` bigint not null auto_increment primary key,
     `product_sn` varchar(255) not null,
     `attributes` varchar(255) not null,
@@ -140,6 +140,7 @@ $table[] = '商家';
 $sql[] = 'create table if not exists '.$db->table('business').' (
     `id` bigint not null auto_increment unique,
     `business_account` varchar(255) not null primary key,
+    `password` varchar(255) not null,
     `license` varchar(255) not null,
     `identity` varchar(255) not null,
     `company` varchar(255) not null,
@@ -175,7 +176,7 @@ $sql[] = 'create table if not exists '.$db->table('trade').' (
     `status` int not null default \'0\',
     `remark` varchar(255),
     `settle_time` int not null,
-    `solve_time` int
+    `solve_time` int,
     index (`business_account`)
 ) default charset=utf8;';
 
@@ -361,7 +362,7 @@ $sql[] = 'create table if not exists '.$db->table('admin').' (
     `mobile` varchar(255) not null,
     `sex` char(2) not null,
     `business_account` varchar(255) not null,
-    index (`business_accoutn`)
+    index (`business_account`)
 ) default charset=utf8;';
 
 $table[] = '角色';
@@ -370,7 +371,7 @@ $sql[] = 'create table if not exists '.$db->table('role').' (
     `name` varchar(255) not null,
     `purview` text not null,
     `business_account` varchar(255) not null,
-    index (`busienss_account`)
+    index (`business_account`)
 ) default charset=utf8;';
 
 $table[] = '站点参数';
@@ -380,7 +381,8 @@ $sql[] = 'create table if not exists '.$db->table('sysconf').' (
     `value` varchar(255),
     `type` varchar(255) not null,
     `options` text,
-    `group` varchar(255) not null
+    `group` varchar(255) not null,
+    `remark` varchar(255) not null
 ) default charset=utf8;';
 
 $table[] = '购物车';
@@ -393,7 +395,7 @@ $sql[] = 'create table if not exists '.$db->table('cart').' (
     `integral` decimal(18,2) not null,
     `number` int not null,
     `business_account` varchar(255) not null,
-    `add_time` int not null
+    `add_time` int not null,
     index (`openid`),
     index (`account`),
     index (`business_account`)
@@ -455,13 +457,47 @@ $sql[] = 'create table if not exists '.$db->table('product').' (
     `sale_count` int not null default \'0\',
     `order_view` int not null default \'50\',
     `free_delivery` tinyint(1) not null default \'0\'
-) defalut charset=utf8;';
+) default charset=utf8;';
 
 $table[] = '短链接';
 $sql[] = 'create table if not exists '.$db->table('short_link').' (
     `url` varchar(255) not null primary key,
     `hash` varchar(255) not null unique
-) default charset-utf8;';
+) default charset=utf8;';
+
+$table[] = '省';
+$sql[] = 'create table if not exists '.$db->table('province').' (
+    `id` int not null auto_increment primary key,
+    `province_name` varchar(255) not null
+) default charset=utf8;';
+
+$table[] = '市';
+$sql[] = 'create table if not exists '.$db->table('city').' (
+    `id` int not null auto_increment primary key,
+    `city_name` varchar(255) not null,
+    `province_id` int not null,
+    `first_letter` char(1) not null,
+    `is_hot` tinyint not null default 0,
+    `code` varchar(255) not null
+) default charset=utf8;';
+
+$table[] = '区';
+$sql[] = 'create table if not exists '.$db->table('district').' (
+    `id` int not null auto_increment primary key,
+    `district_name` varchar(255) not null,
+    `city_id` int not null,
+    `code` varchar(255) not null
+) default charset=utf8;';
+
+$table[] = '商圈';
+$sql[] = 'create table if not exists '.$db->table('group').' (
+    `id` int not null auto_increment primary key,
+    `group_name` varchar(255) not null,
+    `district_id` int not null,
+    `city_id` int not null,
+    `code` varchar(255) not null,
+    `first_letter` char(1) not null
+) default charset=utf8;';
 
 echo '创建数据库表:<br/>';
 foreach($table as $key=>$name)
