@@ -513,10 +513,22 @@ function rawPost($url, $data)
     return $data;
 }
 
-
+/**
+ * 商户管理后台初始化
+ */
 function business_base_init() {
+
+    if( !isset($_SESSION['business_account']) ) {
+        $links = array(
+            array('link' => 'index.php', 'alt' => '登陆'),
+        );
+        show_system_message('请先登陆', $links);
+        exit;
+    }
+
     $current_shop = $_SESSION['business_shop_name'];
     assign('current_shop', $current_shop);
-
     assign('pageTitle', '网店'.$current_shop.'管理后台');
+
+
 }

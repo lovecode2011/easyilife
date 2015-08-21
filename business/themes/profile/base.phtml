@@ -25,15 +25,15 @@
                 </p>
                 <p>
                     <label class="l-title">Logo：</label>
-                    <input type="button" class="text-input" id="select-image" value="请选择栏目封面" style="cursor:pointer">
-                    <input type="hidden" class="" name="img" id="img" value="{$section.original}"/>
+                    <input type="button" class="text-input" id="select-image" value="请选择LOGO" style="cursor:pointer">
+                    <input type="hidden" class="" name="img" id="img" value="{$business.shop_logo}"/>
                 </p>
                 <p>
                     <label class="l-title"></label>
                     {if $business.shop_logo eq ''}
                     <img id="show-image" alt="未选择图片" src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image">
                     {else}
-                    <img id="show-image" alt="" src="..{$business.shop_logo}" />
+                    <img id="show-image" alt="" src="{$business.shop_logo_src}" />
                     {/if}
                 </p>
                 <p>

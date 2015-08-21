@@ -499,6 +499,34 @@ $sql[] = 'create table if not exists '.$db->table('group').' (
     `first_letter` char(1) not null
 ) default charset=utf8;';
 
+$table[] = '主营行业';
+$sql[] = 'create table if not exists '.$db->table('industry').' (
+    `id` int not null auto_increment primary key,
+    `name` varchar(255) not null
+) default charset=utf8;';
+
+$table[] = '主营分类';
+$sql[] = 'create table if not exists '.$db->table('classification').' (
+    `id` int not null auto_increment primary key,
+    `name` varchar(255) not null
+) default charset=utf8;';
+
+$table[] = '商家认证信息';
+$sql[] = 'create table if not exists '.$db->table('auth').' (
+    `id` int not null auto_increment primary key,
+    `business_account` varchar(255) not null,
+    `company` varchar(255) not null,
+    `license` varchar(255) not null,
+    `identity` varchar(255) not null,
+    `industry_id` int not null,
+    `category_id` int not null,
+    `contact` varchar(255) not null,
+    `mobile` varchar(255) not null,
+    `email` varchar(255) not null,
+    `add_time` int not null,
+    `status` tinyint not null default 0
+) default charset=utf8;';
+
 echo '创建数据库表:<br/>';
 foreach($table as $key=>$name)
 {

@@ -112,6 +112,89 @@ if( 'base' == $opera ) {
 }
 
 if( 'auth' == $opera ) {
+    $company = trim(getPOST('company'));
+    $industry_id = trim(getPOST('industry'));
+    $category_id = trim(getPOST('classification'));
+    $contact = trim(getPOST('contact'));
+    $mobile = trim(getPOST('mobile'));
+    $email = trim(getPOST('email'));
+    $license = trim(getPOST('license'));
+    $identity = trim(getPOST('identity'));
+
+    if( '' == $company ) {
+        show_system_message('公司名称不能为空', array());
+        exit;
+    }
+    $company = $db->escape($company);
+
+    $industry_id = intval($industry_id);
+    if( 0 >= $industry_id ) {
+        show_system_message('主营行业参数错误', array());
+        exit;
+    }
+
+    $category_id = intval($category_id);
+    if( 0 >= $category_id ) {
+        show_system_message('主营分类参数错误', array());
+        exit;
+    }
+
+    if( '' == $contact ) {
+        show_system_message('负责人不能为空', array());
+        exit;
+    }
+    $contact = $db->escape($contact);
+
+    if( '' == $mobile ) {
+        show_system_message('联系电话不能为空', array());
+        exit;
+    }
+    $mobile = $db->escape($mobile);
+
+    if( '' == $email ) {
+        show_system_message('电子邮箱不能为空', array());
+        exit;
+    }
+    $email = $db->escape($email);
+
+    if( '' == $license ) {
+        show_system_message('请选择营业执照', array());
+        exit;
+    }
+
+    if( '' == $identity ) {
+        show_system_message('请选择法人身份证', array());
+        exit;
+    }
+
+    $data = array(
+        'company' => $company,
+        'industry_id' => $industry_id,
+        'category_id' => $category_id,
+        'contact' => $contact,
+        'mobile' => $mobile,
+        'email' => $email,
+        'license' => $license,
+        'identity' => $identity,
+        'add_time' => time(),
+        'business_account' => $_SESSION['business_account'],
+        'status' => 0,
+    );
+
+    if( $db->autoInsert('auth', array($data)) ) {
+        show_system_message('您的申请已提交，请静候佳音。', array());
+        exit;
+    } else {
+        if( file_exists(realpath('..'.$license)) ) {
+            @unlink(realpath('..'.$license));
+        }
+        if( file_exists(realpath('..'.$identity)) ) {
+            @unlink(realpath('..'.$identity));
+        }
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
+
 
 }
 //======================================================================
@@ -123,6 +206,12 @@ if( 'base' == $act ) {
     $get_business .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
     $get_business .= ' limit 1';
     $business = $db->fetchRow($get_business);
+    if( file_exists(realpath('..'.$business['shop_logo'])) ) {
+        $business['shop_logo_src'] = '..'.$business['shop_logo'];
+    } else {
+        $business['shop_logo_src'] = $business['shop_logo'];
+    }
+
     assign('business', $business);
 
     $get_province_list = 'select * from '.$db->table('province').' where 1 order by id asc';
@@ -172,6 +261,45 @@ if( 'base' == $act ) {
 
 if( 'auth' == $act ) {
 
+
+    $check_auth = 'select * from '.$db->table('auth');
+    $check_auth .= ' where `business_account` = \''.$_SESSION['business_account'].'\' and status = 0';
+    $check_auth .= ' order by id desc limit 1';
+
+    $check_auth = $db->fetchRow($check_auth);
+    if( $check_auth ) {
+        $edit_disable = true;
+    } else {
+        $edit_disable = false;
+    }
+    assign('edit_disable', $edit_disable);
+
+    $get_business = 'select * from '.$db->table('business');
+    $get_business .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_business .= ' limit 1';
+    $business = $db->fetchRow($get_business);
+    if( file_exists(realpath('..'.$business['license'])) ) {
+        $business['license_src'] = '..'.$business['license'];
+    } else {
+        $business['license_src'] = $business['license'];
+    }
+    if( file_exists(realpath('..'.$business['identity'])) ) {
+        $business['identity_src'] = '..'.$business['identity'];
+    } else {
+        $business['identity_src'] = $business['identity'];
+    }
+
+    assign('business', $business);
+
+    $get_industry_list = 'select * from '.$db->table('industry');
+    $get_industry_list .= ' where 1 order by id asc';
+    $industry_list = $db->fetchAll($get_industry_list);
+    assign('industry_list', $industry_list);
+
+    $get_classification_list = 'select * from '.$db->table('classification');
+    $get_classification_list .= ' where 1 order by id asc';
+    $classification_list = $db->fetchAll($get_classification_list);
+    assign('classification_list', $classification_list);
 }
 $template .= $act.'.phtml';
 $smarty->display($template);
