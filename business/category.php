@@ -23,6 +23,10 @@ $act = ( $act == '' ) ? 'view' : $act;
 //============================================================
 
 if( 'add' == $opera ) {
+    if( !check_purview('pur_category_add', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
 
     $name = trim(getPOST('category_name'));
     $parent_id = trim(getPOST('parent_id'));
@@ -98,6 +102,11 @@ if( 'add' == $opera ) {
 }
 
 if( 'edit' == $opera ) {
+    if( !check_purview('pur_category_edit', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+
     $id = intval(getPOST('id'));
 
     if( 0 >= $id ) {
@@ -194,6 +203,11 @@ if( 'edit' == $opera ) {
 
 
 if( 'view' == $act ) {
+    if( !check_purview('pur_category_view', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+
     $get_category_list = 'select * from '.$db->table('category');
     $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_category_list .= ' order by `path` ASC';
@@ -218,7 +232,13 @@ if( 'view' == $act ) {
 }
 
 if( 'add' == $act ) {
-    $get_category_list = 'select `id`, `name`, `path` from '.$db->table('category').' where 1  order by `path` ASC';
+    if( !check_purview('pur_category_add', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+
+    $get_category_list = 'select `id`, `name`, `path` from '.$db->table('category');
+    $get_category_list .= ' where `business_account` = \''.$_SESSION['business_account'].'\' order by `path` ASC';
     $category_list = $db->fetchAll($get_category_list);
     if( $category_list ) {
         foreach ($category_list as $key => $category) {
@@ -238,6 +258,11 @@ if( 'add' == $act ) {
 }
 
 if( 'edit' == $act ) {
+    if( !check_purview('pur_category_edit', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+
     $id = intval(getGET('id'));
 
     if( 0 >= $id ) {
@@ -280,6 +305,11 @@ if( 'edit' == $act ) {
 }
 
 if( 'delete' == $act ) {
+    if( !check_purview('pur_category_del', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+
     $id = intval(getGET('id'));
 
     if( 0 >= $id ) {

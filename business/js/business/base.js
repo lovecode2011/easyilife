@@ -3,34 +3,30 @@
  */
 $(function() {
 
-    // 百度地图API功能
-    var map = new BMap.Map("baidu-map");
-    if (map_init) {
-        map.centerAndZoom(new BMap.Point($('input[name=lng]').val(), $('input[name=lat]').val()), 20);
-        var marker = new BMap.Marker(new BMap.Point($('input[name=lng]').val(), $('input[name=lat]').val()));
-        map.addOverlay(marker);
-    } else {
-        map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);
+    group_init();
 
+    function group_init() {
+        $('#group').empty();
+        $('#group').css('display', 'none');
+        var district_id = $('#district').children(':selected').val();
+        var groups = data_groups[district_id];
+        if (groups) {
+            $('#group').css('display', 'block');
+            var temp = '<option value="0">全部</option>';
+            for (var i = 0; i < groups.length; i++) {
+                temp += '<option value="' + groups[i].id + '"';
+                if( selected_group == groups[i].id ) {
+                    temp += ' selected="selected"';
+                }
+                temp += '>';
+                temp += groups[i].group_name + '</option>';
+            }
+            $('#group').empty();
+            $('#group').append(temp);
+            $('#group').css('display', 'inline');
+        }
     }
 
-    map.addEventListener("click", showInfo);
-    map.addControl(new BMap.NavigationControl());
-    map.addControl(new BMap.ScaleControl());
-    map.addControl(new BMap.OverviewMapControl());
-    map.addControl(new BMap.MapTypeControl());
-    map.enableScrollWheelZoom();   //启用滚轮放大缩小，默认禁用
-
-    function showInfo(e) {
-        $('input[name=lng]').val(e.point.lng);
-        $('input[name=lat]').val(e.point.lat);
-        $('input[name=lng-show]').val(e.point.lng);
-        $('input[name=lat-show]').val(e.point.lat);
-        var marker = new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat));
-        map.clearOverlays();
-        map.addOverlay(marker);
-        //alert(e.point.lng + ", " + e.point.lat);
-    }
 
 
 
@@ -45,7 +41,6 @@ $(function() {
         var local = new BMap.LocalSearch(map, {
             renderOptions: {map: map}
         });
-        console.log(address_kw);
         local.search(address_kw);
     }
 
@@ -93,7 +88,6 @@ $(function() {
         var districts = data_districts[city_id];
 
         var city = $('#city').children(':selected').text();
-        locate_city(city);
 
         $('#district').empty();
         var temp = '';
@@ -103,13 +97,13 @@ $(function() {
         $('#district').append(temp);
 
         var district = $('#district').children(':selected').text();
-        locate_city(district);
+        $('#group').empty();
+        $('#group').css('display', 'none');
     });
 
     $('#city').change(function() {
         var city_id = $(this).val();
         var city = $(this).children(':selected').text();
-        locate_city(city);
         var districts = data_districts[city_id];
         $('#district').empty();
         var temp = '';
@@ -117,11 +111,42 @@ $(function() {
             temp += '<option value="' + districts[i].id + '">' + districts[i].district_name + '</option>';
         }
         $('#district').append(temp);
+        $('#group').empty();
+        $('#group').css('display', 'none');
+
+        var district_id = $(this).children(':selected').val();
+        var groups = data_groups[district_id];
+        if( groups ) {
+            $('#group').css('display', 'block');
+            var temp = '<option value="0">全部</option>';
+            for(var i = 0; i < groups.length; i++ ) {
+                temp += '<option value="'+ groups[i].id +'">' + groups[i].group_name + '</option>';
+            }
+            $('#group').empty();
+            $('#group').append(temp);
+            $('#group').css('display', 'inline');
+        }
+
     });
 
     $('#district').change(function() {
-        var district = $('#district').children(':selected').text();
-        locate_city(district);
+        var district_id = $(this).val();
+        var district = $(this).children(':selected').text();
+        var groups = data_groups[district_id];
+        if( groups ) {
+            $('#group').css('display', 'block');
+            var temp = '<option value="0">全部</option>';
+            for(var i = 0; i < groups.length; i++ ) {
+                temp += '<option value="'+ groups[i].id +'">' + groups[i].group_name + '</option>';
+            }
+            $('#group').empty();
+            $('#group').append(temp);
+            $('#group').css('display', 'inline');
+        } else {
+            $('#group').empty();
+            $('#group').css('display', 'none');
+        }
+
     });
 
     $('#address').blur(function() {
@@ -129,6 +154,5 @@ $(function() {
         var city = $('#city').children(':selected').text();
         var district = $('#district').children(':selected').text();
         var address_kw = province + city + district + $(this).val();
-        locate_by_address(address_kw);
     })
 });

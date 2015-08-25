@@ -316,7 +316,6 @@ function back_base_init() {
             break;
         }
     }
-//    var_dump($realMenus);exit;
 
     assign('menuMark', $menuMark);
 
@@ -513,22 +512,43 @@ function rawPost($url, $data)
     return $data;
 }
 
+
 /**
- * 商户管理后台初始化
+ * 验证银行卡是否正确
+ * @param $bank_card
+ * @return bool
  */
-function business_base_init() {
+function luhm_check($bank_card) {
+    $length = strlen($bank_card);
 
-    if( !isset($_SESSION['business_account']) ) {
-        $links = array(
-            array('link' => 'index.php', 'alt' => '登陆'),
-        );
-        show_system_message('请先登陆', $links);
-        exit;
+    $last_num = substr($bank_card, $length-1, 1);
+    $first_several_num = substr($bank_card, 0, $length - 1);
+    $new_array = array();
+    for( $i = $length - 1; $i >= 0; $i-- ) {
+        array_push($new_array, substr($first_several_num, $i, 1));
     }
+    $sum = 0;
+    foreach( $new_array as $k => $v ) {
+        if( ($k) % 2 == 1 ) {    //奇数位
+            $temp = $v * 2;
+            if( $temp <= 9 ) {
+                $sum += $temp;
+            } else {
+                $sum += intval($temp / 10);
+                $sum += $temp % 10;
+            }
+        } else {
+            $sum += $v;
+        }
+    }
+    //计算luhm
+    $subtractor = ( ($sum % 10) == 0 ) ? 10 : ($sum % 10);
+    $luhm = 10 - $subtractor;
 
-    $current_shop = $_SESSION['business_shop_name'];
-    assign('current_shop', $current_shop);
-    assign('pageTitle', '网店'.$current_shop.'管理后台');
-
+    if( $last_num == $luhm ) {
+        return true;
+    } else {
+        return false;
+    }
 
 }

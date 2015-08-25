@@ -25,38 +25,69 @@ if( 'login' == $opera ) {
     $account = trim(getPOST('account'));
     $password = trim(getPOST('password'));
 
-    if('' == $account)
-    {
+    if('' == $account) {
         $error['account'] = '账号不能为空';
     } else {
         $account = $db->escape(htmlspecialchars($account));
     }
 
-    if('' == $password)
-    {
+    if('' == $password) {
         $error['password'] = '密码不能为空';
     } else {
         $password = md5($password.PASSWORD_END);
     }
-    $checkAccount = 'select `password`,`shop_name` from '.$db->table('business').' where `business_account`=\''.$account.'\' limit 1';
-    $business = $db->fetchRow($checkAccount);
 
-    if($business)
-    {
-        if($password == $business['password'])
-        {
-            $_SESSION['business_shop_name'] = $business['shop_name'];
-            $_SESSION['business_account'] = $account;
+    if( preg_match('#@#', $account) ) {
 
-            show_system_message('登录成功', array(array('alt'=>'进入管理后台', 'link'=>'main.php')));
-            exit;
+        $checkAccount = 'select `password`,`role_id`,`business_account` from '.$db->table('admin').' where `account`=\''.$account.'\' limit 1';
+        $admin = $db->fetchRow($checkAccount);
+        if( $admin ) {
+            if( $password == $admin['password']) {
 
+                $get_purview = 'select purview from '.$db->table('role').' where id = '.$admin['role_id'].' limit 1';
+                $purview = $db->fetchOne($get_purview);
+
+                $get_shop_name  = 'select `shop_name` from '.$db->table('business').' where `business_account`=\''.$admin['business_account'].'\' limit 1';
+                $shop_name = $db->fetchOne($get_shop_name);
+
+                $_SESSION['business_shop_name'] = $shop_name;
+                $_SESSION['business_account'] = $admin['business_account'];
+                $_SESSION['business_purview'] = $purview;
+                $_SESSION['business_admin'] = $account;
+                show_system_message('登录成功', array(array('alt'=>'进入管理后台', 'link'=>'main.php')));
+                exit;
+
+            } else {
+                $error['password'] = '帐号或密码错误';
+            }
         } else {
-            $error['password'] = '密码错误';
+            $error['account'] = '账号不存在';
         }
+
     } else {
-        $error['account'] = '账号不存在';
+        $checkAccount = 'select `password`,`shop_name` from '.$db->table('business').' where `business_account`=\''.$account.'\' limit 1';
+        $business = $db->fetchRow($checkAccount);
+
+        if($business) {
+            if($password == $business['password']) {
+                global $purview;
+                $_SESSION['business_shop_name'] = $business['shop_name'];
+                $_SESSION['business_account'] = $account;
+                $_SESSION['business_purview'] = json_encode($purview);
+                $_SESSION['business_admin'] = $account;
+
+                show_system_message('登录成功', array(array('alt'=>'进入管理后台', 'link'=>'main.php')));
+                exit;
+
+            } else {
+                $error['password'] = '帐号或密码错误';
+            }
+        } else {
+            $error['account'] = '账号不存在';
+        }
     }
+
+
 }
 
 //忘记密码
@@ -83,6 +114,7 @@ if( 'forget' == $act ) {
 if( 'logout' == $act ) {
     unset($_SESSION['business_shop_name']);
     unset($_SESSION['business_account']);
+    unset($_SESSION['business_purview']);
 
     redirect('index.php');
 }

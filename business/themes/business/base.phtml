@@ -6,6 +6,8 @@
 <script type="text/javascript">
     var data_cities = {$json_cities};
     var data_districts = {$json_districts};
+    var data_groups = {$json_groups};
+    var selected_group = {$business.group};
     var map_init = {$map_init};
 </script>
 <!-- content -->
@@ -21,7 +23,7 @@
             <fieldset>
                 <p>
                     <label class="l-title">店名：</label>
-                    <input class="text-input w300" type="text" maxlength="64" id="shop_name" name="shop_name" value="{$business.shop_name}" placeholder="请输入店名">
+                    <input class="text-input w300" type="text" maxlength="64" id="shop_name" name="shop_name" value="{$business.shop_name}" placeholder="请输入店名" disabled="disabled">
                 </p>
                 <p>
                     <label class="l-title">Logo：</label>
@@ -53,6 +55,8 @@
                         <option value="{$district.id}" {if $business.district eq $district.id}selected="selected"{/if}>{$district.district_name}</option>
                         {/foreach}
                     </select>
+                    <select id="group" name="group" class="w150">
+                    </select>
                 </p>
                 <p>
                     <label class="l-title">详细地址：</label>
@@ -67,7 +71,7 @@
                     <input class="text-input w150" type="text" maxlength="32" id="lat" name="lat" disabled="disabled" value="{$business.latitude}"/>
                 </p>
                 <p>
-                    <div id="baidu-map" style="margin: 0 auto 50px;height: 400px ;width: 800px;"></div>
+                    <div id="baidu-map" style="display:none;margin: 0 auto 50px;height: 400px ;width: 800px;"></div>
                 </p>
                 <p>
                     <label class="l-title"></label>

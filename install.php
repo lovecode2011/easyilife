@@ -181,7 +181,7 @@ $sql[] = 'create table if not exists '.$db->table('trade').' (
 ) default charset=utf8;';
 
 $table[] = '商家明细';
-$sql[] = 'create table if not exists '.$db->table('business_exchagne_log').' (
+$sql[] = 'create table if not exists '.$db->table('business_exchange_log').' (
     `id` bigint not null auto_increment primary key,
     `business_account` varchar(255) not null,
     `balance` decimal(18,2) not null default \'0\',
