@@ -2,6 +2,14 @@
 <body>
 {include file="library/navbar.lbi"}
 {include file="library/sidebar.lbi"}
+<style>
+{literal}
+    .select-image {
+        cursor: pointer;
+    }
+{/literal}
+</style>
+
 <script src="js/jquery.modal.min.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="css/jquery.modal.css" type="text/css" media="screen" />
 <script type="text/javascript" >
@@ -55,6 +63,10 @@
                     </select>
                 </p>
                 <p>
+                    <label class="l-title">库存：</label>
+                    <input class="text-input w150" type="text" id="inventory" name="inventory" placeholder="请输入库存">
+                </p>
+                <p>
                     <label class="l-title">售价：</label>
                     <input class="text-input w150" type="text" id="price" name="price" placeholder="请输入售价">
                 </p>
@@ -79,9 +91,9 @@
                     <input class="text-input w150" type="text" name="integral_given" placeholder="赠送积分">
                 </p>
                 <p>
-                    <label class="l-title">产品主图：</label>
-                    <input class="text-input" type="button" name="select-img" value="选择图片" />
-                    <input type="hidden" name="img" placeholder="">
+                    <label class="l-title">产品图片：</label>
+                    <input type="hidden" name="img" id="img" placeholder="">
+                    <img class="select-image" alt="" src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image">&nbsp;
                 </p>
                 <p>
                     <label class="l-title">产品简介：</label>
@@ -115,7 +127,6 @@
                     <label class="l-title">包邮：</label>
                     <input type="radio" name="free_delivering" value="0" checked="checked"> <em>否</em>&nbsp;
                     <input type="radio" name="free_delivering" value="1"> <em>是</em>
-
                 </p>
                 <p>
                     <label class="l-title"></label>
@@ -138,6 +149,23 @@
             <div class="modal-footer">
                 <div class="pull-right">
                     <button class="btn btn-primary" type="button" id="confirm">确定</button>&nbsp;
+                    <a class="btn btn-primary" rel="modal:close">取消</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-edit-product-attr" class="modal modal-large">
+        <div class="modal-dialog">
+            <div class="modal-head">
+                <h1 class="modal-title">产品属性</h1>
+                <a href="javascript: void(0)" class="close-modal" rel="modal:close">&times;</a>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right">
+                    <button class="btn btn-primary" type="button" id="edit-confirm">确定</button>&nbsp;
                     <a class="btn btn-primary" rel="modal:close">取消</a>
                 </div>
             </div>
@@ -178,6 +206,33 @@
                     K('form[name=productAddForm]')[0].submit();
                 });
             }
+        });
+        var editor = K.editor({
+            allowFileManager: true,
+            uploadJson: '../plugins/kindeditor/upload_json.php',
+            fileManagerJson: '../plugins/kindeditor/file_manager_json.php'
+        });
+        K('.select-image').click(function() {
+            editor.loadPlugin('image', function() {
+                editor.plugin.imageDialog({
+                    imageUrl : '',
+                    clickFn : function(url, title, width, height, border, align) {
+                        if( !width ) {
+                            width = 200 + 'px';
+                        }
+                        if( !height ) {
+                            height = 150 + 'px';
+                        }
+
+                        K('#img').val(url);
+                        K('.select-image').attr('src', url);
+                        K('.select-image').css('display', 'block');
+                        K('.select-image').attr('width', width);
+                        K('.select-image').attr('height', height);
+                        editor.hideDialog();
+                    }
+                });
+            });
         });
     });
     {/literal}
