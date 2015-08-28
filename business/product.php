@@ -13,8 +13,8 @@ include 'library/init.inc.php';
 business_base_init();
 $template = 'product/';
 
-$action = 'view|add|edit|delete|cycle|revoke|remove|sale';
-$operation = 'add|edit';
+$action = 'view|add|edit|delete|cycle|revoke|remove|sale|gallery|del-gallery';
+$operation = 'add|edit|gallery';
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
 $act = ( $act == '' ) ? 'view' : $act;
@@ -489,6 +489,103 @@ if( 'edit' == $opera ) {
 
 }
 
+if( 'gallery' == $opera ) {
+    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $product_sn = trim(getPOST('sn'));
+    if( '' == $product_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+    $get_product = 'select a.* from '.$db->table('product').' as a';
+    $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 2 limit 1';
+    $product = $db->fetchRow($get_product);
+    if( !$product ) {
+        show_system_message('产品不存在', array());
+        exit;
+    }
+    if( $product['status'] == 2 ) {
+        show_system_message('产品已被删除', array());
+        exit;
+    }
+
+    $img_list = getPOST('img');
+    $order_view_list = getPOST('order_view');
+    $id_list = getPOST('id');
+
+    if( !is_array($img_list) || !is_array($order_view_list) || !is_array($id_list) ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+
+    $insert_data = array();
+    $update_data = array();
+    $update_where = array();
+
+    foreach( $order_view_list as $key => $order_view ) {
+        $order_view_list[$key] = intval($order_view) <= 0 ? 50 : intval($order_view);
+    }
+
+    foreach( $img_list as $key => $img ) {
+        $img_list[$key] = $db->escape(trim($img));
+    }
+
+    foreach( $id_list as $key => $id ) {
+        if( 0 >= intval($id) ) {
+            if( '' == $img_list[$key] || !file_exists('..'.$img_list[$key])) {
+                continue;
+            }
+            $insert_data[] = array(
+                'original_img' => $img_list[$key],
+                'order_view' => $order_view_list[$key],
+                'big_img' => $img_list[$key],
+                'thumb_img' => str_replace('/image/', '/thumb/', $img_list[$key]),
+                'product_sn' => $product_sn,
+            );
+        } else {
+            if( '' == $img_list[$key] || !file_exists('..'.$img_list[$key])) {
+                continue;
+            }
+            $update_data[] = array(
+                'original_img' => $img_list[$key],
+                'order_view' => $order_view_list[$key],
+                'big_img' => $img_list[$key],
+                'thumb_img' => str_replace('/image/', '/thumb/', $img_list[$key]),
+                'product_sn' => $product_sn,
+            );
+            $update_where[] = 'id = '.$id.' and product_sn = \''.$product_sn.'\'';
+        }
+    }
+    $db->begin();
+    $transaction = true;
+    if( $insert_data ) {
+        if (!$db->autoInsert('gallery', $insert_data)) {
+            $transaction = false;
+        }
+    }
+
+    foreach( $update_data as $key => $data ) {
+        if( !$db->autoUpdate('gallery', $data, $update_where[$key]) ) {
+            $transaction = false;
+        }
+    }
+
+    if( $transaction ) {
+        $db->commit();
+        show_system_message('修改产品相册成功', array());
+        exit;
+    } else {
+        $db->rollback();
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
+
+}
+
 //===============================================================================
 
 if( 'view' == $act ) {
@@ -665,6 +762,8 @@ if( 'edit' == $act ) {
         show_system_message('参数错误', array());
         exit;
     }
+    $product_sn = $db->escape($product_sn);
+
     $get_product = 'select a.*, b.attributes, b.inventory from '.$db->table('product').' as a';
     $get_product .= ' left join '.$db->table('inventory').' as b on a.product_sn = b.product_sn';
     $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
@@ -732,6 +831,94 @@ if( 'edit' == $act ) {
     $brand_list = $db->fetchAll($get_brand_list);
     assign('brand_list', $brand_list);
 
+}
+
+if( 'gallery' == $act ) {
+    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $product_sn = trim(getGET('sn'));
+    if( '' == $product_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+
+    $get_product = 'select a.* from '.$db->table('product').' as a';
+    $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 2 limit 1';
+    $product = $db->fetchRow($get_product);
+    if( !$product ) {
+        show_system_message('产品不存在', array());
+        exit;
+    }
+    if( $product['status'] == 2 ) {
+        show_system_message('产品已被删除', array());
+        exit;
+    }
+
+    $get_gallery_list = 'select * from '.$db->table('gallery');
+    $get_gallery_list .= ' where product_sn = \''.$product_sn.'\'';
+    $get_gallery_list .= ' order by order_view asc, id asc';
+
+    $gallery_list = $db->fetchAll($get_gallery_list);
+    $count = count($gallery_list);
+
+    if( $gallery_list ) {
+        foreach( $gallery_list as $key => $gallery ) {
+            if( file_exists(realpath('..'.$gallery['original_img'])) ) {
+                $gallery_list[$key]['original_img_src'] = '..'.$gallery['original_img'];
+            } else {
+                $gallery_list[$key]['original_img_src'] = $gallery['original_img'];
+            }
+
+        }
+        for( $i = $count; $i < 10; $i++ ) {
+            $gallery_list[$i]['id'] = '';
+            $gallery_list[$i]['original_img'] = '';
+            $gallery_list[$i]['original_img_src'] = '/upload/image/no-image.png';
+            $gallery_list[$i]['order_view'] = '';
+        }
+    } else {
+        for( $i = 0; $i < 10; $i++ ) {
+            $gallery_list[$i]['id'] = '';
+            $gallery_list[$i]['original_img'] = '';
+            $gallery_list[$i]['original_img_src'] = '/upload/image/no-image.png';
+            $gallery_list[$i]['order_view'] = '';
+        }
+    }
+
+    assign('product_sn', $product_sn);
+    assign('gallery_list', $gallery_list);
+
+}
+
+if( 'del-gallery' == $act ) {
+    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $id = intval(getGET('id'));
+    if( 0 >= $id ) {
+        redirect('product.php?act=gallery');
+    }
+    $get_gallery = 'select * from '.$db->table('gallery').' as a';
+    $get_gallery .= ' left join '.$db->table('product').' as b on a.product_sn = b.product_sn';
+    $get_gallery .= ' where a.id = '.$id.' and b.business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $gallery = $db->fetchRow($get_gallery);
+    if( empty($gallery) ) {
+        show_system_message('图片不存在', array());
+        exit;
+    }
+
+    $delete_gallery = 'delete from '.$db->table('gallery').' where id = '.$id.' limit 1';
+    if( $db->delete($delete_gallery) ) {
+        redirect('product.php?act=gallery');
+    } else {
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
 }
 
 if( 'delete' == $act ) {

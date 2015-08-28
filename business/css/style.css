@@ -14,6 +14,9 @@ input,select,textarea{outline:none}
 .w150{
     width:150px !important;
 }
+.w180{
+    width:180px !important;
+}
 .w300{
     width:300px !important;
 }

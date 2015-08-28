@@ -552,3 +552,111 @@ function luhm_check($bank_card) {
     }
 
 }
+
+/**
+ * 图片缩放
+ * @param $filename
+ * @param int $max_width
+ * @param int $max_height
+ * @param $type
+ */
+function resize_image($filename, $type, $max_width = 100, $max_height = 75) {
+    //文件保存目录路径
+    $save_path = ROOT_PATH.'upload/';
+    //文件保存目录URL
+    $save_url = '/upload/';
+    //upload下保存图片的目录
+    $dir_name = 'image';
+
+    $im = null;
+    switch($type) {
+        case 'jpg': $im = imagecreatefromjpeg(ROOT_PATH.$filename);break;
+        case 'jpeg': $im = imagecreatefromjpeg(ROOT_PATH.$filename);break;
+        case 'png': $im = imagecreatefrompng(ROOT_PATH.$filename);break;
+        case 'gif': $im = imagecreatefromgif(ROOT_PATH.$filename);break;
+        default: $im = imagecreatefromjpeg(ROOT_PATH.$filename);break;
+    }
+    $pic_width = imagesx($im);
+    $pic_height = imagesy($im);
+
+    if(($max_width && $pic_width > $max_width) || ($max_height && $pic_height > $max_height))
+    {
+        if($max_width && $pic_width>$max_width)
+        {
+            $widthratio = $max_width/$pic_width;
+            $resizewidth_tag = true;
+        }
+
+        if($max_height && $pic_height>$max_height)
+        {
+            $heightratio = $max_height/$pic_height;
+            $resizeheight_tag = true;
+        }
+
+        if($resizewidth_tag && $resizeheight_tag)
+        {
+            if($widthratio<$heightratio)
+                $ratio = $widthratio;
+            else
+                $ratio = $heightratio;
+        }
+
+        if($resizewidth_tag && !$resizeheight_tag)
+            $ratio = $widthratio;
+        if($resizeheight_tag && !$resizewidth_tag)
+            $ratio = $heightratio;
+
+        $new_width = $pic_width * $ratio;
+        $new_height = $pic_height * $ratio;
+
+        if(function_exists("imagecopyresampled"))
+        {
+            $new_im = imagecreatetruecolor($new_width,$new_height);
+            imagecopyresampled($new_im,$im,0,0,0,0,$new_width,$new_height,$pic_width,$pic_height);
+        }
+        else
+        {
+            $new_im = imagecreate($new_width,$new_height);
+            imagecopyresized($new_im,$im,0,0,0,0,$new_width,$new_height,$pic_width,$pic_height);
+        }
+        //新文件名
+        $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $type;
+    }
+    else
+    {
+        //新文件名
+        $new_file_name = date("YmdHis") . '_' . rand(10000, 99999) . '.' . $type;
+        $new_im = $im;
+    }
+
+
+    //创建文件夹
+    if ($dir_name !== '')
+    {
+        $save_path .= $dir_name . "/";
+        $save_url .= $dir_name . "/";
+        if (!file_exists($save_path))
+        {
+            mkdir($save_path);
+        }
+    }
+    $ymd = date("Ymd");
+    $save_path .= $ymd . "/";
+    $save_url .= $ymd . "/";
+    if (!file_exists($save_path))
+    {
+        mkdir($save_path);
+    }
+
+    $file_path = $save_path . $new_file_name;
+
+    switch($type) {
+        case 'jpg': imagejpeg($new_im, $file_path);break;
+        case 'jpeg': imagejpeg($new_im, $file_path);break;
+        case 'png': imagepng($new_im, $file_path);break;
+        case 'gif': imagegif($new_im, $file_path);break;
+        default: imagejpeg($new_im, $file_path);break;
+    }
+    return $save_url . $new_file_name;
+
+}

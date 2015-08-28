@@ -62,7 +62,7 @@
                     {if $product.img neq ''}
                     <img width="80" height="60" src="{$product.img}" alt=""/>
                     {else}
-                    <img width="80" height="60" src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt=""/>
+                    <img width="80" height="60" src="/upload/image/no-image.png" alt=""/>
                     {/if}
                 </td>
                 <td>{$product.category_name}</td>
@@ -73,7 +73,7 @@
                 <td class="text-right">
                     <a onclick="javascript:if(confirm('确认要{$product.sales_str}？')) return true; else return false;" href="?act=sale&sn={$product.product_sn}">{$product.sales_str}</a>
                     | <a href="?act=edit&sn={$product.product_sn}">编辑</a>
-                    | <a href="gallery.php?sn={$product.product_sn}">上传图片</a>
+                    | <a href="?act=gallery&sn={$product.product_sn}">上传图片</a>
                     | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&&sn={$product.product_sn}">删除</a>
                 </td>
             </tr>

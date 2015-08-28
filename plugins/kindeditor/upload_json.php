@@ -10,6 +10,9 @@
 require_once 'JSON.php';
 
 session_start();
+if( !isset($_SESSION['business_account']) ) {
+    alert('请先登陆商户管理后台');
+}
 $business_account = $_SESSION['business_account'];
 
 $php_path = dirname(__FILE__) . '/';
@@ -128,6 +131,8 @@ if (empty($_FILES) === false) {
 		alert("上传文件失败。");
 	}
 	@chmod($file_path, 0644);
+
+    create_thumb($file_path, $file_ext);
 	$file_url = $save_url . $new_file_name;
 
 	header('Content-type: text/html; charset=UTF-8');
@@ -142,3 +147,135 @@ function alert($msg) {
 	echo $json->encode(array('error' => 1, 'message' => $msg));
 	exit;
 }
+
+function create_thumb($filename, $type, $max_width = 100, $max_height = 75) {
+
+    $php_path = dirname(__FILE__) . '/';
+    $php_url = dirname($_SERVER['PHP_SELF']) . '/';
+
+    //文件保存目录路径
+    $save_path = $php_path . '../../upload/';
+    //文件保存目录URL
+    $save_url = $php_url . '../../upload/';
+
+    //upload下保存图片的目录
+    $dir_name = 'thumb';
+
+
+    $im = null;
+    switch($type) {
+        case 'jpg':
+            $im = imagecreatefromjpeg($filename);
+            break;
+        case 'jpeg':
+            $im = imagecreatefromjpeg($filename);
+            break;
+        case 'png':
+            $im = imagecreatefrompng($filename);
+            break;
+        case 'gif':
+            $im = imagecreatefromgif($filename);
+            break;
+        default:
+            $im = imagecreatefromjpeg($filename);
+            break;
+    }
+    $pic_width = imagesx($im);
+    $pic_height = imagesy($im);
+
+    //计算缩略图的宽和高
+    if( ($max_width && $pic_width > $max_width) || ($max_height && $pic_height > $max_height) ) {
+        //需要缩放宽度
+        if( $max_width && $pic_width > $max_width ) {
+            $width_ratio = $max_width/$pic_width;
+            $resize_width_tag = true;
+        }
+        //需要缩放高度
+        if( $max_height && $pic_height>$max_height ) {
+            $height_ratio = $max_height/$pic_height;
+            $resize_height_tag = true;
+        }
+        //宽度高度都要缩放，计算真正的缩放比
+        if( $resize_width_tag && $resize_height_tag ) {
+            if( $width_ratio < $height_ratio ) {
+                $ratio = $width_ratio;
+            }
+            else {
+                $ratio = $height_ratio;
+            }
+        }
+        //按宽度缩放比缩放
+        if( $resize_width_tag && !$resize_height_tag ) {
+            $ratio = $width_ratio;
+        }
+        //按高度缩放比缩放
+        if( $resize_height_tag && !$resize_width_tag ) {
+            $ratio = $height_ratio;
+        }
+
+        //缩略图的宽度和高度
+        $new_width = $pic_width * $ratio;
+        $new_height = $pic_height * $ratio;
+
+        if( function_exists("imagecopyresampled") ) {
+            $new_im = imagecreatetruecolor($new_width,$new_height);
+            imagecopyresampled($new_im,$im,0,0,0,0,$new_width,$new_height,$pic_width,$pic_height);
+        } else {
+            $new_im = imagecreate($new_width,$new_height);
+            imagecopyresized($new_im,$im,0,0,0,0,$new_width,$new_height,$pic_width,$pic_height);
+        }
+    } else {
+        $new_im = $im;
+    }
+
+
+    //创建文件夹
+    if ($dir_name !== '') {
+        $save_path .= $dir_name . "/";
+        $save_url .= $dir_name . "/";
+        if (!file_exists($save_path)) {
+            mkdir($save_path);
+        }
+
+        $save_path .= $_SESSION['business_account'] .'/';
+        $save_url .= $_SESSION['business_account'] . '/';
+        if (!file_exists($save_path)) {
+            mkdir($save_path);
+        }
+    }
+    $ymd = date("Ymd");
+    $save_path .= $ymd . "/";
+    $save_url .= $ymd . "/";
+    if ( !file_exists($save_path) ) {
+        mkdir($save_path);
+    }
+
+    $temp = explode('/', $filename);
+    $temp_length = count($temp);
+
+    $file_path = $save_path . $temp[$temp_length - 1];
+
+    //写入缩略图文件
+    switch($type) {
+        case 'jpg':
+            $result = imagejpeg($new_im, $file_path);
+            break;
+        case 'jpeg':
+            $result = imagejpeg($new_im, $file_path);
+            break;
+        case 'png':
+            $result = imagepng($new_im, $file_path);
+            break;
+        case 'gif':
+            $result = imagegif($new_im, $file_path);
+            break;
+        default:
+            $result = imagejpeg($new_im, $file_path);
+            break;
+    }
+    if( !$result ) {
+        alert('生成缩略图发生错误');
+    }
+    return $save_url . $temp[$temp_length - 1];
+}
+
