@@ -477,7 +477,7 @@ ul.tabs li.active a{
 }
 /* END 表单样式 */
 /* 资讯样式 */
-.article-main table img,.product-main table img{ width:80px;}
+/*.article-main table img,.product-main table img{ width:80px;}*/
 .pages{ width:100.5%; text-align:right; padding:10px 0; clear:both;}
 .pages a,.pages b{ margin:0 2px;color:#09c;}
 .pages a,.pages b{ border:1px solid #09c; background:#fff; padding:5px 9px; text-decoration:none}

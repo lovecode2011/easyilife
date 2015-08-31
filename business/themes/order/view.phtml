@@ -5,11 +5,19 @@
 <!-- content -->
 <div id="content">
     <div class="content-title">
-        <h5 class="pull-left">账户明细</h5>
-        <h5 class="pull-left">
-            账户余额:{$business.balance}
-        </h5>
-        <div class="pull-right"><a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>&nbsp;</div>
+        <h5 class="pull-left">订单管理{if $order_status neq ''}-{$order_status}{/if}</h5>
+        <div class="pull-right">
+            <a class="btn btn-primary" href="order.php">全部</a>&nbsp;
+            <a class="btn btn-primary" href="order.php?status=1">待支付</a>&nbsp;
+            <a class="btn btn-primary" href="order.php?status=4">待发货</a>&nbsp;
+            <a class="btn btn-primary" href="order.php?status=6">已发货</a>&nbsp;
+            <a class="btn btn-primary" href="order.php?status=7">已收货</a>&nbsp;
+            <a class="btn btn-primary" href="order.php?status=8">申请退单</a>&nbsp;
+            <a class="btn btn-primary" href="order.php?status=9">退单中</a>&nbsp;
+            <a class="btn btn-primary" href="order.php?status=10">已退单</a>&nbsp;
+            <a class="btn btn-primary" href="order.php?status=11">无效订单</a>&nbsp;
+            <a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>&nbsp;
+        </div>
         <div class="clear"></div>
     </div>
     <div class="article-main-header">
@@ -38,32 +46,40 @@
         </form>
         <div class="clear"></div>
     </div>
+
     <div class="article-main">
+        {if $status eq 0}
         <table class="table">
             <thead>
             <tr>
-                <th>交易时间</th>
-                <th>交易金额</th>
-                <th>余额</th>
+                <th>订单编号</th>
+                <th>下单时间</th>
+                <th>订单状态</th>
+                <th>产品总额</th>
+                <th>联系方式</th>
                 <th>备注</th>
-                <th>操作员</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
             {if $total neq 0}
-            {foreach from=$exchange_list item=exchange}
+            {foreach from=$order_list item=order}
             <tr>
-                <td>{$exchange.add_time_str}</td>
-                <td>{$exchange.trade}</td>
-                <td>{$exchange.balance}</td>
-                <td>{$exchange.remark}</td>
-                <td>{$exchange.operator}</td>
+                <td>{$order.order_sn}</td>
+                <td>{$order.add_time_str}</td>
+                <td>{$order.status_str}</td>
+                <td>{$order.amount}</td>
+                <td>{$order.address}&nbsp;{$order.consignee}({$order.mobile})</td>
+                <td>{$order.remark}</td>
+                <td>
+
+                </td>
             </tr>
             {/foreach}
             {else}
             {if $st eq '' && $et eq ''}
             <tr>
-                <td style="padding: 50px 0" colspan="5" align="center">未有交易产生！</td>
+                <td style="padding: 50px 0" colspan="5" align="center">尚未有客户下单！</td>
             </tr>
             {else}
             <tr>
@@ -110,6 +126,11 @@
             </tr>
             </tbody>
         </table>
+        {/if}
+
+        {if $status eq 1}
+
+        {/if}
     </div>
 </div>
 <!-- END content -->
@@ -123,6 +144,7 @@
     {/literal}
 </script>
 <!-- END 日历控件 -->
+
 {include file="library/footer.lbi"}
 </body>
 </html>

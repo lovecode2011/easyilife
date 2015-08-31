@@ -554,6 +554,37 @@ $sql[] = 'create table if not exists '.$db->table('auth').' (
     `status` tinyint not null default 0
 ) default charset=utf8;';
 
+$table[] = '订单详情';
+$sql[] = 'create table if not exists '.$db->table('order_detail').' (
+    `id` int not null auto_increment primary key,
+    `order_sn` varchar(255) not null,
+    `product_sn` varchar(255) not null,
+    `product_name` varchar(255) not null,
+    `product_attributes` varchar(255) not null,
+    `product_price` decimal(18,2) not null,
+    `integral` decimal(18,2) not null,
+    `integral_given` decimal(18,2) not null,
+    `reward` decimal(18,2) not null,
+    `count` int not null,
+    `business_account` varchar(255) not null,
+    index(`order_sn`, `product_sn`)
+) default charset=utf8;';
+
+$table[] = '收货地址';
+$sql[] = 'create table if not exists '.$db->table('address').' (
+    `id` int not null auto_increment primary key,
+    `province` int not null,
+    `city` int not null,
+    `district` int not null,
+    `group` int not null default 0,
+    `address` varchar(255) not null,
+    `consignee` varchar(255) not null,
+    `mobile` varchar(255) not null,
+    `zipcode` varchar(255),
+    `account` varchar(255) not null,
+    index(`account`)
+) default charset=utf8;';
+
 
 
 echo '创建数据库表:<br/>';

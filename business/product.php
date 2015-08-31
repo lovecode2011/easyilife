@@ -914,7 +914,7 @@ if( 'del-gallery' == $act ) {
 
     $delete_gallery = 'delete from '.$db->table('gallery').' where id = '.$id.' limit 1';
     if( $db->delete($delete_gallery) ) {
-        redirect('product.php?act=gallery');
+        redirect('product.php?act=gallery&sn='.$gallery['product_sn']);
     } else {
         show_system_message('系统繁忙，请稍后重试', array());
         exit;
