@@ -123,7 +123,7 @@ global $menus;
 $menus = array(
     'pur_business' => array(
         'title' => '商户信息管理',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe609;',
         'url' => 'business.php',
         'children' => array(
             'pur_business_base' => array('url' => 'business.php', 'title' => '基本信息'),
@@ -132,7 +132,7 @@ $menus = array(
     ),
     'pur_category' => array(
         'title' => '产品分类管理',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe603;',
         'url' => 'category.php',
         'children' => array(
             'pur_category_view' => array('url' => 'category.php', 'title' => '分类列表'),
@@ -142,7 +142,7 @@ $menus = array(
 
     'pur_product' => array(
         'title' => '产品管理',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe608;',
         'url' => 'product.php',
         'children' => array(
             'pur_product_view' => array('url' => 'product.php', 'title' => '产品列表'),
@@ -153,7 +153,7 @@ $menus = array(
 
     'pur_express' => array(
         'title' => '物流方式管理',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe605;',
         'url' => 'express.php',
         'children' => array(
             'pur_express_view' => array('url' => 'express.php', 'title' => '物流方式列表'),
@@ -163,7 +163,7 @@ $menus = array(
 
     'pur_finance' => array(
         'title' => '财务管理',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe601;',
         'url' => 'finance.php',
         'children' => array(
             'pur_finance_view' => array('url' => 'finance.php', 'title' => '账户明细'),
@@ -173,7 +173,7 @@ $menus = array(
     ),
     'pur_order' => array(
         'title' => '订单管理',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe604;',
         'url' => 'order.php',
     ),
     'pur_eval' => array(
@@ -183,7 +183,7 @@ $menus = array(
     ),
     'pur_admin' => array(
         'title' => '管理员',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe602;',
         'url' => 'admin.php',
         'children' => array(
             'pur_admin_view' => array('url' => 'admin.php', 'title' => '管理员列表'),
@@ -192,7 +192,7 @@ $menus = array(
     ),
     'pur_role' => array(
         'title' => '角色管理',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe600;',
         'url' => 'role.php',
         'children' => array(
             'pur_role_view' => array('url' => 'role.php', 'title' => '角色列表'),
