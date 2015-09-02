@@ -22,11 +22,7 @@
             {foreach from=$roleList item=role}
             <tr>
                 <td>{$role.name}</td>
-                {if $role.id eq 1}
-                <td class="text-right"></td>
-                {else}
                 <td class="text-right"><a href="?act=edit&id={$role.id}">编辑</a> | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&id={$role.id}">删除</a></td>
-                {/if}
             </tr>
             {/foreach}
             </tbody>

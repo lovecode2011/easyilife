@@ -658,5 +658,22 @@ function resize_image($filename, $type, $max_width = 100, $max_height = 75) {
         default: imagejpeg($new_im, $file_path);break;
     }
     return $save_url . $new_file_name;
+}
 
+/**
+ * 判断是否跨域
+ * @return bool 跨域返回true
+ * @author 王仁欢
+ */
+function check_cross_domain() {
+    $server_name = $_SERVER['SERVER_NAME'];//当前运行脚本所在服务器主机的名字。
+    $sub_from = $_SERVER["HTTP_REFERER"];//链接到当前页面的前一页面的 URL 地址
+    $sub_len = strlen($server_name);//统计服务器的名字长度。
+    $check_from = substr($sub_from,7,$sub_len);//截取提交到前一页面的url，不包含http:://的部分。
+
+    if( $check_from != $server_name ) {
+        return true;
+    } else {
+        return false;
+    }
 }
