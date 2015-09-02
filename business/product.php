@@ -712,6 +712,11 @@ if( 'sale' == $act ) {
         show_system_message('权限不足', array());
         exit;
     }
+    $product_sn = trim(getGET('sn'));
+    if( '' == $product_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
     $product_sn = $db->escape($product_sn);
 
     $get_product = 'select * from '.$db->table('product');
