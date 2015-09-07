@@ -13,7 +13,7 @@ include 'library/init.inc.php';
 business_base_init();
 $template = 'product/';
 
-$action = 'view|add|edit|delete|cycle|revoke|remove|sale|gallery|del-gallery';
+$action = 'view|add|edit|delete|cycle|revoke|remove|sale|release|gallery|del-gallery';
 $operation = 'add|edit|gallery';
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
@@ -259,8 +259,13 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    if( $product['status'] == 2 ) {
+    if( $product['status'] == 5 ) {
         show_system_message('产品已被删除', array());
+        exit;
+    }
+
+    if( $product['status'] == 2 ) {
+        show_system_message('产品审核中，请耐心等待', array());
         exit;
     }
 
@@ -508,7 +513,7 @@ if( 'gallery' == $opera ) {
         show_system_message('产品不存在', array());
         exit;
     }
-    if( $product['status'] == 2 ) {
+    if( $product['status'] == 5 ) {
         show_system_message('产品已被删除', array());
         exit;
     }
@@ -597,14 +602,26 @@ if( 'view' == $act ) {
 
     $status = intval(getGET('status'));
     if( $status != 0 ) {
-        if( $status == 1 ) {
-            $and_where .= ' and status = 1';
-        } else {
-            $and_where .= ' and status = 0';
+        switch($status) {
+            case 1:
+                $and_where .= ' and status = 1';
+                break;
+            case 2:
+                $and_where .= ' and status = 2';
+                break;
+            case 3:
+                $and_where .= ' and status = 3';
+                break;
+            case 4:
+                $and_where .= ' and status = 4';
+                break;
+            default:
+                $and_where .= ' and status = 0';
+                break;
         }
         assign('status', $status);
     } else {
-        $and_where .= ' and status <> 2';
+        $and_where .= ' and status <> 5';
     }
 
     $keyword = trim(getGET('keyword'));
@@ -640,13 +657,27 @@ if( 'view' == $act ) {
     $get_product_list .= ' limit '.$offset.','.$count;
     $product_list = $db->fetchAll($get_product_list);
 
+    $status_array = array(
+        1 => '待发布',
+        2 => '待审核',
+        3 => '已下架',
+        4 => '已上架',
+    );
+
+    $opera_array = array(
+        1 => '发布',
+        2 => '',
+        3 => '上架',
+        4 => '下架',
+    );
+
     if( $product_list ) {
         foreach( $product_list as $key => $product ) {
             if( file_exists(realpath('..'.$product['img']))) {
                 $product[$key]['img'] = '..'.$product['img'];
             }
-            $product_list[$key]['sales'] = ( $product['status'] == 1 ) ? '是' : '否';
-            $product_list[$key]['sales_str'] = ( $product['status'] == 1 ) ? '下架' : '上架';
+            $product_list[$key]['status_str'] = $status_array[$product['status']];
+            $product_list[$key]['sales_str'] = $opera_array[$product['status']];
         }
     }
     assign('product_list', $product_list);
@@ -707,6 +738,44 @@ if( 'add' == $act ) {
 
 }
 
+if( 'release' == $act ) {
+    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $product_sn = trim(getGET('sn'));
+    if( '' == $product_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+
+    $get_product = 'select * from '.$db->table('product');
+    $get_product .= ' where product_sn = \''.$product_sn.'\'';
+    $get_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
+    $get_product .= ' limit 1';
+    $product  = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        show_system_message('产品不存在', array());
+        exit;
+    }
+    if( $product['status'] == 5 ) {
+        show_system_message('产品已被删除', array());
+        exit;
+    }
+    $release_product = 'update '.$db->table('product').' set status = 2, prev_status = '.$product['status'];
+    $release_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $release_product .= ' and product_sn = \''.$product_sn.'\' limit 1';
+
+    if( $db->update($release_product) ) {
+        show_system_message('发布成功，平台将对产品进行审核', array());
+        exit;
+    } else {
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
+}
+
 if( 'sale' == $act ) {
     if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
@@ -728,7 +797,7 @@ if( 'sale' == $act ) {
         show_system_message('产品不存在', array());
         exit;
     }
-    if( $product['status'] == 2 ) {
+    if( $product['status'] == 5 ) {
         show_system_message('产品已被删除', array());
         exit;
     }
@@ -778,8 +847,12 @@ if( 'edit' == $act ) {
         show_system_message('产品不存在', array());
         exit;
     }
-    if( $product['status'] == 2 ) {
+    if( $product['status'] == 5 ) {
         show_system_message('产品已被删除', array());
+        exit;
+    }
+    if( $product['status'] == 2 ) {
+        show_system_message('产品审核中，请耐心等待', array());
         exit;
     }
 
@@ -858,7 +931,7 @@ if( 'gallery' == $act ) {
         show_system_message('产品不存在', array());
         exit;
     }
-    if( $product['status'] == 2 ) {
+    if( $product['status'] == 5 ) {
         show_system_message('产品已被删除', array());
         exit;
     }
@@ -947,7 +1020,7 @@ if( 'delete' == $act ) {
         show_system_message('产品不存在', array());
         exit;
     }
-    if( $product['status'] == 2 ) {
+    if( $product['status'] == 5 ) {
         show_system_message('产品已被删除', array());
         exit;
     }
@@ -977,7 +1050,7 @@ if( 'cycle' == $act ) {
         show_system_message('权限不足', array());
         exit;
     }
-    $and_where = ' and status = 2';
+    $and_where = ' and status = 5';
 
     $keyword = trim(getGET('keyword'));
     if( '' != $keyword ) {

@@ -8,8 +8,22 @@
  */
 include 'library/init.inc.php';
 //global $purview;
-//var_dump(json_encode($purview));exit;
-
+//$data = array(
+//    'name' => '超级管理员',
+//    'purview' => json_encode($purview),
+//);
+//$db->autoInsert('platform_role', array($data));
+//
+//$data = array(
+//    'account' => 'admin',
+//    'password' => md5('admin'.PASSWORD_END),
+//    'name' => '管理员',
+//    'email' => 'wrh4285@163.com',
+//    'sex' => 'M',
+//    'mobile' => '13662364285',
+//    'role_id' => 1,
+//);
+//$db->autoInsert('platform_admin', array($data));
 
 $template = 'index/';
 
@@ -28,27 +42,25 @@ if( 'login' == $opera ) {
     $account = trim(getPOST('account'));
     $password = trim(getPOST('password'));
 
-    if('' == $account)
-    {
+    if('' == $account) {
         $error['account'] = '账号不能为空';
     } else {
         $account = $db->escape(htmlspecialchars($account));
     }
 
-    if('' == $password)
-    {
+    if('' == $password) {
         $error['password'] = '密码不能为空';
     } else {
         $password = md5($password.PASSWORD_END);
     }
-    $checkAccount = 'select `password`,`role_id`,`name` from `'.DB_PREFIX.'admin` where `account`=\''.$account.'\' limit 1';
+    $checkAccount = 'select `password`,`role_id`,`name` from `'.DB_PREFIX.'platform_admin` where `account`=\''.$account.'\' limit 1';
     $admin = $db->fetchRow($checkAccount);
 
     if($admin)
     {
         if($password == $admin['password'])
         {
-            $getRole = 'select `purview` from `'.DB_PREFIX.'role` where `id`='.$admin['role_id'].' limit 1';
+            $getRole = 'select `purview` from `'.DB_PREFIX.'platform_role` where `id`='.$admin['role_id'].' limit 1';
             if($role = $db->fetchRow($getRole))
             {
                 $_SESSION['purview'] = $role['purview'];
@@ -109,7 +121,7 @@ if( 'logout' == $act ) {
 
 assign('error', $error);
 
-assign('pageTitle', $config['site_name']);
+assign('pageTitle', '三级分销系统-管理后台');
 $template .= $act.'.phtml';
 $smarty->display($template);
 

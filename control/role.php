@@ -39,7 +39,7 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    $get_role = 'select * from `'.DB_PREFIX.'role` where id = \''.$id.'\' limit 1';
+    $get_role = 'select * from `'.DB_PREFIX.'platform_role` where id = \''.$id.'\' limit 1';
     $role = $db->fetchRow($get_role);
     if( empty($role) ) {
         show_system_message('参数错误', array());
@@ -73,7 +73,7 @@ if( 'edit' == $opera ) {
     $order = '';
     $limit = '1';
 
-    if( $db->autoUpdate('role', $data, $where , $order, $limit) ) {
+    if( $db->autoUpdate('platform_role', $data, $where , $order, $limit) ) {
         show_system_message('修改管理员角色成功', array(array('alt'=>'查看管理员角色列表','link'=>'role.php')));
         exit;
     } else {
@@ -119,7 +119,7 @@ if('add' == $opera) {
         'purview' => json_encode($purview_value),
     );
 
-    if( $db->autoInsert('role', array($data)) ) {
+    if( $db->autoInsert('platform_role', array($data)) ) {
         show_system_message('新增管理员角色成功', array(array('alt'=>'查看管理员角色列表','link'=>'role.php')));
         exit;
     } else {
@@ -137,7 +137,7 @@ if( 'view' == $act ) {
         exit;
     }
 
-    $get_role_list = 'select `id`, `name` from `'.DB_PREFIX.'role` order by `id` asc';
+    $get_role_list = 'select `id`, `name` from `'.DB_PREFIX.'platform_role` order by `id` asc';
 
     $role_list = $db->fetchAll($get_role_list);
     assign('roleList', $role_list);
@@ -169,7 +169,7 @@ if( 'edit' == $act ) {
         exit;
     }
 
-    $get_role = 'select `id`,`name`,`purview` from `'.DB_PREFIX.'role` where `id`='.$id;
+    $get_role = 'select `id`,`name`,`purview` from `'.DB_PREFIX.'platform_role` where `id`='.$id;
     $role = $db->fetchRow($get_role);
     $role['purview'] = json_decode($role['purview']);
 
@@ -219,7 +219,7 @@ if( 'delete' == $act ) {
         exit;
     }
 
-    $get_role = 'select * from `'.DB_PREFIX.'role` where id = \''.$id.'\' limit 1';
+    $get_role = 'select * from `'.DB_PREFIX.'platform_role` where id = \''.$id.'\' limit 1';
     $role = $db->fetchRow($get_role);
     if( empty($role) ) {
         show_system_message('角色不存在', array());
@@ -231,7 +231,7 @@ if( 'delete' == $act ) {
         show_system_message('该角色还有管理员在使用，不能删除', array());
         exit;
     } else {
-        $delete_role = 'delete from `'.DB_PREFIX.'role` where `id`='.$id.' limit 1';
+        $delete_role = 'delete from `'.DB_PREFIX.'platform_role` where `id`='.$id.' limit 1';
         if( $db->delete($delete_role) ) {
             show_system_message('删除管理员角色成功', array(array('alt'=>'查看管理员角色', 'link'=>'role.php')));
             exit;

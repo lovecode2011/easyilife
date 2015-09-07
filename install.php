@@ -585,6 +585,23 @@ $sql[] = 'create table if not exists '.$db->table('address').' (
     index(`account`)
 ) default charset=utf8;';
 
+$table[] = '平台管理员';
+$sql[] = 'create table if not exists '.$db->table('platform_admin').' (
+    `account` varchar(255) not null primary key,
+    `password` varchar(255) not null,
+    `name` varchar(255) not null,
+    `email` varchar(255) not null,
+    `sex` char(2) not null default \'M\',
+    `mobile` varchar(255) not null,
+    `role_id` int not null
+) default charset=utf8;';
+
+$table[] = '平台角色';
+$sql[] = 'create table if not exists '.$db->table('platform_role').' (
+    `id` int not null auto_increment primary key,
+    `name` varchar(255) not null,
+    `purview` text not null
+) default charset=utf8;';
 
 
 echo '创建数据库表:<br/>';
