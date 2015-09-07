@@ -112,7 +112,7 @@ if( 'edit' == $opera ) {
     $order = '';
     $limit = '1';
 
-    if( $db->autoUpdate('admin', $data, $where, $order, $limit) ) {
+    if( $db->autoUpdate('platform_admin', $data, $where, $order, $limit) ) {
         show_system_message('修改管理员成功', array());
         exit;
     } else {
@@ -227,7 +227,7 @@ if( 'add' == $opera ) {
         'role_id' => $role_id,
     );
 
-    if($db->autoInsert('admin', array($data))) {
+    if($db->autoInsert('platform_admin', array($data))) {
         show_system_message('新增管理员成功', array(array('alt'=>'查看管理员列表', 'link'=>'adminUser.php')));
         exit;
     } else {
@@ -245,8 +245,8 @@ if( 'view' == $act ) {
         exit;
     }
 
-    $get_admin_list = 'select a.*, r.name as role_name from `'.DB_PREFIX.'admin` as a';
-    $get_admin_list .= ' left join '.DB_PREFIX.'role as r on a.role_id = r.id';
+    $get_admin_list = 'select a.*, r.name as role_name from `'.DB_PREFIX.'platform_admin` as a';
+    $get_admin_list .= ' left join '.DB_PREFIX.'platform_role as r on a.role_id = r.id';
 
     $admin_list = $db->fetchAll($get_admin_list);
     assign('adminList', $admin_list);
@@ -259,7 +259,7 @@ if( 'add' == $act ) {
         exit;
     }
 
-    $get_role_list = 'select `id`,`name` from `'.DB_PREFIX.'role` where `id`<>1 order by `id` asc';
+    $get_role_list = 'select `id`,`name` from `'.DB_PREFIX.'platform_role` where `id`<>1 order by `id` asc';
     $role_list = $db->fetchAll($get_role_list);
 
     if( empty($role_list) ) {
@@ -296,7 +296,7 @@ if( 'edit' == $act ) {
 
     assign('admin', $admin);
 
-    $get_role_list = 'select `id`,`name` from `'.DB_PREFIX.'role` where `id`<>1 order by `id` asc';
+    $get_role_list = 'select `id`,`name` from `'.DB_PREFIX.'platform_role` where `id`<>1 order by `id` asc';
     $role_list = $db->fetchAll($get_role_list);
 
     if( empty($role_list) ) {

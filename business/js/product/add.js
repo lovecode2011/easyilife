@@ -116,7 +116,7 @@ $(function() {
                 temp_array.shift().css('display', 'none').appendTo($('#show-attr-' + index + ' p.clear')[i]);
             }
 
-            $('#add-attr').hide();
+            //$('#add-attr').hide();
             $.modal.close();
             index++;
 
@@ -128,7 +128,7 @@ $(function() {
 
             $('.edit-attr').click(function() {
                 $('#modal-edit-product-attr .modal-body').empty();
-                $('.edit-attr').parent().prev().children().each(function() {
+                $(this).parent().prev().children().each(function() {
                     var temp = $(this).clone();
                     temp.children('.product-attribute').css('display', 'inline-block');
                     temp.children('.product-attribute').prev('em').css('display', 'none');

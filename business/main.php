@@ -18,7 +18,7 @@ $act = check_action($action, getGET('act'));
 $act = ( $act == '' ) ? 'view' : $act;
 //产品数量
 $get_product_count = 'select count(*) from '.$db->table('product');
-$get_product_count .= ' where `business_account` = \''.$_SESSION['business_account'].'\' and `status` <> 2';
+$get_product_count .= ' where `business_account` = \''.$_SESSION['business_account'].'\' and `status` <> 5';
 $product_count = $db->fetchOne($get_product_count);
 assign('product_count', $product_count);
 

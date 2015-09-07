@@ -8,8 +8,10 @@
         <h5 class="pull-left">产品管理</h5>
         <div class="pull-right">
             <a class="btn btn-primary" href="product.php">全部</a>&nbsp;
-            <a class="btn btn-primary" href="product.php?status=1">已上架</a>&nbsp;
-            <a class="btn btn-primary" href="product.php?status=2">已下架</a>&nbsp;
+            <a class="btn btn-primary" href="product.php?status=1">待发布</a>&nbsp;
+            <a class="btn btn-primary" href="product.php?status=2">待审核</a>&nbsp;
+            <a class="btn btn-primary" href="product.php?status=3">已上架</a>&nbsp;
+            <a class="btn btn-primary" href="product.php?status=4">已下架</a>&nbsp;
             <a class="btn btn-primary" href="?act=cycle">回收站</a></div>
         <div class="clear"></div>
     </div>
@@ -47,7 +49,7 @@
                 <th>分类</th>
                 <th>市场价</th>
                 <th>售价</th>
-                <th>是否上架</th>
+                <th>状态</th>
                 <th>排序</th>
                 <th class="text-right">操作</th>
             </tr>
@@ -68,12 +70,19 @@
                 <td>{$product.category_name}</td>
                 <td>{$product.shop_price}</td>
                 <td>{$product.price}</td>
-                <td>{$product.sales}</td>
+                <td>{$product.status_str}</td>
                 <td>{$product.order_view}</td>
                 <td class="text-right">
-                    <a onclick="javascript:if(confirm('确认要{$product.sales_str}？')) return true; else return false;" href="?act=sale&sn={$product.product_sn}">{$product.sales_str}</a>
-                    | <a href="?act=edit&sn={$product.product_sn}">编辑</a>
-                    | <a href="?act=gallery&sn={$product.product_sn}">上传图片</a>
+                    {if $product.status eq 1}
+                    <a onclick="javascript:if(confirm('确认要{$product.sales_str}？')) return true; else return false;" href="?act=release&sn={$product.product_sn}">{$product.sales_str}</a>|
+                    {/if}
+                    {if $product.status eq 3 || $product.status eq 4}
+                    <a onclick="javascript:if(confirm('确认要{$product.sales_str}？')) return true; else return false;" href="?act=sale&sn={$product.product_sn}">{$product.sales_str}</a>|
+                    {/if}
+                    {if $product.status neq 2}
+                    <a href="?act=edit&sn={$product.product_sn}">编辑</a>|
+                    {/if}
+                    <a href="?act=gallery&sn={$product.product_sn}">上传图片</a>
                     | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&&sn={$product.product_sn}">删除</a>
                 </td>
             </tr>

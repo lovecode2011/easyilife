@@ -62,9 +62,9 @@ $purview = array(
     //产品
     'pur_product' => array(
         'pur_product_view',
-        'pur_product_add',
-        'pur_product_edit',
-        'pur_product_del',
+        'pur_product_exam',
+//        'pur_product_edit',
+//        'pur_product_del',
     ),
 
     //产品分类
@@ -73,6 +73,30 @@ $purview = array(
         'pur_category_add',
         'pur_category_edit',
         'pur_category_del',
+    ),
+
+    //产品类型
+    'pur_type' => array(
+        'pur_type_view',
+        'pur_type_add',
+        'pur_type_edit',
+        'pur_type_del',
+    ),
+
+    //产品品牌
+    'pur_brand' => array(
+        'pur_brand_view',
+        'pur_brand_add',
+        'pur_brand_edit',
+        'pur_brand_del',
+    ),
+
+    //主营行业
+    'pur_industry' => array(
+        'pur_industry_view',
+        'pur_industry_add',
+        'pur_industry_edit',
+        'pur_industry_del',
     ),
 
 );
@@ -129,10 +153,10 @@ $L_purview = array(
     'pur_role_del'=>'删除管理员角色',
 
     'pur_product' => '产品管理',
-    'pur_product_add'=>'添加产品',
     'pur_product_view'=>'查看产品',
-    'pur_product_edit'=>'编辑产品',
-    'pur_product_del'=>'删除产品',
+    'pur_product_exam'=>'审核产品',
+//    'pur_product_edit'=>'编辑产品',
+//    'pur_product_del'=>'删除产品',
 
     'pur_self' => '个人信息',
     'pur_passwd_edit' => '密码修改',
@@ -148,11 +172,39 @@ $L_purview = array(
 
     'pur_stastics' => '站点统计',
     'pur_stastics_view' => '查看统计',
+
+    'pur_category' => '产品分类',
+    'pur_category_view' => '查看产品分类',
+    'pur_category_add' => '添加产品分类',
+    'pur_category_edit' => '编辑产品分类',
+    'pur_category_del' => '删除产品分类',
+
+    'pur_type' => '产品类型',
+    'pur_type_view' => '查看产品类型',
+    'pur_type_add' => '添加产品类型',
+    'pur_type_edit' => '编辑产品类型',
+    'pur_type_del' => '删除产品类型',
+
+    'pur_brand' => '产品品牌',
+    'pur_brand_view' => '查看产品品牌',
+    'pur_brand_add' => '添加产品品牌',
+    'pur_brand_edit' => '编辑产品品牌',
+    'pur_brand_del' => '删除产品品牌',
+
+    'pur_industry' => '主营行业',
+    'pur_industry_view' => '查看主营行业',
+    'pur_industry_add' => '添加主营行业',
+    'pur_industry_edit' => '编辑主营行业',
+    'pur_industry_del' => '删除主营行业',
 );
 
 global $menus;
 $menus = array(
     'pur_product' => array('url'=>'product.php', 'title'=>'产品管理', 'parent' => 'menu_product'),
+    'pur_category' => array('url'=>'category.php', 'title'=>'产品分类', 'parent'=>'menu_product'),
+    'pur_brand' => array('url'=>'brand.php', 'title'=>'产品品牌', 'parent'=>'menu_product'),
+    'pur_type' => array('url'=>'type.php', 'title'=>'产品类型', 'parent'=>'menu_product'),
+    'pur_industry' => array('url'=>'industry.php', 'title'=>'主营行业', 'parent'=>'menu_product'),
     'pur_member' => array('url'=>'member.php', 'title'=>'会员管理', 'parent' => 'menu_member'),
     'pur_account' => array('url'=>'account.php', 'title'=>'账户明细', 'parent' => 'menu_account'),
     'pur_withdraw' => array('url'=>'withdraw.php', 'title'=>'提现管理', 'parent' => 'menu_account'),
