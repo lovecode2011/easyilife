@@ -217,11 +217,11 @@ input,select,textarea{outline:none}
     line-height: 12px;
 }
 .hover{
-    color:#ffffff !important;
-    background: #22282e;
+    color:#333333!important;
+    background: #ececec;
 }
 
-.select-hover{s
+.select-hover{
     color:#ffffff !important;
     background: #22282e;
 }

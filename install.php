@@ -260,7 +260,10 @@ $sql[] = 'create table if not exists '.$db->table('member').' (
     `reward_amount` decimal(18,2) not null default \'0\',
     `parent_id` int not null default \'0\',
     `path` varchar(255),
-    `business_account` varchar(255)
+    `business_account` varchar(255),
+    `ticket` varchar(255),
+    `expired` int not null default \'0\',
+    `scene_id` int not null default \'0\'
 ) default charset=utf8;';
 
 $table[] = '订单';
