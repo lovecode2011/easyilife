@@ -60,7 +60,7 @@ if( 'add' == $opera ) {
     }
     $product_sn = $db->escape($product_sn);
 
-    $status = ( $status == 1 ) ? 1 : 0;
+    $status = ( $status == 1 ) ? 2 : 1;
 
     if( '' == $name ) {
         show_system_message('产品名称不能为空', array());

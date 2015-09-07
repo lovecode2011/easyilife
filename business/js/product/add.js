@@ -116,7 +116,7 @@ $(function() {
                 temp_array.shift().css('display', 'none').appendTo($('#show-attr-' + index + ' p.clear')[i]);
             }
 
-            $('#add-attr').hide();
+            //$('#add-attr').hide();
             $.modal.close();
             index++;
 
