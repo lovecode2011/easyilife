@@ -26,7 +26,6 @@ if( 'add' == $opera ) {
         exit;
     }
 
-    $product_sn = trim(getPOST('product_sn'));
     $status = intval(getPOST('status'));
     $name = trim(getPOST('name'));
     $category = intval(getPOST('category'));
@@ -53,12 +52,12 @@ if( 'add' == $opera ) {
 
     $inventory = getPOST('inventory');
     $attr = getPOST('attr');
-
-    if( '' == $product_sn ) {
-        show_system_message('产品编号不能为空', array());
-        exit;
-    }
-    $product_sn = $db->escape($product_sn);
+    do {
+        $sn = rand(100000, 999999);
+        $product_sn = 'EIF'.$sn;
+        $sql = 'select * from '.$db->table('product').' where product_sn = \''.$product_sn.'\'';
+        $exists = $db->fetchRow($sql);
+    } while( $exists );
 
     $status = ( $status == 1 ) ? 2 : 1;
 
@@ -471,7 +470,7 @@ if( 'gallery' == $opera ) {
     $product_sn = $db->escape($product_sn);
     $get_product = 'select a.* from '.$db->table('product').' as a';
     $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 2 limit 1';
+    $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 5 limit 1';
     $product = $db->fetchRow($get_product);
     if( !$product ) {
         show_system_message('产品不存在', array());
@@ -765,20 +764,20 @@ if( 'sale' == $act ) {
         show_system_message('产品已被删除', array());
         exit;
     }
-    $product_on_shelf = 'update '.$db->table('product').' set status = 1';
+    $product_on_shelf = 'update '.$db->table('product').' set status = 4, prev_status = 3';
     $product_on_shelf .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $product_on_shelf .= ' and product_sn = \''.$product_sn.'\' limit 1';
 
-    $product_off_shelf = 'update '.$db->table('product').' set status = 1';
+    $product_off_shelf = 'update '.$db->table('product').' set status = 3, prev_status = 4';
     $product_off_shelf .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $product_off_shelf .= ' and product_sn = \''.$product_sn.'\' limit 1';
 
-    if( $product['status'] == 0 ) {
+    if( $product['status'] == 3 ) {
         if( $db->update($product_on_shelf) ) {
             show_system_message('上架成功', array());
             exit;
         }
-    } else if( $product['status'] == 1 ) {
+    } else if( $product['status'] == 4 ) {
         if( $db->update($product_off_shelf) ) {
             show_system_message('下架成功', array());
             exit;
@@ -901,7 +900,7 @@ if( 'gallery' == $act ) {
 
     $get_product = 'select a.* from '.$db->table('product').' as a';
     $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 2 limit 1';
+    $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 5 limit 1';
     $product = $db->fetchRow($get_product);
     if( !$product ) {
         show_system_message('产品不存在', array());

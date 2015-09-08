@@ -13,8 +13,8 @@ back_base_init();
 $template = 'product/';
 assign('subTitle', '产品管理');
 
-$action = 'view|exam';
-$operation = '';
+$action = 'view|exam|reject';
+$operation = 'exam|reject';
 
 $act = check_action($action, getGET('act'));
 $act = ( $act == '' ) ? 'view' : $act;
@@ -22,16 +22,90 @@ $act = ( $act == '' ) ? 'view' : $act;
 $opera = check_action($operation, getPOST('opera'));
 //===========================================================================
 
-if( 'add' == $opera ) {
-    if( !check_purview('pur_product_add', $_SESSION['purview']) ) {
+if( 'exam' == $opera ) {
+    if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
         show_system_message('权限不足', array());
+        exit;
+    }
+    $id = intval(getPOST('id'));
+    if( 0 >= $id ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+
+    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 limit 1';
+    $product = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+
+    if( $product['status'] == 5 ) {
+        show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+
+    $update_product = 'update '.$db->table('product').' set ';
+    $update_product .= ' status = 3';
+    $update_product .= ' ,prev_status = 2';
+    $update_product .= ' where id = \''.$id.'\' limit 1';
+
+    if( $db->update($update_product) ) {
+
+        //系统通知商户===
+
+        //=============
+        show_system_message('产品通过审核', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    } else {
+        show_system_message('系统繁忙，请稍后重试', array(array('link' => 'product.php', 'alt' => '产品管理')));
         exit;
     }
 }
 
-if( 'edit' == $opera ) {
-    if( !check_purview('pur_product_edit', $_SESSION['purview']) ) {
+if( 'reject' == $opera ) {
+    if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
         show_system_message('权限不足', array());
+        exit;
+    }
+    $id = intval(getPOST('id'));
+    if( 0 >= $id ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $message = trim(getPOST('message'));
+    if( '' == $message ) {
+        show_system_message('请输入驳回理由', array());
+        exit;
+    }
+    $message = $db->escape($message);
+
+    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 limit 1';
+    $product = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+
+    if( $product['status'] == 5 ) {
+        show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+
+    $update_product = 'update '.$db->table('product').' set ';
+    $update_product .= ' status = 1';
+    $update_product .= ' ,prev_status = 2';
+    $update_product .= ' where id = \''.$id.'\' limit 1';
+
+    if( $db->update($update_product) ) {
+
+        //系统通知商户===
+
+        //=============
+        show_system_message('产品审核已驳回', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    } else {
+        show_system_message('系统繁忙，请稍后重试', array(array('link' => 'product.php', 'alt' => '产品管理')));
         exit;
     }
 }
@@ -130,16 +204,14 @@ if( 'exam' == $act ) {
     $product_sn = $db->escape($product_sn);
 
     $get_product = 'select a.*, b.attributes, b.inventory from '.$db->table('product').' as a';
-    $get_product .= ' left join '.$db->table('inventory').' as b on a.product_sn = b.product_sn';
-    $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status = 2 limit 1';
     $product = $db->fetchRow($get_product);
     if( !$product ) {
-        show_system_message('产品不存在', array());
+        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
         exit;
     }
     if( $product['status'] == 5 ) {
-        show_system_message('产品已被删除', array());
+        show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
         exit;
     }
 
@@ -197,11 +269,29 @@ if( 'exam' == $act ) {
     assign('brand_list', $brand_list);
 }
 
-if( 'delete' == $act ) {
-    if( !check_purview('pur_product_del', $_SESSION['purview']) ) {
+if( 'reject' == $act ) {
+    if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
+    $id = intval(getGET('id'));
+    if( 0 >= $id ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+
+    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 limit 1';
+    $product = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+
+    if( $product['status'] == 5 ) {
+        show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+    assign('id', $id);
 }
 
 
