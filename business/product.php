@@ -51,7 +51,7 @@ if( 'add' == $opera ) {
     $free_delivering = intval(getPOST('free_delivering'));
 
 
-    $inventory = intval(getPOST('inventory'));
+    $inventory = getPOST('inventory');
     $attr = getPOST('attr');
 
     if( '' == $product_sn ) {
@@ -209,36 +209,40 @@ if( 'add' == $opera ) {
         'free_delivery' => $free_delivering,
     );
     $table = 'product';
+    $db->begin();
+    $transaction = true;
+    if( !$db->autoInsert($table, array($data)) ) {
+        $transaction = false;
+    }
+    $links = array(
+        array('link' => 'product.php', 'alt' => '产品列表'),
+        array('link' => 'product.php?act=add', 'alt' => '继续添加'),
+    );
 
-    if( $db->autoInsert($table, array($data)) ) {
-        $links = array(
-            array('link' => 'product.php', 'alt' => '产品列表'),
-            array('link' => 'product.php?act=add', 'alt' => '继续添加'),
-        );
 
-
-        if( is_array($attr) ) {
-            foreach( $attr as $k => $v ) {
-                $attributes = json_encode($v);
-                $data = array(
-                    'product_sn' => $product_sn,
-                    'attributes' => $attributes,
-                    'inventory' => $inventory,
-                );
-                $table = 'inventory';
-                if( !$db->autoInsert($table, array($data)) ) {
-                    show_system_message('添加产品属性失败', $links);
-                }
+    if( is_array($attr) ) {
+        foreach( $attr as $k => $v ) {
+            $attributes = $db->escape(json_encode($v));
+            $data = array(
+                'product_sn' => $product_sn,
+                'attributes' => $attributes,
+                'inventory' => $inventory[$k],
+            );
+            $table = 'inventory';
+            if( !$db->autoInsert($table, array($data)) ) {
+                $transaction = false;
             }
         }
-        show_system_message('增加产品成功', $links);
-        exit;
+    }
 
-    } else {
+    if( $transaction == false ) {
+        $db->rollback();
         show_system_message('系统繁忙，请稍后重试', array());
         exit;
     }
-
+    $db->commit();
+    show_system_message('增加产品成功', $links);
+    exit;
 }
 
 if( 'edit' == $opera ) {
@@ -270,7 +274,6 @@ if( 'edit' == $opera ) {
     }
 
     $product_sn = trim(getPOST('product_sn'));
-    $status = intval(getPOST('status'));
     $name = trim(getPOST('name'));
     $category = intval(getPOST('category'));
     $product_type = intval(getPOST('type'));
@@ -292,18 +295,6 @@ if( 'edit' == $opera ) {
     $weight = intval(getPOST('weight'));
     $order_view = intval(getPOST('order_view'));
     $free_delivering = intval(getPOST('free_delivering'));
-
-
-    $inventory = intval(getPOST('inventory'));
-    $attr = getPOST('attr');
-
-    if( '' == $product_sn ) {
-        show_system_message('产品编号不能为空', array());
-        exit;
-    }
-    $product_sn = $db->escape($product_sn);
-
-    $status = ( $status == 1 ) ? 1 : 0;
 
     if( '' == $name ) {
         show_system_message('产品名称不能为空', array());
@@ -427,7 +418,6 @@ if( 'edit' == $opera ) {
     }
 
     $data = array(
-        'product_sn' => $product_sn,
         'name' => $name,
         'shop_price' => $shop_price,
         'price' => $shop_price,
@@ -440,7 +430,6 @@ if( 'edit' == $opera ) {
         'detail' => $detail,
         'category_id' => $category,
         'product_type_id' => $product_type,
-        'status' => $status,
         'promote_price' => $promote_price,
         'promote_begin' => $promote_begin,
         'promote_end' => $promote_end,
@@ -448,6 +437,7 @@ if( 'edit' == $opera ) {
         'brand_id' => $brand,
         'order_view' => $order_view,
         'free_delivery' => $free_delivering,
+        'status' => 2,
     );
     $table = 'product';
     $where = 'business_account = \''.$_SESSION['business_account'].'\' and id = \''.$id.'\'';
@@ -459,32 +449,6 @@ if( 'edit' == $opera ) {
             array('link' => 'product.php?act=add', 'alt' => '添加产品'),
         );
 
-
-        if( is_array($attr) ) {
-            foreach( $attr as $k => $v ) {
-                $attributes = json_encode($v);
-                $data = array(
-                    'product_sn' => $product_sn,
-                    'attributes' => $attributes,
-                    'inventory' => $inventory,
-                );
-                $table = 'inventory';
-                $where = 'product_sn = \''.$product['product_sn'].'\'';
-                if( !$db->autoUpdate($table, $data, $where, $order, $limit) ) {
-                    show_system_message('修改产品属性失败', $links);
-                }
-            }
-        } else {
-            $data = array(
-                'product_sn' => $product_sn,
-                'inventory' => $inventory,
-            );
-            $table = 'inventory';
-            $where = 'product_sn = \''.$product['product_sn'].'\'';
-            if( !$db->autoUpdate($table, $data, $where, $order, $limit) ) {
-                show_system_message('修改产品属性失败', $links);
-            }
-        }
         show_system_message('修改产品成功', $links);
         exit;
     } else {
@@ -838,8 +802,7 @@ if( 'edit' == $act ) {
     }
     $product_sn = $db->escape($product_sn);
 
-    $get_product = 'select a.*, b.attributes, b.inventory from '.$db->table('product').' as a';
-    $get_product .= ' left join '.$db->table('inventory').' as b on a.product_sn = b.product_sn';
+    $get_product = 'select a.* from '.$db->table('product').' as a';
     $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 2 limit 1';
     $product = $db->fetchRow($get_product);
@@ -859,9 +822,22 @@ if( 'edit' == $act ) {
     $product['promote_begin'] = ( $product['promote_begin'] ) ? date('Y-m-d H:i:s', $product['promote_begin']) : '';
     $product['promote_end'] = ( $product['promote_end'] ) ? date('Y-m-d H:i:s', $product['promote_end']) : '';
     $product['img_src'] = (file_exists('..'.$product['img'])) ? '..'.$product['img'] : $product['img'];
-
     assign('product', $product);
-    assign('attributes', $product['attributes']);
+
+
+    $get_attributes = 'select * from '.$db->table('inventory');
+    $get_attributes .= ' where product_sn = \''.$product_sn.'\'';
+    $product_attributes = $db->fetchAll($get_attributes);
+//    var_dump($product_attributes);exit;
+    if( $product_attributes ) {
+        foreach( $product_attributes as $key => $attributes ) {
+            $product_attributes[$key]['attributes'] = json_decode($attributes['attributes']);
+        }
+    } else {
+        $product_attributes = array();
+    }
+
+    assign('attributes', json_encode($product_attributes));
 
     $get_category_list = 'select * from '.$db->table('category');
     $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
@@ -1024,7 +1000,7 @@ if( 'delete' == $act ) {
         show_system_message('产品已被删除', array());
         exit;
     }
-    $update_product = 'update '.$db->table('product').' set status = 2';
+    $update_product = 'update '.$db->table('product').' set status = 5';
     $update_product .= ' where product_sn = \''.$product_sn.'\'';
     $update_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
     $update_product .= ' limit 1';
@@ -1169,12 +1145,12 @@ if( 'remove' == $act ) {
         show_system_message('产品不存在', array());
         exit;
     }
-    if( $product['status'] != 2 ) {
+    if( $product['status'] != 5 ) {
         show_system_message('产品未被删除', array(array('link' => 'product.php', 'alt' => '产品列表')));
         exit;
     }
 
-    $db->begin;
+    $db->begin();
     $transaction = true;
 
     $remove_product = 'delete from '.$db->table('product');

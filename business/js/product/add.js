@@ -52,6 +52,10 @@ $(function() {
                         }
                         temp += '</p>';
                     }
+                    temp += '<p>' +
+                    '<label class="l-title">库存</label>' +
+                    '<input class="text-input w50 product-attribute" type="text" name="inventory[' + index + ']" placeholder="请输入库存" label="库存">' +
+                    '</p>'
 
                     $('.modal-body').append(temp);
 
