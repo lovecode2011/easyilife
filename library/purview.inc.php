@@ -67,7 +67,7 @@ $purview = array(
 //        'pur_product_del',
     ),
 
-    //产品分类
+    //主营分类
     'pur_category' => array(
         'pur_category_view',
         'pur_category_add',
@@ -173,11 +173,11 @@ $L_purview = array(
     'pur_stastics' => '站点统计',
     'pur_stastics_view' => '查看统计',
 
-    'pur_category' => '产品分类',
-    'pur_category_view' => '查看产品分类',
-    'pur_category_add' => '添加产品分类',
-    'pur_category_edit' => '编辑产品分类',
-    'pur_category_del' => '删除产品分类',
+    'pur_category' => '主营分类',
+    'pur_category_view' => '查看主营分类',
+    'pur_category_add' => '添加主营分类',
+    'pur_category_edit' => '编辑主营分类',
+    'pur_category_del' => '删除主营分类',
 
     'pur_type' => '产品类型',
     'pur_type_view' => '查看产品类型',
@@ -201,9 +201,9 @@ $L_purview = array(
 global $menus;
 $menus = array(
     'pur_product' => array('url'=>'product.php', 'title'=>'产品管理', 'parent' => 'menu_product'),
-    'pur_category' => array('url'=>'category.php', 'title'=>'产品分类', 'parent'=>'menu_product'),
     'pur_brand' => array('url'=>'brand.php', 'title'=>'产品品牌', 'parent'=>'menu_product'),
     'pur_type' => array('url'=>'type.php', 'title'=>'产品类型', 'parent'=>'menu_product'),
+    'pur_category' => array('url'=>'category.php', 'title'=>'主营分类', 'parent'=>'menu_product'),
     'pur_industry' => array('url'=>'industry.php', 'title'=>'主营行业', 'parent'=>'menu_product'),
     'pur_member' => array('url'=>'member.php', 'title'=>'会员管理', 'parent' => 'menu_member'),
     'pur_account' => array('url'=>'account.php', 'title'=>'账户明细', 'parent' => 'menu_account'),

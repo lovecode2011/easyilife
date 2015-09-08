@@ -25,7 +25,7 @@ if( check_cross_domain() ) {
     exit;
 }
 
-$operation = 'order_detail';
+$operation = 'order_detail|edit_attr|add_attr|delete_attr';
 $opera = check_action($operation, getPOST('opera'));
 
 if( 'order_detail' == $opera ) {
@@ -98,4 +98,210 @@ if( 'order_detail' == $opera ) {
     ));exit;
 }
 
+//更新产品属性
+if( 'edit_attr' == $opera ) {
+    $product_sn = trim(getPOST('sn'));
+    $id = intval(getPOST('id'));
+    $inventory = intval(getPOST('inventory'));
+    $attr = trim(getPOST('attr'));
 
+    if( '' == $product_sn ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+    if( '' == $attr ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $attr = $db->escape($attr);
+
+    if( 0 >= $id ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+
+    $inventory = ( 0 > $inventory ) ? 0 : $inventory;
+
+    $get_product = 'select * from '.$db->table('product');
+    $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_product .= ' and product_sn = \''.$product_sn.'\' limit 1';
+
+    $product = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '产品不存在',
+        ));
+        exit;
+    }
+
+    $get_attribute = 'select * from '.$db->table('inventory');
+    $get_attribute .= ' where id = '.$id;
+    $get_attribute .= ' and product_sn = \''.$product_sn.'\' limit 1';
+
+    $attribute = $db->fetchRow($get_attribute);
+
+    $data = array(
+        'attributes' => $attr,
+//        'product_sn' => $product_sn,
+        'inventory' => $inventory,
+    );
+    $table = 'inventory';
+    $where = 'id = '.$id;
+
+    if( empty($attribute) ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '产品属性不存在',
+        ));
+        exit;
+    } else {
+        if( $db->autoUpdate($table, $data, $where, '', 1) ) {
+            echo json_encode(array(
+                'error' => 0,
+                'message' => '产品属性更新成功',
+            ));
+            exit;
+        } else {
+            echo json_encode(array(
+                'error' => 1,
+                'message' => '系统繁忙，请稍后重试',
+            ));
+            exit;
+        }
+    }
+}
+
+//增加产品属性
+if( 'add_attr' == $opera ) {
+    $product_sn = trim(getPOST('sn'));
+    $attr = trim(getPOST('attr'));
+    $inventory = intval(getPOST('inventory'));
+
+    if( '' == $product_sn ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+    if( '' == $attr ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $attr = $db->escape($attr);
+    $inventory = ( 0 > $inventory ) ? 0 : $inventory;
+
+    $data = array(
+        'product_sn' => $product_sn,
+        'attributes' => $attr,
+        'inventory' => $inventory,
+    );
+
+    if( $db->autoInsert('inventory', array($data)) ) {
+        echo json_encode(array(
+            'error' => 0,
+            'message' => '添加产品属性成功',
+            'id' => $db->get_last_id(),
+        ));
+        exit;
+    } else {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '系统繁忙，请稍后重试',
+        ));
+        exit;
+    }
+
+
+}
+
+//删除产品属性
+if( 'delete_attr' == $opera ) {
+    $product_sn = trim(getPOST('sn'));
+    $id = intval(getPOST('id'));
+    $inventory = intval(getPOST('inventory'));
+
+    if( '' == $product_sn ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+    if( 0 >= $id ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $inventory = ( 0 > $inventory ) ? 0 : $inventory;
+
+
+    $get_product = 'select * from '.$db->table('product');
+    $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_product .= ' and product_sn = \''.$product_sn.'\' limit 1';
+
+    $product = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '产品不存在',
+        ));
+        exit;
+    }
+
+    $get_attribute = 'select * from '.$db->table('inventory');
+    $get_attribute .= ' where id = '.$id;
+    $get_attribute .= ' and product_sn = \''.$product_sn.'\' limit 1';
+
+    $attribute = $db->fetchRow($get_attribute);
+    if( empty($attribute) ) {
+        echo json_encode(array(
+            'error' => 1,
+//            'message' => $get_attribute
+            'message' => '产品属性不存在',
+        ));
+        exit;
+    }
+
+    $delete_attribute = 'delete from '.$db->table('inventory');
+    $delete_attribute .= ' where id = '.$id;
+    $delete_attribute .= ' and product_sn = \''.$product_sn.'\' limit 1';
+
+    if( $db->delete($delete_attribute) ) {
+        echo json_encode(array(
+            'error' => 0,
+            'message' => '删除产品属性成功',
+        ));
+        exit;
+    } else {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '系统繁忙，请稍后重试',
+        ));
+        exit;
+    }
+}
+
+echo json_encode(array(
+    'error' => 1,
+    'message' => '系统繁忙，请稍后重试',
+));
+exit;
