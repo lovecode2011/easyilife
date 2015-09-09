@@ -334,10 +334,10 @@ if( 'auth' == $act ) {
     $industry_list = $db->fetchAll($get_industry_list);
     assign('industry_list', $industry_list);
 
-    $get_classification_list = 'select * from '.$db->table('classification');
-    $get_classification_list .= ' where 1 order by id asc';
-    $classification_list = $db->fetchAll($get_classification_list);
-    assign('classification_list', $classification_list);
+    $get_category_list = 'select * from '.$db->table('category');
+    $get_category_list .= ' where business_account = \'\' order by id asc';
+    $category_list = $db->fetchAll($get_category_list);
+    assign('category_list', $category_list);
 }
 $template .= $act.'.phtml';
 $smarty->display($template);

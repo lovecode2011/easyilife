@@ -2,7 +2,39 @@
 <body>
 {include file="library/navbar.lbi"}
 {include file="library/sidebar.lbi"}
+<!-- content -->
+<div id="content">
+    <div class="content-title">
+        <h5 class="pull-left">添加主营分类</h5>
+        <div class="clear"></div>
+    </div>
+    <div class="basicInfo-main">
+        <form id="categoryAddForm" method="post" action="">
+            <fieldset>
+                <p>
+                    <label class="l-title">分类名：</label>
+                    <input class="text-input w300" type="text" maxlength="64" id="category_name" name="category_name" value="" placeholder="请输入分类名"/>
+                </p>
+                <p>
+                    <label class="l-title">父级分类：</label>
+                    <select name="parent_id" class="w150">
+                        <option value="0">顶级分类</option>
+                        {foreach from=$category_list item=category}
+                        <option value="{$category.id}">{$category.name}</option>
+                        {/foreach}
+                    </select>
+                </p>
+                <p>
+                    <label class="l-title"></label>
+                    <button class="btn btn-primary" type="submit">保存</button>
+                    <input type="hidden" name="opera" value="add" />
+                </p>
 
+            </fieldset>
+        </form>
+    </div>
+</div>
+<!-- END content -->
 
 {include file="library/footer.lbi"}
 </body>

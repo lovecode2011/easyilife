@@ -30,8 +30,8 @@
                     <label class="l-title">主营分类：</label>
                     <select id="classification" name="classification" class="w150">
                         <option value="0">请选择分类</option>
-                        {foreach from=$classification_list item=classification}
-                        <option value="{$classification.id}" {if $business.category_id eq $classification.id}selected="selected"{/if}>{$classification.name}</option>
+                        {foreach from=$category_list item=category}
+                        <option value="{$category.id}" {if $business.category_id eq $category.id}selected="selected"{/if}>{$category.name}</option>
                         {/foreach}
                     </select>
                 </p>

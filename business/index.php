@@ -98,7 +98,7 @@ if( 'forget' == $opera ) {
 //登陆，默认
 if( 'login' == $act ) {
     //如果已登陆
-    if( check_admin_login() ) {
+    if( isset($_SESSION['business_account']) ) {
         redirect('main.php');
     }
 }
