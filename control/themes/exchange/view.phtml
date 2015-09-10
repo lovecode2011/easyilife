@@ -5,11 +5,11 @@
 <!-- content -->
 <div id="content">
     <div class="content-title">
-        <h5 class="pull-left">账户明细</h5>
-        <h5 class="pull-left">
-            账户余额:{$business.balance}
-        </h5>
-        <div class="pull-right"><a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>&nbsp;</div>
+        <h5 class="pull-left">商家交易</h5>
+        <div class="pull-right">
+            <a href="exchange.php?act=reward" class="btn btn-primary">会员佣金</a>
+            <a href="javascript:history.go(-1)" class="btn btn-primary">返回</a>
+        </div>
         <div class="clear"></div>
     </div>
     <div class="article-main-header">
@@ -38,26 +38,28 @@
         </form>
         <div class="clear"></div>
     </div>
-    <div class="article-main">
+    <div class="withdraw-record">
         <table class="table">
             <thead>
             <tr>
-                <th>交易时间</th>
+                <th>商家帐号</th>
                 <th>担保交易</th>
-                <th>余额</th>
+                <th>状态</th>
+                <th>结算时间</th>
+                <th>发放时间</th>
                 <th>备注</th>
-                <th>操作员</th>
             </tr>
             </thead>
             <tbody>
             {if $total neq 0}
-            {foreach from=$exchange_list item=exchange}
+            {foreach from=$trade_list item=trade}
             <tr>
-                <td>{$exchange.add_time_str}</td>
-                <td>{$exchange.trade}</td>
-                <td>{$exchange.balance}</td>
-                <td>{$exchange.remark}</td>
-                <td>{$exchange.operator}</td>
+                <td>{$trade.business_account}</td>
+                <td>{$trade.trade}</td>
+                <td>{$trade.status_str}</td>
+                <td>{$trade.settle_time_str}</td>
+                <td>{$trade.solve_time_str}</td>
+                <td>{$trade.remark}</td>
             </tr>
             {/foreach}
             {else}
@@ -75,7 +77,7 @@
             {/if}
             {/if}
             <tr>
-                <td colspan="7">
+                <td colspan="6">
                     <div class="pull-right">
                         <div class="pages">
                             <span>共有{$total}条，{$totalPage}页，每页显示：{$count}条</span>
@@ -111,6 +113,8 @@
             </tbody>
         </table>
     </div>
+
+
 </div>
 <!-- END content -->
 <!-- 日历控件 -->

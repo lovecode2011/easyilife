@@ -5,11 +5,11 @@
 <!-- content -->
 <div id="content">
     <div class="content-title">
-        <h5 class="pull-left">账户明细</h5>
-        <h5 class="pull-left">
-            账户余额:{$business.balance}
-        </h5>
-        <div class="pull-right"><a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>&nbsp;</div>
+        <h5 class="pull-left">会员佣金</h5>
+        <div class="pull-right">
+            <a href="exchange.php" class="btn btn-primary">商家交易</a>
+            <a href="javascript:history.go(-1)" class="btn btn-primary">返回</a>
+        </div>
         <div class="clear"></div>
     </div>
     <div class="article-main-header">
@@ -38,32 +38,36 @@
         </form>
         <div class="clear"></div>
     </div>
-    <div class="article-main">
+    <div class="withdraw-record">
         <table class="table">
             <thead>
             <tr>
-                <th>交易时间</th>
-                <th>担保交易</th>
-                <th>余额</th>
+                <th>会员帐号</th>
+                <th>返利</th>
+                <th>积分</th>
+                <th>状态</th>
+                <th>结算时间</th>
+                <th>发放时间</th>
                 <th>备注</th>
-                <th>操作员</th>
             </tr>
             </thead>
             <tbody>
             {if $total neq 0}
-            {foreach from=$exchange_list item=exchange}
+            {foreach from=$member_reward_list item=member_reward}
             <tr>
-                <td>{$exchange.add_time_str}</td>
-                <td>{$exchange.trade}</td>
-                <td>{$exchange.balance}</td>
-                <td>{$exchange.remark}</td>
-                <td>{$exchange.operator}</td>
+                <td>{$member_reward.account}</td>
+                <td>{$member_reward.reward}</td>
+                <td>{$member_reward.integral}</td>
+                <td>{$member_reward.status_str}</td>
+                <td>{$member_reward.settle_time_str}</td>
+                <td>{$member_reward.solve_time_str}</td>
+                <td>{$member_reward.remark}</td>
             </tr>
             {/foreach}
             {else}
             {if $st eq '' && $et eq ''}
             <tr>
-                <td style="padding: 50px 0" colspan="5" align="center">未有交易产生！</td>
+                <td style="padding: 50px 0" colspan="7" align="center">未有交易产生！</td>
             </tr>
             {else}
             <tr>
@@ -111,6 +115,8 @@
             </tbody>
         </table>
     </div>
+
+
 </div>
 <!-- END content -->
 <!-- 日历控件 -->

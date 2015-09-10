@@ -5,11 +5,12 @@
 <!-- content -->
 <div id="content">
     <div class="content-title">
-        <h5 class="pull-left">账户明细</h5>
-        <h5 class="pull-left">
-            账户余额:{$business.balance}
-        </h5>
-        <div class="pull-right"><a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>&nbsp;</div>
+        <h5 class="pull-left">{if $type eq 0}会员-{else}商户-{/if}提现记录</h5>
+        <div class="pull-right">
+            <a href="withdraw.php?type=0" class="btn btn-primary">会员</a>
+            <a href="withdraw.php?type=1" class="btn btn-primary">商户</a>
+            <a href="withdraw.php?act=log" class="btn btn-primary">提现日志</a>
+        </div>
         <div class="clear"></div>
     </div>
     <div class="article-main-header">
@@ -32,58 +33,57 @@
                 <label>结束日期：</label>
                 <input class="text-input w150" type="text" id="" name="et" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD'})"{/literal} value="{$et}">&nbsp;
                 <button type="submit" class="btn btn-default">搜索</button>
+                <input type="hidden" name="type" value="{$type}"/>
             </div>
             </p>
         </fieldset>
         </form>
         <div class="clear"></div>
     </div>
-    <div class="article-main">
+    <div class="withdraw-record">
         <table class="table">
             <thead>
             <tr>
-                <th>交易时间</th>
-                <th>担保交易</th>
-                <th>余额</th>
+                <th>流水号</th>
+                <th>帐号</th>
+                <th>银行帐号</th>
+                <th>金额</th>
+                <th>手续费</th>
+                <th>是否到帐</th>
+                <th>申请时间</th>
                 <th>备注</th>
-                <th>操作员</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
-            {if $total neq 0}
-            {foreach from=$exchange_list item=exchange}
+            {foreach from=$withdraw_list item=withdraw}
             <tr>
-                <td>{$exchange.add_time_str}</td>
-                <td>{$exchange.trade}</td>
-                <td>{$exchange.balance}</td>
-                <td>{$exchange.remark}</td>
-                <td>{$exchange.operator}</td>
-            </tr>
-            {/foreach}
-            {else}
-            {if $st eq '' && $et eq ''}
-            <tr>
-                <td style="padding: 50px 0" colspan="5" align="center">未有交易产生！</td>
-            </tr>
-            {else}
-            <tr>
-                <td style="padding: 50px 0" colspan="7" align="center">
-                    <span class="text-size-24 blue icon-info-1" style="vertical-align: middle"></span>
-                    <div class="text-size-18 tip-text inline-block">没有查询到符合条件的记录</div>
+                <td>{$withdraw.withdraw_sn}</td>
+                <td>{if $type eq 0}{$withdraw.account}{else}{$withdraw.business_account}{/if}</td>
+                <td>{$withdraw.bank}<br />{$withdraw.bank_card}<br />{$withdraw.bank_account}</td>
+                <td>{$withdraw.amount}</td>
+                <td>{$withdraw.fee}</td>
+                <td>{$withdraw.status_str}</td>
+                <td>{$withdraw.add_time_str}</td>
+                <td>{$withdraw.remark}</td>
+                <td>
+                    {if $withdraw.status eq 0}
+                    <a href="?act=edit&sn={$withdraw.withdraw_sn}&type={$type}" onclick="javascript:if(confirm('确认已到帐？')) return true; else return false;">到帐</a> |
+                    <a href="?act=delete&sn={$withdraw.withdraw_sn}&type={$type}"  onclick="javascript:if(confirm('确认要删除？')) return true; else return false;">删除</a>
+                    {/if}
                 </td>
             </tr>
-            {/if}
-            {/if}
+            {/foreach}
             <tr>
-                <td colspan="7">
+                <td colspan="9">
                     <div class="pull-right">
                         <div class="pages">
                             <span>共有{$total}条，{$totalPage}页，每页显示：{$count}条</span>
                             {if $go_first}
-                            <a href="?page=1&st={$st}&count={$count}&et={$et}">首页</a>
+                            <a href="?page=1&st={$st}&count={$count}&et={$et}&type={$type}">首页</a>
                             {/if}
                             {if $has_prev}
-                            <a href="?page={$page - 1}&st={$st}&count={$count}&et={$et}">上一页</a>
+                            <a href="?page={$page - 1}&st={$st}&count={$count}&et={$et}&type={$type}">上一页</a>
                             {/if}
                             {if $has_many_prev}
                             ...
@@ -92,17 +92,17 @@
                             {if $pageNum eq $page}
                             <b>{$page}</b>
                             {else}
-                            <a href="?page={$pageNum}&st={$st}&count={$count}&et={$et}">{$pageNum}</a>
+                            <a href="?page={$pageNum}&st={$st}&count={$count}&et={$et}&type={$type}">{$pageNum}</a>
                             {/if}
                             {/foreach}
                             {if $has_many_next}
                             ...
                             {/if}
                             {if $go_last}
-                            <a href="?page={$totalPage}&st={$st}&count={$count}&et={$et}">末页</a>
+                            <a href="?page={$totalPage}&st={$st}&count={$count}&et={$et}&type={$type}">末页</a>
                             {/if}
                             {if $has_next}
-                            <a href="?page={$page + 1}&st={$st}&count={$count}&et={$et}">下一页</a>
+                            <a href="?page={$page + 1}&st={$st}&count={$count}&et={$et}&type={$type}">下一页</a>
                             {/if}
                         </div>
                     </div>
@@ -111,6 +111,8 @@
             </tbody>
         </table>
     </div>
+
+
 </div>
 <!-- END content -->
 <!-- 日历控件 -->
@@ -123,6 +125,7 @@
     {/literal}
 </script>
 <!-- END 日历控件 -->
+
 {include file="library/footer.lbi"}
 </body>
 </html>
