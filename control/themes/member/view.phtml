@@ -40,6 +40,7 @@
                 <th>ID</th>
                 <th>昵称</th>
                 <th>帐号</th>
+                <th>性别</th>
                 <th>手机</th>
                 <th>邮箱</th>
                 <th>是否关注</th>
@@ -48,31 +49,34 @@
             </thead>
             <tbody>
             {if $total neq 0}
-            {foreach from=$contentList item=content}
+            {foreach from=$member_list item=member}
             <tr>
-                <td>{$content.id}</td>
-                <td>{$content.title}</td>
-                <td>
-                    {if $content.original neq ''}
-                    <img width="80" height="60" src="../{$content.original}" alt=""/>
+                <td>{$member.id}</td>
+                <td>{$member.nickname}</td>
+                <td>{$member.account}</td>
+                <td>{$member.sex}</td>
+                <td>{$member.mobile}</td>
+                <td>{$member.email}</td>
+                <td>{$member.subscribed}</td>
+                <td class="text-right">
+                    <a href="?act=network&account={$member.account}">查看</a>
+                    | <a href="?act=edit&account={$member.account}">编辑</a>
+                    {if $member.status eq 1}
+                    | <a onclick="javascript:if(confirm('确认要拉黑？')) return true; else return false;" href="?act=delete&account={$member.account}">拉黑</a></td>
                     {else}
-                    <img width="80" height="60" src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt=""/>
+                    | <a onclick="javascript:if(confirm('确认要撤销拉黑？')) return true; else return false;" href="?act=revoke&account={$member.account}">撤销</a></td>
+
                     {/if}
-                </td>
-                <td>{$content.section_name}</td>
-                <td>{$content.author}</td>
-                <td>{$content.add_time}</td>
-                <td class="text-right"><a href="../article.php?id={$content.id}">查看</a> |  <a href="?act=edit&id={$content.id}">编辑</a> | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&id={$content.id}">删除</a></td>
             </tr>
             {/foreach}
             {else}
             <tr>
-                <td style="padding: 50px 0" colspan="7" align="center">您还没有会员</td>
+                <td style="padding: 50px 0" colspan="8" align="center">您还没有会员</td>
             </tr>
             {/if}
 
             <tr>
-                <td colspan="7">
+                <td colspan="8">
                     <div class="pull-right">
                         <div class="pages">
                             <span>共有{$total}条，{$totalPage}页，每页显示：{$count}条</span>
@@ -110,7 +114,13 @@
     </div>
 </div>
 <!-- END content -->
-
+<script type="text/javascript">
+    $(function(){
+        $('select[name=count]').change(function(){
+            window.location.href="member.php?count="+$(this).val();
+        });
+    });
+</script>
 
 {include file="library/footer.lbi"}
 </body>

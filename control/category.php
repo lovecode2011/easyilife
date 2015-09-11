@@ -42,13 +42,16 @@ if( 'add' == $opera ) {
         exit;
     }
 
+    $img = trim(getPOST('img'));
+    $img = $db->escape($img);
+
     $data = array(
         'name' => $name,
         'business_account' => '',
         'parent_id' => $parent_id,
         'price_filter' => 3,
         'path' => '',
-        'icon' => '',
+        'icon' => $img,
         'search_brand' => 1,
     );
 
@@ -130,6 +133,8 @@ if( 'edit' == $opera ) {
         $path = $parent_path.$id.',';
     }
 
+    $img = trim(getPOST('img'));
+    $img = $db->escape($img);
 
     $data = array(
         'name' => $name,
@@ -137,7 +142,7 @@ if( 'edit' == $opera ) {
         'parent_id' => $parent_id,
         'price_filter' => 3,
         'path' => $path,
-        'icon' => '',
+        'icon' => $img,
         'search_brand' => 1,
     );
 
@@ -186,7 +191,6 @@ if( 'view' == $act ) {
                 while ($count--) {
                     $temp = '&nbsp;&nbsp;' . $temp;
                 }
-
                 $category['name'] = $temp;
             }
             $category_list[$key] = $category;

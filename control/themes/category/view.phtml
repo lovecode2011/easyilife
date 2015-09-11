@@ -22,8 +22,8 @@
             <tbody>
             {if $category_list}
             {foreach from=$category_list item=category}
-            <tr>
-                <td>{$category.name}</td>
+            <tr id="cate-{$category.id}" {if $category.parent_id neq 0}class="children-{$category.parent_id} children" style="display: "{else}class="top"{/if}>
+                <td class="cate-name" style="cursor: pointer;">{$category.name}</td>
                 <td class="text-right"><a href="?act=edit&id={$category.id}">编辑</a> | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&id={$category.id}">删除</a></td>
             </tr>
             {/foreach}

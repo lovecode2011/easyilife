@@ -121,7 +121,7 @@ if( 'withdraw' == $opera ) {
         $data = array(
             'business_account' => $_SESSION['business_account'],
             'balance' => $business['balance'] - $amount,
-            'trade' => $business['trade'],
+            'trade' => 0,
             'add_time' => time(),
             'remark' => '冻结提现资金:'.$amount,
             'operator' => $_SESSION['business_admin'],
