@@ -248,29 +248,47 @@ if( 'network' == $act ) {
     if( !empty($grand) ) {
         $data = array(
             'name' => '上上家-'.$grand['account'],
+            'account' => $grand['account'],
+            'parentId' => $grand['parent_id'],
+            'isParent' => true,
             'open' => true,
         );
         $data['children'] = array(array(
             'name' => '上家-'.$parent['account'],
+            'account' => $parent['account'],
+            'parentId' => $parent['parent_id'],
+            'isParent' => true,
             'open' => true,
             'children' => array(array(
                 'name' => $member['account'],
+                'account' => $member['account'],
+                'parentId' => $member['parent_id'],
+                'isParent' => true,
             )),
         ));
     } else if( !empty($parent) ) {
         $data = array(
             'name' => '上家-'.$parent['account'],
+            'account' => $parent['account'],
+            'parentId' => $parent['parent_id'],
+            'isParent' => true,
             'open' => true,
             'children' => array(array(
                 'name' => $member['account'],
+                'account' => $member['account'],
+                'parentId' => $member['parent_id'],
+                'isParent' => true,
             )),
         );
     } else {
         $data = array(
             'name' => $member['account'],
+            'account' => $member['account'],
+            'parentId' => $member['parent_id'],
+            'isParent' => true,
         );
     }
-
+    assign('account', $member['account']);
     assign('data', json_encode(array($data)));
 
 }

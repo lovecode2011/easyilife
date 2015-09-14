@@ -21,10 +21,33 @@
 </div>
 <script type="text/javascript" src="js/jquery.ztree.core-3.5.min.js"></script>
 <script type="text/javascript">
-    var setting = {	};
+    var account = "{$account}";
+    var zNodes = {$data};
+    {literal}
+    var setting = {
+        async: {
+            enable: true,
+            url:"ajax.php",
+            autoParam:["account"],
+            otherParam:{"current":account,"opera":"get_children"},
+            dataFilter: filter
+        }
+    };
+
+    function filter(treeId, parentNode, responseData) {
+        console.log(treeId);
+        console.log(responseData.data);
+        if ( responseData.error ) {
+            alert(responseData.message);
+            return null;
+        }
+        return responseData.data;
+    }
+
     $(document).ready(function(){
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
     });
+    {/literal}
 </script>
 {include file="library/footer.lbi"}
 </body>
