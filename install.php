@@ -473,6 +473,7 @@ $sql[] = 'create table if not exists '.$db->table('product').' (
     `category_id` int not null,
     `product_type_id` int not null,
     `status` int not null default \'0\',
+    `prev_status` int not null default \'0\',
     `promote_price` decimal(18,2) not null,
     `promote_begin` int,
     `promote_end` int,

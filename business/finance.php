@@ -88,9 +88,9 @@ if( 'withdraw' == $opera ) {
         'fee' => $fee,
         'add_time' => $add_time,
         'remark' => $remark,
-        'account' => $business['account'],
+        'business_account' => $_SESSION['business_account'],
     );
-    $table = 'withdraw';
+    $table = 'business_withdraw';
     if( !$db->autoInsert($table, array($data))) {
         $transaction = false;
     }
@@ -110,13 +110,25 @@ if( 'withdraw' == $opera ) {
 
         $data = array(
             'add_time' => $add_time,
-            'operator' => $_SESSION['business_account'],
+            'operator' => $_SESSION['business_admin'],
             'withdraw_sn' => $withdraw_sn,
             'status' => 0,
-            'remark' => $remark,
+            'remark' => '申请提现',
         );
-        $table = 'withdraw_log';
+        $table = 'business_withdraw_log';
         $db->autoInsert($table, array($data));
+
+        $data = array(
+            'business_account' => $_SESSION['business_account'],
+            'balance' => $business['balance'] - $amount,
+            'trade' => 0,
+            'add_time' => time(),
+            'remark' => '冻结提现资金:'.$amount,
+            'operator' => $_SESSION['business_admin'],
+        );
+        $table= 'business_exchange_log';
+        $db->autoInsert($table, array($data));
+
         show_system_message('您的提现申请已提交', array());
         exit;
     } else {
@@ -232,8 +244,8 @@ if( 'record' == $act ) {
 
     $page = intval(getGET('page'));
     $count = intval(getGET('count'));
-    $getTotal = 'select count(*) from '.$db->table('withdraw');
-    $getTotal .= ' where account = \''.$business['account'].'\'';
+    $getTotal = 'select count(*) from '.$db->table('business_withdraw');
+    $getTotal .= ' where account = \''.$_SESSION['business_account'].'\'';
     $total = $db->fetchOne($getTotal);
 
     $count = intval(getGET('count'));
@@ -244,8 +256,8 @@ if( 'record' == $act ) {
     $page = ( 0 >= $page ) ? 1 : $page;
     $offset = ( $page - 1 ) * $count;
 
-    $get_withdraw_list = 'select * from '.$db->table('withdraw');
-    $get_withdraw_list .= ' where `account` = \''.$business['account'].'\'';
+    $get_withdraw_list = 'select * from '.$db->table('business_withdraw');
+    $get_withdraw_list .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
     $get_withdraw_list .= ' order by add_time desc';
     $get_withdraw_list .= ' limit '.$offset.','.$count;
     $withdraw_list = $db->fetchAll($get_withdraw_list);

@@ -85,7 +85,7 @@ if( 'add' == $opera ) {
         $update_category = 'update '.$db->table($table).' set `path`=\''.$path.'\' where `id`='.$id.' limit 1';
         if( $db->update($update_category) ) {
             $links = array(
-                array('alt'=>'查看产品分类', 'link'=>'category.php?act=list'),
+                array('alt'=>'查看产品分类', 'link'=>'category.php'),
                 array('alt'=>'继续添加产品分类', 'link'=>'category.php?act=add')
             );
             show_system_message('添加产品分类成功', $links);
@@ -283,7 +283,7 @@ if( 'edit' == $act ) {
     assign('category', $category);
 
     $get_category_list = 'select * from '.$db->table('category');
-    $get_category_list .= ' where id <> \''.$id.'\' and path not like \''.$category['path'].'%\'';
+    $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\' and id <> \''.$id.'\' and path not like \''.$category['path'].'%\'';
 
     $category_list = $db->fetchAll($get_category_list);
 
