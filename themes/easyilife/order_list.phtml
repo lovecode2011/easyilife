@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>生活圈移动商城</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="生活圈移动商城">
+    <link rel="apple-touch-icon-precomposed" href="{$template_dir}images/touch/touch-icon-iphone.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{$template_dir}images/touch/touch-icon-ipad.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{$template_dir}images/touch/touch-icon-iphone4.png">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="{$template_dir}css/common.css">
+    <link rel="stylesheet" href="{$template_dir}css/mobile.css">
+    <link rel="stylesheet" href="{$template_dir}css/fonts.css">
+</head>
+<body>
+<header class="header" style="position:fixed;">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1><em>我的订单</em></h1>
+</header>
+<!-- 筛选导航栏-->
+<nav class="ol_select_bar" style="position: fixed;">
+    <ul>
+        <a href="?status=0" {if $status eq 0}class="hover"{/if}><li>全部</li></a>
+        <a href="?status=1" {if $status eq 1}class="hover"{/if}><li>待付款</li></a>
+        <a href="?status=6" {if $status eq 6}class="hover"{/if}><li>待收货</li></a>
+        <a href="?status=7" {if $status eq 7}class="hover"{/if}><li>待评价</li></a>
+    </ul>
+</nav>
+
+<!-- 订单列表 -->
+<section class="order-list" style="padding-top: 4rem;">
+    {foreach from=$order_list item=order}
+    <div class="block">
+        <div class="order_list">
+            <!--非当当自营显示店铺入口-->
+            <div class="shop_title">
+                <a href="order.php?act=detail&sn={$order.order_sn}">
+                    <!--店铺名称-->
+                    <div class="fl">
+                        {$order.order_sn}
+                    </div>
+                    <span class="fr right_arrow"></span>
+                </a>
+
+            </div>
+            <!--分包商品信息-->
+            <div class="cart_item prd_ebook">
+                {foreach from=$order.order_detail item=od}
+                <a href="product.php?id={$od.id}">
+                    <!--电子书加签-->
+                    <!--包裹图片-->
+                    <img src="{$od.img}" class="fl pro_pic">
+                    <!--包裹详情-->
+                    <div class="detail">
+                        <!--包裹状态-->
+                        <div class="fr prd_state">
+                            <!--状态文字-->
+                            <div class="prd_state_title">
+                                {$order.show_status}
+                            </div>
+                        </div>
+                        <!--包裹名称显示，多件产品，显示包裹编号，一件产品显示产品名称-->
+                        <p class="fl prd_tit">
+                            {$od.product_name}
+                        </p>
+                        <p class="fl prd_tit">
+                            <br/>
+                            {$od.product_attributes}
+                        </p>
+                    </div>
+                </a>
+                {/foreach}
+                <!--数量价格信息-->
+                <div class="detail2">
+                    共<span>{count($order.order_detail)}</span>件商品
+                    <span>　总价：</span><span class="order_price">￥{$order.amount}</span>
+                </div>
+                <!--操作按键-->
+                <!--
+                <div class="detail3">
+                    <a href="#" class="orange_hollow">立即支付</a>
+                    <a href="#">取消订单</a>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+    {/foreach}
+</section>
+<div style="height: 2.8rem;"></div>
+<!-- 底部菜单 -->
+<section class="menu">
+    <ul>
+        <li><a href="index.php"><em class="icon">&#xe601;</em><span>首页</span></a></li>
+        <li><a href="category.php"><em class="icon">&#xe603;</em><span>分类</span></a></li>
+        <li><a href="cart.php"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
+        <li><a class="active" href="#"><em class="icon">&#xe600;</em><span>我</span></a></li>
+    </ul>
+</section>
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+
+</body>
+</html>

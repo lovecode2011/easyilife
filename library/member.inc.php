@@ -7,6 +7,125 @@
  * Time: 下午10:12
  */
 
+ /**
+ * 账户明细
+ * @param string $account
+ * @param float $balance
+ * @param float $reward
+ * @param float $integral
+ * @param float $integral_await
+ * @param float $reward_await
+ * @param string $operator
+ * @param string $remark
+ * @return bool
+ */
+ function add_memeber_exchange_log($account, $balance, $reward, $integral, $integral_await, $reward_await, $operator, $remark = '')
+ {
+    global $db;
+
+    $exchange_data = array(
+        'account' => $account,
+        'balance' => $balance,
+        'reward' => $reward,
+        'integral' => $integral,
+        'integral_await' => $integral_await,
+        'reward_await' => $reward_await,
+        'operator' => $operator,
+        'remark' => $remark,
+        'add_time' => time()
+    );
+
+    $db->begin();
+
+    //更新用户账户
+    $update_user = 'update '.$db->table('member').' set `balance`=`balance`+'.$balance.',`reward`=`reward`+'.$reward.','.
+                   '`integral`=`integral`+'.$integral.',`integral_await`=`integral_await`+'.$integral_await.','.
+                   '`reward_await`=`reward_await`+'.$reward_await.' where `account`=\''.$account.'\'';
+    if($db->update($update_user))
+    {
+        if($db->autoInsert('member_exchange_log', array($exchange_data)))
+        {
+            $db->commit();
+            return true;
+        }
+    }
+
+    $db->rollback();
+    return false;
+ }
+
+/**
+ * 修改收货地址
+ * @param int $province
+ * @param int $city
+ * @param int $district
+ * @param int $group
+ * @param string $address
+ * @param string $consignee
+ * @param string $mobile
+ * @param string $zipcode
+ * @param string $account
+ * @param bool $is_default
+ * @param int $id
+ * @return bool
+ */
+ function edit_address($province, $city, $district, $group, $address, $consignee, $mobile, $zipcode, $account, $is_default, $id)
+ {
+    global $db;
+
+    $address_data = array(
+        'province' => $province,
+        'city' => $city,
+        'district' => $district,
+        'group' => $group,
+        'address' => $address,
+        'consignee' => $consignee,
+        'mobile' => $mobile,
+        'zipcode' => $zipcode,
+        'is_default' => $is_default
+    );
+
+    return $db->autoUpdate('address', $address_data, '`id`='.$id.' and `account`=\''.$account.'\'');
+ }
+
+/**
+ * 新增收货地址
+ * @param int $province
+ * @param int $city
+ * @param int $district
+ * @param int $group
+ * @param string $address
+ * @param string $consignee
+ * @param string $mobile
+ * @param string $zipcode
+ * @param string $account
+ * @param bool $is_default
+ * @return int
+ */
+ function add_address($province, $city, $district, $group, $address, $consignee, $mobile, $zipcode, $account, $is_default = true)
+ {
+    global $db;
+
+    $address_data = array(
+        'province' => $province,
+        'city' => $city,
+        'district' => $district,
+        'group' => $group,
+        'address' => $address,
+        'consignee' => $consignee,
+        'mobile' => $mobile,
+        'zipcode' => $zipcode,
+        'account' => $account,
+        'is_default' => $is_default
+    );
+
+    if($db->autoInsert('address', array($address_data)))
+    {
+        return $db->get_last_id();
+    } else {
+        return false;
+    }
+ }
 /**
  * 取消分销产品
  * @param string $account
@@ -223,3 +342,15 @@
 
     return $account;
  }
+
+/**
+ * 发放推广积分
+ * @param $account
+ * @param $integral
+ * @param $remark
+ * @return bool
+ */
+function add_recommend_integral($account, $integral, $remark = '', $operator = 'settle')
+{
+    return add_memeber_exchange_log($account, 0, 0, $integral, 0,0, $operator, $remark);
+}

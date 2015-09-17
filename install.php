@@ -425,6 +425,8 @@ $sql[] = 'create table if not exists '.$db->table('cart').' (
     `number` int not null,
     `business_account` varchar(255) not null,
     `add_time` int not null,
+    `attributes` varchar(255),
+    `checked` tinyint(1) not null default \'1\',
     index (`openid`),
     index (`account`),
     index (`business_account`)
@@ -604,6 +606,13 @@ $sql[] = 'create table if not exists '.$db->table('platform_role').' (
     `id` int not null auto_increment primary key,
     `name` varchar(255) not null,
     `purview` text not null
+) default charset=utf8;';
+
+$table[] = '卡好池';
+$sql[] = 'create table if not exists '.$db->table('card_pool').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `status` int not null default \'1\'
 ) default charset=utf8;';
 
 

@@ -22,6 +22,28 @@ function is_weixin()
 	return false;
 }
 
+/*
+ * 非授权的方式获取用户信息
+ */
+function get_user_wechat_info($access_token, $openid)
+{
+    global $db;
+
+    $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN';
+    $url = sprintf($url, $access_token, $openid);
+
+    $user_info = get($url);
+
+    $user_info = json_decode($user_info);
+    $data = array(
+        'nickname' => $user_info->nickname,
+        'headimg' => $user_info->headimgurl,
+        'unionid' => $user_info->unionid
+    );
+
+    return $db->autoUpdate('member', $data, '`openid`=\''.$openid.'\'');
+}
+
  //获取用户信息
  /**
  * @param string code

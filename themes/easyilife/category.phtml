@@ -28,600 +28,46 @@
             <div class="text_box" name="search_box" title="搜索框" onclick="return 1;"><input id="_keyword" type="text" class="text" placeholder="搜索商品、品牌、种类" onkeydown="this.style.color='#404040'"></div>
             <input type="submit" value="" class="submit">
         </div>
-        <a href="javascript:void(0);" class="header_qr"></a>
+        <!--<a href="javascript:void(0);" class="header_qr"></a>-->
     </div>
     <div class="main_box">
         <nav class="class_list_nav">
             <div class="class_list_nav_box" id="class_list_nav_box" title="一级分类" style="overflow: hidden;">
                 <ul style="transition-property: transform; transform-origin: 0px 0px 0px; transform: translate(0px, 0px) scale(1) translateZ(0px);">
-                    <a name="cate_lev1_0" title="图书" rel="0">
-                        <li class="on">图书</li>
+                    {foreach from=$category_list item=cat}
+                    <a name="cate_lev1_{$cat.id}" title="{$cat.name}" rel="{$cat.id}">
+                        <li class="on">{$cat.name}</li>
                     </a>
-                    <a name="cate_lev1_1" title="童书" rel="1">
-                        <li class="">童书</li>
-                    </a>
-                    <a name="cate_lev1_2" title="音像" rel="2">
-                        <li class="">音像</li>
-                    </a>
-                    <a name="cate_lev1_3" title="女装" rel="3">
-                        <li class="">女装</li>
-                    </a>
-                    <a name="cate_lev1_4" title="女鞋女包" rel="4">
-                        <li class="">女鞋女包</li>
-                    </a>
-                    <a name="cate_lev1_5" title="内衣袜品" rel="5">
-                        <li class="">内衣袜品</li>
-                    </a>
-                    <a name="cate_lev1_6" title="男装" rel="6">
-                        <li class="">男装</li>
-                    </a>
-                    <a name="cate_lev1_7" title="男鞋男包" rel="7">
-                        <li class="">男鞋男包</li>
-                    </a>
-                    <a name="cate_lev1_8" title="运动户外" rel="8">
-                        <li class="">运动户外</li>
-                    </a>
-                    <a name="cate_lev1_9" title="孕婴童" rel="9">
-                        <li class="">孕婴童</li>
-                    </a>
-                    <a name="cate_lev1_10" title="童装童鞋" rel="10">
-                        <li class="">童装童鞋</li>
-                    </a>
-                    <a name="cate_lev1_11" title="珠宝饰品" rel="11">
-                        <li class="">珠宝饰品</li>
-                    </a>
-                    <a name="cate_lev1_12" title="手表眼镜" rel="12">
-                        <li class="">手表眼镜</li>
-                    </a>
-                    <a name="cate_lev1_13" title="家居日用" rel="13">
-                        <li class="">家居日用</li>
-                    </a>
-                    <a name="cate_lev1_14" title="家具汽车" rel="14">
-                        <li class="">家具汽车</li>
-                    </a>
-                    <a name="cate_lev1_15" title="美妆个护" rel="15">
-                        <li class="">美妆个护</li>
-                    </a>
-                    <a name="cate_lev1_16" title="食品保健" rel="16">
-                        <li class="">食品保健</li>
-                    </a>
-                    <a name="cate_lev1_17" title="手机数码" rel="17">
-                        <li class="">手机数码</li>
-                    </a>
-                    <a name="cate_lev1_18" title="电脑办公" rel="18">
-                        <li class="">电脑办公</li>
-                    </a>
-                    <a name="cate_lev1_19" title="家用电器" rel="19">
-                        <li class="">家用电器</li>
-                    </a>
-                    <a name="cate_lev1_20" title="宠物之家" rel="20">
-                        <li class="">宠物之家</li>
-                    </a>
+                    {/foreach}
                 </ul>
             </div>
         </nav>
         <div class="class_box">
             <div class="class_box_inner" id="class_box_inner" title="二级分类" style="overflow: hidden;">
                 <div class="class_box_over" style="transition-property: transform; transform-origin: 0px 0px 0px; transform: translate(0px, -410px) scale(1) translateZ(0px);">
-                    <div id="cate_lev2_div_0" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
-                        <a href="#" class="banImg" name="cate_lev2_banner_0" title="">
-                            <img class="cate_banner_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00087/hw/886x315_gr_0901.jpg"></a>
-                        <h3>文艺</h3>
+                    <!---->
+                    {foreach from=$category_2_list item=cat key=parent_id}
+                    <div id="cate_lev2_div_{$parent_id}" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                        <a href="product.php?id=1" class="banImg" name="cate_lev2_banner_0" title="">
+                            <img class="cate_banner_img" src="{$template_dir}images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00087/hw/886x315_gr_0901.jpg"></a>
+                        {foreach from=$cat item=c}
+                        <h3>{$c.name}</h3>
                         <ul class="clearfix">
+                            {foreach from=$c.children item=cc}
                             <li>
                                 <div>
-                                    <a href="#" name="cate_lev2_0_0_0" title="小说">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/xiaoshuo-23274638.png" alt="小说">
-                                        <span>小说</span>
+                                    <a href="product_list.php?id={$cc.id}" name="cate_lev2_0_0_0" title="{$cc.name}">
+                                        <img class="cate_icon_img" src="{$template_dir}images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/xiaoshuo-23274638.png" alt="小说">
+                                        <span>{$cc.name}</span>
                                     </a>
                                 </div>
                             </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_0_1" title="文学">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/wenxue-22924035.png" alt="文学">
-                                        <span>文学</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_0_2" title="传记">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/zhuanji-22880790.png" alt="传记">
-                                        <span>传记</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_0_3" title="青春文学">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/qingchunwenxue-23429675.png" alt="青春文学">
-                                        <span>青春文学</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_0_4" title="动漫/幽默">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/dongmanyoumo-22505986.png" alt="动漫/幽默">
-                                        <span>动漫/幽默</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_0_5" title="艺术">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00478/weiaisjdtp/sdzy-0521-160x160.png" alt="艺术">
-                                        <span>艺术</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_0_6" title="摄影">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img62.ddimg.cn/upload_img/00490/zhangping/sheying-21027025.png" alt="摄影">
-                                        <span>摄影</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_0_7" title="偶像明星">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/ouxiangmingxing-23339228.png" alt="偶像明星">
-                                        <span>偶像明星</span>
-                                    </a>
-                                </div>
-                            </li>
+                            {/foreach}
                         </ul>
-                        <h3>经管励志</h3>
-                        <ul class="clearfix">
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_1_0" title="励志/成功">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/chenggonglizhi-23480636.png" alt="励志/成功">
-                                        <span>励志/成功</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_1_1" title="管理">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/guanli-23631999.png" alt="管理">
-                                        <span>管理</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_1_2" title="经济">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/jingji-23588988.png" alt="经济">
-                                        <span>经济</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_1_3" title="投资理财">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/licai-20958305.png" alt="投资理财">
-                                        <span>投资理财</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_1_4" title="心灵修养">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/xinlingyuxiuyang-22876893.png" alt="心灵修养">
-                                        <span>心灵修养</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_1_5" title="职场">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/zhichang-22574835.png" alt="职场">
-                                        <span>职场</span>
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                        <h3>生活</h3>
-                        <ul class="clearfix">
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_0" title="保健">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/baojian-23472049.png" alt="保健">
-                                        <span>保健</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_1" title="亲子家教">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/qinzijiajiao-22809551.png" alt="亲子家教">
-                                        <span>亲子家教</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_2" title="旅游">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/lvyou-23587836.png" alt="旅游">
-                                        <span>旅游</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_3" title="美食">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/meishi-20740393.png" alt="美食">
-                                        <span>美食</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_4" title="育儿">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/yuer-20729852.png" alt="育儿">
-                                        <span>育儿</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_5" title="美妆">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/meizhuang-23347391.png" alt="美妆">
-                                        <span>美妆</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_6" title="两性">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/liangxing-23583720.png" alt="两性">
-                                        <span>两性</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_7" title="手工DIY">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/shougongDIY-22814427.png" alt="手工DIY">
-                                        <span>手工DIY</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_8" title="孕期">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/yunqi-20536112.png" alt="孕期">
-                                        <span>孕期</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_9" title="运动">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/yundong-23505967.png" alt="运动">
-                                        <span>运动</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_10" title="休闲">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img62.ddimg.cn/upload_img/00490/zhangping/xiuxian-23250529.png" alt="休闲">
-                                        <span>休闲</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_11" title="风水占卜">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/fengshuizhanbu-22570608.png" alt="风水占卜">
-                                        <span>风水占卜</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_2_12" title="家庭家居">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/jiatingjiaju-22775098.png" alt="家庭家居">
-                                        <span>家庭家居</span>
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                        <h3>人文社科</h3>
-                        <ul class="clearfix">
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_3_0" title="哲学宗教">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/zongjiaozhexue-23624649.png" alt="哲学宗教">
-                                        <span>哲学宗教</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_3_1" title="历史">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/lishi-23630165.png" alt="历史">
-                                        <span>历史</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_3_2" title="政治军事">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/zhengzhijunshi-23640741.png" alt="政治军事">
-                                        <span>政治军事</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_3_3" title="文化">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/wenhua-22568332.png" alt="文化">
-                                        <span>文化</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_3_4" title="社会科学">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/shehuikexue-23438061.png" alt="社会科学">
-                                        <span>社会科学</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_3_5" title="心理学">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/xinlixue-20767715.png" alt="心理学">
-                                        <span>心理学</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_3_6" title="古籍">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/guji-22919214.png" alt="古籍">
-                                        <span>古籍</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_0_3_7" title="法律">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/falv-23331746.png" alt="法律">
-                                        <span>法律</span>
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
+                        {/foreach}
                     </div>
-                    <div style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1); display: none;" id="cate_lev2_div_1">
-                        <a href="#" class="banImg" name="cate_lev2_banner_1" title="">
-                            <img class="cate_banner_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00234/zzh/886315kai0901.jpg" ></a>
-                        <h3>特别推荐</h3>
-                        <ul class="clearfix">
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_0_0" title="博恩熊情境教育绘本：快乐的幼儿园（全14册）">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00234/tongshu/boenxiong160160-0610.png" alt="博恩熊情境教育绘本：快乐的幼儿园（全14册）">
-                                        <span>博恩熊情境教育绘本：快乐的幼儿园（全14册）</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_0_1" title="钱文忠给孩子的国学励志书系列（全5册）">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img62.ddimg.cn/upload_img/00566/wxgx/20150604_fl23693459.png" alt="钱文忠给孩子的国学励志书系列（全5册）">
-                                        <span>钱文忠给孩子的国学励志书系列（全5册）</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_0_2" title="亲亲自然（第5-8辑合集）">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00566/wxgx/20150604_fl23677352.png" alt="亲亲自然（第5-8辑合集）">
-                                        <span>亲亲自然（第5-8辑合集）</span>
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                        <h3>童书</h3>
-                        <ul class="clearfix">
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_0" title="科普/百科">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/11987_h5.png" alt="科普/百科">
-                                        <span>科普/百科</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_1" title="中国儿童文学">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50005_h5.png" alt="中国儿童文学">
-                                        <span>中国儿童文学</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_2" title="外国儿童文学">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50015_h5.png" alt="外国儿童文学">
-                                        <span>外国儿童文学</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_3" title="精装图画书">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50028_h5.png" alt="精装图画书">
-                                        <span>精装图画书</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_4" title="平装图画书">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50029_h5.png" alt="平装图画书">
-                                        <span>平装图画书</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_5" title="婴儿读物">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50075_h5.png" alt="婴儿读物">
-                                        <span>婴儿读物</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_6" title="幼儿启蒙">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50076_h5.png" alt="幼儿启蒙">
-                                        <span>幼儿启蒙</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_7" title="益智游戏">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50128_h5.png" alt="益智游戏">
-                                        <span>益智游戏</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_8" title="玩具书">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50136_h5.png" alt="玩具书">
-                                        <span>玩具书</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" title="动漫/卡通">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50141_h5.png" alt="动漫/卡通">
-                                        <span>动漫/卡通</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_10" title="少儿英语">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50066_h5.png" alt="少儿英语">
-                                        <span>少儿英语</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_11" title="励志/成长">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50123_h5.png" alt="励志/成长">
-                                        <span>励志/成长</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_12" title="进口儿童书">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50084_h5.png" alt="进口儿童书">
-                                        <span>进口儿童书</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_13" title="阅读工具书">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50124_h5.png" alt="阅读工具书">
-                                        <span>阅读工具书</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_1_1_14" title="少儿期刊">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img36.ddimg.cn/upload_img/00484/touch/50163_h5.png" alt="少儿期刊">
-                                        <span>少儿期刊</span>
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div style="display: none;" id="cate_lev2_div_2">
-                        <h3>音像</h3>
-                        <ul class="clearfix">
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_2_0_0" title="音乐">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/yinyue-1066335436.png" alt="音乐">
-                                        <span>音乐</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_2_0_1" title="影视">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img60.ddimg.cn/upload_img/00490/zhangping/yingshi-23442356.png" alt="影视">
-                                        <span>影视</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_2_0_2" title="软件">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img62.ddimg.cn/upload_img/00490/zhangping/ruanjian-23601828.png" alt="软件">
-                                        <span>软件</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_2_0_3" title="游戏">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/youxi-21115914.png" alt="游戏">
-                                        <span>游戏</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_2_0_4" title="教育音像">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/jiaoyuyinxiang-23601829.png" alt="教育音像">
-                                        <span>教育音像</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_2_0_5" title="华语流行">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img61.ddimg.cn/upload_img/00490/zhangping/huayuliuxing-23398083.png" alt="华语流行">
-                                        <span>华语流行</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_2_0_6" title="儿童音乐">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img62.ddimg.cn/upload_img/00490/zhangping/ertongyinyue-20321669.png" alt="儿童音乐">
-                                        <span>儿童音乐</span>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <div>
-                                    <a href="#" name="cate_lev2_2_0_7" title="动画片">
-                                        <img class="cate_icon_img" src="images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/donghuapian-21128496.png" alt="动画片">
-                                        <span>动画片</span>
-                                    </a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                    {/foreach}
+                    <!---->
                 </div>
             </div>
         </div>
@@ -633,7 +79,7 @@
             <div id="component_1434612"></div>
             <section class="mix_new_header">
                 <a href="javascript:void(0)" class="mix_back"></a>
-                <form id="index_search_form" method="get" action=" " target="_parent" onsubmit="return mix_submit_search();">
+                <form id="index_search_form" method="get" action="search.php" target="_parent" onsubmit="return mix_submit_search();">
                     <div class="search">
                         <div class="text_box">
                             <input id="keyword" name="keyword" type="text" value="" placeholder="搜索商品、品牌、种类" class="keyword text" onkeydown="this.style.color='#404040';" maxlength="70" autocomplete="off">
@@ -643,15 +89,24 @@
                         <input type="hidden" value="0" name="cid" id="cid">
                         <input type="hidden" value="" name="sid">
                     </div>
-                    <input type="submit" value="搜索" class="mix_filtrate">
+                    <input type="submit" value="搜索" class="mix_filtrate" onclick="alert('功能建设中...');return false;">
                 </form>
             </section>
         </header>
-    </header></section>
+    </header>
+</section>
+<!-- 底部菜单 -->
+<section class="menu">
+    <ul>
+        <li><a href="index.php"><em class="icon">&#xe601;</em><span>首页</span></a></li>
+        <li><a class="active" href="category.php"><em class="icon">&#xe603;</em><span>分类</span></a></li>
+        <li><a href="cart.php"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
+        <li><a href="user.php"><em class="icon">&#xe600;</em><span>我</span></a></li>
+    </ul>
+</section>
 <script type="text/javascript" src="{$template_dir}js/zepto.min.js"></script>
 <script type="text/javascript" src="{$template_dir}js/iscroll.min.js"></script>
 <script type="text/javascript" src="{$template_dir}js/zepto.lazyload.min.js"></script>
 <script type="text/javascript" src="{$template_dir}js/category.js"></script>
-
 </body>
 </html>
