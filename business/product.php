@@ -82,10 +82,6 @@ if( 'add' == $opera ) {
         exit;
     }
 
-    if( 0 > $inventory ) {
-        $inventory = 0;
-    }
-
     if( 0 > $price ) {
         show_system_message('售价不能为负数', array());
         exit;
@@ -206,6 +202,7 @@ if( 'add' == $opera ) {
         'brand_id' => $brand,
         'order_view' => $order_view,
         'free_delivery' => $free_delivering,
+        'prev_status' => 0,
     );
     $table = 'product';
     $db->begin();
@@ -314,10 +311,6 @@ if( 'edit' == $opera ) {
     if( 0 >= $brand ) {
         show_system_message('品牌参数错误', array());
         exit;
-    }
-
-    if( 0 > $inventory ) {
-        $inventory = 0;
     }
 
     if( 0 > $price ) {
@@ -436,7 +429,8 @@ if( 'edit' == $opera ) {
         'brand_id' => $brand,
         'order_view' => $order_view,
         'free_delivery' => $free_delivering,
-        'status' => 2,
+        'status' => ( $product['status'] == 1 ) ? 1 : 2,
+        'prev_status' => $product['status'],
     );
     $table = 'product';
     $where = 'business_account = \''.$_SESSION['business_account'].'\' and id = \''.$id.'\'';
@@ -932,14 +926,14 @@ if( 'gallery' == $act ) {
         for( $i = $count; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '/upload/image/no-image.png';
+            $gallery_list[$i]['original_img_src'] = '/upload/image/iconfont-jia.png';
             $gallery_list[$i]['order_view'] = '';
         }
     } else {
         for( $i = 0; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '/upload/image/no-image.png';
+            $gallery_list[$i]['original_img_src'] = '/upload/image/iconfont-jia.png';
             $gallery_list[$i]['order_view'] = '';
         }
     }
@@ -1002,6 +996,7 @@ if( 'delete' == $act ) {
         exit;
     }
     $update_product = 'update '.$db->table('product').' set status = 5';
+    $update_product .= ', prev_status = '.$product['status'];
     $update_product .= ' where product_sn = \''.$product_sn.'\'';
     $update_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
     $update_product .= ' limit 1';
@@ -1095,11 +1090,12 @@ if( 'revoke' == $act ) {
         show_system_message('产品不存在', array());
         exit;
     }
-    if( $product['status'] != 2 ) {
+    if( $product['status'] != 5 ) {
         show_system_message('产品未被删除', array());
         exit;
     }
-    $update_product = 'update '.$db->table('product').' set status = 0';
+    $update_product = 'update '.$db->table('product').' set status = '.$product['prev_status'];
+    $update_product .= ', prev_status = \''.$product['status'].'\'';
     $update_product .= ' where product_sn = \''.$product_sn.'\'';
     $update_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
     $update_product .= ' limit 1';

@@ -28,12 +28,12 @@ $purview = array(
         'pur_product_del',
     ),
 
-    'pur_express' => array(
-        'pur_express_view',
-        'pur_express_add',
-        'pur_express_edit',
-        'pur_express_del',
-    ),
+//    'pur_express' => array(
+//        'pur_express_view',
+//        'pur_express_add',
+//        'pur_express_edit',
+//        'pur_express_del',
+//    ),
 
     'pur_finance' => array(
         'pur_finance_view',
@@ -85,11 +85,11 @@ $L_purview = array(
     'pur_product_edit' => '编辑产品',
     'pur_product_del' => '删除产品',
 
-    'pur_express' => '物流方式设置',
-    'pur_express_view' => '物流列表',
-    'pur_express_add' => '增加物流',
-    'pur_express_edit' => '编辑物流',
-    'pur_express_del' => '删除物流',
+//    'pur_express' => '物流方式设置',
+//    'pur_express_view' => '物流列表',
+//    'pur_express_add' => '增加物流',
+//    'pur_express_edit' => '编辑物流',
+//    'pur_express_del' => '删除物流',
 
 
     'pur_finance' => '财务管理',
@@ -151,15 +151,15 @@ $menus = array(
         ),
     ),
 
-    'pur_express' => array(
-        'title' => '物流方式管理',
-        'icon' => '&#xe605;',
-        'url' => 'express.php',
-        'children' => array(
-            'pur_express_view' => array('url' => 'express.php', 'title' => '物流方式列表'),
-            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
-        ),
-    ),
+//    'pur_express' => array(
+//        'title' => '物流方式管理',
+//        'icon' => '&#xe605;',
+//        'url' => 'express.php',
+//        'children' => array(
+//            'pur_express_view' => array('url' => 'express.php', 'title' => '物流方式列表'),
+//            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
+//        ),
+//    ),
 
     'pur_finance' => array(
         'title' => '财务管理',

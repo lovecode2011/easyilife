@@ -177,11 +177,34 @@ if( 'auth' == $opera ) {
         show_system_message('请选择营业执照', array());
         exit;
     }
+    $license = $db->escape($license);
 
     if( '' == $identity ) {
         show_system_message('请选择法人身份证', array());
         exit;
     }
+    $identity = $db->escape($identity);
+
+    $check_email = 'select * from '.$db->table('business');
+    $check_email .= ' where email = \''.$email.'\'';
+    $check_email .= ' and business_account <> \''.$_SESSION['business_account'].'\'';
+    $check_email .= ' limit 1';
+    $email_exists = $db->fetchRow($check_email);
+    if( $email_exists ) {
+        show_system_message('邮箱已被使用', array());
+        exit;
+    }
+
+    $check_mobile = 'select * from '.$db->table('business');
+    $check_mobile .= ' where mobile = \''.$mobile.'\'';
+    $check_mobile .= ' and business_account <> \''.$_SESSION['business_account'].'\'';
+    $check_mobile .= ' limit 1';
+    $mobile_exists = $db->fetchRow($check_mobile);
+    if( $mobile_exists ) {
+        show_system_message('号码已被使用', array());
+        exit;
+    }
+
 
     $data = array(
         'company' => $company,

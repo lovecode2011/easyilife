@@ -203,8 +203,8 @@ if( 'exam' == $act ) {
     }
     $product_sn = $db->escape($product_sn);
 
-    $get_product = 'select a.*, b.attributes, b.inventory from '.$db->table('product').' as a';
-    $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status = 2 limit 1';
+    $get_product = 'select a.* from '.$db->table('product').' as a';
+    $get_product .= ' where a.product_sn = \''.$product_sn.'\' and status = 2 limit 1';
     $product = $db->fetchRow($get_product);
     if( !$product ) {
         show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
@@ -220,7 +220,20 @@ if( 'exam' == $act ) {
     $product['img_src'] = (file_exists('..'.$product['img'])) ? '..'.$product['img'] : $product['img'];
 
     assign('product', $product);
-    assign('attributes', $product['attributes']);
+
+    $get_attributes = 'select * from '.$db->table('inventory');
+    $get_attributes .= ' where product_sn = \''.$product_sn.'\'';
+    $product_attributes = $db->fetchAll($get_attributes);
+//    var_dump($product_attributes);exit;
+    if( $product_attributes ) {
+        foreach( $product_attributes as $key => $attributes ) {
+            $product_attributes[$key]['attributes'] = json_decode($attributes['attributes']);
+        }
+    } else {
+        $product_attributes = array();
+    }
+
+    assign('attributes', json_encode($product_attributes));
 
     $get_category_list = 'select * from '.$db->table('category');
     $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
