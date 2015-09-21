@@ -150,7 +150,7 @@ if( 'view' == $act ) {
     $count_array = array(10, 25, 50 , 100);
     $count = ( in_array($count, $count_array) ) ? $count : 10;
 
-    $get_total = 'select count(*) from '.$db->table('product');
+    $get_total = 'select count(*) from '.$db->table('product').' as a';
     $get_total .= $where;
     $total = $db->fetchOne($get_total);
     $total_page = ceil( $total / $count );

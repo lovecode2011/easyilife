@@ -19,6 +19,12 @@ $purview = array(
         'pur_member_edit',
         'pur_member_del',
     ),
+    'pur_business' => array(
+        'pur_business_view',
+        'pur_business_edit',
+        'pur_business_exam',
+        'pur_business_frozen',
+    ),
     'pur_exchange' => array(
         'pur_exchange_view',
         'pur_exchange_reward',
@@ -115,6 +121,13 @@ $L_purview = array(
     'pur_member_edit'=>'编辑会员',
     'pur_member_del'=>'删除会员',
 
+    'pur_business' => '商户管理',
+    'pur_business_view' => '查看商户',
+    'pur_business_edit' => '编辑商户信息',
+    'pur_business_exam' => '商户审核',
+    'pur_business_frozen' => '冻结商户/解除冻结',
+
+
     'pur_adpos' => '广告位置',
     'pur_adpos_add'=>'添加广告位置',
     'pur_adpos_view'=>'查看广告位置',
@@ -206,6 +219,7 @@ $menus = array(
     'pur_category' => array('url'=>'category.php', 'title'=>'主营分类', 'parent'=>'menu_product'),
     'pur_industry' => array('url'=>'industry.php', 'title'=>'主营行业', 'parent'=>'menu_product'),
     'pur_member' => array('url'=>'member.php', 'title'=>'会员管理', 'parent' => 'menu_member'),
+    'pur_business' => array('url' => 'business.php', 'title' => '商户管理', 'parent' => 'menu_business'),
     'pur_account' => array('url'=>'account.php', 'title'=>'账户明细', 'parent' => 'menu_account'),
     'pur_withdraw' => array('url'=>'withdraw.php', 'title'=>'提现管理', 'parent' => 'menu_account'),
     'pur_exchange' => array('url'=>'exchange.php', 'title'=>'交易管理', 'parent' => 'menu_account'),
@@ -222,6 +236,7 @@ global $topMenus;
 $topMenus = array(
     'menu_site' => array('title' => '系统设置', 'icon' => '&#xe607;'),
     'menu_member' => array('title' => '会员管理', 'icon' => '&#xe603;'),
+    'menu_business' => array('title' => '商户管理', 'icon' => '&#xe603;'),
     'menu_account' => array('title' => '财务管理', 'icon' => '&#xe603;'),
     'menu_product' => array('title' => '产品管理', 'icon' => '&#xe603;'),
     'menu_order' => array('title' => '订单管理', 'icon' => '&#xe603;'),
