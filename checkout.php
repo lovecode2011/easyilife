@@ -183,7 +183,7 @@ if('submit_order' == $opera)
             $status = 1;
             if($total_amount == 0)
             {
-                $status = 3;
+                $status = 4;
             }
             $delivery_id = $cart['delivery_id'];
             $business_account = $cart['business_account'];
@@ -194,8 +194,11 @@ if('submit_order' == $opera)
 
             if($order_sn)
             {
-                if($status == 3)
+                if($status == 4)
                 {
+                    $order_data = array('pay_time'=>time());
+
+                    $db->autoUpdate('order', $order_data, '`order_sn`=\''.$order_sn.'\'');
                     add_order_log($order_sn, $_SESSION['account'], $status, "使用余额/圈币/积分支付");
                 }
 

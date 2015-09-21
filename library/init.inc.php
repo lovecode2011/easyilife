@@ -69,8 +69,8 @@ assign('config', $config);
 assign('template_dir', 'themes/'.$config['themes'].'/');
 
 //测试数据
-//$_SESSION['account'] = 'SHQ000000';
-//$_SESSION['openid'] = '01234567890x';
+$_SESSION['account'] = 'SHQ000000';
+$_SESSION['openid'] = '01234567890x';
 if(!isset($_SESSION['openid']))
 {
     $_SESSION['openid'] = '';

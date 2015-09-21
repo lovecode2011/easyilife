@@ -224,8 +224,8 @@
                             height = 150 + 'px';
                         }
 
-                        K('#img').val(url);
-                        K('.select-image').attr('src', url);
+                        K('#img').val(url.replace("/easyilife/", ""));
+                        K('.select-image').attr('src', "../"+url.replace("/easyilife/", ""));
                         K('.select-image').css('display', 'block');
                         K('.select-image').attr('width', width);
                         K('.select-image').attr('height', height);

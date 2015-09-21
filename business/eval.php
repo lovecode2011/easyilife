@@ -120,7 +120,7 @@ if( 'view' == $act ) {
 
     $page = ( $page > $total ) ? $total : $page;
     $page = ( $page <= 0 ) ? 1 : $page;
-    $count = ( $count <= 0 ) ? 1 : $count;
+    $count = ( $count <= 0 ) ? 10 : $count;
     $offset = ( $page - 1 ) * $count;
     $total_page = ceil( $total / $count );
 

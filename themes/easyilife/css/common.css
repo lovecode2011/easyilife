@@ -149,12 +149,6 @@ div {
     float: left;
     width: 50%;
 }
-
-.cd-popup-container .cd-buttons li.cd-signle-button {
-    width: 100%;
-    float: left;
-}
-
 .cd-popup-container .cd-buttons a {
     display: block;
     height: 2.5rem;
@@ -223,17 +217,24 @@ div {
     }
 }
 @media only screen and (orientation : landscape) {
-    html{font-size: 25px;}
     .cd-popup-container {
         margin: 3rem auto;
     }
 }
 
+.cd-popup-container .cd-buttons li.cd-signle-button
+{
+    width: 100%;
+}
+
 .progressbar {
-    margin: 0 auto;
-    display: none;
-    text-align: center;
     position: fixed;
     width: 100%;
-    top: 20%;
+    top: 140px;
+}
+
+.progressbar img {
+    width: 120px;
+    margin: 0 auto;
+    display: block;
 }

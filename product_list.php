@@ -44,9 +44,9 @@ $category_ids_str = implode(',', $category_ids_tmp);
 $get_product_list = 'select * from '.$db->table('product').' where `category_id` in (\''.$category_ids_str.'\')';
 switch($state)
 {
-    case 'price': $get_product_list.' order by `price` ASC'; break;
-    case 'star': $get_product_list.' order by `star` DESC'; break;
-    default: $get_product_list.' order by `add_time` DESC'; break;
+    case 'price': $get_product_list .= ' order by `price` ASC'; break;
+    case 'star': $get_product_list .= ' order by `star` DESC'; break;
+    default: $get_product_list .= ' order by `add_time` DESC'; break;
 }
 
 $product_list = $db->fetchAll($get_product_list);

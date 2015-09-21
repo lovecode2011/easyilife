@@ -609,11 +609,21 @@ $sql[] = 'create table if not exists '.$db->table('platform_role').' (
     `purview` text not null
 ) default charset=utf8;';
 
-$table[] = '卡好池';
+$table[] = '卡号池';
 $sql[] = 'create table if not exists '.$db->table('card_pool').' (
     `id` bigint not null auto_increment primary key,
     `account` varchar(255) not null,
     `status` int not null default \'1\'
+) default charset=utf8;';
+
+$table[] = '银行卡号';
+$sql[] = 'create table if not exists '.$db->table('bank_card').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `bank` varchar(255) not null,
+    `bank_account` varchar(255) not null,
+    `bank_card` varchar(255) not null,
+    index (`account`)
 ) default charset=utf8;';
 
 

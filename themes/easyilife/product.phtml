@@ -33,7 +33,7 @@
     <div class="bd">
         <ul>
             {foreach from=$product.gallery item=gallery}
-            <li><a href="#"><img _src="{$gallery}" src="{$template_dir}images/blank.png" /></a></li>
+            <li><a href="#"><img _src="./{$gallery}" src="{$template_dir}images/blank.png" /></a></li>
             {/foreach}
         </ul>
     </div>
@@ -404,6 +404,10 @@
 
         $("#add_to_cart_btn").bind("click", function() { add_to_cart("{$product.product_sn}"); });
         $("#buy_now_btn").bind("click", function() { buy_now("{$product.product_sn}"); });
+
+        $(".detail-content").children("img").each(function (i, e){
+            $(this).attr("width", "100%");
+        });
     });
 
     function select_attribute(e) {

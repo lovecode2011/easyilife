@@ -32,9 +32,9 @@
             <img class="user-avatar" src="{if $user_info.headimg neq ""}{$user_info.headimg}{else}{$template_dir}images/wang.jpg{/if}" alt="用户"/>
             <div class="user-name">{$user_info.nickname}</div>
             <section class="remaining">
-                <a href="#"><em>余额&nbsp;{$user_info.balance}</em></a>
-                <a href="#"><em>圈币&nbsp;{$user_info.reward}</em></a>
-                <a href="#"><em>积分&nbsp;{$user_info.integral}</em></a>
+                <a href="balance.php"><em>余额&nbsp;{$user_info.balance}</em></a>
+                <a href="reward.php"><em>圈币&nbsp;{$user_info.reward}</em></a>
+                <a href="integral.php"><em>积分&nbsp;{$user_info.integral}</em></a>
             </section>
         </section>
         <!--
@@ -89,13 +89,13 @@
         <nav class="order-nav">
             <ul>
                 <li style="width: 33.333333333333%">
-                    <a href="#" >
+                    <a href="balance.php" >
                         <p class="icon">&#xe614;</p>
                         余额
                     </a>
                 </li>
                 <li style="width: 33.333333333333%">
-                    <a href="#">
+                    <a href="reward.php">
                         <p class="icon">&#xe619;</p>
                         圈币
                     </a>
@@ -111,7 +111,7 @@
     </section>
     <!-- 个人中心功能菜单 -->
     <section class="f-section">
-        <a class="slide-link" href="javascript:alert('功能调试中...');">
+        <a class="slide-link" href="withdraw.php">
             <span class="icon" style="background-color: #fb9065;">&#xe621;</span>我要提现
         </a>
         <a class="slide-link" href="member.php">

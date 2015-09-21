@@ -528,6 +528,7 @@ if( 'gallery' == $opera ) {
             $update_where[] = 'id = '.$id.' and product_sn = \''.$product_sn.'\'';
         }
     }
+
     $db->begin();
     $transaction = true;
     if( $insert_data ) {
@@ -932,7 +933,7 @@ if( 'gallery' == $act ) {
         for( $i = $count; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '/upload/image/no-image.png';
+            $gallery_list[$i]['original_img_src'] = '/upload/image/iconfont-jia.png';
             $gallery_list[$i]['order_view'] = '';
         }
     } else {
@@ -1095,7 +1096,7 @@ if( 'revoke' == $act ) {
         show_system_message('产品不存在', array());
         exit;
     }
-    if( $product['status'] != 2 ) {
+    if( $product['status'] != 5 ) {
         show_system_message('产品未被删除', array());
         exit;
     }

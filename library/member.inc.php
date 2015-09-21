@@ -354,3 +354,64 @@ function add_recommend_integral($account, $integral, $remark = '', $operator = '
 {
     return add_memeber_exchange_log($account, 0, 0, $integral, 0,0, $operator, $remark);
 }
+
+/**
+ * 验证密码
+ */
+function verify_password($account, $password)
+{
+    global $db;
+
+    $get_user_password = 'select `password` from '.$db->table('member').' where `account`=\''.$account.'\'';
+    $user_password = $db->fetchOne($get_user_password);
+
+    $password = md5($password.PASSWORD_END);
+
+    return $password == $user_password;
+}
+
+/**
+ * 新增提现记录
+ */
+function add_withdraw($account, $amount, $bank_id, $remark = '')
+{
+    global $db;
+    global $config;
+
+    $withdraw_sn = '';
+
+    $fee = $amount * $config['fee_rate'];
+    $withdraw_data = array(
+        'account' => $account,
+        'amount' => $amount,
+        'fee' => $fee,
+        'status' => 0,
+        'remark' => $remark,
+        'add_time' => time()
+    );
+
+    $get_bank_info = 'select `bank`,`bank_account`,`bank_card` from '.$db->table('bank_card').' where `id`='.$bank_id;
+    $bank_info = $db->fetchRow($get_bank_info);
+
+    if($bank_info)
+    {
+        $withdraw_data = array_merge($withdraw_data, $bank_info);
+    } else {
+        return false;
+    }
+
+    do
+    {
+        $withdraw_sn = 'W'.time().rand(100, 999);
+        $check_withdraw = 'select `withdraw_sn` from '.$db->table('withdraw').' where `withdraw_sn`=\''.$withdraw_sn.'\'';
+    } while($db->fetchOne($check_withdraw));
+
+    $withdraw_data['withdraw_sn'] = $withdraw_sn;
+
+    if($db->autoInsert('withdraw', array($withdraw_data)))
+    {
+        return $withdraw_sn;
+    } else {
+        return false;
+    }
+}

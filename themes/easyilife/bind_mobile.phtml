@@ -38,6 +38,12 @@
     <div class="binding-tips">
         <i class="icon" style="color: #FF8948">&#xe613;</i>&nbsp;绑定手机号码需短信确认
     </div>
+    <div class="binding-phone">
+        <span class="input"><input type="password" id="password" placeholder="请设置密码"></span>
+    </div>
+    <div class="binding-phone" style="margin-top: 10px;">
+        <span class="input"><input type="password" id="confirm_passwd" placeholder="请确认密码"></span>
+    </div>
     <a class="btn" href="javascript:void(0);" onclick="submit_verify();">完成</a>
 </section>
 <div class="cd-popup" role="alert">
@@ -75,6 +81,9 @@
     function submit_verify() {
         var mobile = $("#mobile").val();
         var verify = $("#verify").val();
+        var password = $("#password").val();
+        var confirm_passwd = $("#confirm_passwd").val();
+
         var msg = "";
 
         if(mobile == "") {
@@ -85,13 +94,23 @@
             msg += "-请输入验证码<br/>";
         }
 
+        if(password == "") {
+            msg += "-请设置密码<br/>";
+        } else {
+            if(confirm_passwd == "") {
+                msg += "-请确认密码<br/>";
+            } else if(password != confirm_passwd) {
+                msg += "-两次输入的密码不一致<br/>";
+            }
+        }
+
         if(msg != "") {
             show_message_dialog(msg);
             return false;
         }
 
         var url = "bind_mobile.php";
-        var data = { "opera":"bind", "verify":verify, "mobile":mobile };
+        var data = { "opera":"bind", "verify":verify, "mobile":mobile, "password": password };
         show_mask();
         $.post(url, data, submit_verify_handler, "json");
     }

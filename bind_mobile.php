@@ -15,6 +15,7 @@ if('bind' == $opera)
     $response = array('error'=>1, 'msg'=>'');
     $verify = getPOST('verify');
     $mobile = getPOST('mobile');
+    $password = getPOST('password');
 
     if(!check_cross_domain())
     {
@@ -35,9 +36,16 @@ if('bind' == $opera)
             }
         }
 
+        if($password == '')
+        {
+            $response['msg'] .= '-请填写密码<br/>';
+        } else {
+            $password = md5($password.PASSWORD_END);
+        }
+
         if($response['msg'] == '')
         {
-            $data = array('mobile'=>$mobile);
+            $data = array('mobile'=>$mobile, 'password'=>$password);
 
             if($db->autoUpdate('member', $data, '`account`=\''.$_SESSION['account'].'\''))
             {

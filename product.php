@@ -121,12 +121,17 @@ if($product)
     $product['gallery'] = array($product['img']);
     $product_sn = $product['product_sn'];
 
-    $get_gallery = 'select `thumb_img` from '.$db->table('gallery').' where `product_sn`=\''.$product_sn.'\'';
+    $get_gallery = 'select `big_img` from '.$db->table('gallery').' where `product_sn`=\''.$product_sn.'\'';
     $gallery = $db->fetchAll($get_gallery);
 
     if($gallery)
     {
-        $product['gallery'] = array_merge($product['gallery'], $gallery);
+        $gallery_arr = array();
+        foreach($gallery as $g)
+        {
+            $gallery_arr[] = $g['big_img'];
+        }
+        $product['gallery'] = array_merge($product['gallery'], $gallery_arr);
     }
 
     $attributes_map = array();

@@ -94,20 +94,16 @@
                 </td>
                 <td>{$comment.account}</td>
                 <td class="text-right">
-                    <a href="javascript:void(0);" class="view_comment">查看评论</a>
-                    {if $comment.response}
-                    | <a href="?act=response&id={$comment.id}">回复</a>
-                    {else}
-                    | <a href="?act=response&id={$comment.id}">回复</a>
-                    {/if}
+<!--                    <a href="javascript:void(0);" class="view_comment">查看评论</a>-->
+                    <a href="?act=response&id={$comment.id}">回复</a>
                 </td>
             </tr>
-            <tr style="display:none">
+            <tr style="">
                 <td>评论：</td>
                 <td colspan="6">{$comment.comment}</td>
             </tr>
             {if $comment.response}
-            <tr style="display:none" class="comment-response">
+            <tr style="" class="comment-response">
                 <td>回复：</td>
                 <td colspan="6">{$comment.response}</td>
             </tr>

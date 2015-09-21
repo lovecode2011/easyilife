@@ -64,11 +64,12 @@ $(function(){
                     '</td>';
 
                 temp += '<td class="w180">';
-                var attributes = '(' + order_detail[i].product_attributes + ')';
-                attributes = eval(attributes);
-                for( var key in attributes ) {
-                    temp += '<em>' + key + ':' + attributes[key] + '</em>&nbsp;&nbsp;';
-                }
+                //var attributes = '(' + order_detail[i].product_attributes + ')';
+                //attributes = eval(attributes);
+                //for( var key in attributes ) {
+                //    temp += '<em>' + key + ':' + attributes[key] + '</em>&nbsp;&nbsp;';
+                //}
+                temp += '<em>'+ order_detail[i].product_attributes + '</em>';
                 temp += '</td>';
 
                 temp += '<td>' + order_detail[i].product_price + '</td>';
