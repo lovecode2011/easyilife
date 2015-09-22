@@ -34,6 +34,12 @@ $get_order_count .= ' where `business_account` = \''.$_SESSION['business_account
 $order_count = $db->fetchOne($get_order_count);
 assign('order_count', $order_count);
 
+//系统消息数量
+$get_message_count = 'select count(*) from '.$db->table('message');
+$get_message_count .= ' where `business_account` = \''.$_SESSION['business_account'].'\' and status = 0';
+$message_count = $db->fetchOne($get_message_count);
+assign('message_count', $message_count);
+
 $template .= $act.'.phtml';
 $smarty->display($template);
 

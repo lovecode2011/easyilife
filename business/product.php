@@ -34,10 +34,6 @@ if( 'add' == $opera ) {
     $price = floatval(getPOST('price'));
     $shop_price = floatval(getPOST('shop_price'));
     $lowest_price = floatval(getPOST('lowest_price'));
-    $reward = floatval(getPOST('reward'));
-
-    $integral = 0;
-    $given_integral = 0;
 
     $img = trim(getPOST('img'));
     $desc = trim(getPOST('desc'));
@@ -96,12 +92,6 @@ if( 'add' == $opera ) {
         show_system_message('最低价不能为负数', array());
         exit;
     }
-
-    if( 0 >= $reward ) {
-        show_system_message('返利不能为负数', array());
-        exit;
-    }
-
 
     if( '' == $img ) {
         show_system_message('请选择一张图片作为封面', array());
@@ -184,9 +174,9 @@ if( 'add' == $opera ) {
         'shop_price' => $shop_price,
         'price' => $shop_price,
         'lowest_price' => $lowest_price,
-        'reward' => $reward,
-        'integral' => $integral,
-        'integral_given' => $given_integral,
+        'reward' => 0,
+        'integral' => 0,
+        'integral_given' => 0,
         'img' => $img,
         'desc' => $desc,
         'detail' => $detail,
@@ -328,12 +318,6 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    if( 0 >= $reward ) {
-        show_system_message('返利不能为负数', array());
-        exit;
-    }
-
-
     if( '' == $img ) {
         show_system_message('请选择一张图片作为封面', array());
         exit;
@@ -414,9 +398,6 @@ if( 'edit' == $opera ) {
         'shop_price' => $shop_price,
         'price' => $shop_price,
         'lowest_price' => $lowest_price,
-        'reward' => $reward,
-        'integral' => $integral,
-        'integral_given' => $given_integral,
         'img' => $img,
         'desc' => $desc,
         'detail' => $detail,

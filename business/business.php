@@ -129,6 +129,7 @@ if( 'auth' == $opera ) {
     }
 
     $company = trim(getPOST('company'));
+    $desc = trim(getPOST('desc'));
     $industry_id = trim(getPOST('industry'));
     $category_id = trim(getPOST('classification'));
     $contact = trim(getPOST('contact'));
@@ -142,6 +143,12 @@ if( 'auth' == $opera ) {
         exit;
     }
     $company = $db->escape($company);
+
+    if( '' == $desc ) {
+        show_system_message('请输入公司简介，让会员了解您的公司', array());
+        exit;
+    }
+    $desc = $db->escape($desc);
 
     $industry_id = intval($industry_id);
     if( 0 >= $industry_id ) {
@@ -208,6 +215,7 @@ if( 'auth' == $opera ) {
 
     $data = array(
         'company' => $company,
+        'desc' => $desc,
         'industry_id' => $industry_id,
         'category_id' => $category_id,
         'contact' => $contact,
@@ -224,12 +232,6 @@ if( 'auth' == $opera ) {
         show_system_message('您的申请已提交，请静候佳音。', array());
         exit;
     } else {
-        if( file_exists(realpath('..'.$license)) ) {
-            @unlink(realpath('..'.$license));
-        }
-        if( file_exists(realpath('..'.$identity)) ) {
-            @unlink(realpath('..'.$identity));
-        }
         show_system_message('系统繁忙，请稍后重试', array());
         exit;
     }

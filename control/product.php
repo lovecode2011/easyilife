@@ -45,14 +45,39 @@ if( 'exam' == $opera ) {
         exit;
     }
 
+    $reward = floatval(getPOST('reward'));
+    $integral = intval(getPOST('integral'));
+    $integral_given = intval(getPOST('integral_given'));
+    if( 0 >= $reward ) {
+        $reward = 0;
+    }
+    if( 0 > $integral ) {
+        $integral = 0;
+    }
+    if( 0 > $integral_given ) {
+        $integral_given = 0;
+    }
+
     $update_product = 'update '.$db->table('product').' set ';
     $update_product .= ' status = 3';
-    $update_product .= ' ,prev_status = 2';
+    $update_product .= ', prev_status = 2';
+    $update_product .= ', reward = \''.$reward.'\'';
+    $update_product .= ', integral = \''.$integral.'\'';
+    $update_product .= ', integral_given = \''.$integral_given.'\'';
     $update_product .= ' where id = \''.$id.'\' limit 1';
 
     if( $db->update($update_product) ) {
 
         //系统通知商户===
+        $data = array(
+            'title' => '系统消息',
+            'content' => '您的产品，编号'.$product['product_sn'].'审核通过',
+            'account' => $business['account'],
+            'business_account' => $business['business_account'],
+            'add_time' => time(),
+            'status' => 0,  //未读
+        );
+        $db->autoInsert('message', array($data));
 
         //=============
         show_system_message('产品通过审核', array(array('link' => 'product.php', 'alt' => '产品管理')));
@@ -99,9 +124,18 @@ if( 'reject' == $opera ) {
 
     if( $db->update($update_product) ) {
 
-        //系统通知商户===
+        //系统通知商户==================================
+        $data = array(
+            'title' => '系统消息',
+            'content' => '您的产品，编号'.$product['product_sn'].'审核不通过。'.$message,
+            'account' => $business['account'],
+            'business_account' => $business['business_account'],
+            'add_time' => time(),
+            'status' => 0,  //未读
+        );
+        $db->autoInsert('message', array($data));
 
-        //=============
+        //==============================================
         show_system_message('产品审核已驳回', array(array('link' => 'product.php', 'alt' => '产品管理')));
         exit;
     } else {

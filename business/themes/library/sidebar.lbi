@@ -6,6 +6,16 @@
                     <em class="icon">&#xe606;</em>首页
                 </a>
             </li>
+            <li class="menu_message">
+                <a href="javascript:void(0);" class="nav-top-item">
+                    <em class="icon">&#xe607;</em>系统消息
+                </a>
+                <ul class="submenu" id="id_menu_message" style="display: none">
+                    <li><a href="message.php?status=0">未读消息</a></li>
+                    <li><a href="message.php?status=1">已读消息</a></li>
+                </ul>
+
+            </li>
             {foreach from=$menus item=menu key=key}
             <li class="{$key}">
                 <a href="{if isset($menu.children)}javascript:void(0);{else}{$menu.url}{/if}" class="nav-top-item" >
@@ -30,9 +40,16 @@
         menu1("", "", ".menu_index a.nav-top-item");
     })
 {else}
+    {if $active_nav eq 'message'}
+    $(function () {
+        menu1("#id_menu_message", "#id_menu_message a", ".menu_message a.nav-top-item");
+    });
+    {else}
     $(function() {
         menu1("#id_{$menu_mark}", "#id_{$menu_mark} a", ".{$menu_mark} a.nav-top-item");
     });
+    {/if}
+
 {/if}
 </script>
 

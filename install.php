@@ -549,6 +549,7 @@ $sql[] = 'create table if not exists '.$db->table('auth').' (
     `id` int not null auto_increment primary key,
     `business_account` varchar(255) not null,
     `company` varchar(255) not null,
+    `desc` text not null,
     `license` varchar(255) not null,
     `identity` varchar(255) not null,
     `industry_id` int not null,
@@ -624,6 +625,17 @@ $sql[] = 'create table if not exists '.$db->table('bank_card').' (
     `bank_account` varchar(255) not null,
     `bank_card` varchar(255) not null,
     index (`account`)
+) default charset=utf8;';
+
+$table[] = '系统消息';
+$sql[] = 'create table if not exists '.$db->table('message').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `business_account` varchar(255) not null,
+    `title` varchar(255) not null,
+    `content` text not null,
+    `status` int not null,
+    `add_time` int not null
 ) default charset=utf8;';
 
 

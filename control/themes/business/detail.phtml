@@ -18,6 +18,12 @@
                     <input class="text-input w300" type="text" maxlength="64" name="company" value="{$auth.company}" disabled="disabled"/>
                 </p>
                 <p>
+                    <label class="l-title">公司简介：</label>
+                    <textarea disabled="disabled" rows="6" cols="41" name="old-desc">{$business.desc}</textarea>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <textarea disabled="disabled" rows="6" cols="41" name="desc">{$auth.desc}</textarea>
+                </p>
+                <p>
                     <label class="l-title">主营行业：</label>
                     <input class="text-input w300" type="text" maxlength="64" name="old-industry" value="{$business.industry_name}" disabled="disabled"/>
                     ——>
@@ -62,7 +68,7 @@
                     <input type="hidden" name="opera" value="auth" />
                     <input type="hidden" name="account" value="{$business.business_account}" />
                     <button class="btn btn-primary" type="submit">通过</button> &nbsp;
-                    <a href="business.php?act=auth_reject" class="btn btn-primary">驳回</a>&nbsp;
+                    <a href="business.php?act=auth_reject&account={$business.business_account}" class="btn btn-primary">驳回</a>&nbsp;
                     <a href="business.php?act=auth" class="btn btn-primary">返回</a>
                 </p>
             </fieldset>

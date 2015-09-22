@@ -239,6 +239,24 @@ function business_base_init() {
         exit;
     }
 
+    global $db;
+    $get_business = 'select * from '.$db->table('business');
+    $get_business .= ' where business_account = \''.$_SESSION['business_account'].'\' and status = 2';
+    $business = $db->fetchRow($get_business);
+
+    if( empty($business) ) {
+        if( isset($_SESSION['business_account']) ) {
+            unset($_SESSION['business_shop_name']);
+            unset($_SESSION['business_account']);
+            unset($_SESSION['business_purview']);
+        }
+        $links = array(
+            array('link' => 'index.php', 'alt' => '重新登陆'),
+        );
+        show_system_message('商户不存在或不在运营中', $links);
+        exit;
+    }
+
     $current_shop = $_SESSION['business_shop_name'];
     assign('current_shop', $current_shop);
     assign('pageTitle', '网店'.$current_shop.'管理后台');

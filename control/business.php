@@ -86,10 +86,10 @@ if( 'auth' == $opera ) {
     if( $transaction ) {
         $db->commit();
         //删除图片
-        if( file_exists(realpath('..'.$business['license'])) ) {
+        if( $auth['license'] != $business['license'] && file_exists(realpath('..'.$business['license'])) ) {
             @unlink(realpath('..'.$business['license']));
         }
-        if( file_exists(realpath('..'.$business['identity'])) ) {
+        if( $auth['identity'] != $business['identity'] && file_exists(realpath('..'.$business['identity'])) ) {
             @unlink(realpath('..'.$business['identity']));
         }
         $links = array(
@@ -141,6 +141,116 @@ if( 'exam' == $opera ) {
         show_system_message('系统繁忙，请稍后重试', array());
         exit;
     }
+}
+
+if( 'reject' == $opera ) {
+    if( !check_purview('pur_business_exam', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $business_account = trim(getPOST('account'));
+    if( '' == $business_account ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $business_account = $db->escape($business_account);
+    $get_business = 'select * from '.$db->table('business');
+    $get_business .= ' where business_account = \''.$business_account.'\' and status = 1 limit 1';
+
+    $business = $db->fetchRow($get_business);
+    if( empty($business) ) {
+        show_system_message('商户不存在', array());
+        exit;
+    }
+
+    $reason = trim(getPOST('reason'));
+    if( '' == $reason ) {
+        $reason = '您的开店申请审核不通过，请重新提交';
+    } else {
+        $reason = $db->escape($reason);
+    }
+
+    $db->begin();
+    $transaction = true;
+
+    $update_business = 'update '.$db->table('business').' set status = 0';
+    $update_business .= ' where business_account = \''.$business_account.'\' limit 1';
+    if( !$db->update($update_business) ) {
+        $transaction = false;
+    }
+    //已系统消息形式返回驳回理由，返回到
+    $data = array(
+        'title' => '系统消息',
+        'content' => $reason,
+        'account' => $business['account'],
+        'business_account' => $business['business_account'],
+        'add_time' => time(),
+        'status' => 0,  //未读
+    );
+
+    if( !$db->autoInsert('message', array($data)) ) {
+        $transaction = false;
+    }
+
+    if( $transaction ) {
+        $db->commit();
+        $links = array(
+            array('link' => 'business.php', 'alt' => '商户列表'),
+        );
+        show_system_message('入驻申请已驳回', $links);
+        exit;
+    } else {
+        $db->rollback();
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
+
+}
+
+if( 'auth_reject' == $opera ) {
+    if( !check_purview('pur_business_exam', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $business_account = trim(getPOST('account'));
+    if( '' == $business_account ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $business_account = $db->escape($business_account);
+    $get_business = 'select * from '.$db->table('business');
+    $get_business .= ' where business_account = \''.$business_account.'\' and status = 1 limit 1';
+
+    $business = $db->fetchRow($get_business);
+    if( empty($business) ) {
+        show_system_message('商户不存在', array());
+        exit;
+    }
+
+    $reason = trim(getPOST('reason'));
+    if( '' == $reason ) {
+        $reason = '您的认证信息审核不通过，请重新提交';
+    } else {
+        $reason = $db->escape($reason);
+    }
+
+    $db->begin();
+    $transaction = true;
+
+    $update_business = 'update '.$db->table('auth').' set status = 2';
+    $update_business .= ' where business_account = \''.$business_account.'\' limit 1';
+    if( !$db->update($update_business) ) {
+        $transaction = false;
+    }
+    //已系统消息形式返回驳回理由，返回到
+    $data = array(
+        'title' => '系统消息',
+        'content' => $reason,
+        'account' => $business['account'],
+        'business_account' => $business['business_account'],
+        'add_time' => time(),
+        'status' => 0,  //未读
+    );
 }
 
 //===========================================================================
@@ -405,6 +515,15 @@ if( 'reject' == $act ) {
         exit;
     }
     $business_account = $db->escape($business_account);
+
+    $get_business = 'select * from '.$db->table('business');
+    $get_business .= ' where business_account = \''.$business_account.'\' and status = 1 limit 1';
+    $business = $db->fetchRow($get_business);
+    if( empty($business) ) {
+        show_system_message('商户不存在', array());
+        exit;
+    }
+    assign('business_account', $business_account);
 }
 
 //认证信息驳回
@@ -419,6 +538,15 @@ if( 'auth_reject' == $act ) {
         exit;
     }
     $business_account = $db->escape($business_account);
+
+    $get_business = 'select * from '.$db->table('business');
+    $get_business .= ' where business_account = \''.$business_account.'\' and status = 2 limit 1';
+    $business = $db->fetchRow($get_business);
+    if( empty($business) ) {
+        show_system_message('商户不存在', array());
+        exit;
+    }
+    assign('business_account', $business_account);
 }
 
 

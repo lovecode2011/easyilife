@@ -441,3 +441,140 @@ $(document).ready(function() {
     });
 });
 /* END 系统设置表单验证 */
+
+
+/*添加产品表单验证*/
+$(document).ready(function() {
+    var validator = $("#productAddForm").validate({
+        rules: {
+            name: {
+                required: true,
+                maxlength: 64
+            },
+            price: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            shop_price: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            lowest_price: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            reward: {
+                required: true,
+                number: true,
+                min: 0
+            }
+        },
+        messages: {
+            name: {
+                required: '请输入产品名称',
+                maxlength: '产品名称太长'
+            },
+            price: {
+                required: '请输入产品售价',
+                number: '请输入数值',
+                min: $.validator.format("产品售价不能小于{0}.")
+            },
+            shop_price: {
+                required: '请输入产品售价',
+                number: '请输入数值',
+                min: $.validator.format("产品售价不能小于{0}.")
+            },
+            lowest_price: {
+                required: '请输入产品最低价',
+                number: '请输入数值',
+                min: $.validator.format("产品最低价不能小于{0}.")
+            },
+            reward: {
+                required: '请输入返利',
+                number: '请输入数值',
+                min: $.validator.format("返利不能小于{0}.")
+            }
+        }
+    });
+});
+/* END 添加产品表单验证*/
+
+/*编辑产品表单验证*/
+$(document).ready(function() {
+    var validator = $("#productEditForm").validate({
+        rules: {
+            name: {
+                required: true,
+                maxlength: 64
+            },
+            price: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            shop_price: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            lowest_price: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            reward: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            img: {
+                required: true
+            },
+            promote_begin : {
+                date: true
+            },
+            promote_end : {
+                date: true
+            }
+        },
+        messages: {
+            name: {
+                required: '请输入产品名称',
+                maxlength: '产品名称太长'
+            },
+            price: {
+                required: '请输入产品售价',
+                number: '请输入数值',
+                min: $.validator.format("产品售价不能小于{0}.")
+            },
+            shop_price: {
+                required: '请输入产品售价',
+                number: '请输入数值',
+                min: $.validator.format("产品售价不能小于{0}.")
+            },
+            lowest_price: {
+                required: '请输入产品最低价',
+                number: '请输入数值',
+                min: $.validator.format("产品最低价不能小于{0}.")
+            },
+            reward: {
+                required: '请输入返利',
+                number: '请输入数值',
+                min: $.validator.format("返利不能小于{0}.")
+            },
+            img: {
+                required: '请选择一张图片作为封面'
+            },
+            promote_begin: {
+                date: '请输入有效的时间'
+            },
+            promote_end: {
+                date: '请输入有效的时间'
+            }
+        }
+    });
+});
+/* END 编辑产品表单验证*/
