@@ -134,7 +134,7 @@ $(function() {
         }
     });
 
-    $('.remove-attr').click(function() {
+    $('.remove-attr').live('click', function() {
         editing = $(this).parent().prev().attr('id').split('show-attr-')[1];
         var data = {sn:$('#product_sn').val(), id:editing, opera: 'delete_attr'};
         var url = 'ajax.php';
@@ -147,28 +147,6 @@ $(function() {
                 $('#show-attr-' + editing).remove();
             }
         },'json');
-    });
-
-    $('.edit-attr').click(function() {
-        $('#modal-edit-product-attr .modal-body').empty();
-        $('.edit-attr').parent().prev().children().each(function() {
-            var temp = $(this).clone();
-            temp.children('.product-attribute').css('display', 'inline-block');
-            temp.children('.product-attribute').prev('em').css('display', 'none');
-            $('#modal-edit-product-attr .modal-body').append(temp);
-        });
-
-        editing = $(this).parent().prev().attr('id').split('show-attr-')[1];
-
-        $('#modal-edit-product-attr').modal();
-
-        $('.required').focus(function() {
-            if( $(this).val() == '必填项' ) {
-                $(this).val('');
-            }
-            $(this).css('border', '1px rgb(213,213,213) solid');
-            $(this).css('color', '#000000');
-        });
     });
 
     $('#add-attr').click(function(e) {
@@ -220,6 +198,29 @@ $(function() {
             $(this).css('color', '#000000');
         });
 
+
+    });
+
+    $('.edit-attr').live('click', function() {
+        $('#modal-edit-product-attr .modal-body').empty();
+        $(this).parent().prev().children().each(function() {
+            var temp = $(this).clone();
+            temp.children('.product-attribute').css('display', 'inline-block');
+            temp.children('.product-attribute').prev('em').css('display', 'none');
+            $('#modal-edit-product-attr .modal-body').append(temp);
+        });
+
+        editing = $(this).parent().prev().attr('id').split('show-attr-')[1];
+        console.log(editing);
+        $('#modal-edit-product-attr').modal();
+
+        $('.required').focus(function() {
+            if( $(this).val() == '必填项' ) {
+                $(this).val('');
+            }
+            $(this).css('border', '1px rgb(213,213,213) solid');
+            $(this).css('color', '#000000');
+        });
     });
 
     $('#confirm').click(function() {
@@ -287,9 +288,6 @@ $(function() {
                     index++;
                 }
             },'json');
-
-
-
         }
 
     });
