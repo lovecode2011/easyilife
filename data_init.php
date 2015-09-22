@@ -12,8 +12,13 @@ $data = array();
 //站点参数
 $table[] = 'sysconf';
 $data[] = array(
+    array('key'=>'recommend_integral', 'name'=>'推广赠送积分', 'value'=>10, 'type'=>'text', 'group'=>'config', 'remark'=>''),
+    array('key'=>'level_1', 'name'=>'一级分销比例', 'value'=>0.3, 'type'=>'text', 'group'=>'config', 'remark'=>''),
+    array('key'=>'level_2', 'name'=>'二级分销比例', 'value'=>0.2, 'type'=>'text', 'group'=>'config', 'remark'=>''),
+    array('key'=>'level_3', 'name'=>'三级分销比例', 'value'=>0.1, 'type'=>'text', 'group'=>'config', 'remark'=>'')
 );
 
+/*
 //管理员
 $table[] = 'admin';
 $data[] = array(
@@ -36,6 +41,7 @@ $data[] = array(
 $table[] = 'card_pool';
 $data[] = array(
 );
+*/
 
 echo '初始化数据:<br/>';
 foreach($table as $key=>$name)
@@ -54,6 +60,6 @@ foreach($table as $key=>$name)
     {
         echo ' <font color="green">success</font><br/>';
     } else {
-        echo ' <font color="red">fail</font><br/>';
+        echo ' <font color="red">fail</font><br/>'.$db->errmsg();
     }
 }

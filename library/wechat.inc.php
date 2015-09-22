@@ -22,6 +22,28 @@ function is_weixin()
 	return false;
 }
 
+/*
+ * 非授权的方式获取用户信息
+ */
+function get_user_wechat_info($access_token, $openid)
+{
+    global $db;
+
+    $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN';
+    $url = sprintf($url, $access_token, $openid);
+
+    $user_info = get($url);
+
+    $user_info = json_decode($user_info);
+    $data = array(
+        'nickname' => $user_info->nickname,
+        'headimg' => $user_info->headimgurl,
+        'unionid' => $user_info->unionid
+    );
+
+    return $db->autoUpdate('member', $data, '`openid`=\''.$openid.'\'');
+}
+
  //获取用户信息
  /**
  * @param string code
@@ -32,8 +54,6 @@ function is_weixin()
  */
 function get_user_info($code, $appid, $appsecret, $mode = 'base')
 {
-    global $db;
-
     //获取access_token
     $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code';
     $url = sprintf($url, $appid, $appsecret, $code);
@@ -58,13 +78,7 @@ function get_user_info($code, $appid, $appsecret, $mode = 'base')
             $response = json_decode($response);
             if(!isset($response->error))
             {
-                $data = array(
-                    'nick_name' => $response->nickname,
-                    'img' => $response->headimgurl,
-                    'unionid' => $response->unionid
-                );
-
-                $db->autoUpdate('member', $data, '`openid`=\''.$response->openid.'\'');
+                return $response;
             } else {
                 return false;
             }
@@ -109,7 +123,7 @@ function get_qrcode($openid, $access_token)
     }
     //临时二维码申请
     $data = '{"expire_seconds": 1800, "action_name": "QR_SCENE", "action_info": {"scene": {"scene_id": '.$scene_id.'}}}';
-    $response = rawPost('https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token='.$access_token, $data);
+    $response = post('https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token='.$access_token, $data, false);
 
     $response = json_decode($response);
 
@@ -123,7 +137,7 @@ function get_qrcode($openid, $access_token)
             'expired' => time()+1800
         );
 
-        $db->autoUpdate('user', $data, '`openid`=\''.$openid.'\'');
+        $db->autoUpdate('member', $data, '`openid`=\''.$openid.'\'');
         $qrcode = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='.$response->ticket;
         return $qrcode;
     }

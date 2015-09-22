@@ -264,6 +264,7 @@ class MySQL
      */
     public function autoInsert($table, $data)
     {
+        global $log;
         $sql = 'insert into '.$this->table($table).' (%s) values %s';
 
         $columns = '';
@@ -281,6 +282,7 @@ class MySQL
 
         $sql = sprintf($sql, $columns, $values);
 
+        $log->record($sql);
         return $this->insert($sql);
     }
 
@@ -289,6 +291,8 @@ class MySQL
      */
     public function autoUpdate($table, $data, $where = 1, $order = '', $limit = '')
     {
+        global $log;
+
         $update = '';
         foreach($data as $key=>$value)
         {
@@ -310,6 +314,7 @@ class MySQL
 
         $sql = sprintf($sql, $update, $where, $order, $limit);
 
+        $log->record($sql);
         return $this->update($sql);
     }
 

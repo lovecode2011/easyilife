@@ -522,6 +522,7 @@ if( 'gallery' == $opera ) {
             $update_where[] = 'id = '.$id.' and product_sn = \''.$product_sn.'\'';
         }
     }
+
     $db->begin();
     $transaction = true;
     if( $insert_data ) {

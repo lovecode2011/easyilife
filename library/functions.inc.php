@@ -443,7 +443,7 @@ function get($url, $params = '')
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_HEADER, 0);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
+//    curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
 
     $data = curl_exec($curl);
     curl_close($curl);
@@ -477,41 +477,18 @@ function post($url, $params = array(), $encode = true)
         $postParams = $params;
     }
     $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, $url);
-    curl_setopt($curl, CURLOPT_HEADER, 0);
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $postParams);
-    curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
-    $data = curl_exec($curl);
-    curl_close($curl);
-
-    return $data;
-}
-
-/**
- * CURL的POST方法 用于发送不带参数的数据
- * @param string $url 目标链接
- * @param string $data 附带的参数
- * @return string 通过POST方法获取到的网页数据
- * @author winsen
- * @date 2014-11-20
- */
-function rawPost($url, $data)
-{
-    $curl = curl_init();
     $this_header = array("content-type: application/x-www-form-urlencoded; charset=UTF-8");
     curl_setopt($curl, CURLOPT_HTTPHEADER, $this_header);
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_POST, 1);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $postParams);
+//    curl_setopt($curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1);
     $data = curl_exec($curl);
     curl_close($curl);
 
     return $data;
 }
-
 
 /**
  * 验证银行卡是否正确

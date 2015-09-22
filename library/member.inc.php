@@ -7,327 +7,293 @@
  * Time: 下午10:12
  */
 
-/**
-* 修改充值操作记录
-*/
-function update_recharge($recharge_sn, $status, $operator, $remark)
-{
-
-}
-
-/**
-* 新增充值申请
-*/
-function add_recharge_application($account, $recharge, $remark, $bank_name, $bank_account, $bank_card, $status = 0, $operator = '')
-{
+ /**
+ * 账户明细
+ * @param string $account
+ * @param float $balance
+ * @param float $reward
+ * @param float $integral
+ * @param float $integral_await
+ * @param float $reward_await
+ * @param string $operator
+ * @param string $remark
+ * @return bool
+ */
+ function add_memeber_exchange_log($account, $balance, $reward, $integral, $integral_await, $reward_await, $operator, $remark = '')
+ {
     global $db;
 
-    $db->begin();
-
-    $data = array(
+    $exchange_data = array(
         'account' => $account,
-        'amount' => $recharge,
-        'real_amount' => $recharge,
+        'balance' => $balance,
+        'reward' => $reward,
+        'integral' => $integral,
+        'integral_await' => $integral_await,
+        'reward_await' => $reward_await,
+        'operator' => $operator,
         'remark' => $remark,
-        'bank_name' => $bank_name,
-        'bank_card' => $bank_card,
-        'bank_account' => $bank_account,
-        'status' => $status
+        'add_time' => time()
     );
 
-    $recharge_sn = '';
-    do
-    {
-        $recharge_sn = 'R'.time().rand(100, 999);
-        $check_recharge_sn = 'select `recharge_sn` from '.$db->table('recharge').' where `recharge_sn`=\''.$recharge_sn.'\'';
-    } while($db->fetchOne($check_recharge_sn));
-
-    if($recharge_sn)
-    {
-        if($db->autoInsert('recharge', array($data)))
-        {
-            $log_data = array(
-                'recharge_sn' => $recharge_sn,
-                'add_time' => time(),
-                'operator' => $operator
-            );
-
-            if($operator == '')
-            {
-                $log_data['operator'] = $account;
-                $log_data['remark'] = '提交充值申请';
-            }
-
-            if($db->autoInsert('recharge_log', array($log_data)))
-            {
-                $db->commit();
-                return $recharge_sn;
-            }
-        }
-    }
-
-    $db->rollback();
-    return false;
-}
-/**
-* 修改提现申请
-*/
-function update_withdraw($apply_sn, $status, $operator, $remark)
-{
-    global $db;
-
     $db->begin();
 
-    $data = array(
-        'status' => $status
-    );
-
-    if($db->autoUpdate('withdraw', $data, '`apply_sn`=\''.$apply_sn.'\''))
-    {
-        $log_data = array(
-            'apply_sn' => $apply_sn,
-            'add_time' => time(),
-            'operator' => $operator,
-            'remark' => $remark
-        );
-
-        if($db->autoInsert('withdraw_log', array($log_data)))
-        {
-            $db->commit();
-            return true;
-        }
-    }
-
-    $db->rollback();
-    return false;
-}
-/**
-* 新增提现申请
-*/
-function add_withdraw_application($account, $withdraw, $fee, $remark, $bank_name, $bank_account, $bank_card)
-{
-    global $db;
-    global $log;
-
-    $db->begin();
-
-    $data = array(
-        'account' => $account,
-        'amount' => $withdraw,
-        'fee' => $fee,
-        'apply_time' => time(),
-        'remark' => $remark,
-        'bank_name' => $bank_name,
-        'bank_account' => $bank_account,
-        'bank_card' => $bank_card
-    );
-
-    $apply_sn = '';
-    do
-    {
-        $apply_sn = 'A'.time().rand(100, 999);
-        $check_apply_sn = 'select `apply_sn` from '.$db->table('withdraw').' where `apply_sn`=\''.$apply_sn.'\'';
-    } while($db->fetchOne($check_apply_sn));
-
-    if($apply_sn)
-    {
-        $data['apply_sn'] = $apply_sn;
-
-        if($db->autoInsert('withdraw', array($data)))
-        {
-            $log_data = array(
-                'apply_sn' => $apply_sn,
-                'add_time' => time(),
-                'operator' => $account,
-                'remark' => '提交申请'
-            );
-
-            if($db->autoInsert('withdraw_log', array($log_data)))
-            {
-                $db->commit();
-                return $apply_sn;
-            }
-        }
-    }
-
-    $db->rollback();
-    return false;
-}
-
-/**
-* 新增赠送积分
-*/
-function add_integral_given($account, $integral_given, $remark, $operator = 'settle')
-{
-    global $db;
-    global $log;
-
-    $db->begin();
-
-    if(add_member_account($account, $operator, 3, 0, $integral_given, 0, 0, 0, $remark))
-    {
-        $data = array(
-            'account' => $account,
-            'integral_await' => $integral_given,
-            'add_time' => time()
-        );
-
-        if($db->autoInsert('reward', array($data)))
-        {
-            $db->commit();
-            return true;
-        }
-    }
-
-    $db->rollback();
-    return false;
-}
-/**
-* 新增推广积分
-*/
-function add_recommend_integral($account, $integral, $remark, $operator = 'settle')
-{
-    global $db;
-    global $log;
-
-    $db->begin();
-
-    if(add_member_account($account, $operator, 3, $integral, 0, 0, 0, 0, $remark))
-    {
-        $db->commit();
-        return true;
-    }
-
-    $db->rollback();
-    return false;
-}
-
-/**
-* 新增分销奖金
-*/
-function add_reward($account, $reward, $remark, $operator = 'settle')
-{
-    global $db;
-    global $log;
-
-    $db->begin();
-
-    if(add_member_account($account, $operator, 3, 0, 0, 0, $reward, 0, $remark))
-    {
-        $data = array(
-            'account' => $account,
-            'reward_await' => $reward,
-            'add_time' => time()
-        );
-
-        if($db->autoInsert('reward', array($data)))
-        {
-            $db->commit();
-            return true;
-        }
-    }
-
-    $db->rollback();
-    return false;
-}
-/**
-* 会员积分互转
-*/
-function integral_transfer($from, $to, $integral, $remark)
-{
-    global $db;
-    global $log;
-
-    $db->begin();
-
-    $check_integral = 'select `integral` from '.$db->table('user').' where `account`=\''.$from.'\' for update';
-    $from_integral = $db->fetchOne($check_integral);
-
-    if($from_integral >= $integral)
-    {
-        if(add_member_account($from, $from, 1, -1*$integral, 0, 0, 0, 0, $remark))
-        {
-            if(add_member_account($to, $from, 2, $integral, 0, 0, 0, 0, $remark))
-            {
-                $db->commit();
-                return true;
-            }
-        }
-    }
-
-    $db->rollback();
-    return false;
-}
-
-/**
-* 记录会员账户明细
-*/
-function add_member_account($account, $operator, $type, $integral = 0, $integral_await = 0, $reward = 0, $reward_await = 0, $emoney = 0, $remark = '')
-{
-    global $db;
-    global $log;
-
-    $update_user = 'update '.$db->table('user').' set `integral`=`integral`+%f,`integral_await`=`integral_await`+%f,'.
-                   '`reward`=`reward`+%f,`reward_await`=`reward_await`+%f,`emoney`=`emoney`+%f where `account`=\'%s\'';
-    $update_user = sprintf($update_user, $integral, $integral_await, $reward, $reward_await, $emoney, $account);
-    $log->record($update_user);
+    //更新用户账户
+    $update_user = 'update '.$db->table('member').' set `balance`=`balance`+'.$balance.',`reward`=`reward`+'.$reward.','.
+                   '`integral`=`integral`+'.$integral.',`integral_await`=`integral_await`+'.$integral_await.','.
+                   '`reward_await`=`reward_await`+'.$reward_await.' where `account`=\''.$account.'\'';
     if($db->update($update_user))
     {
-        $data = array(
-            'account' => $account,
-            'operator' => $operator,
-            'integral' => $integral,
-            'integral_await' => $integral_await,
-            'reward' => $reward,
-            'reward_await' => $reward_await,
-            'emoney' => $emoney,
-            'remark' => $remark,
-            'add_time' => time(),
-            'type' => $type
-        );
+        if($db->autoInsert('member_exchange_log', array($exchange_data)))
+        {
+            $db->commit();
+            return true;
+        }
+    }
 
-        $db->autoInsert('account', array($data));
+    $db->rollback();
+    return false;
+ }
 
-        return true;
+/**
+ * 修改收货地址
+ * @param int $province
+ * @param int $city
+ * @param int $district
+ * @param int $group
+ * @param string $address
+ * @param string $consignee
+ * @param string $mobile
+ * @param string $zipcode
+ * @param string $account
+ * @param bool $is_default
+ * @param int $id
+ * @return bool
+ */
+ function edit_address($province, $city, $district, $group, $address, $consignee, $mobile, $zipcode, $account, $is_default, $id)
+ {
+    global $db;
+
+    $address_data = array(
+        'province' => $province,
+        'city' => $city,
+        'district' => $district,
+        'group' => $group,
+        'address' => $address,
+        'consignee' => $consignee,
+        'mobile' => $mobile,
+        'zipcode' => $zipcode,
+        'is_default' => $is_default
+    );
+
+    return $db->autoUpdate('address', $address_data, '`id`='.$id.' and `account`=\''.$account.'\'');
+ }
+
+/**
+ * 新增收货地址
+ * @param int $province
+ * @param int $city
+ * @param int $district
+ * @param int $group
+ * @param string $address
+ * @param string $consignee
+ * @param string $mobile
+ * @param string $zipcode
+ * @param string $account
+ * @param bool $is_default
+ * @return int
+ */
+ function add_address($province, $city, $district, $group, $address, $consignee, $mobile, $zipcode, $account, $is_default = true)
+ {
+    global $db;
+
+    $address_data = array(
+        'province' => $province,
+        'city' => $city,
+        'district' => $district,
+        'group' => $group,
+        'address' => $address,
+        'consignee' => $consignee,
+        'mobile' => $mobile,
+        'zipcode' => $zipcode,
+        'account' => $account,
+        'is_default' => $is_default
+    );
+
+    if($db->autoInsert('address', array($address_data)))
+    {
+        return $db->get_last_id();
     } else {
         return false;
     }
-}
-
+ }
 /**
- * 新增会员账号
+ * 取消分销产品
+ * @param string $account
+ * @param string $product_sn
+ * @return bool
  */
-function add_user($openid, $parent_id = 0)
-{
+ function cancel_distribution_product($account, $product_sn)
+ {
     global $db;
 
-    //scene_id可能已满但不影响获取二维码操作
-    $data = array(
-        'openid' => $openid,
-        'scene_id' => 0,
+    return $db->autoDelete('distribution', '`account`=\''.$account.'\' and `product_sn`=\''.$product_sn.'\'');
+ }
+
+ /**
+ * 分销产品
+ * @param string $account
+ * @param string $product_sn
+ * @return bool
+ */
+ function distribution_product($account, $product_sn)
+ {
+    global $db;
+    global $log;
+
+    //检查产品是否已分销
+    $check_distribution = 'select `account` from '.$db->table('distribution').' where `account`=\''.$account.'\' and `product_sn`=\''.$product_sn.'\'';
+    if($db->fetchOne($check_distribution))
+    {
+        return true;
+    } else {
+        $distribution_data = array(
+            'account' => $account,
+            'product_sn' => $product_sn,
+            'add_time' => time()
+        );
+
+        $log->record_array($distribution_data);
+        return $db->autoInsert('distribution', array($distribution_data));
+    }
+ }
+
+ /**
+ * 取消收藏产品
+ * @param string $account
+ * @param string $product_sn
+ * @return bool
+ */
+ function cancel_collection_product($account, $product_sn)
+ {
+    global $db;
+
+    return $db->autoDelete('collection', '`account`=\''.$account.'\' and `product_sn`=\''.$product_sn.'\'');
+ }
+
+ /**
+ * 收藏产品
+ * @param string $account
+ * @param string $product_sn
+ * @return bool
+ */
+ function collection_product($account, $product_sn)
+ {
+    global $db;
+    global $log;
+
+    //检查产品是否已收藏
+    $check_collection = 'select `account` from '.$db->table('collection').' where `account`=\''.$account.'\' and `product_sn`=\''.$product_sn.'\'';
+    if($db->fetchOne($check_collection))
+    {
+        return true;
+    } else {
+        $collection_data = array(
+            'account' => $account,
+            'product_sn' => $product_sn,
+            'add_time' => time()
+        );
+
+        $log->record_array($collection_data);
+
+        return $db->autoInsert('collection', array($collection_data));
+    }
+ }
+
+ /**
+ * 同步微信信息
+ * @param string $openid
+ * @param string $code
+ * @return bool
+ */
+ function async_member_info($openid, $code)
+ {
+    global $db;
+    global $config;
+    global $log;
+
+    $user_info = get_user_info($code, $config['appid'], $config['appsecret'], 'userinfo');
+
+    if($user_info)
+    {
+        $member_data = array(
+            'sex' => $user_info->sex,
+            'nickname' => $user_info->nickname,
+            'province' => $user_info->province,
+            'city' => $user_info->city,
+            'headimg' => $user_info->headimg,
+            'unionid' => $user_info->unionid
+        );
+
+        $log->record_array($member_data);
+        if($db->autoUpdate('member', $member_data, '`openid`=\''.$openid.'\''))
+        {
+            return true;
+        } else {
+            return false;
+        }
+    }
+ }
+
+ /**
+ * 注册会员信息
+ * @param string $openid
+ * @return string 会员账号
+ */
+ function register_member($openid, $parent_id = 0)
+ {
+    global $db;
+    global $log;
+
+    $db->begin();
+    $member_data = array(
         'account' => get_account(),
+        'openid' => $openid,
+        'add_time' => time(),
         'parent_id' => $parent_id
     );
 
-    if($db->autoInsert('user', array($data)))
+    if($db->autoInsert('member', array($member_data)))
     {
-        if($parent_id > 0)
+        $path = '';
+        $id = $db->get_last_id();
+        if($parent_id)
         {
-            $self_id = $db->get_last_id();
-            $get_parent_path = 'select `path` from '.$db->table('user').' where `id`='.$parent_id;
-            $parent_path = $db->fetchOne($get_parent_path);
+            $get_parent_path = 'select `path` from '.$db->table('member').' where `id`='.$parent_id;
+            $path = $db->fetchOne($get_parent_path);
+        }
 
-            $path = $parent_path.$self_id.',';
+        $path .= $id.',';
 
-            $db->autoUpdate('user', array('path'=>$path), '`openid`=\''.$openid.'\'');
+        $update_data = array(
+            'path' => $path
+        );
+
+        if($db->autoUpdate('member', $update_data, '`id`='.$id))
+        {
+            $log->record_array($member_data);
+            $db->commit();
+            return $member_data['account'];
         }
     }
 
-    return $data['account'];
-}
+    $db->rollback();
+    return false;
+ }
 
  /**
  * 获取会员账号
+ * @param int $step 账号池增长的步长，实际账号池增长速度为2*$step
+ * @return string 会员账号
  */
  function get_account($step = 500)
  {
@@ -358,6 +324,13 @@ function add_user($openid, $parent_id = 0)
         $data = array();
         foreach($account_arr as $account_tail)
         {
+            $c = strlen($account_tail);
+            while($c < 6)
+            {
+                $account_tail = '0'.$account_tail;
+                $c++;
+            }
+
             $data[] = array('account'=>$account_prefix.$account_tail);
         }
         $log->record_array($data);
@@ -369,3 +342,76 @@ function add_user($openid, $parent_id = 0)
 
     return $account;
  }
+
+/**
+ * 发放推广积分
+ * @param $account
+ * @param $integral
+ * @param $remark
+ * @return bool
+ */
+function add_recommend_integral($account, $integral, $remark = '', $operator = 'settle')
+{
+    return add_memeber_exchange_log($account, 0, 0, $integral, 0,0, $operator, $remark);
+}
+
+/**
+ * 验证密码
+ */
+function verify_password($account, $password)
+{
+    global $db;
+
+    $get_user_password = 'select `password` from '.$db->table('member').' where `account`=\''.$account.'\'';
+    $user_password = $db->fetchOne($get_user_password);
+
+    $password = md5($password.PASSWORD_END);
+
+    return $password == $user_password;
+}
+
+/**
+ * 新增提现记录
+ */
+function add_withdraw($account, $amount, $bank_id, $remark = '')
+{
+    global $db;
+    global $config;
+
+    $withdraw_sn = '';
+
+    $fee = $amount * $config['fee_rate'];
+    $withdraw_data = array(
+        'account' => $account,
+        'amount' => $amount,
+        'fee' => $fee,
+        'status' => 0,
+        'remark' => $remark,
+        'add_time' => time()
+    );
+
+    $get_bank_info = 'select `bank`,`bank_account`,`bank_card` from '.$db->table('bank_card').' where `id`='.$bank_id;
+    $bank_info = $db->fetchRow($get_bank_info);
+
+    if($bank_info)
+    {
+        $withdraw_data = array_merge($withdraw_data, $bank_info);
+    } else {
+        return false;
+    }
+
+    do
+    {
+        $withdraw_sn = 'W'.time().rand(100, 999);
+        $check_withdraw = 'select `withdraw_sn` from '.$db->table('withdraw').' where `withdraw_sn`=\''.$withdraw_sn.'\'';
+    } while($db->fetchOne($check_withdraw));
+
+    $withdraw_data['withdraw_sn'] = $withdraw_sn;
+
+    if($db->autoInsert('withdraw', array($withdraw_data)))
+    {
+        return $withdraw_sn;
+    } else {
+        return false;
+    }
+}

@@ -260,7 +260,10 @@ $sql[] = 'create table if not exists '.$db->table('member').' (
     `reward_amount` decimal(18,2) not null default \'0\',
     `parent_id` int not null default \'0\',
     `path` varchar(255),
-    `business_account` varchar(255)
+    `business_account` varchar(255),
+    `ticket` varchar(255),
+    `expired` int not null default \'0\',
+    `scene_id` int not null default \'0\'
 ) default charset=utf8;';
 
 $table[] = '订单';
@@ -422,6 +425,8 @@ $sql[] = 'create table if not exists '.$db->table('cart').' (
     `number` int not null,
     `business_account` varchar(255) not null,
     `add_time` int not null,
+    `attributes` varchar(255),
+    `checked` tinyint(1) not null default \'1\',
     index (`openid`),
     index (`account`),
     index (`business_account`)
@@ -602,6 +607,23 @@ $sql[] = 'create table if not exists '.$db->table('platform_role').' (
     `id` int not null auto_increment primary key,
     `name` varchar(255) not null,
     `purview` text not null
+) default charset=utf8;';
+
+$table[] = '卡号池';
+$sql[] = 'create table if not exists '.$db->table('card_pool').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `status` int not null default \'1\'
+) default charset=utf8;';
+
+$table[] = '银行卡号';
+$sql[] = 'create table if not exists '.$db->table('bank_card').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `bank` varchar(255) not null,
+    `bank_account` varchar(255) not null,
+    `bank_card` varchar(255) not null,
+    index (`account`)
 ) default charset=utf8;';
 
 

@@ -5,6 +5,8 @@
  * @version 1.0.0
  * @date 2015-01-09
  */
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 //设置系统相关参数
 session_start();
 date_default_timezone_set('Asia/Shanghai');
@@ -18,9 +20,9 @@ $loader = AutoLoader::getInstance();
 $configs = array('script_path'=>ROOT_PATH.'library/', 'class_path'=>ROOT_PATH.'library/');
 $loader->setConfigs($configs);
 
-$class_list = array('Smarty', 'Logs', 'MySQL', 'Code');
+$class_list = array('Smarty', 'Logs', 'MySQL', 'Code', 'JSSDK');
 $loader->includeClass($class_list);
-$script_list = array('configs','functions','lang');
+$script_list = array('configs','functions','lang', 'member', 'transaction', 'wechat');
 $loader->includeScript($script_list);
 //初始化数据库链接
 global $db;
@@ -47,7 +49,7 @@ $smarty = new Smarty();
 $smarty->setCompileDir(ROOT_PATH.'data/compiles');
 $smarty->setTemplateDir(ROOT_PATH.'themes/'.$config['themes']);
 $smarty->setCacheDir(ROOT_PATH.'data/caches');
-$smarty->setCacheLifetime(1800);//设置缓存文件超时时间为1800秒
+$smarty->setCacheLifetime(2);//设置缓存文件超时时间为1800秒
 
 //Debug模式下每次都强制编译输出
 if($debug_mode)
@@ -65,3 +67,62 @@ assign('LANG', $lang);
 assign('config', $config);
 //设置模板路径
 assign('template_dir', 'themes/'.$config['themes'].'/');
+
+//测试数据
+$_SESSION['account'] = 'SHQ000000';
+$_SESSION['openid'] = '01234567890x';
+if(!isset($_SESSION['openid']))
+{
+    $_SESSION['openid'] = '';
+}
+
+$code = getGET('code');
+$state = getGET('state');
+if($_SESSION['openid'] == '' && $code != '' && $state == 2048)
+{
+    $wechat_user = get_user_info($code, $config['appid'], $config['appsecret'], 'userinfo');
+
+    if($wechat_user)
+    {
+        $log->record("get user openid:".$wechat_user->openid);
+        $_SESSION['openid'] = $wechat_user->openid;
+
+        $get_account = 'select `account` from '.$db->table('member').' where `openid`=\''.$wechat_user->openid.'\'';
+        $account = $db->fetchOne($get_account);
+
+        if(!$account)
+        {
+            $log->record("register new member");
+            register_member($_SESSION['openid']);
+        }
+
+        $member_data = array(
+            'sex' => $wechat_user->sex,
+            'nickname' => $wechat_user->nickname,
+            'province' => $wechat_user->province,
+            'city' => $wechat_user->city,
+            'headimg' => $wechat_user->headimgurl
+        );
+
+        $db->autoUpdate('member', $member_data, '`openid`=\''.$wechat_user->openid.'\'');
+        $get_account = 'select `account` from '.$db->table('member').' where `openid`=\''.$wechat_user->openid.'\'';
+        $_SESSION['account'] = $db->fetchOne($get_account);
+    } else {
+        echo 'ERROR 2048: 获取授权信息失败';
+        exit;
+    }
+}
+
+if($_SESSION['openid'] == '' || $_SESSION['account'] == '')
+{
+    echo '获取用户信息失败，请联系管理员';
+    exit;
+}
+
+//微信JS调用参数
+if(is_weixin())
+{
+    $jssdk = new JSSDK($config['appid'], $config['appsecret']);
+    $signPackage = $jssdk->GetSignPackage();
+    assign('signPackage', $signPackage);
+}
