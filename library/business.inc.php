@@ -268,4 +268,9 @@ function business_base_init() {
     assign('active_nav', $active_nav);
     assign('menu_mark', 'menu_'.$active_nav);
 
+    //未读消息数量
+    $get_unread_message_count = 'select count(*) from '.$db->table('message');
+    $get_unread_message_count .= ' where business_account = \''.$_SESSION['business_account'].'\' and status = 0';
+    $unread_message_count = $db->fetchOne($get_unread_message_count);
+    assign('unread_message_count', $unread_message_count);
 }

@@ -70,7 +70,7 @@ if( 'exam' == $opera ) {
 
         //系统通知商户===
         $data = array(
-            'title' => '系统消息',
+            'title' => '产品审核',
             'content' => '您的产品，编号'.$product['product_sn'].'审核通过',
             'account' => $business['account'],
             'business_account' => $business['business_account'],
@@ -126,7 +126,7 @@ if( 'reject' == $opera ) {
 
         //系统通知商户==================================
         $data = array(
-            'title' => '系统消息',
+            'title' => '产品审核',
             'content' => '您的产品，编号'.$product['product_sn'].'审核不通过。'.$message,
             'account' => $business['account'],
             'business_account' => $business['business_account'],

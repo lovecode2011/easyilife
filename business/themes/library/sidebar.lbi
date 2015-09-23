@@ -9,10 +9,13 @@
             <li class="menu_message">
                 <a href="javascript:void(0);" class="nav-top-item">
                     <em class="icon">&#xe607;</em>系统消息
+                    {if $unread_message_count neq 0}
+                    <sup class="badge">&nbsp;{$unread_message_count}</sup>
+                    {/if}
                 </a>
                 <ul class="submenu" id="id_menu_message" style="display: none">
-                    <li><a href="message.php?status=0">未读消息</a></li>
-                    <li><a href="message.php?status=1">已读消息</a></li>
+                    <li><a href="message.php">未读消息</a></li>
+                    <li><a href="message.php?act=read">已读消息</a></li>
                 </ul>
 
             </li>

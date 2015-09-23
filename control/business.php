@@ -83,6 +83,19 @@ if( 'auth' == $opera ) {
         $transaction = false;
     }
 
+    //已系统消息形式返回驳回理由，返回到
+    $data = array(
+        'title' => '信息认证',
+        'content' => '您的信息认证已通过审核，数据已更新。',
+        'account' => $business['account'],
+        'business_account' => $business['business_account'],
+        'add_time' => time(),
+        'status' => 0,  //未读
+    );
+    if( !$db->autoInsert('message', array($data)) ) {
+        $transaction = false;
+    }
+
     if( $transaction ) {
         $db->commit();
         //删除图片
@@ -132,6 +145,20 @@ if( 'exam' == $opera ) {
     $update_business .= ' where business_account = \''.$business_account.'\' and status = 1 limit 1';
 
     if( $db->update($update_business) ) {
+        //系统通知
+        $data = array(
+            'title' => '商户审核',
+            'content' => '您已成功入驻分销平台，祝您生意兴隆！',
+            'account' => $business['account'],
+            'business_account' => $business['business_account'],
+            'add_time' => time(),
+            'status' => 0,  //未读
+        );
+
+        if( !$db->autoInsert('message', array($data)) ) {
+            $transaction = false;
+        }
+
         $links = array(
             array('alt' => '商户列表', 'link' => 'business.php'),
         );
@@ -180,7 +207,7 @@ if( 'reject' == $opera ) {
     }
     //已系统消息形式返回驳回理由，返回到
     $data = array(
-        'title' => '系统消息',
+        'title' => '商户审核',
         'content' => $reason,
         'account' => $business['account'],
         'business_account' => $business['business_account'],
@@ -244,13 +271,29 @@ if( 'auth_reject' == $opera ) {
     }
     //已系统消息形式返回驳回理由，返回到
     $data = array(
-        'title' => '系统消息',
+        'title' => '信息认证',
         'content' => $reason,
         'account' => $business['account'],
         'business_account' => $business['business_account'],
         'add_time' => time(),
         'status' => 0,  //未读
     );
+    if( !$db->autoInsert('message', array($data)) ) {
+        $transaction = false;
+    }
+
+    if( $transaction ) {
+        $db->commit();
+        $links = array(
+            array('link' => 'business.php', 'alt' => '商户列表'),
+        );
+        show_system_message('信息认证已驳回', $links);
+        exit;
+    } else {
+        $db->rollback();
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
 }
 
 //===========================================================================

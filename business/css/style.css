@@ -221,7 +221,7 @@ input,select,textarea{outline:none}
     background: #22282e;
 }
 
-.select-hover{s
+.select-hover{
     color:#ffffff !important;
     background: #22282e;
 }
@@ -501,3 +501,97 @@ ul.tabs li.active a{
     opacity: 1;
 }
 /* END 资讯样式 */
+
+/* 没有特效的tab css*/
+ul.tabs-without-js {
+    float: left;
+    list-style: none;
+    height: 41px;
+    border-bottom: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;
+    width: 100%;
+}
+ul.tabs-without-js li {
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #dddddd;
+    border-left: none;
+    margin-bottom: -1px;
+    _margin-bottom: -2px;
+    overflow: hidden;
+    position: relative;
+}
+ul.tabs-without-js li a {
+    text-decoration: none;
+    color:#666;
+    display: block;
+    padding: 0 20px;
+    border: 1px solid #fff;
+    outline: none;
+}
+ul.tabs-without-js li a:hover {
+    color:#428bca;
+}
+ul.tabs-without-js li.active, ul.tabs-without-js li.active a:hover  {
+    background: #ffffff;
+    border-bottom: 1px solid #fff;
+    color:#333333;
+}
+ul.tabs-without-js li.active{
+    border-top:2px solid #00a2ca;
+}
+ul.tabs-without-js li.active a{
+    color:#333333;
+}
+.tab_container {
+    border-top: none;
+    clear: both;
+    float: left;
+    width: 100%;
+    background: #fff;
+}
+.tab_content {
+    padding: 10px 0 10px;
+}
+.table {
+    color: #666;
+    background: #FFF;
+    font-size: 12px;
+    margin-top: 8px;
+    border: 1px solid #e1e6eb;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.table thead tr th {
+    padding: 8px 8px;
+    font-weight: normal;
+    color: #999;
+    border-bottom: 1px solid #e1e6eb;
+    background-color: #F5F6FA;
+}
+.table tbody tr td {
+    padding: 12px 8px;
+    border-top: 0px;
+    border-bottom: 1px solid #e1e6eb;
+    vertical-align: middle;
+}
+/* END 导航管理css */
+
+/* 系统消息未读信息提示 */
+.badge {
+    position: absolute;
+    /*top: .5rem;*/
+    right: 22%;
+    display: inline-block;
+    min-width: .8rem;
+    height: .8rem;
+    border-radius: .4rem;
+    padding: 0 .05rem;
+    background-color: #fe463c;
+    line-height: .8rem;
+    font-size: .6rem;
+    color: #fff;
+}
+/* END 系统消息未读信息提示 */
+
