@@ -178,7 +178,7 @@ if( 'view' == $act ) {
     $keyword = trim(getGET('keyword'));
     if( '' != $keyword ) {
         $keyword = $db->escape($keyword);
-        $where .= ' and a.name like \'%'.$keyword.'%\' || product_sn like \'%'.$keyword.'%\'';
+        $where .= ' and a.name like \'%'.$keyword.'%\' or product_sn like \'%'.$keyword.'%\'';
     }
     $count = intval(getGET('count'));
     $count_array = array(10, 25, 50 , 100);
@@ -223,6 +223,14 @@ if( 'view' == $act ) {
         }
     }
     assign('product_list', $product_list);
+
+    if( $status == 1 ) {
+        $exam_count = $total;
+    } else {
+        $get_exam_count = 'select count(*) from '.$db->table('product').' where status = 2';
+        $exam_count = $db->fetchOne($get_exam_count);
+    }
+    assign('exam_count', $exam_count);
 }
 
 if( 'exam' == $act ) {

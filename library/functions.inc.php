@@ -323,6 +323,35 @@ function back_base_init() {
     assign('activeNav', $activeNav);
     assign('pageTitle', '三级分销系统-管理后台');
     assign('currentAdmin', $_SESSION['name']);
+
+    //待处理商户数量
+    global $db;
+    $get_business_exam_count = 'select count(*) from '.$db->table('business').' where status = 1';
+    $business_exam_count = $db->fetchOne($get_business_exam_count);
+
+    $get_business_auth_count = 'select count(*) from '.$db->table('auth').' where status = 0';
+    $business_auth_count = $db->fetchOne($get_business_auth_count);
+
+    $business_deal_count = $business_auth_count + $business_exam_count;
+    assign('business_deal_count', $business_deal_count);
+
+    //待处理产品数量
+    $get_product_exam_count = 'select count(*) from '.$db->table('product').' where status = 2';
+    $product_exam_count = $db->fetchOne($get_product_exam_count);
+    assign('product_exam_count', $product_exam_count);
+
+    //待处理提现
+    $get_member_withdraw_deal_count = 'select count(*) from'.$db->table('withdraw').' where status = 0';
+    $member_withdraw_deal_count = $db->fetchOne($get_member_withdraw_deal_count);
+
+    $get_business_withdraw_deal_count = 'select count(*) from'.$db->table('business_withdraw').' where status = 0';
+    $business_withdraw_deal_count = $db->fetchOne($get_business_withdraw_deal_count);
+
+    $withdraw_deal_count = $member_withdraw_deal_count + $business_withdraw_deal_count;
+
+    assign('member_withdraw_count', $member_withdraw_deal_count);
+    assign('business_withdraw_count', $business_withdraw_deal_count);
+    assign('withdraw_deal_count', $withdraw_deal_count);
 }
 
 

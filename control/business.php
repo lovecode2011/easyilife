@@ -330,7 +330,7 @@ if( 'view' == $act ) {
     $keyword = trim(getGET('keyword'));
     if( '' != $keyword ) {
         $keyword = $db->escape($keyword);
-        $where .= ' and a.shop_name like \'%'.$keyword.'%\' || a.company like \'%'.$keyword.'%\'';
+        $where .= ' and a.shop_name like \'%'.$keyword.'%\' or a.company like \'%'.$keyword.'%\'';
     }
     $count = intval(getGET('count'));
     $count_array = array(10, 25, 50 , 100);
@@ -375,9 +375,20 @@ if( 'view' == $act ) {
             $business_list[$key]['status_str'] = $status_array[$value['status']];
         }
     }
-
-
     assign('business_list', $business_list);
+
+
+    if( $status == 1 ) {
+        $exam_count = $total;
+    } else {
+        $get_exam_count = 'select count(*) from '.$db->table('business').' where status = 1';
+        $exam_count = $db->fetchOne($get_exam_count);
+    }
+    assign('exam_count', $exam_count);
+
+    $get_auth_count = 'select count(*) from '.$db->table('auth').' where status = 0';
+    $auth_count = $db->fetchOne($get_auth_count);
+    assign('auth_count', $auth_count);
 }
 
 //认证信息列表
@@ -421,6 +432,12 @@ if( 'auth' == $act ) {
         }
     }
     assign('auth_list', $auth_list);
+
+    $get_exam_count = 'select count(*) from '.$db->table('business').' where status = 0';
+    $exam_count = $db->fetchOne($get_exam_count);
+    assign('exam_count', $exam_count);
+
+    assign('auth_count', $total);
 
 }
 
@@ -516,7 +533,7 @@ if( 'frozen' == $act ) {
     $business_account = $db->escape($business_account);
 
     $get_business = 'select * from '.$db->table('business');
-    $get_business .= ' where business_account = \''.$business_account.'\' and status = 2 || status = 3';
+    $get_business .= ' where business_account = \''.$business_account.'\' and status = 2 or status = 3';
     $get_business .= ' limit 1';
 
     $business = $db->fetchRow($get_business);

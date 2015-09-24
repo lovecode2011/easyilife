@@ -19,10 +19,16 @@
         </h5>
         <div class="pull-right">
             <a class="btn btn-primary" href="business.php">全部</a>&nbsp;
-            <a class="btn btn-primary" href="business.php?status=1">待审核</a>&nbsp;
+            <a class="btn btn-primary" href="business.php?status=1">
+                待审核
+                {if $exam_count neq 0}<sup class="badge">{$exam_count}</sup>{/if}
+            </a>&nbsp;
             <a class="btn btn-primary" href="business.php?status=2">运营中</a>&nbsp;
             <a class="btn btn-primary" href="business.php?status=3">已冻结</a>&nbsp;
-            <a class="btn btn-primary" href="business.php?act=auth">认证信息</a>&nbsp;
+            <a class="btn btn-primary" href="business.php?act=auth">
+                认证信息
+                {if $auth_count neq 0}<sup class="badge">{$auth_count}</sup>{/if}
+            </a>&nbsp;
             <a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>&nbsp;
         </div>
         <div class="clear"></div>

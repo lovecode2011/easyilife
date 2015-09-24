@@ -119,6 +119,24 @@
     </div>
 </div>
 <!-- END content -->
+
+<script type="text/javascript">
+    $(function(){
+        $('select[name=count]').change(function(){
+            var keyword = $('input[name=keyword]').val();
+            var count = $(this).val();
+            var url = 'brand.php?count=' + count;
+            if( keyword ) {
+                url += '&keyword=' + keyword;
+            }
+            {if $status}
+                var status = $('input[name=status]').val();
+                url += '&status=' + status;
+                {/if}
+                    window.location.href = url;
+                });
+            });
+</script>
 {include file="library/footer.lbi"}
 </body>
 </html>
