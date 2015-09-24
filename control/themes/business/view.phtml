@@ -166,7 +166,7 @@
             var keyword = $('input[name=keyword]').val();
             var count = $(this).val();
             var url = 'business.php?count=' + count + '&keyword=' + keyword;
-            {if $status}
+            {if $status neq 0}
             var status = $('input[name=status]').val();
             url += status;
             {/if}

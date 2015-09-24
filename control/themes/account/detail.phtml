@@ -69,7 +69,7 @@
             {foreach from=$exchange_list item=exchange}
             {if $type eq 0}
             <tr>
-                <td><a href="?act=detail&type={$type}&account={$exchange.account}">{$exchange.account}</td>
+                <td>{$exchange.account}</td>
                 <td>{$exchange.add_time_str}</td>
                 <td>{$exchange.balance}</td>
                 <td>{$exchange.integral}</td>
@@ -81,7 +81,7 @@
             </tr>
             {else}
             <tr>
-                <td><a href="?act=detail&type={$type}&account={$exchange.business_account}">{$exchange.business_account}</a></td>
+                <td>{$exchange.business_account}</td>
                 <td>{$exchange.add_time_str}</td>
                 <td>{$exchange.balance}</td>
                 <td>{$exchange.trade}</td>
@@ -110,10 +110,10 @@
                         <div class="pages">
                             <span>共有{$total}条，{$totalPage}页，每页显示：{$count}条</span>
                             {if $go_first}
-                            <a href="?page=1&st={$st}&count={$count}&et={$et}&type={$type}">首页</a>
+                            <a href="?act=detail&account={$account}&page=1&st={$st}&count={$count}&et={$et}&type={$type}">首页</a>
                             {/if}
                             {if $has_prev}
-                            <a href="?page={$page - 1}&st={$st}&count={$count}&et={$et}&type={$type}">上一页</a>
+                            <a href="?act=detail&account={$account}&page={$page - 1}&st={$st}&count={$count}&et={$et}&type={$type}">上一页</a>
                             {/if}
                             {if $has_many_prev}
                             ...
@@ -122,17 +122,17 @@
                             {if $pageNum eq $page}
                             <b>{$page}</b>
                             {else}
-                            <a href="?page={$pageNum}&st={$st}&count={$count}&et={$et}&type={$type}">{$pageNum}</a>
+                            <a href="?act=detail&account={$account}&page={$pageNum}&st={$st}&count={$count}&et={$et}&type={$type}">{$pageNum}</a>
                             {/if}
                             {/foreach}
                             {if $has_many_next}
                             ...
                             {/if}
                             {if $go_last}
-                            <a href="?page={$totalPage}&st={$st}&count={$count}&et={$et}&type={$type}">末页</a>
+                            <a href="?act=detail&account={$account}&page={$totalPage}&st={$st}&count={$count}&et={$et}&type={$type}">末页</a>
                             {/if}
                             {if $has_next}
-                            <a href="?page={$page + 1}&st={$st}&count={$count}&et={$et}&type={$type}">下一页</a>
+                            <a href="?act=detail&account={$account}&page={$page + 1}&st={$st}&count={$count}&et={$et}&type={$type}">下一页</a>
                             {/if}
                         </div>
                     </div>
@@ -155,7 +155,24 @@
     {/literal}
 </script>
 <!-- END 日历控件 -->
+<script type="text/javascript">
+    $(function() {
+        $('select[name=count]').change(function () {
+            var st = $('input[name=st]').val();
+            var et = $('input[name=et]').val();
 
+            var count = $(this).val();
+            var url = 'account.php?act=detail&account={$account}&type={$type}&count=' + count;
+            if( st ) {
+                url += '&st=' + st;
+            }
+            if( et ) {
+                url += '&et=' + et;
+            }
+            window.location.href = url;
+        });
+    });
+</script>
 {include file="library/footer.lbi"}
 </body>
 </html>

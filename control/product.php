@@ -170,10 +170,10 @@ if( 'view' == $act ) {
                 $where .= ' where status = 0';
                 break;
         }
-        assign('status', $status);
     } else {
         $where .= ' where status > 1 and status < 5';
     }
+    assign('status', $status);
 
     $keyword = trim(getGET('keyword'));
     if( '' != $keyword ) {

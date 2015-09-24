@@ -125,7 +125,24 @@
     {/literal}
 </script>
 <!-- END 日历控件 -->
+<script type="text/javascript">
+    $(function() {
+        $('select[name=count]').change(function () {
+            var st = $('input[name=st]').val();
+            var et = $('input[name=et]').val();
 
+            var count = $(this).val();
+            var url = 'withdraw.php?type={$type}&count=' + count;
+            if( st ) {
+                url += '&st=' + st;
+            }
+            if( et ) {
+                url += '&et=' + et;
+            }
+            window.location.href = url;
+        });
+    });
+</script>
 {include file="library/footer.lbi"}
 </body>
 </html>
