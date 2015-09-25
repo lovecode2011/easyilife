@@ -47,31 +47,53 @@ if( 'response' == $opera ) {
     }
     $response = $db->escape($response);
 
-    $data = array(
-        'add_time' => time(),
-        'comment' => $response,
-        'product_sn' => $comment['product_sn'],
-        'account' => $_SESSION['business_account'],
-        'parent_id' => $id,
-    );
+    $check_response = 'select * from '.$db->table('comment');
+    $check_response .= ' where parent_id = '.$id.' limit 1';
+    $response_exists = $db->fetchRow($check_response);
+    if( $response_exists ) {    //更新
 
-    if( $db->autoInsert('comment', array($data)) ) {
-        $id = $db->get_last_id();
-        $path = $comment['path'].$id.',';
-        $update_comment = 'update '.$db->table('comment').' set path = \''.$path.'\' where id = '.$id.' limit 1';
-        if( !$db->update($update_comment) ) {
-            show_system_message('添加回复失败', array());
+        $data = array(
+            'comment' => $response,
+        );
+        $where = 'id = '.$response_exists['id'];
+        if( $db->autoUpdate('comment', $data, $where) ) {
+            show_system_message('更新回复成功', array());
+            exit();
+        } else {
+            show_system_message('系统繁忙，请稍后重试', array());
             exit();
         }
-        $links = array(
-            array('alt' => '评价列表', 'link' => 'eval.php'),
+
+
+    } else {    //添加
+        $data = array(
+            'add_time' => time(),
+            'comment' => $response,
+            'product_sn' => $comment['product_sn'],
+            'account' => $_SESSION['business_account'],
+            'parent_id' => $id,
         );
-        show_system_message('回复成功', $links);
-        exit();
-    } else {
-        show_system_message('系统繁忙，请稍后重试', array());
-        exit();
+
+        if( $db->autoInsert('comment', array($data)) ) {
+            $id = $db->get_last_id();
+            $path = $comment['path'].$id.',';
+            $update_comment = 'update '.$db->table('comment').' set path = \''.$path.'\' where id = '.$id.' limit 1';
+            if( !$db->update($update_comment) ) {
+                show_system_message('添加回复失败', array());
+                exit();
+            }
+            $links = array(
+                array('alt' => '评价列表', 'link' => 'eval.php'),
+            );
+            show_system_message('回复成功', $links);
+            exit();
+        } else {
+            show_system_message('系统繁忙，请稍后重试', array());
+            exit();
+        }
     }
+
+
 
 }
 

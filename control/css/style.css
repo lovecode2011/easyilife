@@ -485,3 +485,35 @@ ul.tabs li.active a{
     opacity: 1;
 }
 /* END 资讯样式 */
+
+/* 待处理数量提示 */
+.badge {
+    position: absolute;
+    top: 4rem;
+    /*right: 22%;*/
+    display: inline-block;
+    min-width: 1rem;
+    height: 1rem;
+    border-radius: .4rem;
+    padding: 0 .05rem;
+    background-color: #fe463c;
+    line-height: 1rem;
+    font-size: .6rem;
+    color: #fff;
+}
+
+.sidebar-badge {
+    position: absolute;
+    /*top: 4rem;*/
+    right: 22%;
+    display: inline-block;
+    min-width: 1rem;
+    height: 1rem;
+    border-radius: .4rem;
+    padding: 0 .05rem;
+    background-color: #fe463c;
+    line-height: 1rem;
+    font-size: .6rem;
+    color: #fff;
+}
+/* END 待处理数量提示 */

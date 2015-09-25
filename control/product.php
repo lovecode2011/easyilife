@@ -45,14 +45,39 @@ if( 'exam' == $opera ) {
         exit;
     }
 
+    $reward = floatval(getPOST('reward'));
+    $integral = intval(getPOST('integral'));
+    $integral_given = intval(getPOST('integral_given'));
+    if( 0 >= $reward ) {
+        $reward = 0;
+    }
+    if( 0 > $integral ) {
+        $integral = 0;
+    }
+    if( 0 > $integral_given ) {
+        $integral_given = 0;
+    }
+
     $update_product = 'update '.$db->table('product').' set ';
     $update_product .= ' status = 3';
-    $update_product .= ' ,prev_status = 2';
+    $update_product .= ', prev_status = 2';
+    $update_product .= ', reward = \''.$reward.'\'';
+    $update_product .= ', integral = \''.$integral.'\'';
+    $update_product .= ', integral_given = \''.$integral_given.'\'';
     $update_product .= ' where id = \''.$id.'\' limit 1';
 
     if( $db->update($update_product) ) {
 
         //系统通知商户===
+        $data = array(
+            'title' => '产品审核',
+            'content' => '您的产品，编号'.$product['product_sn'].'审核通过',
+            'account' => $business['account'],
+            'business_account' => $business['business_account'],
+            'add_time' => time(),
+            'status' => 0,  //未读
+        );
+        $db->autoInsert('message', array($data));
 
         //=============
         show_system_message('产品通过审核', array(array('link' => 'product.php', 'alt' => '产品管理')));
@@ -99,9 +124,18 @@ if( 'reject' == $opera ) {
 
     if( $db->update($update_product) ) {
 
-        //系统通知商户===
+        //系统通知商户==================================
+        $data = array(
+            'title' => '产品审核',
+            'content' => '您的产品，编号'.$product['product_sn'].'审核不通过。'.$message,
+            'account' => $business['account'],
+            'business_account' => $business['business_account'],
+            'add_time' => time(),
+            'status' => 0,  //未读
+        );
+        $db->autoInsert('message', array($data));
 
-        //=============
+        //==============================================
         show_system_message('产品审核已驳回', array(array('link' => 'product.php', 'alt' => '产品管理')));
         exit;
     } else {
@@ -136,21 +170,21 @@ if( 'view' == $act ) {
                 $where .= ' where status = 0';
                 break;
         }
-        assign('status', $status);
     } else {
         $where .= ' where status > 1 and status < 5';
     }
+    assign('status', $status);
 
     $keyword = trim(getGET('keyword'));
     if( '' != $keyword ) {
         $keyword = $db->escape($keyword);
-        $where .= ' and a.name like \'%'.$keyword.'%\' || product_sn like \'%'.$keyword.'%\'';
+        $where .= ' and a.name like \'%'.$keyword.'%\' or product_sn like \'%'.$keyword.'%\'';
     }
     $count = intval(getGET('count'));
     $count_array = array(10, 25, 50 , 100);
     $count = ( in_array($count, $count_array) ) ? $count : 10;
 
-    $get_total = 'select count(*) from '.$db->table('product');
+    $get_total = 'select count(*) from '.$db->table('product').' as a';
     $get_total .= $where;
     $total = $db->fetchOne($get_total);
     $total_page = ceil( $total / $count );
@@ -189,6 +223,14 @@ if( 'view' == $act ) {
         }
     }
     assign('product_list', $product_list);
+
+    if( $status == 1 ) {
+        $exam_count = $total;
+    } else {
+        $get_exam_count = 'select count(*) from '.$db->table('product').' where status = 2';
+        $exam_count = $db->fetchOne($get_exam_count);
+    }
+    assign('exam_count', $exam_count);
 }
 
 if( 'exam' == $act ) {
@@ -203,8 +245,8 @@ if( 'exam' == $act ) {
     }
     $product_sn = $db->escape($product_sn);
 
-    $get_product = 'select a.*, b.attributes, b.inventory from '.$db->table('product').' as a';
-    $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status = 2 limit 1';
+    $get_product = 'select a.* from '.$db->table('product').' as a';
+    $get_product .= ' where a.product_sn = \''.$product_sn.'\' and status = 2 limit 1';
     $product = $db->fetchRow($get_product);
     if( !$product ) {
         show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
@@ -220,7 +262,20 @@ if( 'exam' == $act ) {
     $product['img_src'] = (file_exists('..'.$product['img'])) ? '..'.$product['img'] : $product['img'];
 
     assign('product', $product);
-    assign('attributes', $product['attributes']);
+
+    $get_attributes = 'select * from '.$db->table('inventory');
+    $get_attributes .= ' where product_sn = \''.$product_sn.'\'';
+    $product_attributes = $db->fetchAll($get_attributes);
+//    var_dump($product_attributes);exit;
+    if( $product_attributes ) {
+        foreach( $product_attributes as $key => $attributes ) {
+            $product_attributes[$key]['attributes'] = json_decode($attributes['attributes']);
+        }
+    } else {
+        $product_attributes = array();
+    }
+
+    assign('attributes', json_encode($product_attributes));
 
     $get_category_list = 'select * from '.$db->table('category');
     $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';

@@ -114,7 +114,7 @@ if( 'view' == $act ) {
     $keyword = trim(getGET('keyword'));
     if( '' != $keyword ) {
         $keyword = $db->escape($keyword);
-        $and_where .= ' and name like \'%'.$keyword.'%\' || desc like \'%'.$keyword.'%\'';
+        $and_where .= ' and name like \'%'.$keyword.'%\' or `desc` like \'%'.$keyword.'%\'';
     }
 
     $count = intval(getGET('count'));

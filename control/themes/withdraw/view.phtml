@@ -7,8 +7,14 @@
     <div class="content-title">
         <h5 class="pull-left">{if $type eq 0}会员-{else}商户-{/if}提现记录</h5>
         <div class="pull-right">
-            <a href="withdraw.php?type=0" class="btn btn-primary">会员</a>
-            <a href="withdraw.php?type=1" class="btn btn-primary">商户</a>
+            <a href="withdraw.php?type=0" class="btn btn-primary">
+                会员
+                {if $member_withdraw_count neq 0}<sup class="badge">{$member_withdraw_count}</sup>{/if}
+            </a>
+            <a href="withdraw.php?type=1" class="btn btn-primary">
+                商户
+                {if $business_withdraw_count neq 0}<sup class="badge">{$business_withdraw_count}</sup>{/if}
+            </a>
             <a href="withdraw.php?act=log" class="btn btn-primary">提现日志</a>
         </div>
         <div class="clear"></div>
@@ -125,7 +131,24 @@
     {/literal}
 </script>
 <!-- END 日历控件 -->
+<script type="text/javascript">
+    $(function() {
+        $('select[name=count]').change(function () {
+            var st = $('input[name=st]').val();
+            var et = $('input[name=et]').val();
 
+            var count = $(this).val();
+            var url = 'withdraw.php?type={$type}&count=' + count;
+            if( st ) {
+                url += '&st=' + st;
+            }
+            if( et ) {
+                url += '&et=' + et;
+            }
+            window.location.href = url;
+        });
+    });
+</script>
 {include file="library/footer.lbi"}
 </body>
 </html>

@@ -14,10 +14,19 @@
                 {if $menu.count eq 1}
                 <a href="{$menu.url}" class="nav-top-item" >
                     <em class="icon">{$menu.icon}</em>{$menu.title}
+                    {if $menu.url eq 'business.php' && $business_deal_count neq 0}
+                    <sup class="sidebar-badge">{if $business_deal_count lt 10}&nbsp;{/if}{$business_deal_count}</sup>
+                    {/if}
                 </a>
                 {else}
                 <a href="{$menu.url}" class="nav-top-item">
                     <em class="icon">{$menu.icon}</em>{$menu.title}
+                    {if $menu.url eq 'exchange.php' && $withdraw_deal_count neq 0}
+                    <sup class="sidebar-badge">{if $withdraw_deal_count lt 10}&nbsp;{/if}{$withdraw_deal_count}</sup>
+                    {/if}
+                    {if $menu.url eq 'product.php' && $product_exam_count neq 0}
+                    <sup class="sidebar-badge">{if $product_exam_count lt 10}&nbsp;{/if}{$product_exam_count}</sup>
+                    {/if}
                 </a>
                 <ul class="submenu" id="{$menu.key}" style="display: none">
                     {foreach from=$menu.children item=child}

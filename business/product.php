@@ -34,10 +34,6 @@ if( 'add' == $opera ) {
     $price = floatval(getPOST('price'));
     $shop_price = floatval(getPOST('shop_price'));
     $lowest_price = floatval(getPOST('lowest_price'));
-    $reward = floatval(getPOST('reward'));
-
-    $integral = 0;
-    $given_integral = 0;
 
     $img = trim(getPOST('img'));
     $desc = trim(getPOST('desc'));
@@ -82,10 +78,6 @@ if( 'add' == $opera ) {
         exit;
     }
 
-    if( 0 > $inventory ) {
-        $inventory = 0;
-    }
-
     if( 0 > $price ) {
         show_system_message('售价不能为负数', array());
         exit;
@@ -100,12 +92,6 @@ if( 'add' == $opera ) {
         show_system_message('最低价不能为负数', array());
         exit;
     }
-
-    if( 0 >= $reward ) {
-        show_system_message('返利不能为负数', array());
-        exit;
-    }
-
 
     if( '' == $img ) {
         show_system_message('请选择一张图片作为封面', array());
@@ -188,9 +174,9 @@ if( 'add' == $opera ) {
         'shop_price' => $shop_price,
         'price' => $shop_price,
         'lowest_price' => $lowest_price,
-        'reward' => $reward,
-        'integral' => $integral,
-        'integral_given' => $given_integral,
+        'reward' => 0,
+        'integral' => 0,
+        'integral_given' => 0,
         'img' => $img,
         'desc' => $desc,
         'detail' => $detail,
@@ -206,6 +192,7 @@ if( 'add' == $opera ) {
         'brand_id' => $brand,
         'order_view' => $order_view,
         'free_delivery' => $free_delivering,
+        'prev_status' => 0,
     );
     $table = 'product';
     $db->begin();
@@ -316,10 +303,13 @@ if( 'edit' == $opera ) {
         exit;
     }
 
+<<<<<<< HEAD
 //    if( 0 > $inventory ) {
 //        $inventory = 0;
 //    }
 
+=======
+>>>>>>> 6a5801f55b9764ab43630e99684c0d177a3ac3e0
     if( 0 > $price ) {
         show_system_message('售价不能为负数', array());
         exit;
@@ -334,12 +324,6 @@ if( 'edit' == $opera ) {
         show_system_message('最低价不能为负数', array());
         exit;
     }
-
-    if( 0 >= $reward ) {
-        show_system_message('返利不能为负数', array());
-        exit;
-    }
-
 
     if( '' == $img ) {
         show_system_message('请选择一张图片作为封面', array());
@@ -421,9 +405,6 @@ if( 'edit' == $opera ) {
         'shop_price' => $shop_price,
         'price' => $shop_price,
         'lowest_price' => $lowest_price,
-        'reward' => $reward,
-        'integral' => $integral,
-        'integral_given' => $given_integral,
         'img' => $img,
         'desc' => $desc,
         'detail' => $detail,
@@ -436,7 +417,8 @@ if( 'edit' == $opera ) {
         'brand_id' => $brand,
         'order_view' => $order_view,
         'free_delivery' => $free_delivering,
-        'status' => 2,
+        'status' => ( $product['status'] == 1 ) ? 1 : 2,
+        'prev_status' => $product['status'],
     );
     $table = 'product';
     $where = 'business_account = \''.$_SESSION['business_account'].'\' and id = \''.$id.'\'';
@@ -940,7 +922,7 @@ if( 'gallery' == $act ) {
         for( $i = 0; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '/upload/image/no-image.png';
+            $gallery_list[$i]['original_img_src'] = '/upload/image/iconfont-jia.png';
             $gallery_list[$i]['order_view'] = '';
         }
     }
@@ -1003,6 +985,7 @@ if( 'delete' == $act ) {
         exit;
     }
     $update_product = 'update '.$db->table('product').' set status = 5';
+    $update_product .= ', prev_status = '.$product['status'];
     $update_product .= ' where product_sn = \''.$product_sn.'\'';
     $update_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
     $update_product .= ' limit 1';
@@ -1100,7 +1083,8 @@ if( 'revoke' == $act ) {
         show_system_message('产品未被删除', array());
         exit;
     }
-    $update_product = 'update '.$db->table('product').' set status = 0';
+    $update_product = 'update '.$db->table('product').' set status = '.$product['prev_status'];
+    $update_product .= ', prev_status = \''.$product['status'].'\'';
     $update_product .= ' where product_sn = \''.$product_sn.'\'';
     $update_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
     $update_product .= ' limit 1';

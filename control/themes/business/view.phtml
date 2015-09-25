@@ -5,10 +5,31 @@
 <!-- content -->
 <div id="content">
     <div class="content-title">
-        <h5 class="pull-left">产品品牌</h5>
+        <h5 class="pull-left">
+            商户管理
+            {if $status && $status eq 1}
+            -待审核
+            {/if}
+            {if $status && $status eq 2}
+            -运营中
+            {/if}
+            {if $status && $status eq 3}
+            -已冻结
+            {/if}
+        </h5>
         <div class="pull-right">
-            <a href="?act=add" class="btn-primary btn">添加品牌</a>
-            <a href="javascript:history.go(-1)" class="btn-primary btn">返回</a>
+            <a class="btn btn-primary" href="business.php">全部</a>&nbsp;
+            <a class="btn btn-primary" href="business.php?status=1">
+                待审核
+                {if $exam_count neq 0}<sup class="badge">{$exam_count}</sup>{/if}
+            </a>&nbsp;
+            <a class="btn btn-primary" href="business.php?status=2">运营中</a>&nbsp;
+            <a class="btn btn-primary" href="business.php?status=3">已冻结</a>&nbsp;
+            <a class="btn btn-primary" href="business.php?act=auth">
+                认证信息
+                {if $auth_count neq 0}<sup class="badge">{$auth_count}</sup>{/if}
+            </a>&nbsp;
+            <a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>&nbsp;
         </div>
         <div class="clear"></div>
     </div>
@@ -31,6 +52,7 @@
                     <label>搜索：</label>
                     <input class="text-input w150" type="text" id="small-input" name="keyword" value="{$keyword}">&nbsp;
                     <button type="submit" class="btn btn-default">搜索</button>
+                    {if $status}<input type="hidden" name="status" value="{$status}"/>{/if}
                 </div>
                 </p>
             </fieldset>
@@ -40,39 +62,64 @@
         <table class="table">
             <thead>
             <tr>
-                <th>品牌名称</th>
-                <th>图片</th>
-                <th>描述</th>
+                <th>商户帐号</th>
+                <th>店铺信息</th>
+                <th>公司名称</th>
+                <th>地址</th>
+                <th>状态</th>
+                <th>账户</th>
+                <th>联系方式</th>
                 <th class="text-right">操作</th>
             </tr>
             </thead>
             <tbody>
             {if $total neq 0}
-            {foreach from=$brand_list item=brand}
+            {foreach from=$business_list item=business}
             <tr>
-                <td>{$brand.name}</td>
+                <td>{$business.business_account}</td>
                 <td>
-                    {if $brand.img neq ''}
-                    <img width="80" height="60" src="{$brand.img}" alt=""/>
-                    {else}
-                    <img width="80" height="60" src="/upload/image/no-image.png" alt=""/>
-                    {/if}
+                    店名：{$business.shop_name}<br />
+                    主营行业：{$business.industry_name}<br />
+                    主营分类：{$business.cate_name}
                 </td>
-                <td>{$brand.desc}</td>
+                <td>
+                    {$business.company}
+                </td>
+                <td>
+                    {$business.province_name}&nbsp;{$business.city_name}&nbsp;{$business.district_name}&nbsp;{$business.group_name}<br />
+                    {$business.address}
+                </td>
+                <td>{$business.status_str}</td>
+                <td>
+                    余额：{$business.balance}<br />
+                    担保交易：{$business.trade}
+                </td>
+                <td>
+                    联系人：{$business.contact}<br />
+                    手机：{$business.mobile}<br />
+                    邮箱：{$business.email}<br />
+                </td>
                 <td class="text-right">
-                    <a href="?act=edit&id={$brand.id}">编辑</a>
-                    | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&&id={$brand.id}">删除</a>
+                    {if $business.status eq 1}
+                    <a href="?act=exam&account={$business.business_account}">审核</a>
+                    {/if}
+                    {if $business.status eq 2}
+                    <a onclick="javascript:if(confirm('确认要冻结商户？')) return true; else return false;" href="?act=frozen&account={$business.business_account}">冻结</a>
+                    {/if}
+                    {if $business.status eq 3}
+                    <a onclick="javascript:if(confirm('确认要为商户解除冻结？')) return true; else return false;" href="?act=frozen&account={$business.business_account}">解除冻结</a>
+                    {/if}
                 </td>
             </tr>
             {/foreach}
             {else}
             {if $keyword eq ''}
             <tr>
-                <td style="padding: 50px 0" colspan="7" align="center">您还没有品牌记录，立即点击 “<a href="?act=add" target="_blank">这里</a>” 添加品牌！</td>
+                <td style="padding: 50px 0" colspan="8" align="center">暂无商户记录</td>
             </tr>
             {else}
             <tr>
-                <td style="padding: 50px 0" colspan="7" align="center">
+                <td style="padding: 50px 0" colspan="8" align="center">
                     <span class="text-size-24 blue icon-info-1" style="vertical-align: middle"></span>
                     <div class="text-size-18 tip-text inline-block">没有查询到符合条件的记录</div>
                 </td>
@@ -81,7 +128,7 @@
             {/if}
 
             <tr>
-                <td colspan="9">
+                <td colspan="8">
                     <div class="pull-right">
                         <div class="pages">
                             <span>共有{$total}条，{$totalPage}页，每页显示：{$count}条</span>
@@ -119,23 +166,19 @@
     </div>
 </div>
 <!-- END content -->
-
 <script type="text/javascript">
     $(function(){
         $('select[name=count]').change(function(){
             var keyword = $('input[name=keyword]').val();
             var count = $(this).val();
-            var url = 'brand.php?count=' + count;
-            if( keyword ) {
-                url += '&keyword=' + keyword;
-            }
-            {if $status}
-                var status = $('input[name=status]').val();
-                url += '&status=' + status;
-                {/if}
-                    window.location.href = url;
-                });
-            });
+            var url = 'business.php?count=' + count + '&keyword=' + keyword;
+            {if $status neq 0}
+            var status = $('input[name=status]').val();
+            url += status;
+            {/if}
+            window.location.href = url;
+        });
+    });
 </script>
 {include file="library/footer.lbi"}
 </body>

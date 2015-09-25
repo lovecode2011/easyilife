@@ -28,12 +28,12 @@ $purview = array(
         'pur_product_del',
     ),
 
-    'pur_express' => array(
-        'pur_express_view',
-        'pur_express_add',
-        'pur_express_edit',
-        'pur_express_del',
-    ),
+//    'pur_express' => array(
+//        'pur_express_view',
+//        'pur_express_add',
+//        'pur_express_edit',
+//        'pur_express_del',
+//    ),
 
     'pur_finance' => array(
         'pur_finance_view',
@@ -85,11 +85,11 @@ $L_purview = array(
     'pur_product_edit' => '编辑产品',
     'pur_product_del' => '删除产品',
 
-    'pur_express' => '物流方式设置',
-    'pur_express_view' => '物流列表',
-    'pur_express_add' => '增加物流',
-    'pur_express_edit' => '编辑物流',
-    'pur_express_del' => '删除物流',
+//    'pur_express' => '物流方式设置',
+//    'pur_express_view' => '物流列表',
+//    'pur_express_add' => '增加物流',
+//    'pur_express_edit' => '编辑物流',
+//    'pur_express_del' => '删除物流',
 
 
     'pur_finance' => '财务管理',
@@ -151,6 +151,7 @@ $menus = array(
         ),
     ),
 
+<<<<<<< HEAD
     'pur_express' => array(
         'title' => '物流方式管理',
         'icon' => '&#xe605;',
@@ -160,6 +161,17 @@ $menus = array(
 //            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
         ),
     ),
+=======
+//    'pur_express' => array(
+//        'title' => '物流方式管理',
+//        'icon' => '&#xe605;',
+//        'url' => 'express.php',
+//        'children' => array(
+//            'pur_express_view' => array('url' => 'express.php', 'title' => '物流方式列表'),
+//            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
+//        ),
+//    ),
+>>>>>>> 6a5801f55b9764ab43630e99684c0d177a3ac3e0
 
     'pur_finance' => array(
         'title' => '财务管理',
@@ -239,6 +251,24 @@ function business_base_init() {
         exit;
     }
 
+    global $db;
+    $get_business = 'select * from '.$db->table('business');
+    $get_business .= ' where business_account = \''.$_SESSION['business_account'].'\' and status = 2';
+    $business = $db->fetchRow($get_business);
+
+    if( empty($business) ) {
+        if( isset($_SESSION['business_account']) ) {
+            unset($_SESSION['business_shop_name']);
+            unset($_SESSION['business_account']);
+            unset($_SESSION['business_purview']);
+        }
+        $links = array(
+            array('link' => 'index.php', 'alt' => '重新登陆'),
+        );
+        show_system_message('商户不存在或不在运营中', $links);
+        exit;
+    }
+
     $current_shop = $_SESSION['business_shop_name'];
     assign('current_shop', $current_shop);
     assign('pageTitle', '网店'.$current_shop.'管理后台');
@@ -251,4 +281,9 @@ function business_base_init() {
     assign('active_nav', $active_nav);
     assign('menu_mark', 'menu_'.$active_nav);
 
+    //未读消息数量
+    $get_unread_message_count = 'select count(*) from '.$db->table('message');
+    $get_unread_message_count .= ' where business_account = \''.$_SESSION['business_account'].'\' and status = 0';
+    $unread_message_count = $db->fetchOne($get_unread_message_count);
+    assign('unread_message_count', $unread_message_count);
 }

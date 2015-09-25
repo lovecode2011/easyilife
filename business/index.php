@@ -47,40 +47,47 @@ if( 'login' == $opera ) {
                 $get_purview = 'select purview from '.$db->table('role').' where id = '.$admin['role_id'].' limit 1';
                 $purview = $db->fetchOne($get_purview);
 
-                $get_shop_name  = 'select `shop_name` from '.$db->table('business').' where `business_account`=\''.$admin['business_account'].'\' limit 1';
-                $shop_name = $db->fetchOne($get_shop_name);
+                $get_business  = 'select `shop_name`,`status` from '.$db->table('business').' where `business_account`=\''.$admin['business_account'].'\' limit 1';
+                $business = $db->fetchRow($get_business);
 
-                $_SESSION['business_shop_name'] = $shop_name;
-                $_SESSION['business_account'] = $admin['business_account'];
-                $_SESSION['business_purview'] = $purview;
-                $_SESSION['business_admin'] = $account;
-                show_system_message('登录成功', array(array('alt'=>'进入管理后台', 'link'=>'main.php')));
-                exit;
-
+                if( $business['status'] != 2 ) {
+                    $error['account'] = '帐号不存在或被冻结';
+                } else {
+                    $_SESSION['business_shop_name'] = $business['shop_name'];
+                    $_SESSION['business_account'] = $admin['business_account'];
+                    $_SESSION['business_purview'] = $purview;
+                    $_SESSION['business_admin'] = $account;
+                    show_system_message('登录成功', array(array('alt'=>'进入管理后台', 'link'=>'main.php')));
+                    exit;
+                }
             } else {
                 $error['password'] = '帐号或密码错误';
             }
         } else {
-            $error['account'] = '账号不存在';
+            $error['account'] = '帐号不存在或被冻结';
         }
 
     } else {
-        $checkAccount = 'select `password`,`shop_name` from '.$db->table('business').' where `business_account`=\''.$account.'\' limit 1';
+        $checkAccount = 'select `password`,`shop_name`,`status` from '.$db->table('business').' where `business_account`=\''.$account.'\' limit 1';
         $business = $db->fetchRow($checkAccount);
 
         if($business) {
-            if($password == $business['password']) {
-                global $purview;
-                $_SESSION['business_shop_name'] = $business['shop_name'];
-                $_SESSION['business_account'] = $account;
-                $_SESSION['business_purview'] = json_encode($purview);
-                $_SESSION['business_admin'] = $account;
-
-                show_system_message('登录成功', array(array('alt'=>'进入管理后台', 'link'=>'main.php')));
-                exit;
-
+            if( $business['status'] != 2 ) {
+                $error['account'] = '帐号不存在或被冻结';
             } else {
-                $error['password'] = '帐号或密码错误';
+                if ($password == $business['password']) {
+                    global $purview;
+                    $_SESSION['business_shop_name'] = $business['shop_name'];
+                    $_SESSION['business_account'] = $account;
+                    $_SESSION['business_purview'] = json_encode($purview);
+                    $_SESSION['business_admin'] = $account;
+
+                    show_system_message('登录成功', array(array('alt' => '进入管理后台', 'link' => 'main.php')));
+                    exit;
+
+                } else {
+                    $error['password'] = '帐号或密码错误';
+                }
             }
         } else {
             $error['account'] = '账号不存在';

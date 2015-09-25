@@ -129,6 +129,7 @@ if( 'auth' == $opera ) {
     }
 
     $company = trim(getPOST('company'));
+    $desc = trim(getPOST('desc'));
     $industry_id = trim(getPOST('industry'));
     $category_id = trim(getPOST('classification'));
     $contact = trim(getPOST('contact'));
@@ -142,6 +143,12 @@ if( 'auth' == $opera ) {
         exit;
     }
     $company = $db->escape($company);
+
+    if( '' == $desc ) {
+        show_system_message('请输入公司简介，让会员了解您的公司', array());
+        exit;
+    }
+    $desc = $db->escape($desc);
 
     $industry_id = intval($industry_id);
     if( 0 >= $industry_id ) {
@@ -177,14 +184,38 @@ if( 'auth' == $opera ) {
         show_system_message('请选择营业执照', array());
         exit;
     }
+    $license = $db->escape($license);
 
     if( '' == $identity ) {
         show_system_message('请选择法人身份证', array());
         exit;
     }
+    $identity = $db->escape($identity);
+
+    $check_email = 'select * from '.$db->table('business');
+    $check_email .= ' where email = \''.$email.'\'';
+    $check_email .= ' and business_account <> \''.$_SESSION['business_account'].'\'';
+    $check_email .= ' limit 1';
+    $email_exists = $db->fetchRow($check_email);
+    if( $email_exists ) {
+        show_system_message('邮箱已被使用', array());
+        exit;
+    }
+
+    $check_mobile = 'select * from '.$db->table('business');
+    $check_mobile .= ' where mobile = \''.$mobile.'\'';
+    $check_mobile .= ' and business_account <> \''.$_SESSION['business_account'].'\'';
+    $check_mobile .= ' limit 1';
+    $mobile_exists = $db->fetchRow($check_mobile);
+    if( $mobile_exists ) {
+        show_system_message('号码已被使用', array());
+        exit;
+    }
+
 
     $data = array(
         'company' => $company,
+        'desc' => $desc,
         'industry_id' => $industry_id,
         'category_id' => $category_id,
         'contact' => $contact,
@@ -201,12 +232,6 @@ if( 'auth' == $opera ) {
         show_system_message('您的申请已提交，请静候佳音。', array());
         exit;
     } else {
-        if( file_exists(realpath('..'.$license)) ) {
-            @unlink(realpath('..'.$license));
-        }
-        if( file_exists(realpath('..'.$identity)) ) {
-            @unlink(realpath('..'.$identity));
-        }
         show_system_message('系统繁忙，请稍后重试', array());
         exit;
     }

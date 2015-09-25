@@ -932,6 +932,29 @@
 </script>
 <!-- END 日历控件 -->
 
+<script type="text/javascript">
+    $(function() {
+        $('select[name=count]').change(function () {
+            var st = $('input[name=st]').val();
+            var et = $('input[name=et]').val();
+
+            var count = $(this).val();
+            var url = 'order.php?count=' + count;
+            if( st ) {
+                url += '&st=' + st;
+            }
+            if( et ) {
+                url += '&et=' + et;
+            }
+            {if $status}
+            var status = $('input[name=status]').val();
+                url += ( status == 0 ) ? '' : '&status=' + status;
+            {/if}
+            window.location.href = url;
+        });
+    });
+</script>
+
 {include file="library/footer.lbi"}
 <script type="text/javascript" src="js/order/view.js">
 

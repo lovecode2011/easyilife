@@ -35,35 +35,28 @@
                 </p>
                 <p class="clear">
                     <label class="l-title">产品分类：</label>
-                    <select name="category" class="w150">
-                        <option value="0">|--请选择--|</option>
-                        {foreach from=$category_list item=category}
-                        <option value="{$category.id}" {if $category.id eq $product.category_id}selected="selected"{/if}>{$category.name}</option>
-                        {/foreach}
-                    </select>
+                    {foreach from=$category_list item=category}
+                        {if $category.id eq $product.category_id}
+                    <input value="{$category.name}" disabled="disabled" class="text-input w300" type="text" id="category" name="category" placeholder="">
+                        {/if}
+                    {/foreach}
                 </p>
                 <p class="clear">
                     <label class="l-title">产品类型：</label>
-                    <select name="type" id="product_type" class="w150">
-                        <option value="0">|--请选择--|</option>
-                        {foreach from=$product_type_list item=product_type}
-                        <option value="{$product_type.id}" {if $product_type.id eq $product.product_type_id}selected="selected"{/if}>{$product_type.name}</option>
-                        {/foreach}
-                    </select>
+                    {foreach from=$product_type_list item=product_type}
+                    {if $product_type.id eq $product.product_type_id}
+                    <input value="{$product_type.name}" disabled="disabled" class="text-input w300" type="text" id="product_type" name="product_type" placeholder="" data-id="{$product.product_type_id}">
+                    {/if}
+                    {/foreach}
                 </p>
                 <p style="display: none" id="product_attr" class="clear"></p>
                 <p class="clear">
                     <label class="l-title">品牌：</label>
-                    <select name="brand" class="w150">
-                        <option value="0">|--请选择--|</option>
-                        {foreach from=$brand_list item=brand}
-                        <option value="{$brand.id}" {if $brand.id eq $product.brand_id}selected="selected"{/if}>{$brand.name}</option>
-                        {/foreach}
-                    </select>
-                </p>
-                <p>
-                    <label class="l-title">库存：</label>
-                    <input disabled="disabled" class="text-input w150" type="text" id="inventory" name="inventory" placeholder="请输入库存" value="{$product.inventory}">
+                    {foreach from=$brand_list item=brand}
+                    {if $brand.id eq $product.brand_id}
+                    <input value="{$brand.name}" disabled="disabled" class="text-input w300" type="text" id="brand" name="brand" placeholder="">
+                    {/if}
+                    {/foreach}
                 </p>
                 <p>
                     <label class="l-title">售价：</label>
@@ -76,18 +69,6 @@
                 <p>
                     <label class="l-title">最低售价：</label>
                     <input disabled="disabled" class="text-input w150" type="text" name="lowest_price" placeholder="请输入最低销售价" value="{$product.lowest_price}">
-                </p>
-                <p>
-                    <label class="l-title">返利：</label>
-                    <input disabled="disabled" class="text-input w150" type="text" name="reward" placeholder="返利" value="{$product.reward}">
-                </p>
-                <p>
-                    <label class="l-title">购买积分：</label>
-                    <input class="text-input w150" type="text" name="integral" placeholder="购买积分" value="{$product.integral}">
-                </p>
-                <p>
-                    <label class="l-title">赠送积分：</label>
-                    <input class="text-input w150" type="text" name="integral_given" placeholder="赠送积分" value="{$product.integral_given}">
                 </p>
                 <p>
                     <label class="l-title">产品图片：</label>
@@ -130,6 +111,18 @@
                     <label class="l-title">包邮：</label>
                     <input type="radio" name="free_delivering" value="0" {if $product.free_delivery eq 0}checked="checked"{/if}> <em>否</em>&nbsp;
                     <input type="radio" name="free_delivering" value="1" {if $product.free_delivery eq 1}checked="checked"{/if}> <em>是</em>
+                </p>
+                <p>
+                    <label class="l-title">返利：</label>
+                    <input class="text-input w150" type="text" name="reward" placeholder="返利" value="{$product.reward}">
+                </p>
+                <p>
+                    <label class="l-title">购买积分：</label>
+                    <input class="text-input w150" type="text" name="integral" placeholder="购买积分" value="{$product.integral}">
+                </p>
+                <p>
+                    <label class="l-title">赠送积分：</label>
+                    <input class="text-input w150" type="text" name="integral_given" placeholder="赠送积分" value="{$product.integral_given}">
                 </p>
                 <p>
                     <label class="l-title"></label>
@@ -209,7 +202,7 @@
     });
     {/literal}
 </script>
-<script type="text/javascript" src="js/product/edit.js"></script>
+<script type="text/javascript" src="js/product/exam.js"></script>
 {include file="library/footer.lbi"}
 </body>
 </html>

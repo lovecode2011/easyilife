@@ -250,6 +250,7 @@ if( 'edit' == $act ) {
 
     $get_category_list = 'select * from '.$db->table('category');
     $get_category_list .= ' where business_account = \'\' and id <> \''.$id.'\' and path not like \''.$category['path'].'%\'';
+    $get_category_list .= ' order by path asc';
 
     $category_list = $db->fetchAll($get_category_list);
 
