@@ -58,15 +58,14 @@
     </div>
 </section>
 <!-- 推广链接二维码 -->
-<!--
 <section class="qr-link">
     <div class="top">
-        <span><a href="#"><em class="icon" style="color: #dd2727;">&#xe604;</em>&nbsp;获取推广二维码</a></span>
-        <span><a href="#"><em class="icon" style="color: #dd2727;">&#xe60a;</em>&nbsp;获取推广链接</a></span>
+        <span><a href="javascript:show_message_dialog('等待接口');"><em class="icon" style="color: #dd2727;">&#xe604;</em>&nbsp;获取推广二维码</a></span>
+        <span><a href="javascript:show_message_dialog('等待接口');"><em class="icon" style="color: #dd2727;">&#xe60a;</em>&nbsp;获取推广链接</a></span>
     </div>
     <div class="bottom">
         <span>
-            <a href="shop.php?id={$product.business_account}">
+            <a href="shop.php?sn={$product.business_account}">
                 <em class="icon" style="color: #dd2727;">&#xe605;</em>&nbsp;进店逛逛
             </a>
         </span>
@@ -77,7 +76,6 @@
         </span>
     </div>
 </section>
--->
 <!-- 产品属性选择 -->
 <section class="option">
     <a class="arrow_con title" name="attributes">
@@ -171,6 +169,15 @@
         <a href="javascript:close_operation_dialog();" class="cd-popup-close img-replace">X</a>
     </div>
 
+    <div class="cd-popup-container" id="confirm_dialog" style="display: none;">
+        <p>居然取消分销，沉思啊客官</p>
+        <ul class="cd-buttons">
+            <li><a id="dialog_confirm_btn" href="javascript:void(0);">去意已决</a></li>
+            <li><a href="javascript:close_operation_dialog('confirm_dialog');">留你一命</a></li>
+        </ul>
+        <a href="javascript:close_operation_dialog('confirm_dialog');" class="cd-popup-close img-replace">X</a>
+    </div>
+
     <div class="cd-popup-container" id="message_dialog" style="display: none;">
         <p id="dialog-message"></p>
         <ul class="cd-buttons">
@@ -191,6 +198,9 @@
     var attributes = {$attributes_json};
     var attributes_mode = {$attributes_mode};//筛选条件表达式
     var pattern = {$attributes_mode};//泛解析表达式
+    var collection_flag = {if $collection_flag}true{else}false{/if};
+    var distribution_flag = {if $distribution_flag}true{else}false{/if};
+    var operation = 0;
 
     function add_to_cart(product_sn) {
         var url = "cart.php";
@@ -262,15 +272,21 @@
         $("#message_dialog").hide();
     }
 
-    function show_operation_dialog() {
+    function show_operation_dialog(id) {
+        if(id == undefined) {
+            id = "dialog";
+        }
         $(".cd-popup").addClass("is-visible");
         $(".progressbar").hide();
-        $("#dialog").show();
+        $("#"+id).show();
     }
 
-    function close_operation_dialog() {
+    function close_operation_dialog(id) {
+        if(id == undefined) {
+            id = "dialog";
+        }
         $(".cd-popup").removeClass("is-visible");
-        $("#dialog").hide();
+        $("#"+id).hide();
     }
 
     function show_mask() {
@@ -305,6 +321,21 @@
         }
     }
 
+    function distribution_confirm(product_sn) {
+        operation = 1;
+        if(distribution_flag) {
+            show_operation_dialog("confirm_dialog");
+            $("#dialog_confirm_btn").click(function () {
+                close_operation_dialog("confirm_dialog");
+                if(distribution_flag && operation--) {
+                    distribution(product_sn);
+                }
+            });
+        } else {
+            distribution(product_sn);
+        }
+    }
+
     function distribution(product_sn) {
         var url = "product.php";
         var data = { "opera":"distribution", "product_sn":product_sn };
@@ -320,9 +351,11 @@
             if(response.status) {
                 $(".distribution").addClass("distribution-on");
                 $("#distribution_desc").text("取消分销");
+                distribution_flag = true;
             } else {
                 $(".distribution").removeClass("distribution-on");
                 $("#distribution_desc").text("分销");
+                distribution_flag = false;
             }
         }
     }
@@ -400,7 +433,7 @@
         $("#minus").bind("click", minus);
 
         $("#collection_btn").bind("click", function() { collection("{$product.product_sn}"); });
-        $("#distribution_btn").bind("click", function() { distribution("{$product.product_sn}"); });
+        $("#distribution_btn").bind("click", function() { distribution_confirm("{$product.product_sn}"); });
 
         $("#add_to_cart_btn").bind("click", function() { add_to_cart("{$product.product_sn}"); });
         $("#buy_now_btn").bind("click", function() { buy_now("{$product.product_sn}"); });

@@ -43,10 +43,10 @@
         <div class="order_list">
             <!--非当当自营显示店铺入口-->
             <div class="shop_title">
-                <a href="order.php?act=detail&sn={$order.order_sn}">
+                <a href="shop.php?sn={$order.business_account}">
                     <!--店铺名称-->
                     <div class="fl">
-                        {$order.order_sn}
+                        {$order.shop_name}
                     </div>
                     <span class="fr right_arrow"></span>
                 </a>
@@ -55,12 +55,16 @@
             <!--分包商品信息-->
             <div class="cart_item prd_ebook">
                 {foreach from=$order.order_detail item=od}
-                <a href="product.php?id={$od.id}">
+                <a href="order.php?act=detail&sn={$order.order_sn}">
                     <!--电子书加签-->
                     <!--包裹图片-->
                     <img src="{$od.img}" class="fl pro_pic">
                     <!--包裹详情-->
                     <div class="detail">
+                        <!--包裹名称显示，多件产品，显示包裹编号，一件产品显示产品名称-->
+                        <p class="fl prd_tit">
+                            {$od.product_name}
+                        </p>
                         <!--包裹状态-->
                         <div class="fr prd_state">
                             <!--状态文字-->
@@ -68,12 +72,7 @@
                                 {$order.show_status}
                             </div>
                         </div>
-                        <!--包裹名称显示，多件产品，显示包裹编号，一件产品显示产品名称-->
                         <p class="fl prd_tit">
-                            {$od.product_name}
-                        </p>
-                        <p class="fl prd_tit">
-                            <br/>
                             {$od.product_attributes}
                         </p>
                     </div>

@@ -52,46 +52,23 @@
 <!-- search result -->
 <section class="goods_list _pre" id="goods_list" name="goods_list" title="商品列表">
     <div class="clearfix">
-        <ul class="clearfix p_left">
+        <ul class="clearfix">
             {foreach from=$product_list name=product_list item=product}
-            {if $smarty.foreach.product_list.iteration mod 2 }
             <li>
                 <div>
                     <a href="product.php?id={$product.id}" name="product_item" title="商品">
                         <p class="img">
-                            <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$product.img}" alt="{$product.name}">
-                        </p>
-                        <p class="name">{$product.name}</p>
-                    </a>
+                            <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$product.img}" alt="{$product.name}"/>
+                        </p >
+                        <p class="name">{$product.name}</p >
+                    </a >
                     <p class="price"><span class="red">¥{$product.price}</span>
                         <!--
                         <span name="item_collect" title="收藏" class="span_sc" onclick="javascript:void(0);" flag="add"></span>
                         -->
-                    </p>
+                    </p >
                 </div>
             </li>
-            {/if}
-            {/foreach}
-        </ul>
-        <ul class="clearfix p_right">
-            {foreach from=$product_list name=product_list item=product}
-            {if $smarty.foreach.product_list.iteration mod 2 eq 0 }
-            <li>
-                <div>
-                    <a href="product.php?id={$product.id}" name="product_item" title="商品">
-                        <p class="img">
-                            <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$product.img}" alt="{$product.name}">
-                        </p>
-                        <p class="name">{$product.name}</p>
-                    </a>
-                    <p class="price"><span class="red">¥{$product.price}</span>
-                        <!--
-                        <span name="item_collect" title="收藏" class="span_sc" onclick="javascript:void(0);" flag="add"></span>
-                        -->
-                    </p>
-                </div>
-            </li>
-            {/if}
             {/foreach}
         </ul>
     </div>

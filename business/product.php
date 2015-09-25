@@ -316,9 +316,9 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    if( 0 > $inventory ) {
-        $inventory = 0;
-    }
+//    if( 0 > $inventory ) {
+//        $inventory = 0;
+//    }
 
     if( 0 > $price ) {
         show_system_message('售价不能为负数', array());

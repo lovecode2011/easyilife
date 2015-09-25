@@ -1,0 +1,44 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: apple
+ * Date: 15/9/22
+ * Time: 上午7:17
+ */
+include 'library/init.inc.php';
+
+$sn = getGET('sn');
+if($sn == '')
+{
+    redirect('index.php');
+}
+
+$sn = $db->escape($sn);
+
+//获取商家信息
+$get_business_info = 'select * from '.$db->table('business').' where `business_account`=\''.$sn.'\'';
+$business = $db->fetchRow($get_business_info);
+
+assign('business', $business);
+//获取商家分类
+$get_category = 'select `id`,`name` from '.$db->table('category').' where `business_account`=\''.$sn.'\' and `parent_id`='.$business['category_id'];
+$category = $db->fetchAll($get_category);
+foreach($category as $key=>$c)
+{
+    $get_children = 'select `id`,`name` from '.$db->table('category').' where `parent_id`='.$c['id'];
+
+    $category[$key]['children'] = $db->fetchAll($get_children);
+}
+
+assign('category', $category);
+//获取商家全部产品
+$get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `business_account`=\''.$sn.'\'';
+$product_list = $db->fetchAll($get_product_list);
+assign('product_list', $product_list);
+//获取新添加的产品
+$get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `business_account`=\''.$sn.'\''.
+                    ' and `add_time`>'.(time()-3600*24*7);
+$new_product = $db->fetchAll($get_product_list);
+assign('new_product_count', count($new_product));
+
+$smarty->display('shop.phtml');

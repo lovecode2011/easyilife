@@ -87,7 +87,7 @@ if('list' == $act)
 
     assign('status', $status);
 
-    $get_order_list = 'select o.`order_sn`,b.`shop_name`,o.`status`,o.`amount` from '.$db->table('order').' as o join '.
+    $get_order_list = 'select o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`business_account` from '.$db->table('order').' as o join '.
                       $db->table('business').' as b using(`business_account`) where o.`account`=\''.$_SESSION['account'].'\'';
 
     if($status > 0)

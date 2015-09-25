@@ -35,13 +35,24 @@ $path = $db->fetchOne($get_category_path);
 $get_category_ids = 'select `id` from '.$db->table('category').' where `path` like \''.$path.'%\' and `id` not in ('.$path.'0)';
 $category_ids = $db->fetchAll($get_category_ids);
 $category_ids_tmp = array();
-foreach($category_ids as $key=>$val)
+$category_ids_str = '';
+if($category_ids)
 {
-    $category_ids_tmp[] = $val['id'];
+    foreach ($category_ids as $key => $val)
+    {
+        $category_ids_tmp[] = $val['id'];
+    }
+    $category_ids_str = implode(',', $category_ids_tmp);
 }
-$category_ids_str = implode(',', $category_ids_tmp);
 
-$get_product_list = 'select * from '.$db->table('product').' where `category_id` in (\''.$category_ids_str.'\')';
+if($category_ids_str == '')
+{
+    $category_ids_str = $id;
+} else {
+    $category_ids_str .= ','.$id;
+}
+$get_product_list = 'select * from '.$db->table('product').' where `category_id` in ('.$category_ids_str.')';
+
 switch($state)
 {
     case 'price': $get_product_list .= ' order by `price` ASC'; break;

@@ -33,7 +33,7 @@
         <div class="cart_list">
             <div class="shop_title"  id="b_id_{$cart.b_id}">
                 <input type="checkbox" class="fl c_checkbox" id="business_{$cart.b_id}" onclick="select_shop({$cart.b_id}, this.checked);">
-                <div class="fl"><a class="shopLink eclipse" href="#">{$cart.shop_name}</a></div>
+                <div class="fl"><a class="shopLink eclipse" href="shop.php?sn={$cart.business_account}">{$cart.shop_name}</a></div>
                 <a class="fl right_arrow" href="#"></a>
                 <!--<a class="c_edit" id="e__0"></a>-->
             </div>
@@ -42,8 +42,8 @@
                 <input type="checkbox" class="fl c_checkbox" id="cart_{$product.c_id}" onclick="select_product({$product.c_id}, this.checked);">
                 <img src="{$product.img}" class="fl pro_pic">
                 <div class="detail">
-                    <p class="fr prd_price">￥{sprintf("%.2f", $product.price)}</p>
                     <p class="fl prd_tit"><a href="#">{$product.name}</a></p>
+                    <p class="fr prd_price">￥{sprintf("%.2f", $product.price)}</p>
                     <p class="fl prd_tit">{$product.attributes}</p>
                     <div class="clear tags">
                         <!-- 数量开始 -->

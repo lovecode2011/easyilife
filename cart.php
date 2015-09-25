@@ -167,7 +167,7 @@ if('add_to_cart' == $opera)
 }
 
 //获取购物车产品
-$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name` from ('.
+$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,c.`business_account` from ('.
                  $db->table('cart').' as c join '.$db->table('product').' as p using(`product_sn`)) join '.$db->table('business').
                  ' as b on (c.`business_account`=b.`business_account`) where c.`account`=\''.$_SESSION['account'].'\' order by c.`business_account`';
 
@@ -187,7 +187,8 @@ if($cart_list_tmp)
             $cart_list[$cart['b_id']] = array(
                 'b_id' => $cart['b_id'],
                 'shop_name' => $cart['shop_name'],
-                'products' => array()
+                'products' => array(),
+                'business_account' => $cart['business_account']
             );
         }
 

@@ -23,30 +23,23 @@
 <body>
 <header class="header">
     <a href="javascript:history.back();" class="back"></a>
-    <h1><em>我的账户</em></h1>
+    <h1><em>商家进驻进度</em></h1>
 </header>
-<!-- 内容开始 -->
-<section class="points" style="margin-top:-.5rem;">
-    <div class="points-detail">
-        <a class="slide-link" href="#" style="background:none;">
-            余额：{$user_info.balance}&nbsp;&nbsp;圈币：{$user_info.reward}&nbsp;&nbsp;积分：{$user_info.integral}
-        </a>
-        <ul>
-            {foreach from=$member_exchange item=exchange}
-            <li>
-                {$exchange.remark}
-                <p>
-                    余额：<span {if $exchange.balance gt 0}style="color:red"{/if}>{if $exchange.balance gt 0}+{/if}{$exchange.balance}</span>
-                    圈币：<span {if $exchange.reward gt 0}style="color:red"{/if}>{if $exchange.reward gt 0}+{/if}{$exchange.reward}</span>
-                    积分：<span {if $exchange.integral gt 0}style="color:red"{/if}>{if $exchange.integral gt 0}+{/if}{$exchange.integral}</span>
-                </p>
-                <p>{date("Y-m-d H:i:s", $exchange.add_time)}</p>
-            </li>
-            {/foreach}
-        </ul>
-    </div>
-</section>
+<!-- 新增收货地址 -->
+<section class="address">
+    <h3 style="font-size: 0.8rem; font-weight: normal; text-align: center; line-height: 1.8rem;">您的审核进度</h3>
 
-<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+    <h4 class="apply-status">1</h4>
+    <p class="apply-status-content">提交商家进驻申请</p>
+
+
+    <h4 class="apply-status {if $status lt 1}apply-status-gray{/if}">2</h4>
+    <p class="apply-status-content">平台验证审核</p>
+
+
+    <h4 class="apply-status {if $status lt 2}apply-status-gray{/if}">3</h4>
+    <p class="apply-status-content">申请成功，账号发放</p>
+
+</section>
 </body>
 </html>

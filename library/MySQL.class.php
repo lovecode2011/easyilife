@@ -323,7 +323,10 @@ class MySQL
      */
     public function autoDelete($table, $where)
     {
+        global $log;
+
         $sql = 'delete from '.$this->table($table).' where '.$where;
+        $log->record($sql);
         return $this->delete($sql);
     }
 

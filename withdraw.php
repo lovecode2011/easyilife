@@ -7,7 +7,7 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'add|delete';
+$operation = 'add|delete|cancel';
 $action = 'list|opera|detail';
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
@@ -23,6 +23,41 @@ $get_withdraw_await = 'select sum(`amount`+`fee`) from '.$db->table('withdraw').
 $withdraw_await = $db->fetchOne($get_withdraw_await);
 
 $withdraw_await = $user_info['balance'] + $user_info['reward'] - $withdraw_await;
+
+if('cancel' == $opera)
+{
+    $response = array('error'=>0, 'msg'=>'');
+
+    $withdraw_sn = getPOST('withdraw_sn');
+
+    if($withdraw_sn == '')
+    {
+        $response['msg'] = '000:参数错误';
+    } else {
+        $withdraw_sn = $db->escape($withdraw_sn);
+    }
+
+    if($response['msg'] == '')
+    {
+        $db->begin();
+        $check_withdraw = 'select `withdraw_sn` from '.$db->table('withdraw').' where `account`=\''.$_SESSION['account'].'\' and '.
+                          ' `withdraw_sn`=\''.$withdraw_sn.'\' and `status`=0 for update;';
+
+        if($db->fetchOne($check_withdraw))
+        {
+            $db->autoDelete('withdraw', '`withdraw_sn`=\''.$withdraw_sn.'\'');
+            $response['error'] = 0;
+            $response['msg'] = '取消申请成功';
+        } else {
+            $response['msg'] = '该申请已处理或不存在';
+        }
+
+        $db->commit();
+    }
+
+    echo json_encode($response);
+    exit;
+}
 
 if('add' == $opera)
 {
@@ -52,9 +87,9 @@ if('add' == $opera)
         {
             $response['msg'] .= '-请填写提现金额<br/>';
         } else {
-            $total_amount = (1+$config['fee_rate']) * $amount;
+            $total_amount = $amount +$config['fee_rate'] * $amount;
 
-            if($total_amount > $withdraw_await)
+            if($withdraw_await < $total_amount)
             {
                 $response['msg'] .= '-可提现金额不足<br/>';
             }
@@ -119,7 +154,13 @@ if('opera' == $act)
 
 if('list' == $act)
 {
+    $template = 'withdraw_list.phtml';
 
+    $get_withdraw_list = 'select `withdraw_sn`,`amount`,`fee`,`status`,`bank`,`bank_account`,`bank_card`,`add_time`,`solve_time` from '.
+                         $db->table('withdraw').' where `account`=\''.$_SESSION['account'].'\' order by `add_time` DESC';
+    $withdraw_list = $db->fetchAll($get_withdraw_list);
+
+    assign('withdraw_list', $withdraw_list);
 }
 
 $smarty->display($template);

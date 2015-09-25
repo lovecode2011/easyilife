@@ -157,7 +157,7 @@ $menus = array(
         'url' => 'express.php',
         'children' => array(
             'pur_express_view' => array('url' => 'express.php', 'title' => '物流方式列表'),
-            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
+//            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
         ),
     ),
 
@@ -246,7 +246,8 @@ function business_base_init() {
     create_business_menu();
 
     $active_nav = get_active_nav();
-    $active_nav = explode('.', $active_nav)[0];
+    $active_nav = explode('.', $active_nav);
+    $active_nav = $active_nav[0];
     assign('active_nav', $active_nav);
     assign('menu_mark', 'menu_'.$active_nav);
 
