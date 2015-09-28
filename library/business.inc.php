@@ -151,7 +151,6 @@ $menus = array(
         ),
     ),
 
-<<<<<<< HEAD
     'pur_express' => array(
         'title' => '物流方式管理',
         'icon' => '&#xe605;',
@@ -161,17 +160,6 @@ $menus = array(
 //            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
         ),
     ),
-=======
-//    'pur_express' => array(
-//        'title' => '物流方式管理',
-//        'icon' => '&#xe605;',
-//        'url' => 'express.php',
-//        'children' => array(
-//            'pur_express_view' => array('url' => 'express.php', 'title' => '物流方式列表'),
-//            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
-//        ),
-//    ),
->>>>>>> 6a5801f55b9764ab43630e99684c0d177a3ac3e0
 
     'pur_finance' => array(
         'title' => '财务管理',

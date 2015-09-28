@@ -128,8 +128,8 @@ if( 'reject' == $opera ) {
         $data = array(
             'title' => '产品审核',
             'content' => '您的产品，编号'.$product['product_sn'].'审核不通过。'.$message,
-            'account' => $business['account'],
-            'business_account' => $business['business_account'],
+            'account' => $_SESSION['account'],
+            'business_account' => $product['business_account'],
             'add_time' => time(),
             'status' => 0,  //未读
         );
@@ -278,7 +278,7 @@ if( 'exam' == $act ) {
     assign('attributes', json_encode($product_attributes));
 
     $get_category_list = 'select * from '.$db->table('category');
-    $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_category_list .= ' where business_account = \''.$product['business_account'].'\'';
     $get_category_list .= ' order by `path` ASC';
     $category_list = $db->fetchAll($get_category_list);
     if( $category_list ) {

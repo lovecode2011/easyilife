@@ -303,13 +303,6 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-<<<<<<< HEAD
-//    if( 0 > $inventory ) {
-//        $inventory = 0;
-//    }
-
-=======
->>>>>>> 6a5801f55b9764ab43630e99684c0d177a3ac3e0
     if( 0 > $price ) {
         show_system_message('售价不能为负数', array());
         exit;
