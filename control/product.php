@@ -45,6 +45,9 @@ if( 'exam' == $opera ) {
         exit;
     }
 
+    $get_account = 'select `account` from '.$db->table('business').' where `business_account` = \''.$product['business_account'].'\' limit 1';
+    $product['account'] = $db->fetchOne($get_account);
+
     $reward = floatval(getPOST('reward'));
     $integral = intval(getPOST('integral'));
     $integral_given = intval(getPOST('integral_given'));
@@ -72,8 +75,8 @@ if( 'exam' == $opera ) {
         $data = array(
             'title' => '产品审核',
             'content' => '您的产品，编号'.$product['product_sn'].'审核通过',
-            'account' => $business['account'],
-            'business_account' => $business['business_account'],
+            'account' => $product['account'],
+            'business_account' => $product['business_account'],
             'add_time' => time(),
             'status' => 0,  //未读
         );
@@ -112,6 +115,9 @@ if( 'reject' == $opera ) {
         exit;
     }
 
+    $get_account = 'select `account` from '.$db->table('business').' where `business_account` = \''.$product['business_account'].'\' limit 1';
+    $product['account'] = $db->fetchOne($get_account);
+
     if( $product['status'] == 5 ) {
         show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
         exit;
@@ -128,7 +134,7 @@ if( 'reject' == $opera ) {
         $data = array(
             'title' => '产品审核',
             'content' => '您的产品，编号'.$product['product_sn'].'审核不通过。'.$message,
-            'account' => $_SESSION['account'],
+            'account' => $product['account'],
             'business_account' => $product['business_account'],
             'add_time' => time(),
             'status' => 0,  //未读
