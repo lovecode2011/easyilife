@@ -22,7 +22,6 @@ $php_url = dirname($_SERVER['PHP_SELF']) . '/';
 $save_path = $php_path . '../../upload/';
 //文件保存目录URL
 $save_url = $php_url . '../../upload/';
-$save_url = 'upload/';
 //定义允许上传的文件扩展名
 $ext_arr = array(
 	'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),
