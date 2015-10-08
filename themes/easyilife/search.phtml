@@ -84,26 +84,30 @@
             价格 <input type="number" id="lp" value="">∼
             <input type="number" id="hp" value="">元
         </div>
+        <!--
         {foreach from=$attributes item=a}
-        <div class="filtrate_category filtrate_category_show"  id="attr_{$a.id}">
-            <a href="javascript:;" class="filtrate_category_a filtrate_category_show" name="filter_region_nav" title="供货区域">供货区域<span class="up_down"></span></a>
+        <div class="filtrate_category filtrate_category_show"  id="attr_{$a.key}">
+            <a href="javascript:;" class="filtrate_category_a filtrate_category_show" name="filter_region_nav" title="{$a.name}">{$a.name}<span class="up_down"></span></a>
         </div>
-        <ul class="clearfix filtrate_address filtrate_list addr_item" id="attr_options_{$a.id}" style="margin-top: 0px; display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
-            {foreach from=$a.values item=val name=attr_val key=ak}
-            <li  id="attr_val_{$ak}_{$a.id}" class="" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
-                <a href="javascript:;" cid="{$ak}" name="{$ak}">{$val}</a>
+        <ul class="clearfix filtrate_address filtrate_list addr_item" id="attr_options_{$a.key}" style="margin-top: 0px; display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+            {foreach from=$a.values item=val key=ak}
+            <li  id="attr_val_{$val.id}_{$a.key}" class="" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                <a href="javascript:;" cid="{$val.id}" name="{$val.id}">{$val.name}</a>
             </li>
             {/foreach}
         </ul>
         {/foreach}
+        -->
         <div class="filtrate_has">
             <h2>其他条件</h2>
             <ul class="clearfix">
-                <li id="displaySalesPromotion" title="免运费" onclick="return 1;" class="on"><label>免运费</label></li>
-                <li id="displayOutlets" title="积分换购" onclick="return 1;"><label>积分换购</label></li>
+                <li id="displaySalesPromotion" title="免运费" onclick="select_condition(this, 'free_delivery');"><label>免运费</label></li>
+                <li id="displayOutlets" title="积分换购" onclick="select_condition(this, 'integral_exchange');"><label>积分换购</label></li>
+                <!--
                 <li id="displayDDSelf" title="速来健自营" onclick="return 1;"><label>速来健自营</label></li>
                 <li id="hasStock" title="认证产品" onclick="return 1;"><label>认证产品</label></li>
                 <li id="displayPreSell" title="货到付款" onclick="return 1;"><label>货到付款</label></li>
+                -->
             </ul>
         </div>
         <ul class="filtrate_btn">
@@ -131,6 +135,16 @@
     var mode = "default";
     var filter = {$filter};
 
+    function select_condition(obj, tag) {
+        if(filter[tag] != undefined) {
+            delete filter[tag];
+            obj.className = "";
+        } else {
+            filter[tag] = 1;
+            obj.className = "on";
+        }
+    }
+
     $(document).ready(function(){
         //图片延迟加载
         $("img.lazy").lazyload({
@@ -141,15 +155,56 @@
         //初始化加载更多功能
 
         //筛选浮层显示控制
-        var filtrate = $(".filtrate"), submit = $(".submit,.back");
+        var filtrate = $(".filtrate"), submit = $(".submit");
         filtrate.bind("click", function () {
             $("._next").show();
             $("._pre").hide();
             window.scrollTo(0, 0);
         });
-        submit.bind("click", function () {
+
+        $(".back").bind("click", function () {
             $("._next").hide();
             $("._pre").show();
+            window.scrollTo(0, 0);
+        });
+
+        submit.bind("click", function () {
+            //价格区间
+            var price_l = $("#lp").val();
+            var price_h = $("#hp").val();
+
+            price_l = parseFloat(price_l);
+            price_h = parseFloat(price_h);
+
+            if(price_l > price_h) {
+                show_message_dialog("最低价格不能高于最高价格");
+                return false;
+            }
+
+            if(!isNaN(price_l)) {
+                filter.price_l = price_l;
+            }
+
+            if(!isNaN(price_h)) {
+                filter.price_h = price_h;
+            }
+
+            $("._next").hide();
+            $("._pre").show();
+            sort_products("default");
+        });
+
+        $("#clear_btn").click(function(){
+            for(var i in filter) {
+                if(i != "keyword") {
+                    delete filter[i];
+                }
+            }
+
+            $("#lp").val("");
+            $("#hp").val("");
+            $("#displaySalesPromotion").removeClass("on");
+            $("#displayOutlets").removeClass("on");
         });
     });
 

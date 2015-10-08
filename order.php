@@ -10,10 +10,17 @@ include 'library/init.inc.php';
 $template = 'order_list.phtml';
 $action = 'list|detail';
 $act = check_action($action, getGET('act'));
+$operation = 'pay_now|cancel|rollback|receive';
+$opera = check_action($operation, getPOST('opera'));
 
 if('' == $act)
 {
     $act = 'list';
+}
+
+if('pay_now' == $opera)
+{
+    $order_sn = getPOST('order_sn');
 }
 
 if('detail' == $act)
@@ -90,9 +97,14 @@ if('list' == $act)
     $get_order_list = 'select o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`business_account` from '.$db->table('order').' as o join '.
                       $db->table('business').' as b using(`business_account`) where o.`account`=\''.$_SESSION['account'].'\'';
 
-    if($status > 0)
+    if($status > 0 && $status < 8)
     {
         $get_order_list .= ' and o.`status`='.$status;
+    }
+
+    if($status > 0 && $status >= 8)
+    {
+        $get_order_list .= ' and o.`status`>='.$status;
     }
 
     $get_order_list .= ' order by o.`add_time` DESC';
