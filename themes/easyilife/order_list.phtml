@@ -86,8 +86,8 @@
                 <!--操作按键-->
                 <div class="detail3">
                     {if $order.status eq 7}
-                    <a href="javascript:rollback('{$order.order_sn}');">申请退单</a>
                     <a href="javascript:comment('{$order.order_sn}');" class="orange_hollow">评价晒单</a>
+                    <a href="javascript:rollback('{$order.order_sn}');">申请退单</a>
                     {/if}
                     {if $order.status eq 6}
                     <a href="javascript:receive('{$order.order_sn}');" class="orange_hollow">确认收货</a>
@@ -102,7 +102,7 @@
     </div>
     {/foreach}
 </section>
-<div style="height: 2.8rem;"></div>
+<div style="height: 1rem;"></div>
 <div class="cd-popup" role="alert">
     <div class="cd-popup-container" id="message_dialog" style="display: none;">
         <p id="dialog-message"></p>
@@ -118,6 +118,12 @@
 </div>
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
+    function comment(order_sn) {
+        if(order_sn != '') {
+            window.location.href = "order.php?act=comment&sn="+order_sn;
+        }
+    }
+
     function pay_now(order_sn) {
         if(order_sn != '') {
             var url = "order.php";
@@ -130,11 +136,74 @@
 
     function pay_now_handler(response) {
         if(response.error == 0) {
-            window.locatoin.href = "topay.php";
+            window.location.href = "topay.php";
         } else {
             hide_mask();
             show_message_dialog(response.msg);
         }
+    }
+
+    function cancel_order(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"cancel", "order_sn":order_sn };
+
+            show_mask();
+            $.post(url, data, cancel_order_handler, "json");
+        }
+    }
+
+    function cancel_order_handler(response) {
+        hide_mask();
+        if(response.error == 0) {
+            $("#dialog_close_btn, #dialog_close").click(function () {
+                window.location.reload();
+            });
+        }
+
+        show_message_dialog(response.msg);
+    }
+
+    function receive(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"receive", "order_sn":order_sn };
+
+            show_mask();
+            $.post(url, data, receive_handler, "json");
+        }
+    }
+
+    function receive_handler(response) {
+        hide_mask();
+        if(response.error == 0) {
+            $("#dialog_close_btn, #dialog_close").click(function () {
+                window.location.reload();
+            });
+        }
+
+        show_message_dialog(response.msg);
+    }
+
+    function rollback(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"rollback", "order_sn":order_sn };
+
+            show_mask();
+            $.post(url, data, receive_handler, "json");
+        }
+    }
+
+    function rollback_handler(response) {
+        hide_mask();
+        if(response.error == 0) {
+            $("#dialog_close_btn, #dialog_close").click(function () {
+                window.location.reload();
+            });
+        }
+
+        show_message_dialog(response.msg);
     }
 
     function show_message_dialog(message) {
