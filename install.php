@@ -301,6 +301,7 @@ $sql[] = 'create table if not exists '.$db->table('order').' (
     `account` varchar(255) not null,
     `self_delivery` tinyint(1) not null default \'0\',
     `pay_time` int,
+    `is_comment` tinyint(1) not null default \'0\',
     index (`business_account`)
 ) default charset=utf8;';
 

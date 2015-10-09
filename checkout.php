@@ -217,7 +217,13 @@ if('submit_order' == $opera)
 
                 if($flag) {
                     $response['error'] = 0;
-                    $_SESSION['order_sn'] = $order_sn;
+                    if(isset($_SESSION['order_sn']))
+                    {
+                        $_SESSION['order_sn'] .= ','.$order_sn;
+                    } else {
+                        $_SESSION['order_sn'] = $order_sn;
+                    }
+
                     $response['status'] = $status;
                 } else {
                     $response['msg'] = '提交订单信息失败，请稍后再试';

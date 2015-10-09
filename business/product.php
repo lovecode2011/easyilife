@@ -558,10 +558,10 @@ if( 'view' == $act ) {
                 $and_where .= ' and status = 0';
                 break;
         }
-        assign('status', $status);
     } else {
         $and_where .= ' and status <> 5';
     }
+    assign('status', $status);
 
     $keyword = trim(getGET('keyword'));
     if( '' != $keyword ) {

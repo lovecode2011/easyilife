@@ -537,10 +537,12 @@ aside span.blue{background-color:#7ec3fa;}
     position: relative;
     width: 2.5rem;
     height: 2.5rem;
+    display: inline-block;
 }
 .product_info {
     margin: 0 10px 0 20px;
     -webkit-box-flex: 1;
+    display: inline-block;
 }
 .product_ul li p {
     font-size: .65rem;
@@ -668,12 +670,72 @@ aside span.blue{background-color:#7ec3fa;}
     border-top: 1px solid #ebebeb;
     background-color: #ffffff;
 }
-.order-status-show{
+.order-status-show, .order-comment {
     padding: .5rem .8rem;
 }
-.order-status-show p{
+
+.order-status-show p, .order-comment div {
     color: #999;
     font-size: 14px;
+}
+
+.order-comment div {
+    vertical-align: top;
+    margin-bottom: .6rem;
+}
+
+.input-comment {
+    border: 1px solid #cecece;
+    width: 93%;
+    height: 4rem;
+    padding: 2.5%;
+}
+
+.star {
+    margin: 0px;
+    display: inline-block;
+    margin-bottom: 0 !important;
+}
+
+.star li {
+    float: left;
+    width: 24px;
+    cursor: pointer;
+    text-indent: -9999px;
+    background: transparent url("../images/star.png") no-repeat scroll 0% 0%;
+    height: 24px;
+    list-style: none;
+}
+
+.star li.on {
+    background-position: 0px -28px;
+}
+
+.operation .orange_hollow {
+    float: right;
+    margin: 0.5rem 0px 0px 0.5rem;
+    padding: .25rem .45rem;
+    border-radius: 5px;
+    background: red;
+    color: #fff;
+}
+
+.operation {
+    border-top: 1px solid #CECECE;
+    margin-bottom: 0;
+}
+
+.product-comment {
+    position: absolute;
+    bottom: 5px;
+    right: 0;
+    color: #ff0000;
+    border: 1px solid #ff0000;
+    padding: .1rem .25rem;
+    border-radius: 5px;
+    vertical-align: middle;
+    text-align: center;
+    line-height: .8rem;
 }
 
 /* 确认支付 */

@@ -14,6 +14,7 @@ if('apply' == $opera)
     $response = array('error'=>1, 'msg'=>'');
 
     $name = getPOST('name');
+    $shop_name = getPOST('shop_name');
     $license = $_FILES['license'];
     $identity = $_FILES['identity'];
     $industry = intval(getPOST('industry'));
@@ -32,6 +33,13 @@ if('apply' == $opera)
         $response['msg'] .= '-请填写公司名称<br/>';
     } else {
         $name = $db->escape($name);
+    }
+
+    if($shop_name == '')
+    {
+        $response['msg'] .= '-请填写网店名称<br/>';
+    } else {
+        $shop_name = $db->escape($shop_name);
     }
 
     if($industry <= 0)
@@ -70,7 +78,9 @@ if('apply' == $opera)
 
         if(move_uploaded_file($license['tmp_name'], $save_path.$file_name))
         {
-           $license = $save_path.$file_name;
+            $php_url = dirname($_SERVER['PHP_SELF']) . '/';
+            $root_url = $php_url . 'upload/image/license/';
+            $license = $root_url.$file_name;
         } else {
             $response['msg'] .= '-营业执照上传失败，请稍后再试<br/>';
         }
@@ -92,7 +102,9 @@ if('apply' == $opera)
 
         if(move_uploaded_file($identity['tmp_name'], $save_path.$file_name))
         {
-            $identity = $save_path.$file_name;
+            $php_url = dirname($_SERVER['PHP_SELF']) . '/';
+            $root_url = $php_url . 'upload/image/identity/';
+            $identity = $root_url.$file_name;
         } else {
             $response['msg'] .= '-法人身份证上传失败，请稍后再试<br/>';
         }
@@ -136,6 +148,7 @@ if('apply' == $opera)
             'mobile' => $mobile,
             'email' => $email,
             'status' => 1,
+            'shop_name' => $shop_name,
             'comment' => 0,
             'account' => $_SESSION['account']
         );
