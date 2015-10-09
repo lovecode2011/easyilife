@@ -45,6 +45,29 @@ if( 'add' == $opera ) {
         show_system_message('参数错误', array());
         exit;
     }
+    //产品分类分配到商家主营分类下
+    if( 0 == $parent_id ) {
+        $get_category_id = 'select `category_id` from '.$db->table('business');
+        $get_category_id .= ' where `business_account` = \''.$_SESSION['business_account'].'\' limit 1';
+        $category_id = $db->fetchOne($get_category_id);
+        $path = '';
+        if( 0 >= $category_id ) {
+            $parent_id = 0;
+        } else {
+            $parent_id = $category_id;
+            $path .= $category_id.',';
+        }
+    }
+
+    //限制自定义分类层数
+    $get_parent = 'select `parent_id`,`path` from '.$db->table('category').' where `id`='.$parent_id;
+    if( $parent = $db->fetchRow($get_parent) ) {
+        $count = count(explode(',', $parent['path']));
+        if( $count >= ( intval($config['category_depth']) + 2 ) ) {
+            show_system_message('产品分类不能超过'.$config['category_depth'].'级', array());
+            exit;
+        }
+    }
 
     $price_filter = intval($price_filter);
     if( 0 >= $price_filter ) {
@@ -140,6 +163,16 @@ if( 'edit' == $opera ) {
     if( 0 > $parent_id ) {
         show_system_message('参数错误', array());
         exit;
+    }
+
+    //限制自定义分类层数
+    $get_parent = 'select `parent_id`,`path` from '.$db->table('category').' where `id`='.$parent_id;
+    if( $parent = $db->fetchRow($get_parent) ) {
+        $count = count(explode(',', $parent['path']));
+        if( $count >= ( intval($config['category_depth']) + 2 ) ) {
+            show_system_message('产品分类不能超过'.$config['category_depth'].'级', array());
+            exit;
+        }
     }
 
     $price_filter = intval($price_filter);

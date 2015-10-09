@@ -13,7 +13,7 @@ include 'library/init.inc.php';
 business_base_init();
 $template = 'order/';
 
-$action = 'view|deliver|prepare|agree|refund|delete';
+$action = 'view|deliver|prepare|agree|refund|delete|detail';
 $operation = 'deliver';
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
@@ -372,6 +372,81 @@ if( 'refund' == $act ) {
         exit;
     }
 
+}
+
+if( 'detail' == $act ) {
+    if( !check_purview('pur_order_view', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+
+    $status_str = array(
+        1 => '待支付',
+        2 => '支付中',
+        3 => '支付完成',
+        4 => '待发货',
+        5 => '配货中',
+        6 => '已发货',
+        7 => '已收货',
+        8 => '申请退单',
+        9 => '退单中',
+        10 => '已退单',
+        11 => '无效订单',
+    );
+
+
+    $order_sn = trim(getGET('sn'));
+
+    if( '' == $order_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $order_sn = $db->escape($order_sn);
+
+    $get_order = 'select a.*, p.province_name, city.city_name, d.district_name, g.group_name, e.name as express_name from '.$db->table('order').' as a';
+    $get_order .= ' left join '.$db->table('province').' as p on a.province = p.id';
+    $get_order .= ' left join '.$db->table('city').' as city on a.city = city.id';
+    $get_order .= ' left join '.$db->table('district').' as d on a.district = d.id';
+    $get_order .= ' left join '.$db->table('group').' as g on a.group = g.id';
+    $get_order .= ' left join '.$db->table('express').' as e on a.express_id = e.id';
+
+    $get_order .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
+    $get_order .= ' and order_sn = \''.$order_sn.'\'';
+    $get_order .= ' limit 1';
+
+    $order = $db->fetchRow($get_order);
+
+    if( empty($order) ) {
+        show_system_message('订单不存在', array());
+        exit;
+    }
+
+    $order['add_time_str'] = $order['add_time'] ? date('Y-m-d H:i:s', $order['add_time']) : '';
+    $order['delivery_time_str'] = $order['delivery_time'] ? date('Y-m-d H:i:s', $order['delivery_time']) : '未发货';
+    $order['receive_time_str'] = $order['receive_time'] ? date('Y-m-d H:i:s', $order['receive_time']) : '未收货';
+    $order['pay_time_str'] = $order['pay_time'] ? date('Y-m-d H:i:s', $order['pay_time']) : '未支付';
+    $order['status_str'] = $status_str[$order['status']];
+
+    $get_order_detail = 'select o.*, p.img from '. $db->table('order_detail').' as o';
+    $get_order_detail .= ' left join '.$db->table('product').' as p on o.product_sn = p.product_sn';
+    $get_order_detail .= ' where o.business_account = \''.$_SESSION['business_account'].'\'';
+    $get_order_detail .= ' and o.order_sn = \''.$order_sn.'\'';
+
+    $order_detail = $db->fetchAll($get_order_detail);
+
+    if( $order_detail ) {
+        foreach( $order_detail as $key => $detail ) {
+            $temp = json_decode($detail['product_attributes']);
+            $str = '';
+            foreach( $temp as $k => $v ) {
+                $str .= $k . ':' . $v.'&nbsp;&nbsp;';
+            }
+            $order_detail[$key]['product_attributes'] = $str;
+        }
+    }
+
+    assign('order', $order);
+    assign('order_detail', $order_detail);
 }
 
 $template .= $act.'.phtml';

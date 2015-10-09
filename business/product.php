@@ -172,7 +172,7 @@ if( 'add' == $opera ) {
         'product_sn' => $product_sn,
         'name' => $name,
         'shop_price' => $shop_price,
-        'price' => $shop_price,
+        'price' => $price,
         'lowest_price' => $lowest_price,
         'reward' => 0,
         'integral' => 0,
@@ -396,7 +396,7 @@ if( 'edit' == $opera ) {
     $data = array(
         'name' => $name,
         'shop_price' => $shop_price,
-        'price' => $shop_price,
+        'price' => $price,
         'lowest_price' => $lowest_price,
         'img' => $img,
         'desc' => $desc,
