@@ -109,7 +109,7 @@ if( 'view' == $act ) {
     );
 
     $status = intval(getGET('status'));
-    if( 0 >= $status || 12 <= $status || 3 == $status || 2 == $status ) {
+    if( 0 >= $status || 12 < $status || 3 == $status || 2 == $status ) {
         assign('status', 0);
         assign('order_status', '');
         $and_where = '';

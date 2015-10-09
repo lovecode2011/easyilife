@@ -55,8 +55,8 @@ $purview = array(
     ),
     'pur_order' => array(
         'pur_order_view',
-        'pur_order_del',
-        'pur_order_edit',
+//        'pur_order_del',
+//        'pur_order_edit',
     ),
     //模板控制
     /*
@@ -251,18 +251,6 @@ $L_purview = array(
     'pur_content_add' => '添加资讯',
     'pur_content_edit' => '编辑资讯',
     'pur_content_del' => '删除资讯',
-
-    'pur_adpos' => '广告位置',
-    'pur_adpos_add'=>'添加广告位置',
-    'pur_adpos_view'=>'查看广告位置',
-    'pur_adpos_edit'=>'编辑广告位置',
-    'pur_adpos_del'=>'删除广告位置',
-
-    'pur_ad' => '广告',
-    'pur_ad_add'=>'添加广告',
-    'pur_ad_view'=>'查看广告列表',
-    'pur_ad_edit'=>'编辑广告',
-    'pur_ad_del'=>'删除广告',
 );
 
 global $menus;
@@ -286,6 +274,7 @@ $menus = array(
     'pur_stastics' => array('url' => 'stastics.php', 'title' => '查看统计', 'parent' => 'menu_stastics'),
     'pur_section' => array('url' => 'section.php', 'title' => '栏目管理', 'parent' => 'menu_cms'),
     'pur_content' => array('url' => 'content.php', 'title' => '资讯管理', 'parent' => 'menu_cms'),
+    'pur_order' => array('url' => 'order.php', 'title' => '订单管理', 'parent' => 'menu_order'),
 );
 
 global $topMenus;
