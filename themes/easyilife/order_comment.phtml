@@ -44,15 +44,13 @@
                                 </div>
                                 <div class="fr prd_state">
                                     <!--状态文字-->
-                                    {if $od.has_comment lt 1}
                                     <div class="prd_state_title product-comment" onclick="pcomment('{$od.product_sn}')">
+                                    {if $od.has_comment lt 1}
                                         产品评价
-                                    </div>
                                     {else}
-                                    <div class="prd_state_title product-comment" style="border:0;">
-                                        已评价
-                                    </div>
+                                        追加评价
                                     {/if}
+                                    </div>
                                 </div>
                             </div>
                         </li>

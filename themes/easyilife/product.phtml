@@ -135,6 +135,18 @@
                 <div class="pic_list clearfix"></div>
                 <div class="time"><span class="c_96 fr">{date('Y-m-d', $comment.add_time)}</span></div>
             </div>
+            {if isset($comment.reply)}
+            <div class="block" style="background: #f1f1f1;">
+                <div class="div1">
+                    <span class="user_name">{$product.business.shop_name}客服回复:</span>
+                </div>
+                <div class="message">
+                    {$comment.reply.comment}
+                </div>
+                <div class="pic_list clearfix"></div>
+                <div class="time"><span class="c_96 fr">{date('Y-m-d', $comment.reply.add_time)}</span></div>
+            </div>
+            {/if}
         </li>
         {/foreach}
         {if $comment_count gt 5}

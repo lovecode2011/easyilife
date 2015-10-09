@@ -97,7 +97,7 @@ div {
     top: 0;
     height: 100%;
     width: 100%;
-    z-index: 99;
+    z-index: 99999;
     font-size: .8rem;
     background-color: rgba(94, 110, 141, 0.9);
     opacity: 1;

@@ -10,6 +10,7 @@ include 'library/init.inc.php';
 $operation = 'collection|distribution';
 
 $opera = check_action($operation, getPOST('opera'));
+
 //产品分销
 if('distribution' == $opera)
 {
@@ -179,9 +180,18 @@ if($product)
     assign('attributes_json', json_encode($attributes_map));
 
     //读取评论信息
-    $get_comments = 'select c.`comment`,c.`star`,c.`add_time`,m.`headimg`,m.`nickname` from '.$db->table('comment').' as c'.
+    $get_comments = 'select c.`id`,c.`comment`,c.`star`,c.`add_time`,m.`headimg`,m.`nickname` from '.$db->table('comment').' as c'.
                     ' join '.$db->table('member').' as m using(`account`) where c.`parent_id`=0 and `product_sn`=\''.$product_sn.'\'';
     $comments = $db->fetchAll($get_comments);
+    if($comments)
+    {
+        foreach($comments as $key=>$c)
+        {
+            $get_reply = 'select `comment`,`add_time` from '.$db->table('comment').' where `parent_id`='.$c['id'];
+
+            $comments[$key]['reply'] = $db->fetchRow($get_reply);
+        }
+    }
     $product['comments'] = $comments;
     assign('comment_count', count($comments));
 

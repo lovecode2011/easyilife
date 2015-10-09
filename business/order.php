@@ -105,6 +105,7 @@ if( 'view' == $act ) {
         9 => '退单中',
         10 => '已退单',
         11 => '无效订单',
+        12 => '已完成',
     );
 
     $status = intval(getGET('status'));
@@ -166,7 +167,7 @@ if( 'view' == $act ) {
     $get_order_list .= ' limit '.$offset.','.$count;
     $order_list = $db->fetchAll($get_order_list);
 
-//    echo $get_order_list;exit;
+//echo $get_order_list;exit;
     if( $order_list ) {
         foreach ($order_list as $key => $order) {
             $order_list[$key]['add_time_str'] = $order['add_time'] ? date('Y-m-d H:i:s', $order['add_time']) : '';
@@ -392,6 +393,7 @@ if( 'detail' == $act ) {
         9 => '退单中',
         10 => '已退单',
         11 => '无效订单',
+        12 => '已完成',
     );
 
 
