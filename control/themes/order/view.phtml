@@ -83,18 +83,6 @@
                 <td>{$order.remark}</td>
                 <td>
                     <a href="order.php?act=detail&sn={$order.order_sn}">订单详情</a>
-                    {if $order.status eq 4}
-                    |&nbsp;<a href="order.php?act=prepare&sn={$order.order_sn}" onclick="javascript:if(confirm('确认要配货？')) return true; else return false;">配货</a>
-                    {/if}
-                    {if $order.status eq 5}
-                    |&nbsp;<a href="order.php?act=deliver&sn={$order.order_sn}" onclick="javascript:if(confirm('确认货物已发出？')) return true; else return false;">发货</a>
-                    {/if}
-                    {if $order.status eq 8}
-                    | <a href="order.php?act=agree&sn={$order.order_sn}" onclick="javascript:if(confirm('确认同意退单？')) return true; else return false;">同意退单</a>
-                    {/if}
-                    {if $order.status eq 9}
-                    | <a href="order.php?act=refund&sn={$order.order_sn}" onclick="javascript:if(confirm('确认已退单？')) return true; else return false;">退单成功</a>
-                    {/if}
                 </td>
             </tr>
             {/foreach}

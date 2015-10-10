@@ -2579,3 +2579,40 @@ nav.ol_select_bar ul a.hover li {
     color: #c3c3c3;
     margin: 1.5rem auto .5rem;
 }
+
+.link-tag {
+    display: inline-block;
+    width: .2rem;
+    height: 1rem;
+    vertical-align: middle;
+    margin-right: .3rem;
+    border-left: 3px solid #ff0000;
+}
+
+.article-header {
+    border-bottom: 1px solid rgb(221, 221, 221);
+    margin: 10px 2.5%;
+    width: 95%;
+}
+
+.article-header h1 {
+    font-weight: normal;
+    font-size: 1.1rem;
+}
+
+.article-date {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #999;
+}
+
+.article-auth {
+    color: rgb(153, 153, 153);
+    font-size: 0.8rem;
+    margin-left: 0.2rem;
+}
+
+.article-content {
+    width: 95%;
+    margin: 0px 2.5%;
+}

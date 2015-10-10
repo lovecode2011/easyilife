@@ -669,7 +669,7 @@ $sql[] = 'create table if not exists '.$db->table('content').' (
     `original_url` varchar(255),
     `section_id` int not null,
     `status` tinyint not null default 1
-) ult charset=utf8;';
+) default charset=utf8;';
 
 
 echo '创建数据库表:<br/>';
