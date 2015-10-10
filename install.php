@@ -625,6 +625,7 @@ $sql[] = 'create table if not exists '.$db->table('bank_card').' (
     `bank` varchar(255) not null,
     `bank_account` varchar(255) not null,
     `bank_card` varchar(255) not null,
+    `mobile` varchar(255) not null,
     index (`account`)
 ) default charset=utf8;';
 

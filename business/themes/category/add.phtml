@@ -25,6 +25,7 @@
                         {/foreach}
                     </select>
                 </p>
+                <!--
                 <p>
                     <label class="l-title">价格区间：</label>
                     <input class="text-input w300" type="text" maxlength="64" id="price_filter" name="price_filter" value="3" placeholder=""/>
@@ -41,12 +42,15 @@
                     <input class="" type="radio" name="search_brand" value="1" checked="checked"/><em>是</em>&nbsp;
                     <input class="" type="radio" name="search_brand" value="0"/><em>否</em>&nbsp;
                 </p>
+                -->
                 <p>
                     <label class="l-title"></label>
+                    <input type="hidden" name="price_filter" value="3"/>
+                    <input type="hidden" name="icon" value="e607"/>
+                    <input type="hidden" name="search_brand" value="1"/>
                     <button class="btn btn-primary" type="submit">保存</button>
                     <input type="hidden" name="opera" value="add" />
                 </p>
-
             </fieldset>
         </form>
     </div>

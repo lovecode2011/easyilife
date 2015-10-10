@@ -34,9 +34,7 @@
         <!--
         <label><span>开户行:</span><input type="text" name="开户行" value="" placeholder="请输入开户所在支行的名称"></label>
         -->
-        <!--
-        <label><span>手机号码:</span><input type="text" name="手机号码" value="" placeholder="请输入该卡在银行预留的号码 "></label>
-        -->
+        <label><span>手机号码:</span><input type="tel" name="mobile" id="mobile" value="" placeholder="请输入该卡在银行预留的号码"></label>
         <label><span>账户密码:</span><input type="password" id="password" name="password" value="" placeholder="请输入账户密码"></label>
         <div class="bank-btn">
             <a class="btn" href="javascript:void(0);" onclick="save_bank();return false;">确认提交</a>
@@ -73,6 +71,7 @@
         var bank_card = $("#bank_card").val();
         var bank = $("#bank").val();
         var password = $("#password").val();
+        var mobile = $("#mobile").val();
         var msg = "";
 
         if(bank == "") {
@@ -87,13 +86,17 @@
             msg += "-请填写银行卡号<br/>";
         }
 
+        if(mobile == "") {
+            msg += "-请输入该卡在银行预留的号码<br/>";
+        }
+
         if(password == "") {
             msg += "-请输入账户密码<br/>";
         }
 
         if(msg == "") {
             var url = "bank.php";
-            var data = { "opera":"add", "bank":bank, "bank_account":bank_account, "bank_card":bank_card, "password":password };
+            var data = { "opera":"add", "bank":bank, "bank_account":bank_account, "bank_card":bank_card, "mobile":mobile, "password":password };
 
             show_mask();
             $.post(url, data, save_bank_handler, "json");
