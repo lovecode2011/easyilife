@@ -1,0 +1,165 @@
+{include file="library/header.lbi"}
+<body>
+{include file="library/navbar.lbi"}
+{include file="library/sidebar.lbi"}
+
+<!-- content -->
+<div id="content">
+    <div class="content-title">
+        <h5 class="pull-left">添加资讯</h5>
+        <div class="clear"></div>
+    </div>
+    <form method="post" name="articleAddForm">
+        <div class="addArticleMain">
+            <div class="addArticleMainL pull-left">
+                <fieldset>
+                    <p>
+                        <input class="text-input w-90" type="text" id="small-input" name="title" placeholder="请输入资讯标题">
+                    </p>
+                    <h5>内容：</h5>
+                    <p>,
+<!--                        <span>内容：</span>-->
+                        <textarea name="content" class="rn w-90" rows="20" placeholder="这里是编辑器"></textarea>
+                    </p>
+                    <p>
+                        <input type="hidden" name="opera" value="add" />
+                        <button class="btn btn-primary" >提交</button> &nbsp;<a href="article.php" class="btn btn-primary">返回</a>
+                    </p>
+            </div>
+            <div class="addArticleMainR pull-left">
+                <fieldset>
+                    <h5>默认设置</h5>
+                    <p>
+                        <span>作者：</span>
+                        <input class="text-input w-100" type="text" id="small-input" name="author" value="{$defaultAuthor}" />
+                    </p>
+                    <p>
+                        <span>排序(升序)：</span>
+                        <input class="text-input w-100" type="text" id="small-input" name="order-view" value="50" />
+                    </p>
+                    <p>
+                        <span>原文连接：</span>
+                        <input class="text-input w-100" type="text" id="small-input" name="original-url" placeholder="原创文章请留空" />
+                    </p>
+                    <p class="clear">
+                        <span>自动发布：</span>
+                        <input type="radio" name="isAutoPublish" value="1"> <em>是</em> &nbsp;
+                        <input type="radio" name="isAutoPublish" value="0" checked="checked"> <em>否</em>
+                    </p>
+                    <p class="clear" style="display:none">
+                        <span>发布时间：</span>
+                        <input class="text-input w-100" placeholder="请输入日期" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"{/literal} name="publishTime">
+                    </p>
+                </fieldset>
+<!--                <fieldset>-->
+<!--                    <h5>SEO</h5>-->
+<!--                    <p>-->
+<!--                        <span>关键词：</span>-->
+<!--                        <input class="text-input w-100" type="text" id="small-input" name="keywords"  placeholder='多个关键字以英文逗号","隔开'>-->
+<!--                    </p>-->
+<!--                    <p>-->
+<!--                        <span>描述：</span>-->
+<!--                        <textarea class="rn w-100" rows="5" name="description"></textarea>-->
+<!--                    </p>-->
+<!--                </fieldset>-->
+                <fieldset>
+                    <h5>资讯分类</h5>
+                    <p>
+                        <select name="articleCatId" class="w-100">
+                            {foreach from=$sectionList item=section}
+                            <option value="{$section.id}">{$section.name}</option>
+                            {/foreach}
+                        </select>
+                    </p>
+                </fieldset>
+                <fieldset>
+                    <h5>封面设置</h5>
+                    <p>
+                        <input type="button" class="text-input" id="select-image" value="请选择资讯封面" style="cursor:pointer">
+                        <input type="hidden" name="img" id="img" value="" />
+                        <img src="" id="show-image" width="" height="" style="display:none" />
+                    </p>
+                </fieldset>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </form>
+</div>
+<!-- END content -->
+<!-- 日历控件 -->
+<script type="text/javascript" src="laydate/laydate.js"></script>
+<script>
+    {literal}
+    $(function(){
+        laydate.skin('yalan');//切换皮肤，请查看skins下面皮肤库
+    });
+    {/literal}
+</script>
+<!-- END 日历控件 -->
+<!-- kindeditor编辑器 -->
+<script type="text/javascript" src="../plugins/kindeditor/kindeditor-all-min.js"></script>
+<script type="text/javascript">
+    {literal}
+    KindEditor.ready(function(K) {
+        var editor1 = K.create("textarea[name='content']", {
+            height: '400px',
+            width: '93%',
+            cssPath: '../plugins/kindeditor/plugins/code/prettify.css',
+            uploadJson: '../plugins/kindeditor/upload_json.php',
+            fileManagerJson: '../plugins/kindeditor/file_manager_json.php',
+            allowFileManager: true,
+            afterCreate: function () {
+                var self = this;
+                K.ctrl(document, 13, function () {
+                    self.sync();
+                    K('form[name=articleAddForm]')[0].submit();
+                });
+                K.ctrl(self.edit.doc, 13, function () {
+                    self.sync();
+                    K('form[name=articleAddForm]')[0].submit();
+                });
+            }
+        });
+
+        var editor = K.editor({
+            allowFileManager: true,
+            uploadJson: '../plugins/kindeditor/section_upload_json.php',
+            fileManagerJson: '../plugins/kindeditor/file_manager_json.php'
+        });
+        K('#select-image').click(function() {
+            editor.loadPlugin('image', function() {
+                editor.plugin.imageDialog({
+                    imageUrl : '',
+                    clickFn : function(url, title, width, height, border, align) {
+                        if( !width ) {
+                            width = 187 + 'px';
+                        }
+                        if( !height ) {
+                            height = 140 + 'px';
+                        }
+
+                        K('#img').val(url);
+                        K('#show-image').attr('src', url);
+                        K('#show-image').css('display', 'block');
+                        K('#show-image').attr('width', width);
+                        K('#show-image').attr('height', height);
+                        editor.hideDialog();
+                    }
+                });
+            });
+        });
+    });
+    $('input[name=isAutoPublish]').click(function(){
+        console.log($(this).is(':checked'));
+        if( $(this).val() == 1 ) {
+            $(this).parent().next().slideDown()
+        } else {
+            $(this).parent().next().slideUp();
+        }
+    });
+    {/literal}
+</script>
+<!-- END kindeditor编辑器 -->
+{include file="library/footer.lbi"}
+</body>
+</html>

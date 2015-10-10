@@ -55,8 +55,8 @@ $purview = array(
     ),
     'pur_order' => array(
         'pur_order_view',
-        'pur_order_del',
-        'pur_order_edit',
+//        'pur_order_del',
+//        'pur_order_edit',
     ),
     //模板控制
     /*
@@ -105,6 +105,36 @@ $purview = array(
         'pur_industry_del',
     ),
 
+    //栏目
+    'pur_section' => array(
+        'pur_section_view',
+        'pur_section_add',
+        'pur_section_edit',
+        'pur_section_del',
+    ),
+
+    //资讯
+    'pur_content' => array(
+        'pur_content_view',
+        'pur_content_add',
+        'pur_content_edit',
+        'pur_content_del',
+    ),
+
+    //广告位置
+    'pur_adpos' => array(
+        'pur_adpos_view',
+        'pur_adpos_add',
+        'pur_adpos_edit',
+        'pur_adpos_del',
+    ),
+    //广告
+    'pur_ad' => array(
+        'pur_ad_view',
+        'pur_ad_add',
+        'pur_ad_edit',
+        'pur_ad_del',
+    ),
 );
 
 global $L_purview;
@@ -209,6 +239,18 @@ $L_purview = array(
     'pur_industry_add' => '添加主营行业',
     'pur_industry_edit' => '编辑主营行业',
     'pur_industry_del' => '删除主营行业',
+
+    'pur_section' => '栏目管理',
+    'pur_section_view' => '查看栏目',
+    'pur_section_add' => '添加栏目',
+    'pur_section_edit' => '编辑栏目',
+    'pur_section_del' => '删除栏目',
+
+    'pur_content' => '资讯管理',
+    'pur_content_view' => '查看资讯',
+    'pur_content_add' => '添加资讯',
+    'pur_content_edit' => '编辑资讯',
+    'pur_content_del' => '删除资讯',
 );
 
 global $menus;
@@ -229,7 +271,10 @@ $menus = array(
     'pur_passwd' => array('url' => 'password.php', 'title' => '修改密码', 'parent' => 'memu_self'),
     'pur_adpos' => array('url' => 'adpos.php', 'title' => '广告位置管理', 'parent' => 'menu_site'),
     'pur_ad' => array('url' => 'ad.php', 'title' => '广告管理', 'parent' => 'menu_site'),
-    'pur_stastics' => array('url' => 'stastics.php', 'title' => '查看统计', 'parent' => 'menu_stastics')
+    'pur_stastics' => array('url' => 'stastics.php', 'title' => '查看统计', 'parent' => 'menu_stastics'),
+    'pur_section' => array('url' => 'section.php', 'title' => '栏目管理', 'parent' => 'menu_cms'),
+    'pur_content' => array('url' => 'content.php', 'title' => '资讯管理', 'parent' => 'menu_cms'),
+    'pur_order' => array('url' => 'order.php', 'title' => '订单管理', 'parent' => 'menu_order'),
 );
 
 global $topMenus;
@@ -243,4 +288,5 @@ $topMenus = array(
     'menu_admin' => array('title' => '权限管理', 'icon' => '&#xe601;'),
     'menu_self' => array('title' => '个人信息', 'icon' => '&#xe602;'),
     'menu_stastics' => array('title' => '站点统计', 'icon' => '&#xe604;'),
+    'menu_cms' => array('title' => 'cms管理', 'icon' => '&#xe604;'),
 );
