@@ -683,3 +683,11 @@ function check_cross_domain() {
         return false;
     }
 }
+
+function query_express($type, $postid, $id = 1, $valicode = '') {
+    $url = 'http://www.kuaidi100.com/query';
+    $temp = rand(0, 100000000);
+    $temp /= 100000000;
+    $params = 'type='.$type.'&postid='.$postid.'&id='.$id.'&valicode='.$valicode.'&temp='.$temp;
+    return get($url, $params);
+}
