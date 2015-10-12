@@ -256,6 +256,11 @@ if( 'base' == $act ) {
     } else {
         $business['shop_logo_src'] = $business['shop_logo'];
     }
+    if( $business['longitude'] && $business['latitude'] ) {
+        $map_init = true;
+    } else {
+        $map_init = false;
+    }
 
     assign('business', $business);
 
@@ -316,7 +321,7 @@ if( 'base' == $act ) {
     assign('json_cities', json_encode($target_city_list));
     assign('json_districts', json_encode($target_district_list));
     assign('json_groups', json_encode($target_group_list));
-    assign('map_init', json_encode(true));
+    assign('map_init', json_encode($map_init));
 }
 
 if( 'auth' == $act ) {

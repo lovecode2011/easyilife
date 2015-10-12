@@ -5,8 +5,6 @@ $(function() {
 
     group_init();
 
-    map_init = true;
-
     // 百度地图API功能
     var map = new BMap.Map("baidu-map");
     if (map_init) {
@@ -169,7 +167,6 @@ $(function() {
             $('#group').empty();
             $('#group').css('display', 'none');
         }
-
     });
 
     $('#address').blur(function() {

@@ -684,6 +684,14 @@ function check_cross_domain() {
     }
 }
 
+/**
+ *  快递100查询接口
+ * @param $type 快递类型
+ * @param $postid 快递单号
+ * @param int $id 默认为1，作用暂时未知
+ * @param string $valicode 默认为空
+ * @return string json
+ */
 function query_express($type, $postid, $id = 1, $valicode = '') {
     $url = 'http://www.kuaidi100.com/query';
     $temp = rand(0, 100000000);
