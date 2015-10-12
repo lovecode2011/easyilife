@@ -68,7 +68,7 @@ if($flag)
         {
             foreach ($children as $key => $cc)
             {
-                $get_children = 'select `id`,`name`,`parent_id` from ' . $db->table('category') . ' where `business_account`=\'\' and `parent_id`=' . $cat['id'];
+                $get_children = 'select `id`,`name`,`parent_id`,`icon` from ' . $db->table('category') . ' where `business_account`=\'\' and `parent_id`=' . $cc['id'];
                 $cc = $db->fetchAll($get_children);
                 $children[$key]['children'] = $cc;
             }

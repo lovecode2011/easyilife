@@ -8,6 +8,8 @@ $(function() {
 
     $('#product_type').change(function() {
         if ($(this).val() == 0) {
+            $("#inventory").removeAttr("disabled");
+            $("#inventory").val("");
             if ($('#product_attr').is(':visible')) {
                 $('#product_attr').slideUp(function() {
                     $('#show-attr').empty();
@@ -16,6 +18,10 @@ $(function() {
             }
             return;
         } else {
+            $("#inventory").attr("disabled", "true");
+            $("#inventory").val(0);
+            $("#inventory").removeClass("error");
+            $("#inventory-error").hide();
             $('#product_attr').slideUp(function() {
                 $('#show-attr').empty();
                 $('#product_attr').empty();

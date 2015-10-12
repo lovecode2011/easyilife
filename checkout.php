@@ -92,6 +92,7 @@ if('submit_order' == $opera)
             $total_product_amount += $cart['price'] * $cart['number'];
             $total_integral += $cart['integral'] * $cart['number'];
             $total_integral_given += $cart['integral_given'] * $cart['number'];
+            $total_reward += $cart['reward'] * $cart['number'];
         }
 
         //获取物流信息
@@ -133,7 +134,7 @@ if('submit_order' == $opera)
         }
 
         //读取用户信息
-        $get_user_info = 'select `integral`,`reward`,`balance` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
+        $get_user_info = 'select `integral`,`reward`,`balance`,`path` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
         $user_info = $db->fetchRow($get_user_info);
 
         $total_amount = $_SESSION['total_amount'];
@@ -225,6 +226,19 @@ if('submit_order' == $opera)
                     }
 
                     $response['status'] = $status;
+                    //订单结算
+                    if($status == 4)
+                    {
+                        $total_reward = $total_reward/2.5;
+                        //计算三级分销
+                        distribution_settle($total_reward, $user_info['path']);
+                        //计算赠送积分
+                        if($total_integral_given)
+                        {
+                            add_memeber_exchange_log($_SESSION['account'], 0, 0, 0, $total_integral_given, 0, 'settle', '系统结算');
+                            add_member_reward($_SESSION['account'], 0, $total_integral_given, '订单'.$order_sn.'赠送积分');
+                        }
+                    }
                 } else {
                     $response['msg'] = '提交订单信息失败，请稍后再试';
                 }

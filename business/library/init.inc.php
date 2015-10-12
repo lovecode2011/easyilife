@@ -52,8 +52,8 @@ $smarty->setCacheLifetime(1800);//设置缓存文件超时时间为1800秒
 //Debug模式下每次都强制编译输出
 if($debug_mode)
 {
-    //$smarty->clearAllCache();
-    //$smarty->clearCompiledTemplate();
+    $smarty->clearAllCache();
+    $smarty->clearCompiledTemplate();
     $smarty->force_compile = true;
 }
 

@@ -7,6 +7,64 @@
  */
 
 /**
+ * 三级分销结算
+ * @param float $reward
+ * @param string $path
+ * @return bool
+ */
+function distribution_settle($reward, $path)
+{
+    global $db;
+    global $config;
+
+    $ids_arr = explode(',', $path);
+    array_pop($ids_arr);
+
+    $rebate = $reward;
+    $current_id = array_pop($ids_arr);
+    //检查是否第一次购买
+    $get_account = 'select `account` from '.$db->table('member').' where `id`='.$current_id;
+    $account = $db->fetchOne($get_account);
+
+    $check_order = 'select count(*) from '.$db->table('order').' where `account`=\''.$account.'\'';
+    if($db->fetchOne($check_order))
+    {
+        add_memeber_exchange_log($account, 0, 0, 0, 0, $rebate, 'settle', '系统结算');
+        add_member_reward($account, $rebate, 0, '系统结算');
+        $rebate = 0;
+    }
+
+    while(count($ids_arr) > 3)
+    {
+        array_shift($ids_arr);
+    }
+
+    $level = 1;
+    while($id = array_pop($ids_arr))
+    {
+        $reward_tmp = $reward * $config['level_'.$level];
+
+        $get_account = 'select `account` from '.$db->table('member').' where `id`='.$id;
+        $account = $db->fetchOne($get_account);
+
+        if($rebate)
+        {
+            add_memeber_exchange_log($account, 0, 0, 0, 0, $rebate, 'settle', '系统结算');
+            add_member_reward($account, $rebate, 0, '系统结算');
+            $rebate = 0;
+        }
+
+        if($reward_tmp)
+        {
+            add_memeber_exchange_log($account, 0, 0, 0, 0, $reward_tmp, 'settle', '系统结算');
+            add_member_reward($account, $reward_tmp, 0, '系统结算');
+        }
+    }
+
+    return true;
+}
+
+/**
  * 新增订单操作记录
  */
 function add_order_log($order_sn, $operator, $status, $remark = '')
