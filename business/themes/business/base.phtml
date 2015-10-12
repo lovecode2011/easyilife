@@ -64,14 +64,14 @@
                 </p>
                 <p>
                     <label class="l-title">经度:</label>
-                    <input class="text-input w150" type="text" maxlength="32" id="lng" name="lng" disabled="disabled" value="{$business.longitude}"/>
+                    <input class="text-input w150" type="text" maxlength="32" id="lng" name="lng" readonly value="{$business.longitude}"/>
                 </p>
                 <p>
                     <label class="l-title">纬度:</label>
-                    <input class="text-input w150" type="text" maxlength="32" id="lat" name="lat" disabled="disabled" value="{$business.latitude}"/>
+                    <input class="text-input w150" type="text" maxlength="32" id="lat" name="lat" readonly value="{$business.latitude}"/>
                 </p>
                 <p>
-                    <div id="baidu-map" style="display:none;margin: 0 auto 50px;height: 400px ;width: 800px;"></div>
+                    <div id="baidu-map" style="margin: 0 auto 50px;height: 400px ;width: 800px;"></div>
                 </p>
                 <p>
                     <label class="l-title"></label>
@@ -125,6 +125,7 @@
         menu1("#ud1", "#ud1 a", ".coin_2 a.nav-top-item");
     })
 </script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=uFn8xlbwjrPfeCT2fZtl3hXw"></script>
 <script type="text/javascript" src="js/business/base.js"></script>
 {include file="library/footer.lbi"}
 </body>

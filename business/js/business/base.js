@@ -5,6 +5,36 @@ $(function() {
 
     group_init();
 
+    map_init = true;
+
+    // 百度地图API功能
+    var map = new BMap.Map("baidu-map");
+    if (map_init) {
+        map.centerAndZoom(new BMap.Point($('input[name=lng]').val(), $('input[name=lat]').val()), 20);
+        var marker = new BMap.Marker(new BMap.Point($('input[name=lng]').val(), $('input[name=lat]').val()));
+        map.addOverlay(marker);
+    } else {
+        map.centerAndZoom(new BMap.Point(113.30765, 23.120049), 12);
+    }
+
+    map.addEventListener("click", showInfo);
+    map.addControl(new BMap.NavigationControl());
+    map.addControl(new BMap.ScaleControl());
+    map.addControl(new BMap.OverviewMapControl());
+    map.addControl(new BMap.MapTypeControl());
+    map.enableScrollWheelZoom();   //启用滚轮放大缩小，默认禁用
+
+    function showInfo(e) {
+        $('input[name=lng]').val(e.point.lng);
+        $('input[name=lat]').val(e.point.lat);
+        $('input[name=lng-show]').val(e.point.lng);
+        $('input[name=lat-show]').val(e.point.lat);
+        var marker = new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat));
+        map.clearOverlays();
+        map.addOverlay(marker);
+        //alert(e.point.lng + ", " + e.point.lat);
+    }
+
     function group_init() {
         $('#group').empty();
         $('#group').css('display', 'none');
@@ -35,13 +65,6 @@ $(function() {
         if (city != "") {
             map.centerAndZoom(city, 15);      // 用城市名设置地图中心点
         }
-    }
-
-    function locate_by_address(address_kw) {
-        var local = new BMap.LocalSearch(map, {
-            renderOptions: {map: map}
-        });
-        local.search(address_kw);
     }
 
 
@@ -154,5 +177,9 @@ $(function() {
         var city = $('#city').children(':selected').text();
         var district = $('#district').children(':selected').text();
         var address_kw = province + city + district + $(this).val();
+        var local = new BMap.LocalSearch(map, {
+            renderOptions:{map: map}
+        });
+        local.search(address_kw);
     })
 });

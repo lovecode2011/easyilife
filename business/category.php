@@ -321,16 +321,18 @@ if( 'edit' == $act ) {
     $category_list = $db->fetchAll($get_category_list);
 
     if( $category_list ) {
-        foreach ($category_list as $key => $category) {
-            $count = count(explode(',', $category['path']));
-            if ($count > 1) {
-                $temp = '|--' . $category['name'];
-                while ($count--) {
-                    $temp = '&nbsp;&nbsp;' . $temp;
-                }
+        foreach ($category_list as $key => $value) {
+            if( false === strpos($value['path'], $category['path']) ) {
+                $count = count(explode(',', $value['path']));
+                if ($count > 1) {
+                    $temp = '|--' . $value['name'];
+                    while ($count--) {
+                        $temp = '&nbsp;&nbsp;' . $temp;
+                    }
 
-                $category['name'] = $temp;
-                $category_list[$key] = $category;
+                    $value['name'] = $temp;
+                    $category_list[$key] = $value;
+                }
             }
         }
     }
