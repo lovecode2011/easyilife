@@ -625,6 +625,7 @@ $sql[] = 'create table if not exists '.$db->table('bank_card').' (
     `bank` varchar(255) not null,
     `bank_account` varchar(255) not null,
     `bank_card` varchar(255) not null,
+    `mobile` varchar(255) not null,
     index (`account`)
 ) default charset=utf8;';
 
@@ -668,7 +669,7 @@ $sql[] = 'create table if not exists '.$db->table('content').' (
     `original_url` varchar(255),
     `section_id` int not null,
     `status` tinyint not null default 1
-) ult charset=utf8;';
+) default charset=utf8;';
 
 
 echo '创建数据库表:<br/>';

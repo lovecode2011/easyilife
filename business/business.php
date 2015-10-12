@@ -360,7 +360,7 @@ if( 'auth' == $act ) {
     assign('industry_list', $industry_list);
 
     $get_category_list = 'select * from '.$db->table('category');
-    $get_category_list .= ' where business_account = \'\' order by id asc';
+    $get_category_list .= ' where business_account = \'\' and `parent_id`>0 order by id asc';
     $category_list = $db->fetchAll($get_category_list);
     assign('category_list', $category_list);
 }

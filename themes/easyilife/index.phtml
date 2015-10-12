@@ -67,9 +67,9 @@
     <div class="index-news-l fl"></div>
     <div id="myscroll" class="index-news-r fr">
         <ul id="notice" class="news-title">
-            <li><a href="#" target="_blank">生活圈积分换好礼</a></li>
-            <li><a href="#" target="_blank">秋冬换新周</a></li>
-            <li><a href="#" target="_blank">母婴产品大优惠</a></li>
+            {foreach from=$notice item=n}
+            <li><a href="article_list.php?id=1" target="_blank">{$n.title}</a></li>
+            {/foreach}
         </ul>
     </div>
 </section>
