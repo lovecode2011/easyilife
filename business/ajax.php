@@ -25,8 +25,210 @@ if( check_cross_domain() ) {
     exit;
 }
 
-$operation = 'order_detail|edit_attr|add_attr|delete_attr';
+$operation = 'order_detail|edit_attr|add_attr|delete_attr|add_content|edit_content|delete_content';
 $opera = check_action($operation, getPOST('opera'));
+
+//编辑消费内容
+if( 'edit_content' == $opera ) {
+    $product_sn = trim(getPOST('sn'));
+    $content = trim(getPOST('content'));
+    $count = trim(getPOST('count'));
+    $total = trim(getPOST('total'));
+    $id = intval(getPOST('id'));
+
+    if( '' == $product_sn ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+    if( 0 >= $id ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+
+    $content = $db->escape($content);
+    $count = $db->escape($count);
+    $total = $db->escape($total);
+
+    $get_product = 'select * from '.$db->table('product');
+    $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_product .= ' and product_sn = \''.$product_sn.'\' and is_virtual = 1 limit 1';
+
+    $product = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '产品不存在',
+        ));
+        exit;
+    }
+
+    $data = array(
+        'content' => $content,
+        'count' => $count,
+        'total' => $total,
+    );
+
+    $where = 'id = '.$id.' and product_sn = \''.$product_sn.'\' limit 1';
+
+    $get_content = 'select `id` from '.$db->table('virtual_content');
+    $get_content .= $where;
+
+    $exists = $db->fetchRow($get_content);
+    if( empty($exists) ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '消费内容不存在',
+        ));
+        exit;
+    } else {
+        if( $db->autoUpdate('virtual_content', $data, $where, '', 1) ) {
+            echo json_encode(array(
+                'error' => 0,
+                'message' => '消费内容更新成功',
+            ));
+            exit;
+        } else {
+            echo json_encode(array(
+                'error' => 1,
+                'message' => '系统繁忙，请稍后重试',
+            ));
+            exit;
+        }
+    }
+
+
+
+}
+
+
+//增加消费内容
+if( 'add_content' == $opera )  {
+    $product_sn = trim(getPOST('sn'));
+    $content = trim(getPOST('content'));
+    $count = trim(getPOST('count'));
+    $total = trim(getPOST('total'));
+
+    if( '' == $product_sn ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+
+    $content = $db->escape($content);
+    $count = $db->escape($count);
+    $total = $db->escape($total);
+
+    $get_product = 'select * from '.$db->table('product');
+    $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_product .= ' and product_sn = \''.$product_sn.'\' and is_virtual = 1 limit 1';
+
+    $product = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '产品不存在',
+        ));
+        exit;
+    }
+
+    $data = array(
+        'product_sn' => $product_sn,
+        'content' => $content,
+        'count' => $count,
+        'total' => $total,
+    );
+
+    if( $db->autoInsert('virtual_content', array($data)) ) {
+        echo json_encode(array(
+            'error' => 0,
+            'message' => '增加消费内容成功',
+        ));
+        exit;
+    } else {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '系统繁忙，请稍后重试',
+        ));
+        exit;
+    }
+}
+
+//删除消费内容
+if( 'delete_content' == $opera ) {
+    $product_sn = trim(getPOST('sn'));
+    $id = intval(getPOST('id'));
+
+    if( '' == $product_sn ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+    if( 0 >= $id ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+
+    $get_product = 'select * from '.$db->table('product');
+    $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_product .= ' and product_sn = \''.$product_sn.'\' and is_virtual = 1 limit 1';
+
+    $product = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '产品不存在',
+        ));
+        exit;
+    }
+
+    $get_content = 'select * from '.$db->table('virtual_content');
+    $get_content .= ' where id = '.$id;
+    $get_content .= ' and product_sn = \''.$product_sn.'\' limit 1';
+
+    $content = $db->fetchRow($get_content);
+    if( empty($content) ) {
+        echo json_encode(array(
+            'error' => 1,
+//            'message' => $get_content
+            'message' => '消费内容不存在',
+        ));
+        exit;
+    }
+
+    $delete_content = 'delete from '.$db->table('virtual_content');
+    $delete_content .= ' where id = '.$id;
+    $delete_content .= ' and product_sn = \''.$product_sn.'\' limit 1';
+
+    if( $db->delete($delete_content) ) {
+        echo json_encode(array(
+            'error' => 0,
+            'message' => '删除消费内容成功',
+        ));
+        exit;
+    } else {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '系统繁忙，请稍后重试',
+        ));
+        exit;
+    }
+}
 
 if( 'order_detail' == $opera ) {
 

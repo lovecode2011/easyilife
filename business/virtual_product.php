@@ -1,27 +1,26 @@
 <?php
 /**
- * 商户产品管理
+ *
  * @author 王仁欢
  * @email wrh4285@163.com
- * @date 2015-08-19
- * @version 1.0.0
+ * @date 15-10-13
+ * @version 
  */
 
 include 'library/init.inc.php';
 
 //商户管理后台初始化
 business_base_init();
-$template = 'product/';
+$template = 'virtual_product/';
 
 $action = 'view|add|edit|delete|cycle|revoke|remove|sale|release|gallery|del-gallery';
 $operation = 'add|edit|gallery';
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
 $act = ( $act == '' ) ? 'view' : $act;
-//===============================================================================
-
+//==========================================================================
 if( 'add' == $opera ) {
-    if( !check_purview('pur_product_add', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_add', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -29,8 +28,6 @@ if( 'add' == $opera ) {
     $status = intval(getPOST('status'));
     $name = trim(getPOST('name'));
     $category = intval(getPOST('category'));
-    $product_type = intval(getPOST('type'));
-    $brand = intval(getPOST('brand'));
     $price = floatval(getPOST('price'));
     $shop_price = floatval(getPOST('shop_price'));
     $lowest_price = floatval(getPOST('lowest_price'));
@@ -41,13 +38,12 @@ if( 'add' == $opera ) {
     $promote_price = floatval(getPOST('promote_price'));
     $promote_begin = trim(getPOST('promote_begin'));
     $promote_end = trim(getPOST('promote_end'));
-    $weight = floatval(getPOST('weight'));
     $order_view = intval(getPOST('order_view'));
-    $free_delivering = intval(getPOST('free_delivering'));
 
+    $content = getPOST('content');
+    $count = getPOST('count');
+    $total = getPOST('total');
 
-    $inventory = getPOST('inventory');
-    $attr = getPOST('attr');
     do {
         $sn = rand(100000, 999999);
         $product_sn = 'EIF'.$sn;
@@ -67,17 +63,6 @@ if( 'add' == $opera ) {
         show_system_message('产品分类参数错误', array());
         exit;
     }
-
-    if( 0 >= $product_type ) {
-        show_system_message('产品类型参数错误', array());
-        exit;
-    }
-
-    if( 0 >= $brand ) {
-        show_system_message('品牌参数错误', array());
-        exit;
-    }
-
     if( 0 > $price ) {
         show_system_message('售价不能为负数', array());
         exit;
@@ -106,7 +91,7 @@ if( 'add' == $opera ) {
     $promote_price = ( $promote_price <= 0 ) ? 0 : $promote_price;
 
     if( '' != $promote_begin ) {
-        if(preg_match('^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$', $promote_begin)) {
+        if(preg_match('#^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$#', $promote_begin)) {
             $dateTime = explode(' ', $promote_begin);
             $date = explode('-', $dateTime[0]);
             $time = explode(':', $dateTime[1]);
@@ -121,7 +106,7 @@ if( 'add' == $opera ) {
     }
 
     if( '' != $promote_end ) {
-        if(preg_match('^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$', $promote_end)) {
+        if(preg_match('#^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$#', $promote_end)) {
             $dateTime = explode(' ', $promote_end);
             $date = explode('-', $dateTime[0]);
             $time = explode(':', $dateTime[1]);
@@ -135,11 +120,7 @@ if( 'add' == $opera ) {
         $promote_end = 0;
     }
 
-    $weight = ( 0 >= $weight ) ? 0 : $weight;
-
     $order_view = ( 0 >= $order_view ) ? 50 : $order_view;
-
-    $free_delivering = ( 1 == $free_delivering ) ? 1 : 0;
 
     $check_product_sn = 'select `product_sn` from '.$db->table('product').' where product_sn = \''.$product_sn.'\' limit 1';
     $product = $db->fetchRow($check_product_sn);
@@ -152,19 +133,6 @@ if( 'add' == $opera ) {
     $category_exists = $db->fetchRow($check_category);
     if( !$category_exists ) {
         show_system_message('不存在的产品分类', array());
-        exit;
-    }
-
-    $check_type = 'select * from '.$db->table('product_type').' where id = '.$product_type.' limit 1';
-    $type_exists = $db->fetchRow($check_type);
-    if( !$type_exists ) {
-        show_system_message('不存在的产品类型', array());
-        exit;
-    }
-    $check_brand = 'select * from '.$db->table('brand').' where id = '.$brand.' limit 1';
-    $brand_exists = $db->fetchRow($check_brand);
-    if( !$brand_exists ) {
-        show_system_message('不存在的品牌', array());
         exit;
     }
 
@@ -182,17 +150,18 @@ if( 'add' == $opera ) {
         'detail' => $detail,
         'business_account' => $_SESSION['business_account'],
         'category_id' => $category,
-        'product_type_id' => $product_type,
+        'product_type_id' => 0,
         'status' => $status,
         'promote_price' => $promote_price,
         'promote_begin' => $promote_begin,
         'promote_end' => $promote_end,
         'add_time' => time(),
-        'weight' => $weight,
-        'brand_id' => $brand,
+        'weight' => 0,
+        'brand_id' => 0,
         'order_view' => $order_view,
-        'free_delivery' => $free_delivering,
+        'free_delivery' => 0,
         'prev_status' => 0,
+        'is_virtual' => 1,
     );
     $table = 'product';
     $db->begin();
@@ -201,20 +170,20 @@ if( 'add' == $opera ) {
         $transaction = false;
     }
     $links = array(
-        array('link' => 'product.php', 'alt' => '产品列表'),
-        array('link' => 'product.php?act=add', 'alt' => '继续添加'),
+        array('link' => 'virtual_product.php', 'alt' => '虚拟产品列表'),
+        array('link' => 'virtual_product.php?act=add', 'alt' => '继续添加'),
     );
 
+    if( is_array($content) && is_array($count) && is_array($total) ) {
+        foreach( $content as $key => $value ) {
 
-    if( is_array($attr) ) {
-        foreach( $attr as $k => $v ) {
-            $attributes = $db->escape(json_encode($v));
             $data = array(
                 'product_sn' => $product_sn,
-                'attributes' => $attributes,
-                'inventory' => $inventory[$k],
+                'content' => $value,
+                'count' => $count[$key],
+                'total' => $total[$key],
             );
-            $table = 'inventory';
+            $table = 'virtual_content';
             if( !$db->autoInsert($table, array($data)) ) {
                 $transaction = false;
             }
@@ -229,10 +198,11 @@ if( 'add' == $opera ) {
     $db->commit();
     show_system_message('增加产品成功', $links);
     exit;
+
 }
 
 if( 'edit' == $opera ) {
-    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_edit', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -259,18 +229,11 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    $product_sn = trim(getPOST('product_sn'));
     $name = trim(getPOST('name'));
     $category = intval(getPOST('category'));
-    $product_type = intval(getPOST('type'));
-    $brand = intval(getPOST('brand'));
     $price = floatval(getPOST('price'));
     $shop_price = floatval(getPOST('shop_price'));
     $lowest_price = floatval(getPOST('lowest_price'));
-    $reward = floatval(getPOST('reward'));
-
-    $integral = 0;
-    $given_integral = 0;
 
     $img = trim(getPOST('img'));
     $desc = trim(getPOST('desc'));
@@ -278,9 +241,7 @@ if( 'edit' == $opera ) {
     $promote_price = floatval(getPOST('promote_price'));
     $promote_begin = trim(getPOST('promote_begin'));
     $promote_end = trim(getPOST('promote_end'));
-    $weight = floatval(getPOST('weight'));
     $order_view = intval(getPOST('order_view'));
-    $free_delivering = intval(getPOST('free_delivering'));
 
     if( '' == $name ) {
         show_system_message('产品名称不能为空', array());
@@ -290,16 +251,6 @@ if( 'edit' == $opera ) {
 
     if( 0 >= $category ) {
         show_system_message('产品分类参数错误', array());
-        exit;
-    }
-
-    if( 0 >= $product_type ) {
-        show_system_message('产品类型参数错误', array());
-        exit;
-    }
-
-    if( 0 >= $brand ) {
-        show_system_message('品牌参数错误', array());
         exit;
     }
 
@@ -331,7 +282,7 @@ if( 'edit' == $opera ) {
     $promote_price = ( $promote_price <= 0 ) ? 0 : $promote_price;
 
     if( '' != $promote_begin ) {
-        if(preg_match('^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$', $publishTime)) {
+        if(preg_match('#^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$#', $promote_begin)) {
             $dateTime = explode(' ', $promote_begin);
             $date = explode('-', $dateTime[0]);
             $time = explode(':', $dateTime[1]);
@@ -346,7 +297,7 @@ if( 'edit' == $opera ) {
     }
 
     if( '' != $promote_end ) {
-        if(preg_match('^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$', $publishTime)) {
+        if(preg_match('#^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$#', $promote_end)) {
             $dateTime = explode(' ', $promote_end);
             $date = explode('-', $dateTime[0]);
             $time = explode(':', $dateTime[1]);
@@ -360,31 +311,7 @@ if( 'edit' == $opera ) {
         $promote_end = 0;
     }
 
-    $weight = ( 0 >= $weight ) ? 0 : $weight;
-
     $order_view = ( 0 >= $order_view ) ? 50 : $order_view;
-
-    $free_delivering = ( 1 == $free_delivering ) ? 1 : 0;
-
-    $check_category = 'select * from '.$db->table('category').' where id = '.$category.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
-    $category_exists = $db->fetchRow($check_category);
-    if( !$category_exists ) {
-        show_system_message('不存在的产品分类', array());
-        exit;
-    }
-
-    $check_type = 'select * from '.$db->table('product_type').' where id = '.$product_type.' limit 1';
-    $type_exists = $db->fetchRow($check_type);
-    if( !$type_exists ) {
-        show_system_message('不存在的产品类型', array());
-        exit;
-    }
-    $check_brand = 'select * from '.$db->table('brand').' where id = '.$brand.' limit 1';
-    $brand_exists = $db->fetchRow($check_brand);
-    if( !$brand_exists ) {
-        show_system_message('不存在的品牌', array());
-        exit;
-    }
 
     $data = array(
         'name' => $name,
@@ -395,25 +322,21 @@ if( 'edit' == $opera ) {
         'desc' => $desc,
         'detail' => $detail,
         'category_id' => $category,
-        'product_type_id' => $product_type,
         'promote_price' => $promote_price,
         'promote_begin' => $promote_begin,
         'promote_end' => $promote_end,
-        'weight' => $weight,
-        'brand_id' => $brand,
         'order_view' => $order_view,
-        'free_delivery' => $free_delivering,
         'status' => ( $product['status'] == 1 ) ? 1 : 2,
         'prev_status' => $product['status'],
     );
     $table = 'product';
-    $where = 'business_account = \''.$_SESSION['business_account'].'\' and id = \''.$id.'\'';
+    $where = 'business_account = \''.$_SESSION['business_account'].'\' and id = \''.$id.'\' and is_virtual = 1';
     $order = '';
     $limit = '1';
     if( $db->autoUpdate($table, $data, $where, $order, $limit) ) {
         $links = array(
-            array('link' => 'product.php', 'alt' => '产品列表'),
-            array('link' => 'product.php?act=add', 'alt' => '添加产品'),
+            array('link' => 'virtual_product.php', 'alt' => '虚拟产品列表'),
+            array('link' => 'virtual_product.php?act=add', 'alt' => '添加虚拟产品'),
         );
 
         show_system_message('修改产品成功', $links);
@@ -426,7 +349,7 @@ if( 'edit' == $opera ) {
 }
 
 if( 'gallery' == $opera ) {
-    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_edit', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -526,7 +449,7 @@ if( 'gallery' == $opera ) {
 //===============================================================================
 
 if( 'view' == $act ) {
-    if( !check_purview('pur_product_view', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_view', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -568,7 +491,7 @@ if( 'view' == $act ) {
     $get_total = 'select count(*) from '.$db->table('product');
     $get_total .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_total .= $and_where;
-    $get_total .= ' and is_virtual = 0';    //实体产品
+    $get_total .= ' and is_virtual = 1';    //虚拟产品
     $total = $db->fetchOne($get_total);
     $total_page = ceil( $total / $count );
 
@@ -586,7 +509,7 @@ if( 'view' == $act ) {
     $get_product_list .= ' left join '.$db->table('category').' as b on a.category_id = b.id';
     $get_product_list .= ' where a.business_account = \''.$_SESSION['business_account'].'\'';
     $get_product_list .= $and_where;
-    $get_product_list .= ' and is_virtual = 0';    //实体产品
+    $get_product_list .= ' and is_virtual = 1';    //虚拟产品
     $get_product_list .= ' order by order_view asc, id desc';
     $get_product_list .= ' limit '.$offset.','.$count;
     $product_list = $db->fetchAll($get_product_list);
@@ -619,7 +542,7 @@ if( 'view' == $act ) {
 }
 
 if( 'add' == $act ) {
-    if( !check_purview('pur_product_add', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_add', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -644,36 +567,10 @@ if( 'add' == $act ) {
     }
     assign('category_list', $category_list);
 
-    $get_product_type_list = 'select  * from '.$db->table('product_type').' where 1 order by id asc';
-    $product_type_list = $db->fetchAll($get_product_type_list);
-    assign('product_type_list', $product_type_list);
-
-    $get_product_attr_list = 'select * from '.$db->table('product_attributes').' where 1 order by product_type_id asc, id asc';
-    $product_attr_list = $db->fetchAll($get_product_attr_list);
-
-    $target_attr_list = array();
-    $length = count($product_attr_list);
-    for( $i = 0; $i < $length; ) {
-        $pid = $product_attr_list[$i]['product_type_id'];
-        $temp = array();
-        do {
-            $temp[] = $product_attr_list[$i];
-            $i++;
-        } while( $i < $length && $pid == $product_attr_list[$i]['product_type_id'] );
-        $target_attr_list[$pid] = $temp;
-    }
-    assign('json_attr_list', json_encode($target_attr_list));
-
-
-    $get_brand_list = 'select * from '.$db->table('brand').' where 1 order by id asc';
-    $brand_list = $db->fetchAll($get_brand_list);
-    assign('brand_list', $brand_list);
-
-
 }
 
 if( 'release' == $act ) {
-    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_edit', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -687,7 +584,7 @@ if( 'release' == $act ) {
     $get_product = 'select * from '.$db->table('product');
     $get_product .= ' where product_sn = \''.$product_sn.'\'';
     $get_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
-    $get_product .= ' and is_virtual = 0';
+    $get_product .= ' and is_virtual = 1';
     $get_product .= ' limit 1';
     $product  = $db->fetchRow($get_product);
     if( empty($product) ) {
@@ -712,7 +609,7 @@ if( 'release' == $act ) {
 }
 
 if( 'sale' == $act ) {
-    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_edit', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -726,7 +623,7 @@ if( 'sale' == $act ) {
     $get_product = 'select * from '.$db->table('product');
     $get_product .= ' where product_sn = \''.$product_sn.'\'';
     $get_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
-    $get_product .= ' and is_virtual = 0';  //实体产品
+    $get_product .= ' and is_virtual = 1';  //虚拟产品
     $get_product .= ' limit 1';
     $product  = $db->fetchRow($get_product);
     if( empty($product) ) {
@@ -763,7 +660,7 @@ if( 'sale' == $act ) {
 }
 
 if( 'edit' == $act ) {
-    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_edit', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -776,7 +673,7 @@ if( 'edit' == $act ) {
 
     $get_product = 'select a.* from '.$db->table('product').' as a';
     $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_product .= ' and is_virtual = 0';  //实体产品
+    $get_product .= ' and is_virtual = 1';  //虚拟产品
     $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 2 limit 1';
     $product = $db->fetchRow($get_product);
     if( !$product ) {
@@ -798,19 +695,12 @@ if( 'edit' == $act ) {
     assign('product', $product);
 
 
-    $get_attributes = 'select * from '.$db->table('inventory');
-    $get_attributes .= ' where product_sn = \''.$product_sn.'\'';
-    $product_attributes = $db->fetchAll($get_attributes);
+    $get_contents = 'select * from '.$db->table('virtual_content');
+    $get_contents .= ' where product_sn = \''.$product_sn.'\' order by id asc';
+    $virtual_contents = $db->fetchAll($get_contents);
 //    var_dump($product_attributes);exit;
-    if( $product_attributes ) {
-        foreach( $product_attributes as $key => $attributes ) {
-            $product_attributes[$key]['attributes'] = json_decode($attributes['attributes']);
-        }
-    } else {
-        $product_attributes = array();
-    }
 
-    assign('attributes', json_encode($product_attributes));
+    assign('virtual_contents', json_encode($virtual_contents));
 
     $get_category_list = 'select * from '.$db->table('category');
     $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
@@ -832,36 +722,10 @@ if( 'edit' == $act ) {
         }
     }
     assign('category_list', $category_list);
-
-    $get_product_type_list = 'select  * from '.$db->table('product_type').' where 1 order by id asc';
-    $product_type_list = $db->fetchAll($get_product_type_list);
-    assign('product_type_list', $product_type_list);
-
-    $get_product_attr_list = 'select * from '.$db->table('product_attributes').' where 1 order by product_type_id asc, id asc';
-    $product_attr_list = $db->fetchAll($get_product_attr_list);
-
-    $target_attr_list = array();
-    $length = count($product_attr_list);
-    for( $i = 0; $i < $length; ) {
-        $pid = $product_attr_list[$i]['product_type_id'];
-        $temp = array();
-        do {
-            $temp[] = $product_attr_list[$i];
-            $i++;
-        } while( $i < $length && $pid == $product_attr_list[$i]['product_type_id'] );
-        $target_attr_list[$pid] = $temp;
-    }
-    assign('json_attr_list', json_encode($target_attr_list));
-
-
-    $get_brand_list = 'select * from '.$db->table('brand').' where 1 order by id asc';
-    $brand_list = $db->fetchAll($get_brand_list);
-    assign('brand_list', $brand_list);
-
 }
 
 if( 'gallery' == $act ) {
-    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_edit', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -874,7 +738,7 @@ if( 'gallery' == $act ) {
 
     $get_product = 'select a.* from '.$db->table('product').' as a';
     $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_product .= ' and is_virtual = 0';  //实体产品
+    $get_product .= ' and is_virtual = 1';  //虚拟产品
     $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 5 limit 1';
     $product = $db->fetchRow($get_product);
     if( !$product ) {
@@ -925,13 +789,13 @@ if( 'gallery' == $act ) {
 }
 
 if( 'del-gallery' == $act ) {
-    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_edit', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
     $id = intval(getGET('id'));
     if( 0 >= $id ) {
-        redirect('product.php?act=gallery');
+        redirect('virtual_product.php?act=gallery');
     }
     $get_gallery = 'select * from '.$db->table('gallery').' as a';
     $get_gallery .= ' left join '.$db->table('product').' as b on a.product_sn = b.product_sn';
@@ -944,7 +808,7 @@ if( 'del-gallery' == $act ) {
 
     $delete_gallery = 'delete from '.$db->table('gallery').' where id = '.$id.' limit 1';
     if( $db->delete($delete_gallery) ) {
-        redirect('product.php?act=gallery&sn='.$gallery['product_sn']);
+        redirect('virtual_product.php?act=gallery&sn='.$gallery['product_sn']);
     } else {
         show_system_message('系统繁忙，请稍后重试', array());
         exit;
@@ -952,7 +816,7 @@ if( 'del-gallery' == $act ) {
 }
 
 if( 'delete' == $act ) {
-    if( !check_purview('pur_product_del', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_del', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -965,7 +829,7 @@ if( 'delete' == $act ) {
 
     $get_product = 'select * from '.$db->table('product');
     $get_product .= ' where product_sn = \''.$product_sn.'\'';
-    $get_product .= ' and is_virtual = 0';  //实体产品
+    $get_product .= ' and is_virtual = 1';  //虚拟产品
     $get_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
     $get_product .= ' limit 1';
     $product  = $db->fetchRow($get_product);
@@ -986,8 +850,8 @@ if( 'delete' == $act ) {
     if( $db->update($update_product) ) {
 
         $links = array(
-            array('link' => 'product.php', 'alt' => '产品列表'),
-            array('link' => 'product.php?act=cycle', 'alt' => '回收站'),
+            array('link' => 'virtual_product.php', 'alt' => '虚拟产品列表'),
+            array('link' => 'virtual_product.php?act=cycle', 'alt' => '回收站'),
         );
 
         show_system_message('产品'.$product['product_sn'].'已移入回收站', $links);
@@ -1000,7 +864,7 @@ if( 'delete' == $act ) {
 }
 
 if( 'cycle' == $act ) {
-    if( !check_purview('pur_product_del', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_del', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -1018,7 +882,7 @@ if( 'cycle' == $act ) {
     $get_total = 'select count(*) from '.$db->table('product').' as a';
     $get_total .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_total .= $and_where;
-    $get_total .= ' and is_virtual = 0';  //实体产品
+    $get_total .= ' and is_virtual = 1';  //虚拟产品
     $total = $db->fetchOne($get_total);
     $total_page = ceil( $total / $count );
 
@@ -1036,7 +900,7 @@ if( 'cycle' == $act ) {
     $get_product_list .= ' left join '.$db->table('category').' as b on a.category_id = b.id';
     $get_product_list .= ' where a.business_account = \''.$_SESSION['business_account'].'\'';
     $get_product_list .= $and_where;
-    $get_product_list .= ' and is_virtual = 0';  //实体产品
+    $get_product_list .= ' and is_virtual = 1';  //虚拟产品
     $get_product_list .= ' order by order_view asc, id desc';
     $get_product_list .= ' limit '.$offset.','.$count;
 //    echo $get_product_list;exit;
@@ -1054,7 +918,7 @@ if( 'cycle' == $act ) {
 }
 
 if( 'revoke' == $act ) {
-    if( !check_purview('pur_product_del', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_del', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -1068,7 +932,7 @@ if( 'revoke' == $act ) {
     $get_product = 'select * from '.$db->table('product');
     $get_product .= ' where product_sn = \''.$product_sn.'\'';
     $get_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
-    $get_product .= ' and is_virtual = 0';  //实体产品
+    $get_product .= ' and is_virtual = 1';  //虚拟产品
     $get_product .= ' limit 1';
     $product  = $db->fetchRow($get_product);
     if( empty($product) ) {
@@ -1088,8 +952,8 @@ if( 'revoke' == $act ) {
     if( $db->update($update_product) ) {
 
         $links = array(
-            array('link' => 'product.php', 'alt' => '产品列表'),
-            array('link' => 'product.php?act=cycle', 'alt' => '回收站'),
+            array('link' => 'virtual_product.php', 'alt' => '虚拟产品列表'),
+            array('link' => 'virtual_product.php?act=cycle', 'alt' => '回收站'),
         );
 
         show_system_message('产品'.$product['product_sn'].'已移出回收站', $links);
@@ -1101,7 +965,7 @@ if( 'revoke' == $act ) {
 }
 
 if( 'remove' == $act ) {
-    if( !check_purview('pur_product_del', $_SESSION['business_purview']) ) {
+    if( !check_purview('pur_virtual_product_del', $_SESSION['business_purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -1121,7 +985,7 @@ if( 'remove' == $act ) {
     $get_product = 'select * from '.$db->table('product');
     $get_product .= ' where product_sn = \''.$product_sn.'\'';
     $get_product .= ' and business_account = \''.$_SESSION['business_account'].'\'';
-    $get_product .= ' and is_virtual = 0';  //实体产品
+    $get_product .= ' and is_virtual = 1';  //虚拟产品
     $get_product .= ' limit 1';
     $product  = $db->fetchRow($get_product);
     if( empty($product) ) {
@@ -1129,7 +993,7 @@ if( 'remove' == $act ) {
         exit;
     }
     if( $product['status'] != 5 ) {
-        show_system_message('产品未被删除', array(array('link' => 'product.php', 'alt' => '产品列表')));
+        show_system_message('产品未被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品列表')));
         exit;
     }
 
@@ -1145,24 +1009,11 @@ if( 'remove' == $act ) {
         $transaction = false;
     }
 
-    $delete_gallery = 'delete from '.$db->table('gallery');
-    $delete_gallery .= ' where product_sn = \''.$product_sn.'\'';
-    $delete_gallery .= ' limit 1';
-    if( !$db->delete($delete_gallery) ) {
-        $transaction = false;
-    }
-
-    $delete_inventory = 'delete from '.$db->table('inventory');
-    $delete_inventory .= ' where product_sn = \''.$product_sn.'\'';
-    if( !$db->delete($delete_inventory) ) {
-        $transaction = false;
-    }
-
     if( $transaction ) {
         $links = array(
-            array('link' => 'product.php', 'alt' => '产品列表'),
-            array('link' => 'product.php?act=cycle', 'alt' => '回收站'),
-            array('link' => 'product.php?act=add', 'alt' => '添加产品'),
+            array('link' => 'virtual_product.php', 'alt' => '虚拟产品列表'),
+            array('link' => 'virtual_product.php?act=cycle', 'alt' => '回收站'),
+            array('link' => 'virtual_product.php?act=add', 'alt' => '添加虚拟产品'),
         );
         $db->commit();
         show_system_message('产品'.$product['product_sn'].'已被彻底删除', $links);
@@ -1177,4 +1028,3 @@ if( 'remove' == $act ) {
 
 $template .= $act.'.phtml';
 $smarty->display($template);
-
