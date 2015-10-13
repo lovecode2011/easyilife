@@ -12,7 +12,7 @@ $charset = 'utf8'; //数据库采用编码
 define('DB_HOST', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', 'root');
-define('DB_DBNAME', 'easyilife');
-define('DB_PREFIX', 'eif_');
+define('DB_DBNAME', 'sbx');
+define('DB_PREFIX', 'sbx_');
 
 define('PASSWORD_END', '_kwanson');
