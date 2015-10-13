@@ -47,6 +47,7 @@ if( 'add' == $opera ) {
 
 
     $inventory = getPOST('inventory');
+    $inventory = intval($inventory);
     $attr = getPOST('attr');
     do {
         $sn = rand(100000, 999999);
@@ -68,7 +69,7 @@ if( 'add' == $opera ) {
         exit;
     }
 
-    if( 0 >= $product_type ) {
+    if( 0 > $product_type ) {
         show_system_message('产品类型参数错误', array());
         exit;
     }
@@ -94,7 +95,7 @@ if( 'add' == $opera ) {
     }
 
     if( '' == $img ) {
-        show_system_message('请选择一张图片作为封面', array());
+        show_system_message('请选择一张图片作为产品主图', array());
         exit;
     }
     $img = $db->escape($img);
@@ -155,12 +156,17 @@ if( 'add' == $opera ) {
         exit;
     }
 
-    $check_type = 'select * from '.$db->table('product_type').' where id = '.$product_type.' limit 1';
-    $type_exists = $db->fetchRow($check_type);
-    if( !$type_exists ) {
-        show_system_message('不存在的产品类型', array());
-        exit;
+    if($product_type)
+    {
+        $check_type = 'select * from ' . $db->table('product_type') . ' where id = ' . $product_type . ' limit 1';
+        $type_exists = $db->fetchRow($check_type);
+        if (!$type_exists)
+        {
+            show_system_message('不存在的产品类型', array());
+            exit;
+        }
     }
+
     $check_brand = 'select * from '.$db->table('brand').' where id = '.$brand.' limit 1';
     $brand_exists = $db->fetchRow($check_brand);
     if( !$brand_exists ) {
@@ -206,8 +212,9 @@ if( 'add' == $opera ) {
     );
 
 
+    //新增产品库存
     if( is_array($attr) ) {
-        foreach( $attr as $k => $v ) {
+        foreach ($attr as $k => $v) {
             $attributes = $db->escape(json_encode($v));
             $data = array(
                 'product_sn' => $product_sn,
@@ -215,9 +222,19 @@ if( 'add' == $opera ) {
                 'inventory' => $inventory[$k],
             );
             $table = 'inventory';
-            if( !$db->autoInsert($table, array($data)) ) {
+            if (!$db->autoInsert($table, array($data))) {
                 $transaction = false;
             }
+        }
+    } else {
+        $data = array(
+            'product_sn' => $product_sn,
+            'attributes' => '',
+            'inventory' => $inventory,
+        );
+        $table = 'inventory';
+        if (!$db->autoInsert($table, array($data))) {
+            $transaction = false;
         }
     }
 
@@ -293,7 +310,7 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    if( 0 >= $product_type ) {
+    if( 0 > $product_type ) {
         show_system_message('产品类型参数错误', array());
         exit;
     }
@@ -303,12 +320,12 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    if( 0 > $price ) {
+    if( 0 >= $price ) {
         show_system_message('售价不能为负数', array());
         exit;
     }
 
-    if( 0 > $shop_price ) {
+    if( 0 >= $shop_price ) {
         show_system_message('市场价不能为负数', array());
         exit;
     }
@@ -319,7 +336,7 @@ if( 'edit' == $opera ) {
     }
 
     if( '' == $img ) {
-        show_system_message('请选择一张图片作为封面', array());
+        show_system_message('请选择一张图片作为产品主图', array());
         exit;
     }
     $img = $db->escape($img);
@@ -373,12 +390,17 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    $check_type = 'select * from '.$db->table('product_type').' where id = '.$product_type.' limit 1';
-    $type_exists = $db->fetchRow($check_type);
-    if( !$type_exists ) {
-        show_system_message('不存在的产品类型', array());
-        exit;
+    if($product_type)
+    {
+        $check_type = 'select * from ' . $db->table('product_type') . ' where id = ' . $product_type . ' limit 1';
+        $type_exists = $db->fetchRow($check_type);
+        if (!$type_exists)
+        {
+            show_system_message('不存在的产品类型', array());
+            exit;
+        }
     }
+
     $check_brand = 'select * from '.$db->table('brand').' where id = '.$brand.' limit 1';
     $brand_exists = $db->fetchRow($check_brand);
     if( !$brand_exists ) {

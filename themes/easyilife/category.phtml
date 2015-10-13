@@ -25,7 +25,7 @@
     <div class="search_header" id="category_header">
         <a href="javascript:history.back();" class="back" name="go_to_index" title="到首页"></a>
         <div class="search">
-            <div class="text_box" name="search_box" title="搜索框" onclick="return 1;"><input id="_keyword" type="text" class="text" placeholder="搜索商品、品牌、种类" onkeydown="this.style.color='#404040'"></div>
+            <div class="text_box" name="search_box" title="搜索框" onclick="return 1;"><input id="_keyword" type="text" class="text" placeholder="搜索商品" onkeydown="this.style.color='#404040'"></div>
             <input type="submit" value="" class="submit">
         </div>
         <!--<a href="javascript:void(0);" class="header_qr"></a>-->
@@ -57,7 +57,7 @@
                             <li>
                                 <div>
                                     <a href="product_list.php?id={$cc.id}" name="cate_lev2_0_0_0" title="{$cc.name}">
-                                        <img class="cate_icon_img" src="{$template_dir}images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00490/zhangping/xiaoshuo-23274638.png" alt="小说">
+                                        <img class="cate_icon_img" src="{$template_dir}images/bg_pic.png" data-src="{$cc.icon}" alt="小说">
                                         <span>{$cc.name}</span>
                                     </a>
                                 </div>

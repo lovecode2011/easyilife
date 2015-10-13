@@ -7,6 +7,28 @@
  * Time: 下午10:12
  */
 
+/**
+ * 会员奖金记录
+ * @param string $account
+ * @param float $reward
+ * @param float $integral
+ * @param string $remark
+ * @return bool
+ */
+function  add_member_reward($account, $reward, $integral = 0.0, $remark = '')
+{
+    global $db;
+
+    $reward_data = array(
+        'account' => $account,
+        'reward' => $reward,
+        'integral' => $integral,
+        'remark' => $remark,
+        'settle_time' => time()
+    );
+
+    return $db->autoInsert('member_reward', array($reward_data));
+}
  /**
  * 账户明细
  * @param string $account

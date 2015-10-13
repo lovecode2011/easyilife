@@ -449,7 +449,7 @@ $(document).ready(function() {
         rules: {
             name: {
                 required: true,
-                maxlength: 64
+                maxlength: 200
             },
             price: {
                 required: true,
@@ -461,15 +461,33 @@ $(document).ready(function() {
                 number: true,
                 min: 0
             },
-            lowest_price: {
-                required: true,
-                number: true,
-                min: 0
-            },
             reward: {
                 required: true,
                 number: true,
                 min: 0
+            },
+            category: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            brand: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            weight: {
+                required: true,
+                number: true,
+                min: 0.00001
+            },
+            inventory: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            img: {
+                required: true
             }
         },
         messages: {
@@ -487,15 +505,33 @@ $(document).ready(function() {
                 number: '请输入数值',
                 min: $.validator.format("产品售价不能小于{0}.")
             },
-            lowest_price: {
-                required: '请输入产品最低价',
-                number: '请输入数值',
-                min: $.validator.format("产品最低价不能小于{0}.")
-            },
             reward: {
                 required: '请输入返利',
                 number: '请输入数值',
                 min: $.validator.format("返利不能小于{0}.")
+            },
+            category: {
+                required: '请选择产品分类',
+                number: '请选择产品分类',
+                min: $.validator.format("请选择产品分类")
+            },
+            brand: {
+                required: '请选择产品品牌',
+                number: '请选择产品品牌',
+                min: $.validator.format("请选择产品品牌")
+            },
+            weight: {
+                required: '请输入产品重量',
+                number: '请输入数值',
+                min: $.validator.format("产品重量不能小于{0}.")
+            },
+            inventory: {
+                required: '请输入产品库存',
+                number: '请输入数值',
+                min: $.validator.format("产品重量不能小于{0}.")
+            },
+            img: {
+                required: '请选择一张图片作为产品主图'
             }
         }
     });

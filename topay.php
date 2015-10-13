@@ -7,6 +7,8 @@
  */
 include 'library/init.inc.php';
 
+//支付方式变更时生成支付代码
+
 $order_sn = $_SESSION['order_sn'];
 
 $get_order_info = 'select * from '.$db->table('order').' where `order_sn`=\''.$order_sn.'\' and `account`=\''.$_SESSION['account'].'\'';

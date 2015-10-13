@@ -122,6 +122,7 @@ if($product)
     $product['gallery'] = array($product['img']);
     $product_sn = $product['product_sn'];
 
+    //读取产品相册
     $get_gallery = 'select `big_img` from '.$db->table('gallery').' where `product_sn`=\''.$product_sn.'\'';
     $gallery = $db->fetchAll($get_gallery);
 
@@ -135,50 +136,86 @@ if($product)
         $product['gallery'] = array_merge($product['gallery'], $gallery_arr);
     }
 
-    $attributes_map = array();
-    $attributes_mode = array();
-    $get_product_attributes = 'select `id`,`name` from '.$db->table('product_attributes').' where `product_type_id`='.$product['product_type_id'];
-
-    $attributes = $db->fetchAll($get_product_attributes);
-
-    foreach($attributes as $a)
+    //读取产品属性表
+    if($product['product_type_id'])
     {
-        $attributes_map[$a['id']] = array('id'=>$a['id'],'name'=>$a['name']);
-        $attributes_mode[$a['id']] = '.*';
-    }
+        $attributes_map = array();
+        $attributes_mode = array();
+        $get_product_attributes = 'select `id`,`name` from ' . $db->table('product_attributes') . ' where `product_type_id`=' . $product['product_type_id'];
 
-    assign('attributes_mode', json_encode($attributes_mode));
+        $attributes = $db->fetchAll($get_product_attributes);
 
-    $get_inventory = 'select `attributes`,`inventory`,`inventory_await`,`inventory_logic` from '.$db->table('inventory').' where `product_sn`=\''.$product_sn.'\'';
-    $inventory = $db->fetchAll($get_inventory);
-
-    $inventory_json = array();
-    foreach($inventory as $inventory_tmp)
-    {
-        $attribute_obj = json_decode($inventory_tmp['attributes']);
-        foreach($attribute_obj as $aid=>$aval)
+        foreach ($attributes as $a)
         {
-            if(!isset($attributes_map[$aid]['values']))
-            {
-                $attributes_map[$aid]['values'] = array();
-            }
-
-            $attributes_map[$aid]['values'][] = mb_convert_encoding($aval, 'UTF-8');
+            $attributes_map[$a['id']] = array('id' => $a['id'], 'name' => $a['name']);
+            $attributes_mode[$a['id']] = '.*';
         }
 
-        $inventory_json[$inventory_tmp['attributes']] = $inventory_tmp['inventory_logic'];
+        assign('attributes_mode', json_encode($attributes_mode));
+
+        //读取产品库存表
+        $get_inventory = 'select `attributes`,`inventory`,`inventory_await`,`inventory_logic` from ' . $db->table('inventory') . ' where `product_sn`=\'' . $product_sn . '\'';
+        $inventory = $db->fetchAll($get_inventory);
+
+        $inventory_json = array();
+        foreach ($inventory as $inventory_tmp)
+        {
+            $attribute_obj = json_decode($inventory_tmp['attributes']);
+            foreach ($attribute_obj as $aid => $aval)
+            {
+                if (!isset($attributes_map[$aid]['values']))
+                {
+                    $attributes_map[$aid]['values'] = array();
+                }
+
+                $attributes_map[$aid]['values'][] = mb_convert_encoding($aval, 'UTF-8');
+            }
+
+            $inventory_json[$inventory_tmp['attributes']] = $inventory_tmp['inventory_logic'];
+        }
+
+        //如果产品只有一组属性，则默认选中
+        if(count($inventory) == 1)
+        {
+            assign('attributes_mode', $inventory[0]['attributes']);
+        }
+
+        assign('inventory_json', json_encode($inventory_json));
+
+        foreach ($attributes_map as $aid => $value)
+        {
+            $attributes_map[$aid]['values'] = array_unique($value['values']);
+        }
+
+        assign('attributes', $attributes_map);
+        assign('attributes_json', json_encode($attributes_map));
+    } else {
+        //产品没有属性表的情况
+        assign('attributes_mode', '');
+        $get_inventory = 'select `attributes`,`inventory`,`inventory_await`,`inventory_logic` from ' . $db->table('inventory') . ' where `product_sn`=\'' . $product_sn . '\'';
+        $inventory = $db->fetchAll($get_inventory);
+
+        $inventory_json = array();
+        foreach ($inventory as $inventory_tmp)
+        {
+            $attribute_obj = json_decode($inventory_tmp['attributes']);
+            foreach ($attribute_obj as $aid => $aval)
+            {
+                if (!isset($attributes_map[$aid]['values']))
+                {
+                    $attributes_map[$aid]['values'] = array();
+                }
+
+                $attributes_map[$aid]['values'][] = mb_convert_encoding($aval, 'UTF-8');
+            }
+
+            $inventory_json[$inventory_tmp['attributes']] = $inventory_tmp['inventory_logic'];
+        }
+
+        assign('inventory_json', json_encode($inventory_json));
+        assign('attributes', array());
+        assign('attributes_json', '');
     }
-
-    assign('inventory_json', json_encode($inventory_json));
-
-    foreach($attributes_map as $aid=>$value)
-    {
-        $attributes_map[$aid]['values'] = array_unique($value['values']);
-    }
-
-    assign('attributes', $attributes_map);
-    assign('attributes_json', json_encode($attributes_map));
-
     //读取评论信息
     $get_comments = 'select c.`id`,c.`comment`,c.`star`,c.`add_time`,m.`headimg`,m.`nickname` from '.$db->table('comment').' as c'.
                     ' join '.$db->table('member').' as m using(`account`) where c.`parent_id`=0 and `product_sn`=\''.$product_sn.'\'';

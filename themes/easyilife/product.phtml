@@ -86,7 +86,11 @@
         <h3 id="attr_{$a.id}">{$a.name}</h3>
         <ul id="attr_options_{$a.id}">
             {foreach from=$a.values item=val name=attr_val key=ak}
+            {if count($a.values) neq 1}
             <li id="attr_val_{$ak}_{$a.id}">{$val}</li>
+            {else}
+            <li id="attr_val_{$ak}_{$a.id}" class="on">{$val}</li>
+            {/if}
             {/foreach}
         </ul>
         {/foreach}
@@ -455,6 +459,7 @@
         });
     });
 
+    //选择产品属性
     function select_attribute(e) {
         var tmp = e.id.split("_");
         var index = tmp[2];
@@ -561,8 +566,14 @@
         }
     }
 
+    //判断是否已经完成产品规格选择
     function select_attributes_complete() {
         var check_inventory_flag = true;
+
+        //无产品属性时用
+        if(attributes_mode == "") {
+            return check_inventory_flag;
+        }
 
         for(var i in attributes_mode) {
             if(attributes_mode[i] == ".*") {

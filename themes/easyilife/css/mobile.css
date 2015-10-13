@@ -184,6 +184,9 @@ aside span.blue{background-color:#7ec3fa;}
     background-color: #fe435d;
     color: white;
 }
+.option .option_detail ul li.disabled {
+    color: #ddd;
+}
 .option .option_detail ul li {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
