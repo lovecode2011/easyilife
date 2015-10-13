@@ -2628,7 +2628,7 @@ nav.ol_select_bar ul a.hover li {
 }
 
 /* 物流信息 */
-.express-start i, .experss-middle i, .express-complete i {
+.express-start i, .experss-middle i, .express-complete i, .express-incomplete i {
     background-image: url("../images/express_status.gif");
     background-repeat: no-repeat;
     display: inline-block;
@@ -2636,7 +2636,7 @@ nav.ol_select_bar ul a.hover li {
     height: 160px;
     float: left;
 }
-.express-start, .experss-middle, .express-complete {
+.express-start, .experss-middle, .express-complete, .express-incomplete {
     margin-top: -40px;
 }
 
@@ -2650,6 +2650,10 @@ nav.ol_select_bar ul a.hover li {
 
 .express-start i {
     background-position: -154px center;
+}
+
+.express-incomplete i {
+    background-position: -104px center;
 }
 
 .express-time {

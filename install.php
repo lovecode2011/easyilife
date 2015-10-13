@@ -490,7 +490,7 @@ $sql[] = 'create table if not exists '.$db->table('product').' (
     `sale_count` int not null default \'0\',
     `order_view` int not null default \'50\',
     `free_delivery` tinyint(1) not null default \'0\',
-    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品，1:虚拟产品\'
+    `is_virtual` tinyint(1) not null default \'0\' comment \'0:实体产品，1:虚拟产品\'
 ) default charset=utf8;';
 
 $table[] = '短链接';

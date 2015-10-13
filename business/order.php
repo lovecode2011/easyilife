@@ -111,6 +111,13 @@ if( 'deliver' == $opera ) {
             'remark' => '发货'
         );
         $db->autoInsert('order_log', array($log_data));
+        //扣减库存
+        $get_order_detail = 'select `product_sn`,`count`,`attributes` from '.$db->table('order_detail').' where `order_sn`=\''.$order_sn.'\'';
+        $order_detail = $db->fetchAll($get_order_detail);
+        foreach($order_detail as $od)
+        {
+            consume_inventory($od['product_sn'], $od['attributes'], $od['count'], 1);
+        }
 
         $links = array(
             array('alt' => '已发货订单列表', 'link' => 'order.php?status=6'),

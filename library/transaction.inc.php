@@ -40,7 +40,8 @@ function consume_inventory($product_sn, $attributes, $number, $mode = 0)
     {
         case 1:
             //扣减物理库存
-            $sql .= ',`inventory`=`inventory`-'.$number;
+            $sql .= ',`inventory`=`inventory`-'.$number.', `inventory_await`=`inventory_await`+'.$number;
+            break;
         default:
             //扣减逻辑库存
             $sql .= ' `inventory_logic`=`inventory_logic`-'.$number.', `inventory_await`=`inventory_await`+'.$number;
