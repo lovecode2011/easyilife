@@ -489,7 +489,8 @@ $sql[] = 'create table if not exists '.$db->table('product').' (
     `share_count` int not null default \'0\',
     `sale_count` int not null default \'0\',
     `order_view` int not null default \'50\',
-    `free_delivery` tinyint(1) not null default \'0\'
+    `free_delivery` tinyint(1) not null default \'0\',
+    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品，1:虚拟产品\'
 ) default charset=utf8;';
 
 $table[] = '短链接';
@@ -670,6 +671,15 @@ $sql[] = 'create table if not exists '.$db->table('content').' (
     `original_url` varchar(255),
     `section_id` int not null,
     `status` tinyint not null default 1
+) default charset=utf8;';
+
+$table[] = '虚拟产品内容';
+$sql[] = 'create table if not exists'.$db->table('virtual_content').' (
+    `id` int not null auto_increment primary key,
+    `product_sn` varchar(255) not null,
+    `content` varchar(255) not null,
+    `count` varchar(255) not null,
+    `total` varchar(255) not null
 ) default charset=utf8;';
 
 

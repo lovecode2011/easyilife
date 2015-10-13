@@ -35,6 +35,13 @@ $purview = array(
         'pur_express_del',
     ),
 
+    'pur_virtual_product' => array(
+        'pur_virtual_product_view',
+        'pur_virtual_product_add',
+        'pur_virtual_product_edit',
+        'pur_virtual_product_del',
+    ),
+
     'pur_finance' => array(
         'pur_finance_view',
 //        'pur_finance_trade',
@@ -64,6 +71,7 @@ $purview = array(
         'pur_role_edit',
         'pur_role_del',
     ),
+
 );
 
 global $L_purview;
@@ -117,6 +125,12 @@ $L_purview = array(
     'pur_role_add' => '增加角色',
     'pur_role_edit' => '编辑角色',
     'pur_role_del' => '删除角色',
+
+    'pur_virtual_product' => '虚拟产品',
+    'pur_virtual_product_view' => '虚拟产品列表',
+    'pur_virtual_product_add' => '增加虚拟产品',
+    'pur_virtual_product_edit' => '编辑虚拟产品',
+    'pur_virtual_product_del' => '删除虚拟产品',
 );
 
 global $menus;
@@ -148,6 +162,17 @@ $menus = array(
             'pur_product_view' => array('url' => 'product.php', 'title' => '产品列表'),
             'pur_product_add' => array('url' => 'product.php?act=add', 'title' => '增加产品'),
             'pur_product_delete' => array('url' => 'product.php?act=cycle', 'title' => '回收站'),
+        ),
+    ),
+
+    'pur_virtual_product' => array(
+        'title' => '虚拟产品管理',
+        'icon' => '&#xe608;',
+        'url' => 'virtual_product.php',
+        'children' => array(
+            'pur_virtual_product_view' => array('url' => 'virtual_product.php', 'title' => '虚拟产品列表'),
+            'pur_virtual_product_add' => array('url' => 'virtual_product.php?act=add', 'title' => '增加虚拟产品'),
+            'pur_virtual_product_delete' => array('url' => 'virtual_product.php?act=cycle', 'title' => '虚拟产品回收站'),
         ),
     ),
 
