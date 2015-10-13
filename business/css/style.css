@@ -595,3 +595,28 @@ ul.tabs-without-js li.active a{
 }
 /* END 系统消息未读信息提示 */
 
+/* 物流信息 */
+.express-start i, .experss-middle i, .express-complete i {
+    background-image: url("../images/express_status.gif");
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    vertical-align: bottom;
+}
+.express-start, .experss-middle, .express-complete {
+    text-indent: 20px;
+    line-height: 40px;
+}
+
+.express-complete i {
+    background-position: -4px center;
+}
+
+.experss-middle i {
+    background-position: -54px center;
+}
+
+.express-start i {
+    background-position: -154px center;
+}

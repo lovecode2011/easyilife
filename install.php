@@ -569,6 +569,7 @@ $sql[] = 'create table if not exists '.$db->table('order_detail').' (
     `product_sn` varchar(255) not null,
     `product_name` varchar(255) not null,
     `product_attributes` varchar(255) not null,
+    `attributes` varchar(255),
     `product_price` decimal(18,2) not null,
     `integral` decimal(18,2) not null,
     `integral_given` decimal(18,2) not null,

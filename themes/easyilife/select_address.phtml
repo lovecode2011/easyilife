@@ -31,7 +31,7 @@
     <div class="address-list">
         {foreach from=$address_list item=address}
         <div class="address_item">
-            <input type="radio" class="fl c_checkbox" id="address_{$address.id}" onclick="select_address({$address.id});"/>
+            <input type="radio" name="address_id" class="fl c_checkbox" id="address_{$address.id}" onclick="select_address({$address.id});"/>
             <div class="detail">
                 <p class="a-name">{$address.consignee}<span class="a-phone">{$address.mobile}</span></p>
                 <p class="a-address">{$address.detail_address}</p>

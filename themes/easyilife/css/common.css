@@ -236,5 +236,5 @@ div {
 .progressbar img {
     width: 120px;
     margin: 0 auto;
-    display: block;
+    display: none;
 }

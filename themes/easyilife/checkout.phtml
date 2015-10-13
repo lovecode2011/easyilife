@@ -96,7 +96,11 @@
                     </ul>
                 </div>
                 <hr color="#E5E5E5" class="line_l" size="1">
-                <div class="single_line_div rarrow border_0" id="shipAndPay">
+                {if count($cart.delivery_list) gt 1}
+                <div class="single_line_div rarrow border_0" id="delivery_list_{$cart.b_id}" onclick="change_delivery({$cart.b_id});">
+                {else}
+                <div class="single_line_div border_0" id="delivery_list_{$cart.b_id}">
+                {/if}
                     <span class="t_span">配送方式：</span>
                     <span class="right_action">{$cart.delivery_list.0.delivery_name}<em class="red_money">￥{sprintf("%.2f", $cart.delivery_list.0.delivery_fee)}</em></span>
                 </div>
@@ -107,6 +111,7 @@
         </div>
         {/foreach}
     </section>
+    {if $user_info.integral gt 0 or $user_info.reward gt 0 or $user_info.balance gt 0}
     <section class="preferential border_bottom">
         <ul class="preferential-list">
             {if $user_info.integral gt 0}
@@ -146,8 +151,9 @@
             </li>
             {/if}
         </ul>
-        <input type="hidden" name="payment_id" id="payment_id" value="1"/>
     </section>
+    {/if}
+    <input type="hidden" name="payment_id" id="payment_id" value="1"/>
     <div style="height: 60px;"></div>
     <!-- 提交订单 -->
     <section class="order-submit">
@@ -179,6 +185,7 @@
 <script type="text/javascript">
     var delivery_list = {$delivery_list_json};
     var total_amount = {$total_amount};
+    var total_product_amount = {$total_product_amount};
 
     $(function(){
         hide_mask();
@@ -213,7 +220,7 @@
         var comment_ele = $("input[type='text']");
         var msg = "";
 
-        var data = { "opera":"submit_order", "use_integral": false, "use_reward": false, "use_balance": false, "address_id": address_id, "payment_id": payment_id, "comments": comments };
+        var data = { "opera":"submit_order", "use_integral": false, "use_reward": false, "use_balance": false, "address_id": address_id, "payment_id": payment_id, "comments": comments, "delivery_list": delivery_list };
         if($("#use_integral") != undefined && $("#use_integral").is(":checked")) {
             data.use_integral = true;
             if(total_amount < 0) {
@@ -269,10 +276,10 @@
     function submit_order_handler(response) {
         hide_mask();
         if(response.error == 0) {
-            if(response.status == 1) {
-                window.location.href = "topay.php";
+            if(response.count == 1) {
+                 window.location.href = "topay.php";
             } else {
-                window.location.href = "order.php?status=1";
+                 window.location.href = "order.php";
             }
         } else {
             show_message_dialog(response.msg);

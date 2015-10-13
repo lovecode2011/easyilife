@@ -8,7 +8,7 @@
 include 'library/init.inc.php';
 
 $template = 'order_list.phtml';
-$action = 'list|detail|comment';
+$action = 'list|detail|comment|express_info';
 $act = check_action($action, getGET('act'));
 $operation = 'pay_now|cancel|rollback|receive|comment|product_comment';
 $opera = check_action($operation, getPOST('opera'));
@@ -282,6 +282,31 @@ if('pay_now' == $opera)
 
     echo json_encode($response);
     exit;
+}
+
+if('express_info' == $act)
+{
+    $order_sn = getGET('order_sn');
+
+    if($order_sn == '')
+    {
+        $response['msg'] = '参数错误';
+    } else {
+        $order_sn = $db->escape($order_sn);
+    }
+
+    $get_order_info = 'select * from '.$db->table('order').' where `order_sn`=\''.$order_sn.'\'';
+    $order = $db->fetchRow($get_order_info);
+
+    if($order && $order['status'] == 6)
+    {
+        $get_express_code = 'select `code` from '.$db->table('express').' where `id`='.$order['express_id'];
+        $express_info = query_express($db->fetchOne($get_express_code   ), $order['express_sn']);
+        $express_info = json_decode($express_info, true);
+        assign('express_info', $express_info);
+    }
+
+    $template = 'order_express.phtml';
 }
 
 if('comment' == $act)
