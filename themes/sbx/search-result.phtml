@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>圣宝先移动商城</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="圣宝先移动商城">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="{$template_dir}css/common.css">
+    <link rel="stylesheet" href="{$template_dir}css/app.css">
+    <link rel="stylesheet" href="{$template_dir}css/fonts.css">
+</head>
+<body>
+<!-- 搜索框 -->
+<header id="head_search_box" title="结果页头部" class="_pre">
+    <div class="search_header">
+        <a href="javascript:history.back();" class="back search_back" title="返回"></a>
+        <div class="search">
+            <form id="search_form" title="搜索部分" method="get" action="" target="_parent" onsubmit="return submit_search();">
+                <div class="text_box" name="list_search_text_box" title="搜索框" onclick="return 1;">
+                    <input id="_keyword" name="key" type="text" placeholder="初语 共357个结果" class="text" value="">
+                </div>
+                <input type="submit" value="" class="submit" id="list_search_submit" title="提交">
+            </form>
+        </div>
+        <a class="search_menu filtrate" name="list_go_filter" title="筛选">筛选</a>
+    </div>
+    <div class="clear"></div>
+</header>
+<!-- 排序 -->
+<section class="filtrate_term _pre" id="product_sort" title="商品排序">
+    <ul>
+        <li class="on"><a href="javascript:void(0);" name="list_sort_index">默认</a></li>
+        <li class=""><a href="#" name="list_sort_sales">销量</a></li>
+        <li class=""><a href="#" name="list_sort_score">评分</a></li>
+        <li class=""><a href="#" name="list_sort_price">价格<span class="arrow_up"></span><span class="arrow_down"> <!-- class添加active_up或者active_down --></span></a></li>
+        <li class=""><a href="#" name="list_sort_date">最新</a></li>
+    </ul>
+</section>
+<!-- search result -->
+<section class="goods_list _pre" id="goods_list" name="goods_list" title="商品列表">
+    <div class="clearfix">
+        <ul class="clearfix">
+            <li>
+                <div>
+                    <a href="#" name="product_item" title="商品">
+                        <p class="img"><img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="http://img32.ddimg.cn/60/20/1122565812-1_h_2.jpg" alt="初语 夏装新款 民族样花哈伦裤显瘦长裤 休闲裤女346203055"></p>
+                        <p class="name">初语 夏装新款 民族样花哈伦裤显瘦长裤 休闲裤女346203055</p>
+                    </a>
+                    <p class="price"><span class="red">¥59.00</span>
+                        <span name="item_collect" title="收藏" class="span_sc" onclick="javascript:void(0);" flag="add"></span>
+                    </p>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <a href="#" name="product_item" title="商品">
+                        <p class="img"><img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="http://img32.ddimg.cn/60/20/1122565812-1_h_2.jpg" alt="初语2015秋季新款 经典海魂风条纹宽松蝙蝠袖中袖T恤女8430121060 时尚大赏，全场满400减50，满189元包邮！"></p>
+                        <p class="name">初语2015秋季新款 经典海魂风条纹宽松蝙蝠袖中袖T恤女8430121060 时尚大赏，全场满400减50，满189元包邮！</p>
+                    </a>
+                    <p class="price"><span class="red">¥59.00</span>
+                        <span name="item_collect" title="收藏" class="span_sc" onclick="javascript:void(0);" flag="add"></span>
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+<section class="_next" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+    <!-- 筛选 -->
+    <header>
+        <div class="new_header_2" id="filter_header" title="筛选头部">
+            <a href="javascript:;" class="back" id="list_filter_back" title="返回"><span>返回</span></a>
+            <h2>筛选</h2>
+        </div>
+    </header>
+    <section id="filter_content" title="属性筛选列表" class="">
+        <div class="filtrate_price" name="filter_price" title="价格筛选" onclick="return 1;">
+            价格 <input type="number" id="lp" value="">∼
+            <input type="number" id="hp" value="">元
+        </div>    <div class="filtrate_category filtrate_category_show" att_id="address">
+        <a href="javascript:;" class="filtrate_category_a filtrate_category_show" name="filter_region_nav" title="供货区域">供货区域<span class="up_down">收起</span></a>
+    </div>
+        <ul class="clearfix filtrate_address filtrate_list addr_item" id="filter_region_list" title="收货地列表" style="margin-top: 0px; display: block; transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+            <li class="" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                <a href="javascript:;" cid="1" name="1">广东</a>
+            </li>
+            <li class="" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                <a href="javascript:;" cid="2" aname="2">福建</a>
+            </li>
+            <li class="" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                <a href="javascript:;" cid="3" aname="3">浙江</a>
+            </li>
+        </ul>
+        <div class="filtrate_has">
+            <h2>其他条件</h2>
+            <ul class="clearfix">
+                <li id="displaySalesPromotion" title="免运费" onclick="return 1;" class="on"><label>免运费</label></li><li id="displayOutlets" title="积分换购" onclick="return 1;"><label>积分换购</label></li><li id="displayDDSelf" title="速来健自营" onclick="return 1;"><label>圣宝先自营</label></li><li id="hasStock" title="认证产品" onclick="return 1;"><label>认证产品</label></li><li id="displayPreSell" title="货到付款" onclick="return 1;"><label>货到付款</label></li>        </ul>
+        </div>
+        <ul class="filtrate_btn">
+            <li><a href="javascript:;" class="reset" id="clear_btn" title="筛选清空">清空筛选条件</a></li>
+            <li><a href="javascript:;" class="submit" id="submit_btn" title="筛选确定">确定</a></li>
+        </ul>
+    </section>
+</section>
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="{$template_dir}js/jquery.lazyload.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        //图片延迟加载
+        $("img.lazy").lazyload({
+            effect : "fadeIn"
+        });
+        //初始化收藏功能
+
+        //初始化加载更多功能
+
+        //筛选浮层显示控制
+        var filtrate = $(".filtrate"), submit = $(".submit,.back");
+        filtrate.bind("click", function () {
+            $("._next").show();
+            $("._pre").hide();
+            window.scrollTo(0, 0);
+        });
+        submit.bind("click", function () {
+            $("._next").hide();
+            $("._pre").show();
+        });
+    });
+</script>
+</body>
+</html>

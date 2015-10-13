@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>圣宝先移动商城</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="圣宝先移动商城">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="{$template_dir}css/common.css">
+    <link rel="stylesheet" href="{$template_dir}css/app.css">
+    <link rel="stylesheet" href="{$template_dir}css/fonts.css">
+</head>
+<body>
+<header class="header" style="position:fixed">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1><em>商品列表</em></h1>
+</header>
+
+<!-- 筛选开始 -->
+<section class="filter">
+    <ul>
+        <li class="on"><a href="#"><em>销量</em></a></li>
+        <li><a href="#"><em>价格<span class="arrow_up"></span><span class="arrow_down"></span><!-- class添加active_up或者active_down --></em></a></li>
+        <li><a href="#"><em>好评</em></a></li>
+        <li><a href="#"><em>最新</em></a></li>
+    </ul>
+</section>
+<!-- 内容开始 -->
+<section class="product-list">
+    <ul>
+        <li>
+            <a href="#">
+                <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/sbx-product.png" alt=" 圣宝先富晒复合酵素 ">
+                <dl class="arrow">
+                    <dt> 圣宝先富晒复合酵素 </dt>
+                    <dd>￥69.00</dd>
+                </dl>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/sbx-product.png" alt=" 圣宝先富晒复合酵素 ">
+                <dl class="arrow">
+                    <dt> 圣宝先富晒复合酵素 </dt>
+                    <dd>￥69.00</dd>
+                </dl>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/sbx-product.png" alt=" 圣宝先富晒复合酵素 ">
+                <dl class="arrow">
+                    <dt> 圣宝先富晒复合酵素 </dt>
+                    <dd>￥69.00</dd>
+                </dl>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/sbx-product.png" alt=" 圣宝先富晒复合酵素 ">
+                <dl class="arrow">
+                    <dt> 圣宝先富晒复合酵素 </dt>
+                    <dd>￥69.00</dd>
+                </dl>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/sbx-product.png" alt=" 圣宝先富晒复合酵素 ">
+                <dl class="arrow">
+                    <dt> 圣宝先富晒复合酵素 </dt>
+                    <dd>￥69.00</dd>
+                </dl>
+            </a>
+        </li>
+    </ul>
+</section>
+
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="{$template_dir}js/jquery.lazyload.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $("img.lazy").lazyload({
+            effect : "fadeIn"
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>圣宝先移动商城</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="圣宝先移动商城">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="{$template_dir}css/common.css">
+    <link rel="stylesheet" href="{$template_dir}css/app.css">
+    <link rel="stylesheet" href="{$template_dir}css/fonts.css">
+</head>
+<body>
+<header class="header">
+    <a href="javascript:history.back();" class="back"></a>
+    <div class="search_box">
+        <a href="#" >
+            <div class="search">
+                <form method="get" action="">
+                    <div class="text_box">
+                        <input id="keyword" name="keyword" type="text" placeholder="本店搜索" class="keyword text" onkeydown="this.style.color='#404040'" autocomplete="off">
+                    </div>
+                    <input type="submit" value="" class="submit" title="搜索">
+                </form>
+            </div>
+        </a>
+    </div>
+    <!-- category -->
+    <div class="category">
+        <dl>
+            <dt>
+                <a id="shop_category" href="javascript:void(0);">分类<i></i></a>
+            </dt>
+        </dl>
+    </div>
+    <!-- 分类菜单-->
+    <div class="category_menu">
+        <ul class="list1">
+            <li>
+                <a href="#">新品推荐</a>
+            </li>
+            <li class="hasmore">
+                <a href="javascript:void(0);" onclick="return false;" grade="2">精 致 裙 装</a>
+                <ul class="list2">
+                    <li><a href="#">连 衣 裙</a></li>
+                    <li><a href="#">半 身 裙/短 裙</a></li>
+
+                </ul>
+            </li>
+            <li class="hasmore">
+                <a href="javascript:void(0);" onclick="return false;" grade="2">唯 美 上 装</a>
+                <ul class="list2">
+                    <li><a href="#">短 袖 T 恤</a></li>
+                    <li><a href="#">雪 纺 衫/蕾 丝 衫</a></li>
+                    <li><a href="#">衬 衣/衬 衫</a></li>
+                    <li><a href="#">长 袖 T 恤 /打 底 衫</a></li>
+                    <li><a href="#">针 织 衫/毛 衣</a></li>
+                    <li><a href="#">卫 衣</a></li>
+
+                </ul>
+            </li>
+            <li class="hasmore">
+                <a href="javascript:void(0);" onclick="return false;" grade="2">裤 装</a>
+                <ul class="list2">
+                    <li><a href="#">短 裤</a></li>
+                    <li><a href="#">长 裤</a></li>
+
+                </ul>
+            </li>
+            <li class="hasmore">
+                <a href="javascript:void(0);" onclick="return false;" grade="2">女 式 外 套</a>
+                <ul class="list2">
+                    <li><a href="#">外 套</a></li>
+
+                </ul>
+            </li>
+            <li class="hasmore">
+                <a href="javascript:void(0);" onclick="return false;" grade="2">套 装</a>
+                <ul class="list2">
+                    <li><a href="#">时 尚 套 装</a></li>
+
+                </ul>
+            </li>
+        </ul>
+    </div>
+</header>
+<!-- 用户基本信息 -->
+<section class="shop">
+    <header class="user-info">
+        <section class="user-basic">
+            <img class="user-avatar" src="{$template_dir}images/product_1.jpg" alt="商家">
+            <div class="user-name">八方好运旗舰店</div>
+        </section>
+        <section class="user-stat">
+            <a id="shop_collect_number" href="#"><em>5</em>全部商品</a>
+            <a id="product_collect_number" href="#"><em>3</em>上新商品</a>
+            <a id="read_history_count" href="#"><em class="icon">&#xe600;</em>联系掌柜</a>
+        </section>
+    </header>
+    <!-- 广告轮播区 -->
+    <section id="focus" class="focus">
+        <div class="hd">
+            <ul></ul>
+        </div>
+        <div class="bd">
+            <ul>
+                <li><a href="#"><img _src="{$template_dir}images/m1.jpg" src="{$template_dir}images/blank.png" /></a></li>
+                <li><a href="#"><img _src="{$template_dir}images/m2.jpg" src="{$template_dir}images/blank.png"/></a></li>
+                <li><a href="#"><img _src="{$template_dir}images/m3.jpg" src="{$template_dir}images/blank.png"/></a></li>
+            </ul>
+        </div>
+    </section>
+    <!-- 商品推荐区 -->
+    <section class="floor">
+        <h2>
+            <a class="title"><i class="icon">&#xe610;</i>店长推荐</a>
+            <a href="#" class="more" title="更多">更多</a>
+        </h2>
+        <dl>
+            <dt><a href="#"><img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/H5.jpg" width="100%" height="auto"></a></dt>
+            <dd><a href="#"><img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/309x224-1.jpg" width="100%" height="auto"></a></dd>
+            <dd><a href="#"><img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/309x224-2.jpg" width="100%" height="auto"></a></dd>
+        </dl>
+    </section>
+    <!-- 热卖产品 -->
+    <section class="hot-product">
+        <h3>- <i class="red-font">热卖产品</i> -</h3>
+        <ul>
+            <li>
+                <a href="#">
+                    <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/product_1.jpg" alt="产品图">
+                    <span>【圣宝先自营】八方好运 松花粉</span>
+                    <em>￥160.00</em>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/product_1.jpg" alt="产品图">
+                    <span>【圣宝先自营】八方好运 松花粉</span>
+                    <em>￥160.00</em>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/product_1.jpg" alt="产品图">
+                    <span>【圣宝先自营】八方好运 松花粉</span>
+                    <em>￥160.00</em>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$template_dir}images/product_1.jpg" alt="产品图">
+                    <span>【圣宝先自营】八方好运 松花粉</span>
+                    <em>￥160.00</em>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- 全部产品 -->
+    <section class="all-product">
+        <a href="#" class="arrow">全部商品</a>
+    </section>
+</section>
+<div style="height: 2.2rem;"></div>
+<!-- 底部菜单 -->
+<section class="menu">
+    <ul>
+        <li><a href="index.html"><em class="icon">&#xe601;</em><span>首页</span></a></li>
+        <li><a href="category.html"><em class="icon">&#xe603;</em><span>分类</span></a></li>
+        <li><a href="cart.html"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
+        <li><a class="active" href="#"><em class="icon">&#xe604;</em><span>我</span></a></li>
+    </ul>
+</section>
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="{$template_dir}js/jquery.lazyload.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $("img.lazy").lazyload({
+            effect : "fadeIn"
+        });
+        $("#shop_category").click(function(){
+            if($(this).hasClass("up")){
+                $(".category_menu").slideUp(500);
+                $(this).removeClass("up");
+                $(".hasmore").removeClass("up");
+                $(".hasmore").find("ul").slideUp();
+            }else{
+                $(".category_menu").slideDown(500);
+                $(this).addClass("up");
+            }
+        })
+        $(".hasmore a").click(function(){
+            $(this).parent().siblings().removeClass("up");
+            $(this).parent().siblings().find("ul").slideUp(500);
+            if($(this).parent().hasClass("up")){
+                $(this).parent().find("ul").slideUp(500);
+                $(this).parent().removeClass("up");
+            }else{
+                $(this).parent().find("ul").slideDown(500);
+                $(this).parent().addClass("up");
+            }
+        })
+    });
+</script>
+<script type="text/javascript" src="{$template_dir}js/TouchSlide.1.1.js"></script>
+<script type="text/javascript">
+    TouchSlide({
+        slideCell:"#focus",
+        titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+        mainCell:".bd ul",
+        effect:"left",
+        autoPlay:true,//自动播放
+        autoPage:true, //自动分页
+        switchLoad:"_src" //切换加载，真实图片路径为"_src"
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>圣宝先移动商城</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="圣宝先移动商城">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="{$template_dir}css/common.css">
+    <link rel="stylesheet" href="{$template_dir}css/app.css">
+    <link rel="stylesheet" href="{$template_dir}css/fonts.css">
+</head>
+<body id="index">
+<!-- 首页头部 -->
+<header class="header">
+    <div class="logo">
+        <a href="#">圣宝先</a>
+    </div>
+    <div class="search_box">
+        <a href="#" >
+            <div class="search">
+                <form method="get" action="search.php">
+                    <div class="text_box">
+                        <input id="keyword" name="keyword" type="text" placeholder="搜索商品/店铺" class="keyword text" onkeydown="this.style.color='#404040'" autocomplete="off">
+                    </div>
+                    <input type="submit" value="" class="submit" sbs_name="搜索">
+                </form>
+            </div>
+        </a>
+    </div>
+    <div class="header_service">
+        <a href="#"><span class="icon">&#xe600;</span><em>客服</em></a>
+    </div>
+</header>
+<!-- 广告轮播区 -->
+<section id="focus" class="focus">
+    <div class="hd">
+        <ul></ul>
+    </div>
+    <div class="bd">
+        <ul>
+            <li><a href="#"><img _src="{$template_dir}images/m1.jpg" src="{$template_dir}images/blank.png" /></a></li>
+            <li><a href="#"><img _src="{$template_dir}images/m2.jpg" src="{$template_dir}images/blank.png"/></a></li>
+            <li><a href="#"><img _src="{$template_dir}images/m3.jpg" src="{$template_dir}images/blank.png"/></a></li>
+        </ul>
+    </div>
+</section>
+<!-- 首页功能区 -->
+<ul class="index-nav">
+    <li><a href="#"><i class="icon" style="background-color: #54b0e9;">&#xe62e;</i><span>健康管理</span></a></li>
+    <li><a href="#"><i class="icon" style="background-color: #76bd3d;">&#xe62d;</i><span>商学院</span></a></li>
+    <li><a href="#"><i class="icon" style="background-color: #f15a5a;">&#xe630;</i><span>名家护航</span></a></li>
+    <li><a href="#"><i class="icon" style="background-color: #8d85ee;">&#xe62c;</i><span>联系掌门人</span></a></li>
+    <li><a href="#"><i class="icon" style="background-color: #ffb721;">&#xe62f;</i><span>合伙人入口</span></a></li>
+    <li><a href="#"><i class="icon" style="background-color: #69c0f7;">&#xe606;</i><span>公益联盟</span></a></li>
+    <li><a href="#"><i class="icon" style="background-color: #ffb221;">&#xe605;</i><span>商家入驻</span></a></li>
+    <li><a href="#"><i class="icon" style="background-color: #ff5757;">&#xe631;</i><span>创业新空间</span></a></li>
+</ul>
+<!-- 首页公告区 -->
+<section class="index-news clearfix">
+    <div class="index-news-l fl"></div>
+    <div id="myscroll" class="index-news-r fr">
+        <ul id="notice" class="news-title">
+            <li><a href="#" target="_blank">积分换好礼</a></li>
+            <li><a href="#" target="_blank">秋冬换新周</a></li>
+            <li><a href="#" target="_blank">母婴产品大优惠</a></li>
+        </ul>
+    </div>
+</section>
+<!-- 首页视频介绍 -->
+<section class="index-video">
+    <div class="video-con">
+        <iframe frameborder="0" src="http://v.qq.com/iframe/player.html? vid=a01628p65de&&auto=0&encryptVer=6.0&platform=61 001&cKey=br5H/361ZInlzCja1g8bw2O1i5036iHTstPddNYnyJA=&encryptVer=6.0&p latform=61001&cKey=vQZ5JjZB9f8yrDi0gEcmtMrcaLGkKzAbJ1gci41WJ7mkvrG5Ama PGpzpCLjtuG/X" allowfullscreen style="width: 100%;height: auto;"></iframe>
+    </div>
+</section>
+
+<!-- 专区 -->
+<section class="index-floor">
+    <div class="floor-con">
+        <a href="#"><img src="{$template_dir}images/ptyx.jpg" alt="平台优选"></a>
+    </div>
+</section>
+<section class="index-floor">
+    <div class="floor-con">
+        <a href="#"><img src="{$template_dir}images/tjzq.jpg" alt="特价专区"></a>
+    </div>
+</section>
+<section class="index-floor">
+    <div class="floor-con">
+        <a href="#"><img src="{$template_dir}images/dhzq.jpg" alt="兑换专区"></a>
+    </div>
+</section>
+<div style="height:1rem; "></div>
+<!-- 底部菜单 -->
+<section class="menu">
+    <ul>
+        <li><a class="active" href="index.php"><em class="icon">&#xe601;</em><span>首页</span></a></li>
+        <li><a href="category.php"><em class="icon">&#xe603;</em><span>分类</span></a></li>
+        <li><a href="cart.php"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
+        <li><a href="user.php"><em class="icon">&#xe604;</em><span>我</span></a></li>
+    </ul>
+</section>
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="{$template_dir}js/jquery.lazyload.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $("img.lazy").lazyload({
+            effect : "fadeIn"
+        });
+    });
+</script>
+<script type="text/javascript" src="{$template_dir}js/TouchSlide.1.1.js"></script>
+<script type="text/javascript">
+    TouchSlide({
+        slideCell:"#focus",
+        titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+        mainCell:".bd ul",
+        effect:"left",
+        autoPlay:true,//自动播放
+        autoPage:true, //自动分页
+        switchLoad:"_src" //切换加载，真实图片路径为"_src"
+    });
+</script>
+//公告滚动
+<script type="text/javascript" src="{$template_dir}js/scrolltext.js"></script>
+<script type="text/javascript">
+    var newsHeight = $(".index-news").height();
+    if(document.getElementById("notice")){
+        var scrollup = new ScrollText("notice");
+        scrollup.LineHeight =  (newsHeight ==120)?40:20;//单排文字滚动的高度
+        scrollup.Amount = 1;            //注意:子模块(LineHeight)一定要能整除Amount.
+        scrollup.Delay = 35;           //延时
+        scrollup.Start();             //文字自动滚动
+        scrollup.Direction = "down"; //文字向下滚动
+    }
+</script>
+</body>
+</html>

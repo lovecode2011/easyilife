@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>圣宝先移动商城</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="圣宝先移动商城">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="{$template_dir}css/common.css">
+    <link rel="stylesheet" href="{$template_dir}css/app.css">
+    <link rel="stylesheet" href="{$template_dir}css/fonts.css">
+</head>
+<body>
+<header class="header">
+    <a href="javascript:history.back();" class="back"></a>
+    <div class="h_label">购物车</div>
+    <!--<a href="javascript: void(0)" class="edit">编辑</a>-->
+</header>
+<!-- 购物车列表 -->
+<section class="cart">
+    <div class="block">
+        <div class="cart_list">
+            <div class="shop_title">
+                <input type="checkbox" class="fl c_checkbox">
+                <div class="fl"><a class="shopLink eclipse" href="#">隔壁老王专卖店</a></div>
+                <a class="fl right_arrow" href="#"></a>
+                <a class="c_edit" id="e__0"></a>
+            </div>
+            <div class="cart_item">
+                <input type="checkbox" class="fl c_checkbox">
+                <img src="{$template_dir}images/product_1.jpg" class="fl pro_pic">
+                <div class="detail">
+                    <p class="fr prd_price">￥69.00</p>
+                    <p class="fl prd_tit"><a href="#">松花粉</a></p>
+                    <div class="clear tags">
+                        <!-- 数量开始 -->
+                        <section class="quantity" style="display: none;">
+                            <div class="number_con">
+                                <span class="minus">-</span>
+                                <div class="input"><input type="text" value="1"></div>
+                                <span class="plus on">+</span>
+                            </div>
+                        </section>
+                        <a class="garbage" style="display: none;"></a>
+                    </div>
+                </div>
+                <div class="bottom_line"></div>
+            </div>
+            <div class="cart_item">
+                <input type="checkbox" class="fl c_checkbox">
+                <img src="{$template_dir}images/product_1.jpg" class="fl pro_pic">
+                <div class="detail">
+                    <p class="fr prd_price">￥69.00</p>
+                    <p class="fl prd_tit"><a href="#">松花粉</a></p>
+                    <div class="clear tags">
+                        <!-- 数量开始 -->
+                        <section class="quantity" style="display: none;">
+                            <div class="number_con">
+                                <span class="minus">-</span>
+                                <div class="input"><input type="text" value="1"></div>
+                                <span class="plus on">+</span>
+                            </div>
+                        </section>
+                        <a class="garbage" style="display: none;"></a>
+                    </div>
+                </div>
+                <div class="bottom_line"></div>
+            </div>
+        </div>
+    </div>
+    <div class="block">
+        <div class="cart_list">
+            <div class="shop_title">
+                <input type="checkbox" class="fl c_checkbox">
+                <div class="fl"><a class="shopLink eclipse" href="#">圣宝先旗舰店</a></div>
+                <a class="fl right_arrow" href="#"></a>
+                <a class="c_edit on" id="e__1"></a>
+            </div>
+            <div class="cart_item">
+                <input type="checkbox" class="fl c_checkbox">
+                <img src="{$template_dir}images/product_1.jpg" class="fl pro_pic">
+                <div class="detail">
+                    <p class="fr prd_price">￥69.00</p>
+                    <p class="fl prd_tit"><a href="#">松花粉</a></p>
+                    <div class="clear tags">
+                        <!-- 数量开始 -->
+                        <section class="quantity">
+                            <div class="number_con">
+                                <span class="minus">-</span>
+                                <div class="input"><input type="text" value="1"></div>
+                                <span class="plus on">+</span>
+                            </div>
+                        </section>
+                        <a class="garbage" style="display: inline;"></a>
+                    </div>
+                </div>
+                <div class="bottom_line"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<div style="height: 4rem;"></div>
+<!-- 去结算 -->
+<footer class="total_result">
+    <div class="fl ">
+        <input type="checkbox" class="c_checkbox" id="cart_check_all" style="">
+        <span>全选</span>
+    </div>
+
+    <div class="fr">
+        <a style="border:.1rem solid #fb4640;" class="c_btn payBtn" id="do_checkout" href="javascript:;">去结算(<span id="cart_quantity">1</span>)</a>
+    </div>
+    <div class="fr totalPrice">
+        <span>商品金额总计</span>
+        <p id="cart_price">
+            <span>￥9.90</span>
+        </p>
+    </div>
+</footer>
+</body>
+</html>

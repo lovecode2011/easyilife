@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>圣宝先移动商城</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="圣宝先移动商城">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="{$template_dir}css/common.css">
+    <link rel="stylesheet" href="{$template_dir}css/app.css">
+    <link rel="stylesheet" href="{$template_dir}css/fonts.css">
+</head>
+<body>
+<header class="header">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1><em>我的订单</em></h1>
+</header>
+<!-- 筛选导航栏-->
+<nav class="ol_select_bar">
+    <ul>
+        <a href="#" class="hover"><li>全部</li></a>
+        <a href="#"><li>待付款</li></a>
+        <a href="#"><li>待收货</li></a>
+        <a href="#"><li>待评价</li></a>
+        <a href="#"><li>售后/退款</li></a>
+    </ul>
+</nav>
+
+<!-- 订单列表 -->
+<section class="order-list">
+    <div class="block">
+        <div class="order_list">
+            <!--非当当自营显示店铺入口-->
+            <div class="shop_title">
+                <a href="#">
+                    <!--店铺名称-->
+                    <div class="fl">
+                        圣宝先官方旗舰店
+                    </div>
+                    <span class="fr right_arrow"></span>
+                </a>
+
+            </div>
+            <!--分包商品信息-->
+            <div class="cart_item prd_ebook">
+                <a href="#">
+                    <!--电子书加签-->
+                    <!--包裹图片-->
+                    <img src="{$template_dir}images/product_1.jpg" class="fl pro_pic">
+                    <!--包裹详情-->
+                    <div class="detail">
+                        <!--包裹状态-->
+                        <div class="fr prd_state">
+                            <!--状态文字-->
+                            <div class="prd_state_title">
+                                等待付款
+                            </div>
+                        </div>
+                        <!--包裹名称显示，多件产品，显示包裹编号，一件产品显示产品名称-->
+                        <p class="fl prd_tit">
+                            圣宝先 松花粉
+                        </p>
+                    </div>
+                </a>
+            <!--数量价格信息-->
+            <div class="detail2">
+                共<span>1</span>件商品
+                <span>　总价：</span><span class="order_price">￥127.00</span>
+            </div>
+            <!--操作按键-->
+            <div class="detail3">
+                <a href="#" class="orange_hollow">立即支付</a>
+                <a href="#">取消订单</a>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="block">
+        <div class="order_list">
+            <!--非当当自营显示店铺入口-->
+            <div class="shop_title">
+                <a href="#">
+                    <!--店铺名称-->
+                    <div class="fl">
+                        圣宝先分销店
+                    </div>
+                    <span class="fr right_arrow"></span>
+                </a>
+
+            </div>
+            <!--分包商品信息-->
+            <div class="cart_item prd_ebook">
+                <a href="#">
+                    <!--电子书加签-->
+                    <!--包裹图片-->
+                    <img src="{$template_dir}images/product_1.jpg" class="fl pro_pic">
+                    <!--包裹详情-->
+                    <div class="detail">
+                        <!--包裹状态-->
+                        <div class="fr prd_state">
+                            <!--状态文字-->
+                            <div class="prd_state_title">
+                                等待收货
+                            </div>
+                        </div>
+                        <!--包裹名称显示，多件产品，显示包裹编号，一件产品显示产品名称-->
+                        <p class="fl prd_tit">
+                            圣宝先 松花粉
+                        </p>
+                    </div>
+                </a>
+                <!--数量价格信息-->
+                <div class="detail2">
+                    共<span>2</span>件商品
+                    <span>　总价：</span><span class="order_price">￥360.00</span>
+                </div>
+                <!--操作按键-->
+                <div class="detail3">
+                    <a href="#" class="orange_hollow">确认收货</a>
+                    <a href="#">延迟收货</a>
+                    <a href="#">查看物流</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block">
+        <div class="order_list">
+            <!--非当当自营显示店铺入口-->
+            <div class="shop_title">
+                <a href="#">
+                    <!--店铺名称-->
+                    <div class="fl">
+                        老王官方旗舰店
+                    </div>
+                    <span class="fr right_arrow"></span>
+                </a>
+
+            </div>
+            <!--分包商品信息-->
+            <div class="cart_item prd_ebook">
+                <a href="#">
+                    <!--电子书加签-->
+                    <!--包裹图片-->
+                    <img src="{$template_dir}images/product_1.jpg" class="fl pro_pic">
+                    <!--包裹详情-->
+                    <div class="detail">
+                        <!--包裹状态-->
+                        <div class="fr prd_state">
+                            <!--状态文字-->
+                            <div class="prd_state_title">
+                                交易成功
+                            </div>
+                        </div>
+                        <!--包裹名称显示，多件产品，显示包裹编号，一件产品显示产品名称-->
+                        <p class="fl prd_tit">
+                            圣宝先 松花粉
+                        </p>
+                    </div>
+                </a>
+                <!--数量价格信息-->
+                <div class="detail2">
+                    共<span>5</span>件商品
+                    <span>　总价：</span><span class="order_price">￥999.00</span>
+                </div>
+                <!--操作按键-->
+                <div class="detail3">
+                    <a href="#" class="orange_hollow">晒单评论</a>
+                    <a href="#">查看物流</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div style="height: 2.8rem;"></div>
+<!-- 底部菜单 -->
+<section class="menu">
+    <ul>
+        <li><a href="index.html"><em class="icon">&#xe601;</em><span>首页</span></a></li>
+        <li><a href="category.html"><em class="icon">&#xe603;</em><span>分类</span></a></li>
+        <li><a href="cart.html"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
+        <li><a class="active" href="#"><em class="icon">&#xe604;</em><span>我</span></a></li>
+    </ul>
+</section>
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+
+</body>
+</html>

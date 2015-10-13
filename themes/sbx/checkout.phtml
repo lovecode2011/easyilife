@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>圣宝先移动商城</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="application-name" content="圣宝先移动商城">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta name="format-detection" content="telephone=no, address=no">
+    <link rel="stylesheet" href="{$template_dir}css/common.css">
+    <link rel="stylesheet" href="{$template_dir}css/app.css">
+    <link rel="stylesheet" href="{$template_dir}css/fonts.css">
+</head>
+<body>
+<header class="header">
+    <a href="javascript:history.back();" class="back"></a>
+    <h1><em>确认订单</em></h1>
+</header>
+<!-- 确定订单 -->
+<section class="checkout-con">
+    <!-- 收货地址 -->
+    <div class="colorBar shadow_top" style="margin-top:6px;"></div>
+    <section class="address">
+        <div class="address-title"><i class="icon">&#xe61a;</i> &nbsp;收货信息</div>
+        <a href="#">
+            <div class="address-con rarrow">
+                <div class="address-user">
+                    <span>老王</span>
+                    <span>13000000000</span>
+                </div>
+                <div class="address-detail">
+                    <div class="address-content">广东 广州 萝岗 科学大道162号广州科学城创意大厦B3-304室 </div>
+                </div>
+            </div>
+        </a>
+    </section>
+    <div class="colorBar shadow_top"></div>
+    <!-- 订单产品详情 -->
+    <section class="orders">
+        <div class="w_panel border_lr order_main border_top rarrow">
+            <h4 class="h_title">
+               <i class="icon">&#xe610;</i>&nbsp;隔壁老王专卖店
+            </h4>
+        </div>
+        <div class="border_lr trans_div order_action_block border_bottom">
+            <div>
+                <div>
+                    <ul class="product_ul">
+                        <li>
+                            <div class="box">
+                                <div class="product_cover">
+                                    <img width="100%" src="{$template_dir}images/product_1.jpg">
+                                </div>
+                                <div class="product_info cr_2">
+                                    <p class="product_name">圣宝先专营 松花粉</p>
+                                    <p>
+                                        <span class="red_money">￥168.00</span>
+                                        <span>&nbsp;×1</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <hr color="#E5E5E5" class="line_l" size="1">
+                <div class="single_line_div rarrow border_0" id="shipAndPay">
+                    <span class="t_span">配送方式：</span>
+                    <span class="right_action">顺丰快递<em class="red_money">￥6.00</em></span>
+                </div>
+                <div class="single_line_div border_0 leavemessage">
+                    <span><input placeholder="要对商家说...（限70字）" value="" data-original-length="0" type="text" maxlength="70"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="preferential border_bottom">
+        <ul class="preferential-list">
+            <li>可用佣金2元<input type="checkbox" class="fr c_checkbox"></li>
+            <li>可用余额5元<input type="checkbox" class="fr c_checkbox"></li>
+        </ul>
+    </section>
+    <div style="height: 60px;"></div>
+    <!-- 提交订单 -->
+    <section class="order-submit">
+        <div class="order_review">
+            <div style="float:left;width:69%;padding:5px 0;line-height:41px;">
+                <div style="float:left;">
+                    <span style="font-size:12px;display:inline-block;color:#464646;">共1件商品，总额(含运费)</span>
+                    <a class="red_money" style="margin:0 0 0 5px;font-size:14px;display:inline-block;">￥174.00 </a>
+                    <br>
+                </div>
+            </div>
+            <a href="order-detail.html" class="yellow_btn">提交订单</a>
+        </div>
+    </section>
+</section>
+
+</body>
+</html>

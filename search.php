@@ -134,4 +134,4 @@ if($price_limit['max'] != $price_limit['min'])
 assign('attributes', $attributes);
 
 assign('filter', json_encode($filter));
-$smarty->display('search.phtml');
+$smarty->display('search-result.phtml');
