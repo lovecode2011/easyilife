@@ -517,15 +517,15 @@ if( 'view' == $act ) {
     $status_array = array(
         1 => '待发布',
         2 => '待审核',
-        3 => '已下架',
-        4 => '已上架',
+        3 => '已上架',
+        4 => '已下架',
     );
 
     $opera_array = array(
         1 => '发布',
         2 => '',
-        3 => '上架',
-        4 => '下架',
+        3 => '下架',
+        4 => '上架',
     );
 
     if( $product_list ) {
@@ -642,12 +642,12 @@ if( 'sale' == $act ) {
     $product_off_shelf .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $product_off_shelf .= ' and product_sn = \''.$product_sn.'\' limit 1';
 
-    if( $product['status'] == 3 ) {
+    if( $product['status'] == 4 ) {
         if( $db->update($product_on_shelf) ) {
             show_system_message('上架成功', array());
             exit;
         }
-    } else if( $product['status'] == 4 ) {
+    } else if( $product['status'] == 3 ) {
         if( $db->update($product_off_shelf) ) {
             show_system_message('下架成功', array());
             exit;
