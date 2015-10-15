@@ -436,7 +436,10 @@
                 </td>
                 <td>{$order.remark}</td>
                 <td>
+                    <a href="order.php?act=detail&sn={$order.order_sn}">订单详情</a>
+                    <!--
                     <a href="javascript:void(0);" class="order-detail" data-value="{$order.order_sn}">订单详情</a>
+                    -->
                 </td>
             </tr>
             {/foreach}

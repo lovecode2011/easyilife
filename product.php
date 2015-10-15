@@ -191,30 +191,38 @@ if($product)
         assign('attributes_json', json_encode($attributes_map));
     } else {
         //产品没有属性表的情况
-        assign('attributes_mode', '');
+        assign('attributes_mode', '""');
         $get_inventory = 'select `attributes`,`inventory`,`inventory_await`,`inventory_logic` from ' . $db->table('inventory') . ' where `product_sn`=\'' . $product_sn . '\'';
         $inventory = $db->fetchAll($get_inventory);
 
         $inventory_json = array();
         foreach ($inventory as $inventory_tmp)
         {
-            $attribute_obj = json_decode($inventory_tmp['attributes']);
-            foreach ($attribute_obj as $aid => $aval)
+            $attribute_obj = '';
+            if($inventory_tmp['attributes'] != '')
             {
-                if (!isset($attributes_map[$aid]['values']))
-                {
-                    $attributes_map[$aid]['values'] = array();
-                }
+                $attribute_obj = json_decode($inventory_tmp['attributes']);
 
-                $attributes_map[$aid]['values'][] = mb_convert_encoding($aval, 'UTF-8');
+                foreach ($attribute_obj as $aid => $aval)
+                {
+                    if (!isset($attributes_map[$aid]['values']))
+                    {
+                        $attributes_map[$aid]['values'] = array();
+                    }
+
+                    $attributes_map[$aid]['values'][] = mb_convert_encoding($aval, 'UTF-8');
+                }
+            } else {
+                $attributes_map = '';
             }
 
             $inventory_json[$inventory_tmp['attributes']] = $inventory_tmp['inventory_logic'];
+            assign('inventory_logic', $inventory_tmp['inventory_logic']);
         }
 
         assign('inventory_json', json_encode($inventory_json));
         assign('attributes', array());
-        assign('attributes_json', '');
+        assign('attributes_json', '""');
     }
     //读取评论信息
     $get_comments = 'select c.`id`,c.`comment`,c.`star`,c.`add_time`,m.`headimg`,m.`nickname` from '.$db->table('comment').' as c'.

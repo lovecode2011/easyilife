@@ -2619,3 +2619,60 @@ nav.ol_select_bar ul a.hover li {
     width: 95%;
     margin: 0px 2.5%;
 }
+
+.inventory-count {
+    font-size: 0.7rem;
+    line-height: 1.5rem;
+    margin-left: .5rem;
+    color: #999;
+}
+
+/* 物流信息 */
+.express-start i, .experss-middle i, .express-complete i, .express-incomplete i {
+    background-image: url("../images/express_status.gif");
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 40px;
+    height: 160px;
+    float: left;
+}
+.express-start, .experss-middle, .express-complete, .express-incomplete {
+    margin-top: -40px;
+}
+
+.express-complete i {
+    background-position: -4px center;
+}
+
+.experss-middle i {
+    background-position: -54px center;
+}
+
+.express-start i {
+    background-position: -154px center;
+}
+
+.express-incomplete i {
+    background-position: -104px center;
+}
+
+.express-time {
+    float: left;
+    margin-top: 65px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 8px;
+    padding: 5px 10px;
+    line-height: 1rem;
+    font-size: 0.6rem;
+}
+
+.express-context {
+    float: left;
+    width: 240px;
+    line-height: 1rem;
+    font-size: 0.6rem;
+    padding: 5px 8px;
+    border-radius: 8px;
+    margin-top: 3px;
+    border: 1px solid #CCC;
+}

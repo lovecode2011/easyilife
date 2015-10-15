@@ -77,9 +77,9 @@
                     <label class="l-title">产品图片：</label>
                     <input type="hidden" name="img" id="img" placeholder="" value="{$product.img}">
                     {if $product.img}
-                    <img class="select-image" alt="" width="200" height="150" src="{$product.img_src}">&nbsp;
+                    <img class="select-image" alt="" width="200" height="200" src="../{$product.img_src}">&nbsp;
                     {else}
-                    <img class="select-image" alt="" src="/upload/image/no-image.png">&nbsp;
+                    <img class="select-image" alt="" src="../upload/image/no-image.png">&nbsp;
                     {/if}
                 </p>
                 <p>
@@ -104,7 +104,7 @@
                 </p>
                 <p>
                     <label class="l-title">重量：</label>
-                    <input class="text-input w150" type="text" name="weight" placeholder="单位：千克" value="{$product.weight}">
+                    <input class="text-input w150" type="text" name="weight" placeholder="产品重量" value="{$product.weight}">克
                 </p>
                 <p>
                     <label class="l-title">产品排序：</label>

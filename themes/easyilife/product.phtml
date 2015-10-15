@@ -77,6 +77,7 @@
     </div>
 </section>
 <!-- 产品属性选择 -->
+{if $attributes}
 <section class="option">
     <a class="arrow_con title" name="attributes">
         <div class="arrow_d">选择 <span class="size">规格 </span><span class="split">/ </span><span class="packing">包装</span></div>
@@ -96,14 +97,20 @@
         {/foreach}
     </div>
 </section>
+{/if}
 <!-- 数量开始 -->
 <section class="quantity">
     <h4>数量：</h4>
-    <div class="number_con">
+    <div class="number_con fl">
         <span class="minus" id="minus">-</span>
         <div class="input"><input id="buy_num" name="buy_num" type="tel" value="1"></div>
         <span class="plus on" id="plus">+</span>
     </div>
+    {if !$attributes}
+    <span id="inventory_count" class="inventory-count fl">库存: {$inventory_logic}</span>
+    {else}
+    <span id="inventory_count" class="inventory-count fl"></span>
+    {/if}
 </section>
 
 <!-- 产品详情 -->
@@ -386,6 +393,7 @@
         } else {
             buy_num++;
             $("#buy_num").val(buy_num);
+            minus_disable();
             minus_enable();
         }
     }
@@ -393,6 +401,7 @@
     function minus() {
         var buy_num = $("#buy_num").val();
 
+        console.info("minus "+buy_num);
         buy_num = parseInt(buy_num);
         if(isNaN(buy_num) || buy_num <= 1) {
             minus_disable();
@@ -403,6 +412,8 @@
             if(buy_num <= 1) {
                 minus_disable();
             }
+            plus_disable();
+            plus_enable();
         }
     }
 
@@ -465,6 +476,7 @@
         var index = tmp[2];
         var aid = tmp[3];
 
+        /*
         if(e.className == "on") {
             attributes_mode[aid] = ".*";
             pattern[aid] = ".*";
@@ -481,12 +493,26 @@
                 }
             }
         }
+        */
+
+        $("#attr_options_"+aid).children(".on").removeClass("on");
+        e.className = "on";
+        console.info(aid+","+index+":"+attributes[aid]['values'][index]);
+        pattern[aid] = attributes[aid]['values'][index];
+        attributes_mode[aid] = attributes[aid]['values'][index];
+
+        for (var i in pattern) {
+            if (i != aid) {
+                pattern[i] = ".*";
+            }
+        }
 
         toogle_options();
     }
 
     //根据条件开启/关闭可筛选条件
     function toogle_options() {
+        /*
         var pattern_mode = "/"+JSON.stringify(pattern)+"/";
         console.info(pattern_mode);
         pattern_mode = eval(pattern_mode);
@@ -547,6 +573,7 @@
                 }
             }
         }
+        */
 
         var check_inventory_flag = select_attributes_complete();
 
@@ -558,6 +585,7 @@
             if(buy_num <= 1) {
                 minus_disable();
             } else {
+                minus_disable();
                 minus_enable();
             }
 
@@ -586,8 +614,12 @@
 
     function check_inventory() {
         var index = JSON.stringify(attributes_mode);
-        console.info(index);
+        console.info("inventory index: "+index);
         var current_inventory = inventory[index];
+        if(current_inventory == undefined) {
+            current_inventory = 0;
+        }
+
         console.info("current inventory:"+current_inventory);
 
         var buy_num = $("#buy_num").val();
@@ -601,12 +633,16 @@
 
             plus_disable();
             return false;
+        } else {
+            plus_disable();
+            plus_enable();
         }
 
         if(buy_num == current_inventory) {
             plus_disable();
         }
 
+        $("#inventory_count").text("库存："+current_inventory);
         return true;
     }
 

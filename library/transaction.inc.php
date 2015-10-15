@@ -7,6 +7,67 @@
  */
 
 /**
+ * 检查产品库存
+ * @param string $product_sn
+ * @param string $attributes
+ * @param int $number
+ * @return bool
+ */
+function check_inventory($product_sn, $attributes, $number)
+{
+    global $db;
+    $check_inventory = 'select `inventory_logic` from '.$db->table('inventory').' where `product_sn`=\''.$product_sn.'\' '.
+                       ' and `attributes`=\''.$attributes.'\' and `inventory_logic`>='.$number;
+
+    return $check_inventory;
+}
+
+/**
+ * 扣减产品库存
+ * @param string $product_sn
+ * @param string $attributes
+ * @param int $number
+ * @param int $mode
+ * @return bool
+ */
+function consume_inventory($product_sn, $attributes, $number, $mode = 0)
+{
+    global $db;
+    global $log;
+
+    $sql = 'update '.$db->table('inventory').' set ';
+    switch($mode)
+    {
+        case 1:
+            //扣减物理库存
+            $sql .= ',`inventory`=`inventory`-'.$number.', `inventory_await`=`inventory_await`+'.$number;
+            break;
+        default:
+            //扣减逻辑库存
+            $sql .= ' `inventory_logic`=`inventory_logic`-'.$number.', `inventory_await`=`inventory_await`+'.$number;
+            break;
+    }
+
+    $sql .= ' where `product_sn`=\''.$product_sn.'\' and `attributes`=\''.$attributes.'\'';
+
+    $log->record($sql);
+    return $db->update($sql);
+}
+
+/**
+ * 修改产品库存
+ * @param string $product_sn
+ * @param string $attributes
+ * @param int $number
+ * @return bool
+ */
+function modify_inventory($product_sn, $attributes, $number)
+{
+    global $db;
+
+
+}
+/**
  * 三级分销结算
  * @param float $reward
  * @param string $path
@@ -86,6 +147,7 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
  * @param string $product_sn
  * @param string $product_name
  * @param string $product_attributes
+ * @param string $attributes
  * @param float $product_price
  * @param float $integral
  * @param float $integral_given
@@ -95,8 +157,8 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
  * @param string $order_sn
  * @return bool
  */
- function add_order_detail($product_sn, $product_name, $product_attributes, $product_price, $integral, $integral_given,
-                           $reward, $count, $business_account, $order_sn)
+ function add_order_detail($product_sn, $product_name, $product_attributes, $attributes, $product_price, $integral,
+                           $integral_given, $reward, $count, $business_account, $order_sn)
  {
     global $db;
 
@@ -104,6 +166,7 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
         'product_sn' => $product_sn,
         'product_name' => $product_name,
         'product_attributes' => $product_attributes,
+        'attributes' => $attributes,
         'product_price' => $product_price,
         'integral' => $integral,
         'integral_given' => $integral_given,
@@ -241,6 +304,9 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
     {
         $delivery_fee += $first_weight;
         $total_weight -= 1000;
+    } else {
+        $delivery_fee += $first_weight;
+        $total_weight = 0;
     }
 
     $weight_count = intval($total_weight/1000);

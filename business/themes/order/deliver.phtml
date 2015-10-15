@@ -15,6 +15,15 @@
         <form id="orderDeliverForm" name="orderDeliverForm" method="post" action="">
             <fieldset>
                 <p>
+                    <label class="l-title">快递公司：</label>
+                    <select class="w150" name="express_id">
+                        <option value="0">请选择快递公司</option>
+                        {foreach from=$express_list item=express}
+                        <option value="{$express.id}">{$express.name}</option>
+                        {/foreach}
+                    </select>
+                </p>
+                <p>
                     <label class="l-title">快递单号：</label>
                     <input class="text-input w200" name="express_sn" />
                 </p>

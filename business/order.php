@@ -13,12 +13,45 @@ include 'library/init.inc.php';
 business_base_init();
 $template = 'order/';
 
+
 $action = 'view|deliver|prepare|agree|refund|delete|detail|export';
 $operation = 'deliver';
+
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
 $act = ( $act == '' ) ? 'view' : $act;
 //===============================================================================
+if('express_info' == $opera)
+{
+    $order_sn = getPOST('order_sn');
+
+    $response = array('error'=>1, 'msg'=>'');
+
+    if($order_sn == '')
+    {
+        $response['msg'] = '参数错误';
+    } else {
+        $order_sn = $db->escape($order_sn);
+    }
+
+    $get_order_info = 'select `express_id`,`status`,`express_sn` from '.$db->table('order').' where `order_sn`=\''.$order_sn.'\'';
+    $order = $db->fetchRow($get_order_info);
+
+    if($order && $order['status'] == 6)
+    {
+        $get_express_code = 'select `code` from '.$db->table('express').' where `id`='.$order['express_id'];
+        $express_info = query_express($db->fetchOne($get_express_code   ), $order['express_sn']);
+        $express_info = json_decode($express_info, true);
+        assign('order_info', $express_info);
+        $response['error'] = 0;
+        $response['msg'] = $smarty->fetch('public/express_info.phtml');
+    } else {
+        $response['msg'] = '当前没有任何信息';
+    }
+
+    echo json_encode($response);
+    exit;
+}
 
 if( 'deliver' == $opera ) {
     if( !check_purview('pur_order_edit', $_SESSION['business_purview']) ) {
@@ -27,7 +60,14 @@ if( 'deliver' == $opera ) {
     }
 
     $express_sn = trim(getPOST('express_sn'));
+    $express_id = intval(getPOST('express_id'));
     $order_sn = trim(getPOST('sn'));
+
+    if($express_id <= 0)
+    {
+        show_system_message('请选择快递公司', array());
+        exit;
+    }
 
     if( '' == $express_sn ) {
         show_system_message('快递单号不能为空', array());
@@ -60,6 +100,7 @@ if( 'deliver' == $opera ) {
 
     $update_order = 'update '.$db->table('order').' set';
     $update_order .= ' `status` = 6';
+    $update_order .= ', `express_id`='.$express_id;
     $update_order .= ', `express_sn` = \''.$express_sn.'\'';
     $update_order .= ', `delivery_time` = '.time();
     $update_order .= ' where order_sn = \''.$order_sn.'\' limit 1';
@@ -73,6 +114,13 @@ if( 'deliver' == $opera ) {
             'remark' => '发货'
         );
         $db->autoInsert('order_log', array($log_data));
+        //扣减库存
+        $get_order_detail = 'select `product_sn`,`count`,`attributes` from '.$db->table('order_detail').' where `order_sn`=\''.$order_sn.'\'';
+        $order_detail = $db->fetchAll($get_order_detail);
+        foreach($order_detail as $od)
+        {
+            consume_inventory($od['product_sn'], $od['attributes'], $od['count'], 1);
+        }
 
         $links = array(
             array('alt' => '已发货订单列表', 'link' => 'order.php?status=6'),
@@ -273,6 +321,10 @@ if( 'deliver' == $act ) {
         show_system_message('参数错误', array());
         exit;
     }
+
+    $get_express_list = 'select `id`,`name` from '.$db->table('express');
+
+    assign('express_list', $db->fetchAll($get_express_list));
     assign('order', $order);
 }
 
@@ -443,17 +495,6 @@ if( 'detail' == $act ) {
     $get_order_detail .= ' and o.order_sn = \''.$order_sn.'\'';
 
     $order_detail = $db->fetchAll($get_order_detail);
-
-    if( $order_detail ) {
-        foreach( $order_detail as $key => $detail ) {
-            $temp = json_decode($detail['product_attributes']);
-            $str = '';
-            foreach( $temp as $k => $v ) {
-                $str .= $k . ':' . $v.'&nbsp;&nbsp;';
-            }
-            $order_detail[$key]['product_attributes'] = $str;
-        }
-    }
 
     assign('order', $order);
     assign('order_detail', $order_detail);

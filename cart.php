@@ -64,10 +64,8 @@ if('add_to_cart' == $opera)
             $response['msg'] .= "-请输入购买数量\n";
         }
 
-        if($attributes == '' || count($attributes) == 0)
+        if($attributes != '' && count($attributes) > 0)
         {
-            $response['msg'] .= "-请选择产品属性\n";
-        } else {
             $attributes_tmp = $attributes;
             $attributes = '{';
             foreach($attributes_tmp as $id=>$value)
@@ -77,6 +75,8 @@ if('add_to_cart' == $opera)
             $attributes = substr($attributes, 0, strlen($attributes)-1);
             $attributes .= '}';
             $attributes = $db->escape($attributes);
+        } else {
+            $attributes = '';
         }
 
         if($response['msg'] == '') {
@@ -198,16 +198,24 @@ if($cart_list_tmp)
         $get_product_attributes = 'select `id`,`name` from ' . $db->table('product_attributes') . ' where `product_type_id`=' . $cart['product_type_id'];
         $attributes_tmp = $db->fetchAll($get_product_attributes);
         $attributes_map = array();
-        foreach ($attributes_tmp as $a)
+        if($attributes_tmp)
         {
-            $attributes_map[$a['id']] = $a['name'];
+            foreach ($attributes_tmp as $a)
+            {
+                $attributes_map[$a['id']] = $a['name'];
+            }
+        } else {
+            $attributes_map = '';
         }
 
         $attributes = json_decode($cart['attributes']);
         $cart['attributes_str'] = '';
-        foreach ($attributes as $aid => $aval)
+        if($attributes)
         {
-            $cart['attributes_str'] .= $attributes_map[$aid] . ':' . $aval . ' ';
+            foreach ($attributes as $aid => $aval)
+            {
+                $cart['attributes_str'] .= $attributes_map[$aid] . ':' . $aval . ' ';
+            }
         }
 
         //获取产品库存
