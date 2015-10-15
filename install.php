@@ -302,6 +302,11 @@ $sql[] = 'create table if not exists '.$db->table('order').' (
     `self_delivery` tinyint(1) not null default \'0\',
     `pay_time` int,
     `is_comment` tinyint(1) not null default \'0\',
+    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品订单，1:虚拟产品订单\',
+    `product_sn` varchar(255) not null default \'\' comment \'虚拟产品编号\',
+    `product_name` varchar(255) not null default \'\' comment \'虚拟产品名称\',
+    `start_time` int not null default 0 comment \'虚拟订单消费起始时间\',
+    `end_time` int not null default 0 comment \'虚拟订单消费结束时间\',
     index (`business_account`)
 ) default charset=utf8;';
 
@@ -675,6 +680,16 @@ $sql[] = 'create table if not exists '.$db->table('content').' (
 $table[] = '虚拟产品内容';
 $sql[] = 'create table if not exists'.$db->table('virtual_content').' (
     `id` int not null auto_increment primary key,
+    `product_sn` varchar(255) not null,
+    `content` varchar(255) not null,
+    `count` varchar(255) not null,
+    `total` varchar(255) not null
+) default charset=utf8;';
+
+$table[] = '虚拟订单内容';
+$sql[] = 'create table if not exists '.$db->table('order_content').' (
+    `id` int not null auto_increment primary key,
+    `order_sn` varchar(255) not null,
     `product_sn` varchar(255) not null,
     `content` varchar(255) not null,
     `count` varchar(255) not null,
