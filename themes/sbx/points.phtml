@@ -20,42 +20,33 @@
 <body>
 <header class="header">
     <a href="javascript:history.back();" class="back"></a>
-    <h1><em>我的积分</em></h1>
+    <h1><em>{$title}</em></h1>
 </header>
 <!-- 我的积分 -->
 <section class="points">
     <header class="points-header">
         <!-- 积分基本信息 -->
         <section class="points-basic">
-            <h3 class="points-count"><em>85</em>分<a href="#">使用帮助</a></h3>
-            <p>小积分，大作用！</p>
+            <h3 class="points-count"><em>{$user_info[{$mode}]}</em>{$unit}<a href="#">使用帮助</a></h3>
+            <p>{$notice}</p>
         </section>
         <nav>
-            <div><a href="#"><i class="icon">&#xe633;</i>领</a></div>
-            <div><a href="#"><i class="icon">&#xe632;</i>花</a></div>
+            <div><a href="javascript:alert('敬请期待');"><i class="icon">&#xe633;</i>领</a></div>
+            <div><a href="javascript:alert('敬请期待');"><i class="icon">&#xe632;</i>花</a></div>
         </nav>
     </header>
     <div class="points-detail">
         <a class="slide-link" href="#">
             收支明细
-            <em>更多</em>
         </a>
         <ul>
+            {foreach from=$member_exchange item=exchange}
             <li>
-                晒单（订单号：123456789）
-                <em class="plus">+100</em>
-                <p>2015-09-15 18:02:13</p>
+                {$exchange.remark}
+                <em {if $exchange[{$mode}] gt 0}class="plus"{/if}>{if $exchange[{$mode}] gt 0}+{/if}{$exchange[{$mode}]}</em>
+                <p>{date("Y-m-d H:i:s", $exchange.add_time)}</p>
             </li>
-            <li>
-                购物（订单号：123456789）
-                <em class="plus">+100</em>
-                <p>2015-09-15 18:27:13</p>
-            </li>
-            <li>
-                兑换ipad（订单号：123456789）
-                <em>-10000</em>
-                <p>2015-09-15 18:02:13</p>
-            </li>
+            {/foreach}
         </ul>
     </div>
 </section>
@@ -63,13 +54,12 @@
 <!-- 底部菜单 -->
 <section class="menu">
     <ul>
-        <li><a href="index.html"><em class="icon">&#xe601;</em><span>首页</span></a></li>
-        <li><a href="category.html"><em class="icon">&#xe603;</em><span>分类</span></a></li>
-        <li><a href="cart.html"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
-        <li><a class="active" href="#"><em class="icon">&#xe604;</em><span>我</span></a></li>
+        <li><a href="index.php"><em class="icon">&#xe601;</em><span>首页</span></a></li>
+        <li><a href="category.php"><em class="icon">&#xe603;</em><span>分类</span></a></li>
+        <li><a href="cart.php"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
+        <li><a class="active" href="user.php"><em class="icon">&#xe604;</em><span>我</span></a></li>
     </ul>
 </section>
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
-
 </body>
 </html>

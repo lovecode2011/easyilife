@@ -19,4 +19,8 @@ $get_member_exchange = 'select * from '.$db->table('member_exchange_log').' wher
 $member_exchange = $db->fetchAll($get_member_exchange);
 assign('member_exchange', $member_exchange);
 
-$smarty->display('balance.phtml');
+assign('mode', 'balance');
+assign('unit', '元');
+assign('notice', '快到我的钱包里来');
+assign('title', '我的余额');
+$smarty->display('points.phtml');

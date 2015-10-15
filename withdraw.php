@@ -12,7 +12,7 @@ $action = 'list|opera|detail';
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
 
-$template = 'withdraw.phtml';
+$template = 'withdrawals.phtml';
 
 $get_user_info = 'select `balance`,`reward`,`password` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
 

@@ -20,28 +20,30 @@
 <body>
 <header class="header" style="position:fixed">
     <a href="javascript:history.back();" class="back"></a>
-    <h1><em>消息中心</em></h1>
+    <h1><em>{$category_name}</em></h1>
 </header>
 
 <!-- 内容开始 -->
 <section class="newslist">
-    <ul>
+    <nav class="newslist-nav">
+        <ul>
+            <li class="on"><a href="#">全部</a></li>
+            <li><a href="#">交易</a></li>
+            <li><a href="#">资讯</a></li>
+            <li><a href="#">系统</a></li>
+        </ul>
+    </nav>
+    <ul class="newslist-con">
+        {foreach from=$article_list item=article}
         <li>
-            <a href="#">
+            <a href="article.php?id={$article.id}">
                 <dl class="arrow">
-                    <dt>公告<span>2015/09/28</span></dt>
-                    <dd>健康生活，辟谷之旅</dd>
+                    <dt>{$article.title}<span>{date("Y/m/d", $article.add_time)}</span></dt>
+                    <dd>{$article.description}</dd>
                 </dl>
             </a>
         </li>
-        <li>
-            <a href="#">
-                <dl class="arrow">
-                    <dt>隔壁老王<span>2015/09/20</span></dt>
-                    <dd>你购买的【酵素粉】已发货...</dd>
-                </dl>
-            </a>
-        </li>
+        {/foreach}
     </ul>
 </section>
 

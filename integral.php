@@ -19,4 +19,8 @@ $get_member_exchange = 'select * from '.$db->table('member_exchange_log').' wher
 $member_exchange = $db->fetchAll($get_member_exchange);
 assign('member_exchange', $member_exchange);
 
-$smarty->display('integral.phtml');
+assign('mode', 'integral');
+assign('unit', '分');
+assign('notice', '小积分大作用');
+assign('title', '我的积分');
+$smarty->display('points.phtml');

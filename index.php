@@ -18,4 +18,14 @@ $get_notice = 'select `id`,`title` from '.$db->table('content').' where `section
 $notice = $db->fetchAll($get_notice);
 assign('notice', $notice);
 
+//获取轮播广告
+$get_cycle_ad = 'select `img`,`url` from '.$db->table('ad').' where `ad_pos_id`=1 order by `order_view`';
+$cycle_ad = $db->fetchAll($get_cycle_ad);
+assign('cycle_ad', $cycle_ad);
+
+//获取展示广告
+$get_perform_ad = 'select `img`,`url`,`alt` from '.$db->table('ad').' where `ad_pos_id`=2 order by `order_view`';
+$perform_ad = $db->fetchAll($get_perform_ad);
+assign('perform_ad', $perform_ad);
+
 $smarty->display('index.phtml');

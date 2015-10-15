@@ -48,7 +48,7 @@
             <tr>
                 <th>产品编号</th>
                 <th>产品名称</th>
-                <th>封面</th>
+                <th>主图</th>
                 <th>分类</th>
                 <th>市场价</th>
                 <th>售价</th>
@@ -65,9 +65,9 @@
                 <td>{$product.name}</td>
                 <td>
                     {if $product.img neq ''}
-                    <img width="80" height="60" src="{$product.img}" alt=""/>
+                    <img height="120" width="120" src="../{$product.img}" alt=""/>
                     {else}
-                    <img width="80" height="60" src="/upload/image/no-image.png" alt=""/>
+                    <img height="120" width="120" src="../upload/image/no-image.png" alt=""/>
                     {/if}
                 </td>
                 <td>{$product.category_name}</td>

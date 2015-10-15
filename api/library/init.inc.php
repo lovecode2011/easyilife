@@ -19,7 +19,7 @@ $loader = AutoLoader::getInstance();
 $configs = array('script_path'=>ROOT_PATH.'library/', 'class_path'=>ROOT_PATH.'library/');
 $loader->setConfigs($configs);
 
-$class_list = array('Logs', 'MySQL');
+$class_list = array('Logs', 'MySQL', 'Smarty');
 $loader->includeClass($class_list);
 $script_list = array('configs','functions', 'member', 'wechat');
 $loader->includeScript($script_list);
@@ -40,3 +40,12 @@ foreach($config_tmp as $tmp)
 {
     $config[$tmp['key']] = $tmp['value'];
 }
+//初始化smarty对象
+global $smarty;
+$smarty = new Smarty();
+$smarty->setCompileDir(ROOT_PATH.'data/compiles');
+$smarty->setTemplateDir(ROOT_PATH.'themes/'.$config['themes']);
+$smarty->setCacheDir(ROOT_PATH.'data/caches');
+$smarty->setCacheLifetime(2);//设置缓存文件超时时间为1800秒
+//设置模板路径
+assign('template_dir', '../themes/'.$config['themes'].'/');

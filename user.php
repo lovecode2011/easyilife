@@ -12,4 +12,17 @@ $get_user_info = 'select * from '.$db->table('member').' where `account`=\''.$_S
 $user_info = $db->fetchRow($get_user_info);
 assign('user_info', $user_info);
 
+//获取订单数量  待付款  待收货  待评价
+$get_order_count = 'select count(*) from '.$db->table('order').' where `account`=\''.$_SESSION['account'].'\' and `status`=';
+
+$order_await_pay = $db->fetchOne($get_order_count.'1');
+
+$order_await_receive = $db->fetchOne($get_order_count.'6');
+
+$order_await_comment = $db->fetchOne($get_order_count.'7');
+
+assign('order_await_pay', $order_await_pay);
+assign('order_await_receive', $order_await_receive);
+assign('order_await_comment', $order_await_comment);
+
 $smarty->display('home.phtml');

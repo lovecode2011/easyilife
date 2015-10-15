@@ -46,9 +46,9 @@
     </div>
     <div class="bd">
         <ul>
-            <li><a href="#"><img _src="{$template_dir}images/m1.jpg" src="{$template_dir}images/blank.png" /></a></li>
-            <li><a href="#"><img _src="{$template_dir}images/m2.jpg" src="{$template_dir}images/blank.png"/></a></li>
-            <li><a href="#"><img _src="{$template_dir}images/m3.jpg" src="{$template_dir}images/blank.png"/></a></li>
+            {foreach from=$cycle_ad item=ad}
+            <li><a href="{$ad.url}"><img _src="{$ad.img}" src="{$template_dir}images/blank.png" /></a></li>
+            {/foreach}
         </ul>
     </div>
 </section>
@@ -60,7 +60,7 @@
     <li><a href="#"><i class="icon" style="background-color: #8d85ee;">&#xe62c;</i><span>联系掌门人</span></a></li>
     <li><a href="#"><i class="icon" style="background-color: #ffb721;">&#xe62f;</i><span>合伙人入口</span></a></li>
     <li><a href="#"><i class="icon" style="background-color: #69c0f7;">&#xe606;</i><span>公益联盟</span></a></li>
-    <li><a href="#"><i class="icon" style="background-color: #ffb221;">&#xe605;</i><span>商家入驻</span></a></li>
+    <li><a href="apply.php"><i class="icon" style="background-color: #ffb221;">&#xe605;</i><span>商家入驻</span></a></li>
     <li><a href="#"><i class="icon" style="background-color: #ff5757;">&#xe631;</i><span>创业新空间</span></a></li>
 </ul>
 <!-- 首页公告区 -->
@@ -68,25 +68,26 @@
     <div class="index-news-l fl"></div>
     <div id="myscroll" class="index-news-r fr">
         <ul id="notice" class="news-title">
-            <li><a href="#" target="_blank">积分换好礼</a></li>
-            <li><a href="#" target="_blank">秋冬换新周</a></li>
-            <li><a href="#" target="_blank">母婴产品大优惠</a></li>
+            {foreach from=$notice item=n}
+            <li><a href="article_list.php?id=1">{$n.title}</a></li>
+            {/foreach}
         </ul>
     </div>
 </section>
 <!-- 首页视频介绍 -->
 <section class="index-video">
     <div class="video-con">
-        <iframe frameborder="0" src="http://v.qq.com/iframe/player.html? vid=a01628p65de&&auto=0&encryptVer=6.0&platform=61 001&cKey=br5H/361ZInlzCja1g8bw2O1i5036iHTstPddNYnyJA=&encryptVer=6.0&p latform=61001&cKey=vQZ5JjZB9f8yrDi0gEcmtMrcaLGkKzAbJ1gci41WJ7mkvrG5Ama PGpzpCLjtuG/X" allowfullscreen style="width: 100%;height: auto;"></iframe>
     </div>
 </section>
 
 <!-- 专区 -->
+{foreach from=$perform_ad item=ad}
 <section class="index-floor">
     <div class="floor-con">
-        <a href="#"><img src="{$template_dir}images/ptyx.jpg" alt="平台优选"></a>
+        <a href="{$ad.url}"><img src="{$ad.img}" alt="{$ad.alt}"></a>
     </div>
 </section>
+{/foreach}
 <section class="index-floor">
     <div class="floor-con">
         <a href="#"><img src="{$template_dir}images/tjzq.jpg" alt="特价专区"></a>

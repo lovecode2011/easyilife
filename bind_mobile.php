@@ -63,4 +63,4 @@ if('bind' == $opera)
     exit;
 }
 
-$smarty->display('bind_mobile.phtml');
+$smarty->display('binding.phtml');

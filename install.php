@@ -263,7 +263,8 @@ $sql[] = 'create table if not exists '.$db->table('member').' (
     `business_account` varchar(255),
     `ticket` varchar(255),
     `expired` int not null default \'0\',
-    `scene_id` int not null default \'0\'
+    `scene_id` int not null default \'0\',
+    `level_id` int not null default \'0\'
 ) default charset=utf8;';
 
 $table[] = '订单';
@@ -302,6 +303,9 @@ $sql[] = 'create table if not exists '.$db->table('order').' (
     `self_delivery` tinyint(1) not null default \'0\',
     `pay_time` int,
     `is_comment` tinyint(1) not null default \'0\',
+    `integral_paid` decimal(18,2) not null default \'0\',
+    `reward_paid` decimal(18,2) not null default \'0\',
+    `balance_paid` decimal(18,2) not null default \'0\',
     index (`business_account`)
 ) default charset=utf8;';
 
@@ -335,6 +339,7 @@ $sql[] = 'create table if not exists '.$db->table('delivery_area').' (
     `free` decimal(18,2) not null default \'0\',
     `delivery_id` int not null,
     `name` varchar(255),
+    `business_account` varchar(255) not null,
     index (`delivery_id`)
 ) default charset=utf8;';
 
@@ -344,7 +349,8 @@ $sql[] = 'create table if not exists '.$db->table('delivery_area_mapper').' (
     `area_id` int not null,
     `province` int not null,
     `city` int not null,
-    `district` int not null
+    `district` int not null,
+    `business_account` varchar(255) not null
 ) default charset=utf8;';
 
 $table[] = '支付方式';
@@ -360,7 +366,7 @@ $sql[] = 'create table if not exists '.$db->table('payment').' (
 $table[] = '广告位置';
 $sql[] = 'create table if not exists '.$db->table('ad_position').' (
     `id` bigint not null auto_increment primary key,
-    `name` varchar(255) not null,
+    `pos_name` varchar(255) not null,
     `width` varchar(255) not null,
     `height` varchar(255) not null,
     `number` int not null default \'1\',
@@ -373,11 +379,11 @@ $sql[] = 'create table if not exists '.$db->table('ad').' (
     `img` varchar(255) not null,
     `alt` varchar(255) not null,
     `forever` tinyint(1) not null default \'1\',
-    `click_count` int not null default \'0\',
+    `click_time` int not null default \'0\',
     `url` varchar(255) not null,
     `order_view` int not null default \'50\',
-    `ad_position_id` int not null,
-    `start_time` int,
+    `ad_pos_id` int not null,
+    `begin_time` int,
     `end_time` int,
     `add_time` int not null
 ) default charset=utf8;';
@@ -428,6 +434,7 @@ $sql[] = 'create table if not exists '.$db->table('cart').' (
     `add_time` int not null,
     `attributes` varchar(255),
     `checked` tinyint(1) not null default \'1\',
+    `is_virtual` tinyint(1) not null default \'0\'，
     index (`openid`),
     index (`account`),
     index (`business_account`)
@@ -577,6 +584,7 @@ $sql[] = 'create table if not exists '.$db->table('order_detail').' (
     `reward` decimal(18,2) not null,
     `count` int not null,
     `business_account` varchar(255) not null,
+    `is_virtual` tinyint(1) not null default \'0\',
     index(`order_sn`, `product_sn`)
 ) default charset=utf8;';
 
@@ -592,6 +600,7 @@ $sql[] = 'create table if not exists '.$db->table('address').' (
     `mobile` varchar(255) not null,
     `zipcode` varchar(255),
     `account` varchar(255) not null,
+    `is_default` tinyint(1) not null default \'0\',
     index(`account`)
 ) default charset=utf8;';
 

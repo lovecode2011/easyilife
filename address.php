@@ -18,7 +18,7 @@ if($act == '')
     $act = 'list';
 }
 
-$template = 'address.phtml';
+$template = 'address-list.phtml';
 
 if('add' == $opera)
 {
@@ -71,9 +71,9 @@ if('add' == $opera)
 
         if($is_default == 'true')
         {
-            $is_default = true;
+            $is_default = 1;
         } else {
-            $is_default = false;
+            $is_default = 0;
         }
 
         if($response['msg'] == '')
@@ -168,9 +168,9 @@ if('edit' == $opera)
 
         if($is_default == 'true')
         {
-            $is_default = true;
+            $is_default = 1;
         } else {
-            $is_default = false;
+            $is_default = 0;
         }
 
         if($response['msg'] == '')
@@ -245,7 +245,7 @@ if('get_info' == $opera)
 
 if('select' == $act)
 {
-    $template = 'select_address.phtml';
+    $template = 'select-address.phtml';
 
     $get_address_list = 'select a.`is_default`,p.`province_name`,c.`city_name`,d.`district_name`,g.`group_name`,a.`address`,a.`consignee`,'.
                         'a.`mobile`,a.`zipcode`,a.`id` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
@@ -266,7 +266,7 @@ if('select' == $act)
 
 if('edit' == $act)
 {
-    $template = 'edit_address.phtml';
+    $template = 'edit-address.phtml';
 
     $id = intval(getGET('id'));
     if($id <= 0)
@@ -336,7 +336,7 @@ if('edit' == $act)
 
 if('add' == $act)
 {
-    $template = 'add_address.phtml';
+    $template = 'add-address.phtml';
 
     $get_province = 'select `id`,`province_name` as `name` from '.$db->table('province');
     $province = $db->fetchAll($get_province);

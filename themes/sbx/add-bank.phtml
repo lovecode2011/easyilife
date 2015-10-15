@@ -25,14 +25,16 @@
 <!-- 添加银行卡 -->
 <section class="bank">
     <div class="add-bank">
-        <label><span>持卡人:</span><input type="text" name="持卡人" value="" placeholder="请输入持卡人姓名"></label>
-        <label><span>银行卡号:</span><input type="text" name="银行卡号" value="" placeholder="请输入银行卡号"></label>
-        <label><span>银行名称:</span><input type="text" name="银行名称" value="" placeholder="请输入银行名称"></label>
+        <label><span>开户人:</span><input type="text" id="bank_account" name="bank_account" value="" placeholder="请输入开户人姓名"></label>
+        <label><span>银行卡号:</span><input type="tel" id="bank_card" name="bank_card" value="" placeholder="请输入银行卡号"></label>
+        <label><span>开户银行:</span><input type="text" id="bank" name="bank" value="" placeholder="请输入银行名称"></label>
+        <!--
         <label><span>开户行:</span><input type="text" name="开户行" value="" placeholder="请输入开户所在支行的名称"></label>
-        <label><span>手机号码:</span><input type="text" name="手机号码" value="" placeholder="请输入该卡在银行预留的号码 "></label>
-        <label><span>提现密码:</span><input type="password" name="提现密码" value="" placeholder="请输入提现密码"></label>
+        -->
+        <label><span>手机号码:</span><input type="tel" name="mobile" id="mobile" value="" placeholder="请输入该卡在银行预留的号码"></label>
+        <label><span>账户密码:</span><input type="password" id="password" name="password" value="" placeholder="请输入账户密码"></label>
         <div class="bank-btn">
-            <a class="btn" href="#" onclick="return false;">确认提交</a>
+            <a class="btn" href="javascript:void(0);" onclick="save_bank();return false;">确认提交</a>
         </div>
     </div>
 </section>
@@ -40,13 +42,99 @@
 <!-- 底部菜单 -->
 <section class="menu">
     <ul>
-        <li><a href="index.html"><em class="icon">&#xe601;</em><span>首页</span></a></li>
-        <li><a href="category.html"><em class="icon">&#xe603;</em><span>分类</span></a></li>
-        <li><a href="cart.html"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
-        <li><a class="active" href="#"><em class="icon">&#xe604;</em><span>我</span></a></li>
+        <li><a href="index.php"><em class="icon">&#xe601;</em><span>首页</span></a></li>
+        <li><a href="category.php"><em class="icon">&#xe603;</em><span>分类</span></a></li>
+        <li><a href="cart.php"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
+        <li><a class="active" href="user.php"><em class="icon">&#xe604;</em><span>我</span></a></li>
     </ul>
 </section>
-<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<div class="cd-popup" role="alert">
+    <div class="cd-popup-container" id="message_dialog" style="display: none;">
+        <p id="dialog-message"></p>
+        <ul class="cd-buttons">
+            <li class="cd-signle-button"><a href="javascript:close_message_dialog();" id="dialog_close_btn">确认</a></li>
+        </ul>
+        <a href="javascript:close_message_dialog();" class="cd-popup-close img-replace" id="dialog_close">X</a>
+    </div>
 
+    <div class="progressbar">
+        <img src="{$template_dir}images/loading.gif"/>
+    </div>
+</div>
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+    function save_bank() {
+        var bank_account = $("#bank_account").val();
+        var bank_card = $("#bank_card").val();
+        var bank = $("#bank").val();
+        var password = $("#password").val();
+        var mobile = $("#mobile").val();
+        var msg = "";
+
+        if(bank == "") {
+            msg += "-请填写开户银行<br/>";
+        }
+
+        if(bank_account == "") {
+            msg += "-请填写开户人姓名<br/>";
+        }
+
+        if(bank_card == "") {
+            msg += "-请填写银行卡号<br/>";
+        }
+
+        if(mobile == "") {
+            msg += "-请输入该卡在银行预留的号码<br/>";
+        }
+
+        if(password == "") {
+            msg += "-请输入账户密码<br/>";
+        }
+
+        if(msg == "") {
+            var url = "bank.php";
+            var data = { "opera":"add", "bank":bank, "bank_account":bank_account, "bank_card":bank_card, "mobile":mobile, "password":password };
+
+            show_mask();
+            $.post(url, data, save_bank_handler, "json");
+        } else {
+            show_message_dialog(msg);
+        }
+    }
+
+    function save_bank_handler(response) {
+        hide_mask();
+
+        show_message_dialog(response.msg);
+        if(response.error == 0) {
+            $("#dialog_close_btn").attr("href", "javascript:history.back();");
+            $("#dialog_close").click(function() {
+                history.back();
+            });
+        }
+    }
+
+    function show_message_dialog(message) {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").hide();
+        $("#dialog-message").html(message);
+        $("#message_dialog").show();
+    }
+
+    function close_message_dialog() {
+        $(".cd-popup").removeClass("is-visible");
+        $("#message_dialog").hide();
+    }
+
+    function show_mask() {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").show();
+    }
+
+    function hide_mask() {
+        $(".cd-popup").removeClass("is-visible");
+        $(".progressbar").hide();
+    }
+</script>
 </body>
 </html>

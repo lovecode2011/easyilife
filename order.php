@@ -7,15 +7,75 @@
  */
 include 'library/init.inc.php';
 
-$template = 'order_list.phtml';
+$template = 'order-list.phtml';
 $action = 'list|detail|comment|express_info';
 $act = check_action($action, getGET('act'));
-$operation = 'pay_now|cancel|rollback|receive|comment|product_comment';
+$operation = 'pay_now|cancel|rollback|receive|comment|product_comment|sort';
 $opera = check_action($operation, getPOST('opera'));
 
 if('' == $act)
 {
     $act = 'list';
+}
+
+if('sort' == $opera)
+{
+    $response = array('error'=>1, 'msg'=>'');
+
+    $status_str = array(
+        1 => '待支付',
+        2 => '支付中',
+        3 => '支付完成',
+        4 => '待发货',
+        5 => '配货中',
+        6 => '已发货',
+        7 => '已收货',
+        8 => '申请退单',
+        9 => '退单中',
+        10 => '已退单',
+        11 => '无效订单',
+        12 => '已完成'
+    );
+
+    $status = intval(getPOST('mode'));
+
+    $get_order_list = 'select o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`business_account` from '.$db->table('order').' as o join '.
+        $db->table('business').' as b using(`business_account`) where o.`account`=\''.$_SESSION['account'].'\'';
+
+    if($status > 0 && $status < 8)
+    {
+        $get_order_list .= ' and o.`status`='.$status;
+    }
+
+    if($status > 0 && $status >= 8)
+    {
+        $get_order_list .= ' and o.`status`>='.$status;
+    }
+
+    $get_order_list .= ' order by o.`add_time` DESC';
+
+    $response['sql'] = $get_order_list;
+
+    $order_list = $db->fetchAll($get_order_list);
+
+    if($order_list)
+    {
+        foreach ($order_list as $key => $ol)
+        {
+            $get_order_detail = 'select od.`product_attributes`,od.`product_name`,od.`product_sn`,p.`id`,p.`img`,od.`count` from ' . $db->table('order_detail') . ' as od ' .
+                ' join ' . $db->table('product') . ' as p using(`product_sn`) where od.`order_sn`=\'' . $ol['order_sn'] . '\'';
+            $order_list[$key]['order_detail'] = $db->fetchAll($get_order_detail);
+            $order_list[$key]['show_status'] = $status_str[$ol['status']];
+        }
+    }
+
+    assign('order_list', $order_list);
+
+    $response['error'] = 0;
+    $response['content'] = $smarty->fetch('order-list-item.phtml');
+
+    echo json_encode($response);
+    exit;
 }
 
 if('product_comment' == $opera)
@@ -232,6 +292,7 @@ if('cancel' == $opera)
         {
             $db->begin();
             //回退库存
+            //回退积分/佣金/余额
             //删除订单
             if($db->autoDelete('order', '`order_sn`=\''.$order_sn.'\''))
             {
@@ -286,6 +347,17 @@ if('pay_now' == $opera)
 
 if('express_info' == $act)
 {
+    $express_state = array(
+        0 => '在途',
+        1 => '揽件',
+        2 => '疑难',
+        3 => '签收',
+        4 => '退签',
+        5 => '派件',
+        6 => '退回'
+    );
+    assign('express_state', $express_state);
+
     $order_sn = getGET('order_sn');
 
     if($order_sn == '')
@@ -300,18 +372,25 @@ if('express_info' == $act)
 
     if($order && $order['status'] == 6)
     {
-        $get_express_code = 'select `code` from '.$db->table('express').' where `id`='.$order['express_id'];
-        $express_info = query_express($db->fetchOne($get_express_code   ), $order['express_sn']);
-        $express_info = json_decode($express_info, true);
+        $get_express_info = 'select `code`,`name` from '.$db->table('express').' where `id`='.$order['express_id'];
+        $express_info = $db->fetchRow($get_express_info);
+        $express_flow = query_express($express_info['code'], $order['express_sn']);
+        $express_flow = json_decode($express_flow, true);
+        assign('express_flow', $express_flow);
         assign('express_info', $express_info);
     }
+    assign('order', $order);
 
-    $template = 'order_express.phtml';
+    $get_order_detail = 'select p.`img` from '.$db->table('order_detail').' as od join '.$db->table('product').
+                        ' as p using(`product_sn`) where od.`order_sn`=\''.$order_sn.'\'';
+    assign('product_img', $db->fetchOne($get_order_detail));
+
+    $template = 'track.phtml';
 }
 
 if('comment' == $act)
 {
-    $template = 'order_comment.phtml';
+    $template = 'comment.phtml';
 
     $order_sn = getGET('sn');
 
@@ -375,7 +454,7 @@ if('detail' == $act)
     }
     $order_sn = $db->escape($order_sn);
 
-    $get_order = 'select o.`product_amount`,o.`integral_paid`,o.`balance_paid`,o.`reward_paid`,o.`add_time`,o.`delivery_fee`,o.`pay_time`,o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`province`,o.`city`,o.`district`,o.`group`,o.`mobile`,o.`consignee`,o.`address` from '.$db->table('order').' as o join '.
+    $get_order = 'select o.`remark`,o.`product_amount`,o.`integral_paid`,o.`balance_paid`,o.`reward_paid`,o.`add_time`,o.`delivery_fee`,o.`pay_time`,o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`province`,o.`city`,o.`district`,o.`group`,o.`mobile`,o.`consignee`,o.`address` from '.$db->table('order').' as o join '.
                  $db->table('business').' as b using(`business_account`) where o.`account`=\''.$_SESSION['account'].'\' and o.`order_sn`=\''.$order_sn.'\'';
 
     $order = $db->fetchRow($get_order);
@@ -397,7 +476,7 @@ if('detail' == $act)
     $order['group_name'] = $db->fetchOne($get_group_name);
 
     assign('order', $order);
-    $template = 'order_detail.phtml';
+    $template = 'order-detail.phtml';
     $_SESSION['order_sn'] = $order_sn;
 }
 

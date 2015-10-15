@@ -26,16 +26,16 @@
 <section class="wallet">
     <!-- 资产列表 -->
     <section class="f-section">
-        <a class="slide-link" href="#">
-            <span class="icon" style="background-color: #f29ec2;">&#xe61d;</span>我的余额<em>￥0.00</em>
+        <a class="slide-link" href="balance.php">
+            <span class="icon" style="background-color: #f29ec2;">&#xe61d;</span>我的余额<em>￥{$user.balance}</em>
         </a>
-        <a class="slide-link" href="#">
-            <span class="icon" style="background-color: #d0c0a6;">&#xe62a;</span>我的佣金<em>￥1.00</em>
+        <a class="slide-link" href="reward.php">
+            <span class="icon" style="background-color: #d0c0a6;">&#xe62a;</span>我的佣金<em>￥{$user.reward}</em>
         </a>
-        <a class="slide-link" href="#">
-            <span class="icon" style="background-color: #fb9065;">&#xe620;</span>我的积分<em>85</em>
+        <a class="slide-link" href="integral.php">
+            <span class="icon" style="background-color: #fb9065;">&#xe620;</span>我的积分<em>{$user.integral}</em>
         </a>
-        <a class="slide-link" href="#">
+        <a class="slide-link" href="javascript:alert('敬请期待');">
             <span class="icon" style="background-color: #80c269;">&#xe616;</span>我的优惠券<em>0</em>
         </a>
     </section>
@@ -44,10 +44,10 @@
 <!-- 底部菜单 -->
 <section class="menu">
     <ul>
-        <li><a href="index.html"><em class="icon">&#xe601;</em><span>首页</span></a></li>
-        <li><a href="category.html"><em class="icon">&#xe603;</em><span>分类</span></a></li>
-        <li><a href="cart.html"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
-        <li><a class="active" href="home.html"><em class="icon">&#xe604;</em><span>我</span></a></li>
+        <li><a href="index.php"><em class="icon">&#xe601;</em><span>首页</span></a></li>
+        <li><a href="category.php"><em class="icon">&#xe603;</em><span>分类</span></a></li>
+        <li><a href="cart.php"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
+        <li><a class="active" href="user.php"><em class="icon">&#xe604;</em><span>我</span></a></li>
     </ul>
 </section>
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>

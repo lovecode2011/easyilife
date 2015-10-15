@@ -19,6 +19,7 @@ if('submit_order' == $opera)
     $use_balance = getPOST('use_balance') == 'true' ? true : false;
     $use_reward = getPOST('use_reward') == 'true' ? true : false;
     $delivery_list = getPOST('delivery_list');
+    $comments = getPOST('comments');
 
     $response = array('error' => 1, 'msg' => '');
 
@@ -64,7 +65,8 @@ if('submit_order' == $opera)
                     'total_reward' => 0,
                     'integral_paid' => 0,
                     'balance_paid' => 0,
-                    'reward_paid' => 0
+                    'reward_paid' => 0,
+                    'remark' => $db->escape($comments[$cart['b_id']])
                 );
             }
 
@@ -218,6 +220,7 @@ if('submit_order' == $opera)
         }
 
         $response['count'] = 0;
+        $response['order_status'] = 0;
         $response['status'] = 0;
         $log->record_array($cart_list);
         //插入订单
@@ -248,15 +251,17 @@ if('submit_order' == $opera)
 
             $db->begin();
             $status = 1;
+            $response['order_status'] = 1;
             if($cart['total_amount'] == 0)
             {
                 $status = 4;
+                $response['order_status'] = 4;
             }
             $business_account = $cart['business_account'];
 
             $order_sn = add_order($cart['total_integral'], $cart['total_product_amount'], $cart['total_delivery_fee'], $cart['delivery_id'],
                                   $business_account, $cart['total_integral_given'], $payment_id, $address_id, $cart['total_reward'],
-                                  $_SESSION['account'], $cart['integral_paid'], $cart['reward_paid'], $cart['balance_paid'], $status);
+                                  $_SESSION['account'], $cart['integral_paid'], $cart['reward_paid'], $cart['balance_paid'], $status, 0, $cart['remark']);
 
             if($order_sn)
             {
@@ -300,7 +305,7 @@ if('submit_order' == $opera)
                     {
                         $cart['total_reward'] = $total_reward/2.5;
                         //计算三级分销
-                        distribution_settle($cart['total_reward'], $user_info['path']);
+                        //distribution_settle($cart['total_reward'], $user_info['path']);
                         //计算赠送积分
                         if($total_integral_given)
                         {

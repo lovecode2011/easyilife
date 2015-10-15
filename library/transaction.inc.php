@@ -65,7 +65,22 @@ function modify_inventory($product_sn, $attributes, $number)
 {
     global $db;
 
+    //检查库存，如果待发库存高于写入库存，则不进行操作
+    $check_inventory = 'select `id` from '.$db->table('inventory').
+                       ' where `product_sn`=\''.$product_sn.'\' and `attributes`=\''.$attributes.'\' and '.
+                       ' `inventory_await`<='.$number;
 
+    $inventory_id = $db->fetchOne($check_inventory);
+
+    if($inventory_id)
+    {
+        $update_inventory = 'update '.$db->table('inventory').' set `inventory`='.$number.',`inventory_logic`='.$number.'-`inventory_await` '.
+                            ' where `id`='.$inventory_id;
+
+        return $db->update($update_inventory);
+    } else {
+        return false;
+    }
 }
 /**
  * 三级分销结算
@@ -200,11 +215,12 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
  * @param float $reward_paid
  * @param float $balance_paid
  * @param int $status
- * @param bool $self_delivery
+ * @param int $self_delivery
+ * @param string $remark
  * @return mixed
  */
  function add_order($integral_amount, $product_amount, $delivery_fee, $delivery_id, $business_account, $integral_given_amount,
-                    $payment_id, $address_id, $reward_amount, $account, $integral_paid = 0.0, $reward_paid = 0.0, $balance_paid = 0.0, $status = 1, $self_delivery = 0)
+                    $payment_id, $address_id, $reward_amount, $account, $integral_paid = 0.0, $reward_paid = 0.0, $balance_paid = 0.0, $status = 1, $self_delivery = 0, $remark = '')
  {
     global $db;
     global $config;
@@ -225,7 +241,8 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
         'reward_amount' => $reward_amount,
         'self_delivery' => $self_delivery,
         'status' => $status,
-        'add_time' => time()
+        'add_time' => time(),
+        'remark' => $remark
     );
 
     //获取地址信息

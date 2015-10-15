@@ -13,9 +13,12 @@ if($id <= 0)
     redirect('index.php');
 }
 
-$get_article = 'select `content`,`title`,`add_time`,`author` from '.$db->table('content').' where `id`='.$id;
+$get_article = 'select `content`,`title`,`add_time`,`author`,`section_id` from '.$db->table('content').' where `id`='.$id;
 $article = $db->fetchRow($get_article);
 
 assign('article', $article);
 
-$smarty->display('article.phtml');
+$get_section_name = 'select `section_name` from '.$db->table('section').' where `id`='.$article['section_id'];
+assign('section_name', $db->fetchOne($get_section_name));
+
+$smarty->display('news-detail.phtml');

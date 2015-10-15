@@ -82,7 +82,7 @@ if( 'add' == $opera ) {
 //        $description = $db->escape(htmlspecialchars($description));
 //    }
     $keywords = '';
-    $description = '';
+    $description = $db->escape(htmlspecialchars($description));
 
     if( '' == $section_id || 0 >= intval($section_id) ) {
         show_system_message('参数错误', array());
@@ -218,7 +218,7 @@ if( 'edit' == $opera ) {
 //        $description = $db->escape(htmlspecialchars($description));
 //    }
     $keywords = '';
-    $description = '';
+    $description = $db->escape(htmlspecialchars($description));
 
     if( '' == $section_id || 0 >= intval($section_id) ) {
         show_system_message('参数错误', array());

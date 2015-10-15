@@ -20,31 +20,19 @@
 <body>
 <header class="header">
     <a href="javascript:history.back();" class="back"></a>
-    <h1><em>收货地址列表</em></h1>
-    <a href="address.php?act=add" class="edit">新增</a>
+    <h1><em>{$section_name}</em></h1>
 </header>
-<!-- 收货地址列表 -->
-<section id="address-list">
-    <div class="address-list">
-        {if $address_list}
-        {foreach from=$address_list item=address}
-        <div class="address_item">
-            <div class="detail">
-                <p class="a-name">收货人：{$address.consignee}<span class="a-phone">{$address.mobile}</span></p>
-                <p class="a-address">收货地址：{$address.detail_address}</p>
-                <div class="clear tags">
-                    {if $address.is_default}<span>默认地址</span>{/if}
-                    <a class="garbage" href="address.php?act=edit&id={$address.id}"></a>
-                </div>
-            </div>
-            <div class="bottom_line"></div>
+<!-- 资讯页面 -->
+<section class="article">
+    <section class="article-con">
+        <h1>{$article.title}</h1>
+        <span class="article-time">{date('Y-m-d H:i:s', $article.add_time)}</span>
+        <div>
+            {$article.content}
         </div>
-        {/foreach}
-        {else}
-        您尚未添加任何地址
-        {/if}
-    </div>
+    </section>
 </section>
+
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
 
 </body>
