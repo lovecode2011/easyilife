@@ -5,15 +5,15 @@
 <!-- content -->
 <div id="content">
     <div class="content-title">
-        <h5 class="pull-left">产品管理</h5>
+        <h5 class="pull-left">虚拟产品管理</h5>
         <div class="pull-right">
-            <a class="btn btn-primary" href="product.php">全部</a>&nbsp;
-            <a class="btn btn-primary" href="product.php?status=1">
+            <a class="btn btn-primary" href="virtual_product.php">全部</a>&nbsp;
+            <a class="btn btn-primary" href="virtual_product.php?status=1">
                 待审核
                 {if $exam_count neq 0}<sup class="badge">{$exam_count}</sup>{/if}
             </a>&nbsp;
-            <a class="btn btn-primary" href="product.php?status=2">已上架</a>&nbsp;
-            <a class="btn btn-primary" href="product.php?status=3">已下架</a>&nbsp;
+            <a class="btn btn-primary" href="virtual_product.php?status=2">已上架</a>&nbsp;
+            <a class="btn btn-primary" href="virtual_product.php?status=3">已下架</a>&nbsp;
         </div>
         <div class="clear"></div>
     </div>
@@ -142,17 +142,17 @@
         $('select[name=count]').change(function(){
             var keyword = $('input[name=keyword]').val();
             var count = $(this).val();
-            var url = 'product.php?count=' + count;
+            var url = 'virtual_product.php?count=' + count;
             if( keyword ) {
                 url += '&keyword=' + keyword;
             }
             {if $status}
-            var status = $('input[name=status]').val();
-            url += '&status=' + status;
-            {/if}
-            window.location.href = url;
-        });
-    });
+                var status = $('input[name=status]').val();
+                url += '&status=' + status;
+                {/if}
+                    window.location.href = url;
+                });
+            });
 </script>
 
 {include file="library/footer.lbi"}

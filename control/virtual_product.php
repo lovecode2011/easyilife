@@ -1,17 +1,17 @@
 <?php
 /**
- * 产品管理
+ * 虚拟虚拟虚拟产品管理
  * @author 王仁欢
  * @email wrh4285@163.com
- * @date 2015-09-06
+ * @date 2015-10-15
  * @version 1.0.0
  */
 
 include 'library/init.inc.php';
 back_base_init();
 
-$template = 'product/';
-assign('subTitle', '产品管理');
+$template = 'virtual_product/';
+assign('subTitle', '虚拟虚拟虚拟产品管理');
 
 $action = 'view|exam|reject';
 $operation = 'exam|reject';
@@ -23,25 +23,26 @@ $opera = check_action($operation, getPOST('opera'));
 //===========================================================================
 
 if( 'exam' == $opera ) {
-    if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
+    if (!check_purview('pur_virtual_product_exam', $_SESSION['purview'])) {
         show_system_message('权限不足', array());
         exit;
     }
+
     $id = intval(getPOST('id'));
     if( 0 >= $id ) {
         show_system_message('参数错误', array());
         exit;
     }
 
-    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 and is_virtual = 0 limit 1';
+    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 limit 1';
     $product = $db->fetchRow($get_product);
     if( empty($product) ) {
-        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
         exit;
     }
 
     if( $product['status'] == 5 ) {
-        show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
         exit;
     }
 
@@ -73,8 +74,8 @@ if( 'exam' == $opera ) {
 
         //系统通知商户===
         $data = array(
-            'title' => '产品审核',
-            'content' => '您的产品，编号'.$product['product_sn'].'审核通过',
+            'title' => '虚拟产品审核',
+            'content' => '您的虚拟产品，编号'.$product['product_sn'].'审核通过',
             'account' => $product['account'],
             'business_account' => $product['business_account'],
             'add_time' => time(),
@@ -83,16 +84,16 @@ if( 'exam' == $opera ) {
         $db->autoInsert('message', array($data));
 
         //=============
-        show_system_message('产品通过审核', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('产品通过审核', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
         exit;
     } else {
-        show_system_message('系统繁忙，请稍后重试', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('系统繁忙，请稍后重试', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
         exit;
     }
 }
 
 if( 'reject' == $opera ) {
-    if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
+    if (!check_purview('pur_virtual_product_exam', $_SESSION['purview'])) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -108,10 +109,10 @@ if( 'reject' == $opera ) {
     }
     $message = $db->escape($message);
 
-    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 limit 1';
+    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 and is_virtual = 1 limit 1';
     $product = $db->fetchRow($get_product);
     if( empty($product) ) {
-        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
 
@@ -119,7 +120,7 @@ if( 'reject' == $opera ) {
     $product['account'] = $db->fetchOne($get_account);
 
     if( $product['status'] == 5 ) {
-        show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
 
@@ -132,8 +133,8 @@ if( 'reject' == $opera ) {
 
         //系统通知商户==================================
         $data = array(
-            'title' => '产品审核',
-            'content' => '您的产品，编号'.$product['product_sn'].'审核不通过。'.$message,
+            'title' => '虚拟产品审核',
+            'content' => '您的虚拟产品，编号'.$product['product_sn'].'审核不通过。'.$message,
             'account' => $product['account'],
             'business_account' => $product['business_account'],
             'add_time' => time(),
@@ -142,19 +143,16 @@ if( 'reject' == $opera ) {
         $db->autoInsert('message', array($data));
 
         //==============================================
-        show_system_message('产品审核已驳回', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('虚拟产品审核已驳回', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     } else {
-        show_system_message('系统繁忙，请稍后重试', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('系统繁忙，请稍后重试', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
 }
-
-
-//===========================================================================
-
+//==========================================================================
 if( 'view' == $act ) {
-    if( !check_purview('pur_product_view', $_SESSION['purview']) ) {
+    if( !check_purview('pur_virtual_product_view', $_SESSION['purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -192,7 +190,7 @@ if( 'view' == $act ) {
 
     $get_total = 'select count(*) from '.$db->table('product').' as a';
     $get_total .= $where;
-    $get_total .= ' and is_virtual = 0';
+    $get_total .= ' and is_virtual = 1';
     $total = $db->fetchOne($get_total);
     $total_page = ceil( $total / $count );
 
@@ -209,7 +207,7 @@ if( 'view' == $act ) {
     $get_product_list = 'select a.*, b.name as category_name from '.$db->table('product').' as a';
     $get_product_list .= ' left join '.$db->table('category').' as b on a.category_id = b.id';
     $get_product_list .= $where;
-    $get_product_list .= ' and is_virtual = 0';
+    $get_product_list .= ' and is_virtual = 1';
     $get_product_list .= ' order by order_view asc, id desc';
     $get_product_list .= ' limit '.$offset.','.$count;
     $product_list = $db->fetchAll($get_product_list);
@@ -235,14 +233,14 @@ if( 'view' == $act ) {
     if( $status == 1 ) {
         $exam_count = $total;
     } else {
-        $get_exam_count = 'select count(*) from '.$db->table('product').' where status = 2  and is_virtual = 0';
+        $get_exam_count = 'select count(*) from '.$db->table('product').' where status = 2 and is_virtual = 1';
         $exam_count = $db->fetchOne($get_exam_count);
     }
     assign('exam_count', $exam_count);
 }
 
 if( 'exam' == $act ) {
-    if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
+    if( !check_purview('pur_virtual_product_exam', $_SESSION['purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -254,14 +252,14 @@ if( 'exam' == $act ) {
     $product_sn = $db->escape($product_sn);
 
     $get_product = 'select a.* from '.$db->table('product').' as a';
-    $get_product .= ' where a.product_sn = \''.$product_sn.'\' and status = 2 limit 1';
+    $get_product .= ' where a.product_sn = \''.$product_sn.'\' and status = 2 and is_virtual = 1 limit 1';
     $product = $db->fetchRow($get_product);
     if( !$product ) {
-        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
         exit;
     }
     if( $product['status'] == 5 ) {
-        show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
         exit;
     }
 
@@ -270,20 +268,6 @@ if( 'exam' == $act ) {
     $product['img_src'] = (file_exists('..'.$product['img'])) ? '..'.$product['img'] : $product['img'];
 
     assign('product', $product);
-
-    $get_attributes = 'select * from '.$db->table('inventory');
-    $get_attributes .= ' where product_sn = \''.$product_sn.'\'';
-    $product_attributes = $db->fetchAll($get_attributes);
-//    var_dump($product_attributes);exit;
-    if( $product_attributes ) {
-        foreach( $product_attributes as $key => $attributes ) {
-            $product_attributes[$key]['attributes'] = json_decode($attributes['attributes']);
-        }
-    } else {
-        $product_attributes = array();
-    }
-
-    assign('attributes', json_encode($product_attributes));
 
     $get_category_list = 'select * from '.$db->table('category');
     $get_category_list .= ' where business_account = \''.$product['business_account'].'\'';
@@ -306,38 +290,18 @@ if( 'exam' == $act ) {
     }
     assign('category_list', $category_list);
 
-    $get_product_type_list = 'select  * from '.$db->table('product_type').' where 1 order by id asc';
-    $product_type_list = $db->fetchAll($get_product_type_list);
-    assign('product_type_list', $product_type_list);
-
-    $get_product_attr_list = 'select * from '.$db->table('product_attributes').' where 1 order by product_type_id asc, id asc';
-    $product_attr_list = $db->fetchAll($get_product_attr_list);
-
-    $target_attr_list = array();
-    $length = count($product_attr_list);
-    for( $i = 0; $i < $length; ) {
-        $pid = $product_attr_list[$i]['product_type_id'];
-        $temp = array();
-        do {
-            $temp[] = $product_attr_list[$i];
-            $i++;
-        } while( $i < $length && $pid == $product_attr_list[$i]['product_type_id'] );
-        $target_attr_list[$pid] = $temp;
-    }
-    assign('json_attr_list', json_encode($target_attr_list));
-
-
-    $get_brand_list = 'select * from '.$db->table('brand').' where 1 order by id asc';
-    $brand_list = $db->fetchAll($get_brand_list);
-    assign('brand_list', $brand_list);
+    $get_virtual_content = 'select * from '.$db->table('virtual_content').' where product_sn = \''.$product_sn.'\'';
+    $virtual_content = $db->fetchAll($get_virtual_content);
+    assign('content_list', $virtual_content);
 
     $get_gallery_list = 'select * from '.$db->table('gallery').' where product_sn = \''.$product_sn.'\' order by order_view asc';
     $gallery_list = $db->fetchAll($get_gallery_list);
     assign('gallery_list', $gallery_list);
+
 }
 
 if( 'reject' == $act ) {
-    if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
+    if( !check_purview('pur_virtual_product_exam', $_SESSION['purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }
@@ -347,15 +311,15 @@ if( 'reject' == $act ) {
         exit;
     }
 
-    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 limit 1';
+    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 and is_virtual = 1 limit 1';
     $product = $db->fetchRow($get_product);
     if( empty($product) ) {
-        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
         exit;
     }
 
     if( $product['status'] == 5 ) {
-        show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
         exit;
     }
     assign('id', $id);
@@ -364,4 +328,3 @@ if( 'reject' == $act ) {
 
 $template .= $act.'.phtml';
 $smarty->display($template);
-

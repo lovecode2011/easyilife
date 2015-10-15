@@ -19,7 +19,7 @@
 <!-- content -->
 <div id="content">
     <div class="content-title">
-        <h5 class="pull-left">审核产品</h5>
+        <h5 class="pull-left">审核虚拟产品</h5>
         <div class="clear"></div>
     </div>
     <div class="adminUser-main">
@@ -27,38 +27,51 @@
             <fieldset>
                 <p>
                     <label class="l-title">产品编号：</label>
-                    <input disabled="disabled" class="text-input w300" type="text" id="product_sn" name="product_sn" placeholder="请输入产品编号" minlength="2" maxlength="32" value="{$product.product_sn}">
+                    <input disabled="disabled" class="text-input w300" type="text" id="product_sn" name="product_sn" placeholder="请输入产品编号" value="{$product.product_sn}">
                 </p>
                 <p>
                     <label class="l-title">名称：</label>
-                    <input disabled="disabled" class="text-input w300" type="text" id="name" name="name" placeholder="请输入产品名称" minlength="5" value="{$product.name}">
+                    <input disabled="disabled" class="text-input w300" type="text" id="name" name="name" placeholder="请输入产品名称" value="{$product.name}">
                 </p>
                 <p class="clear">
                     <label class="l-title">产品分类：</label>
-                    {foreach from=$category_list item=category}
-                        {if $category.id eq $product.category_id}
-                    <input value="{$category.name}" disabled="disabled" class="text-input w300" type="text" id="category" name="category" placeholder="">
-                        {/if}
-                    {/foreach}
+                    <select disabled="disabled" name="category" class="w150">
+                        <option value="0">|--请选择--|</option>
+                        {foreach from=$category_list item=category}
+                        <option value="{$category.id}" {if $category.id eq $product.category_id}selected="selected"{/if}>{$category.name}</option>
+                        {/foreach}
+                    </select>
                 </p>
                 <p class="clear">
-                    <label class="l-title">产品类型：</label>
-                    {foreach from=$product_type_list item=product_type}
-                    {if $product_type.id eq $product.product_type_id}
-                    <input value="{$product_type.name}" disabled="disabled" class="text-input w300" type="text" id="product_type" name="product_type" placeholder="" data-id="{$product.product_type_id}">
-                    {/if}
-                    {/foreach}
+                    <label class="l-title">消费内容：</label>
                 </p>
-                <p style="display: none" id="product_attr" class="clear"></p>
+                <p class="clear" id="show-content">
+<!--                    <div style="width: 400px; margin: 0 auto">-->
+                        <table class="table"   style="width: 1000px; margin: 0 auto">
+                            <thead>
+                            <tr>
+                                <th>消费内容</th>
+                                <th>数量/规格</th>
+                                <th>小计</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {foreach from=$content_list item=content}
+                            <tr>
+                                <td>
+                                    {$content.content}
+                                </td>
+                                <td>
+                                    <em>{$content.count}</em>
+                                </td>
+                                <td>{$content.total}</td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        <table>
+<!--                    </div>-->
+                </p>
                 <p class="clear">
-                    <label class="l-title">品牌：</label>
-                    {foreach from=$brand_list item=brand}
-                    {if $brand.id eq $product.brand_id}
-                    <input value="{$brand.name}" disabled="disabled" class="text-input w300" type="text" id="brand" name="brand" placeholder="">
-                    {/if}
-                    {/foreach}
-                </p>
-                <p>
                     <label class="l-title">售价：</label>
                     <input disabled="disabled" class="text-input w150" type="text" id="price" name="price" placeholder="请输入售价" value="{$product.price}">
                 </p>
@@ -105,17 +118,8 @@
                     <input disabled="disabled" class="text-input w300" type="text" name="promote_end" placeholder="促销结束时间" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"{/literal}  value="{$product.promote_end}">
                 </p>
                 <p>
-                    <label class="l-title">重量：</label>
-                    <input disabled="disabled" class="text-input w150" type="text" name="weight" placeholder="单位：千克" value="{$product.weight}">
-                </p>
-                <p>
                     <label class="l-title">产品排序：</label>
                     <input disabled="disabled" class="text-input w150" type="text" name="order_view" placeholder="" value="{$product.order_view}">
-                </p>
-                <p class="clear">
-                    <label class="l-title">包邮：</label>
-                    <input type="radio" name="free_delivering" value="0" {if $product.free_delivery eq 0}checked="checked"{/if}> <em>否</em>&nbsp;
-                    <input type="radio" name="free_delivering" value="1" {if $product.free_delivery eq 1}checked="checked"{/if}> <em>是</em>
                 </p>
                 <p>
                     <label class="l-title">返利：</label>
@@ -134,7 +138,7 @@
                     <input type="hidden" name="opera" value="exam" />
                     <input type="hidden" name="id" value="{$product.id}"/>
                     <button class="btn btn-primary" type="submit">通过</button> &nbsp;
-                    <a class="btn btn-primary" href="product.php?act=reject&id={$product.id}">驳回</a> &nbsp;
+                    <a class="btn btn-primary" href="virtual_product.php?act=reject&id={$product.id}">驳回</a> &nbsp;
                     <a href="javascript:history.go(-1);" class="btn btn-primary">返回</a>
                 </p>
 
@@ -176,11 +180,6 @@
                     K('form[name=productExamForm]')[0].submit();
                 });
             }
-        });
-        var editor = K.editor({
-            allowFileManager: true,
-            uploadJson: '../plugins/kindeditor/upload_json.php',
-            fileManagerJson: '../plugins/kindeditor/file_manager_json.php'
         });
     });
     {/literal}

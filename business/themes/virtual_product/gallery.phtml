@@ -33,7 +33,7 @@
                                 </p>
                                 <p style="text-align: center">
                                     {if $gallery.id neq ''}
-                                    <a href="product.php?act=del-gallery&id={$gallery.id}" onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" class="btn btn-primary">删除</a>
+                                    <a href="virtual_product.php?act=del-gallery&id={$gallery.id}" onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" class="btn btn-primary">删除</a>
                                     {/if}
                                     {if $gallery.id eq ''}
                                     <button class="btn btn-primary cancel-image" type="button" style="display:none">取消</button>

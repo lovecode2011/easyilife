@@ -73,6 +73,14 @@ $purview = array(
 //        'pur_product_del',
     ),
 
+    //虚拟产品
+    'pur_virtual_product' => array(
+        'pur_virtual_product_view',
+        'pur_virtual_product_exam',
+//        'pur_product_edit',
+//        'pur_product_del',
+    ),
+
     //主营分类
     'pur_category' => array(
         'pur_category_view',
@@ -201,6 +209,10 @@ $L_purview = array(
 //    'pur_product_edit'=>'编辑产品',
 //    'pur_product_del'=>'删除产品',
 
+    'pur_virtual_product' => '虚拟产品管理',
+    'pur_virtual_product_view' => '查看虚拟产品',
+    'pur_virtual_product_exam' => '审核虚拟产品',
+
     'pur_self' => '个人信息',
     'pur_passwd_edit' => '密码修改',
 
@@ -256,6 +268,7 @@ $L_purview = array(
 global $menus;
 $menus = array(
     'pur_product' => array('url'=>'product.php', 'title'=>'产品管理', 'parent' => 'menu_product'),
+    'pur_virtual_product' => array('url'=>'virtual_product.php', 'title'=>'虚拟产品管理', 'parent' => 'menu_product'),
     'pur_brand' => array('url'=>'brand.php', 'title'=>'产品品牌', 'parent'=>'menu_product'),
     'pur_type' => array('url'=>'type.php', 'title'=>'产品类型', 'parent'=>'menu_product'),
     'pur_category' => array('url'=>'category.php', 'title'=>'主营分类', 'parent'=>'menu_product'),

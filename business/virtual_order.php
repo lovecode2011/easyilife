@@ -305,8 +305,8 @@ if( 'export' == $act ) {
     $objPHPExcel = new PHPExcel();
 
     // Set document properties
-    $objPHPExcel->getProperties()->setCreator($_SESSION['account'])
-        ->setLastModifiedBy($_SESSION['account'])
+    $objPHPExcel->getProperties()->setCreator($_SESSION['business_admin'])
+        ->setLastModifiedBy($_SESSION['business_admin'])
         ->setTitle("Office 2007 XLSX Test Document")
         ->setSubject("Office 2007 XLSX Test Document")
         ->setDescription("订单")

@@ -27,6 +27,9 @@
                     {if $menu.url eq 'product.php' && $product_exam_count neq 0}
                     <sup class="sidebar-badge">{if $product_exam_count lt 10}&nbsp;{/if}{$product_exam_count}</sup>
                     {/if}
+                    {if $menu.url eq 'virtual_product.php' && $virtual_product_exam_count neq 0}
+                    <sup class="sidebar-badge">{if $virtual_product_exam_count lt 10}&nbsp;{/if}{$virtual_product_exam_count}</sup>
+                    {/if}
                 </a>
                 <ul class="submenu" id="{$menu.key}" style="display: none">
                     {foreach from=$menu.children item=child}
