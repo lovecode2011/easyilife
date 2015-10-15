@@ -622,6 +622,10 @@ if( 'export' == $act ) {
 
     // add data
     $i = 1;
+    //设置填充的样式和背景色
+    $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':H'.$i)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+    $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':H'.$i)->getFill()->getStartColor()->setRGB('ff0000');
+    $i++;
     foreach( $order_list as $key => $order ) {
         $temp = $order['province_name'].$order['city_name'].$order['district_name'].$order['group_name'].'    ';
         $temp .= $order['address'].'    ';
@@ -656,6 +660,9 @@ if( 'export' == $act ) {
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A'.$i, '订单详情');
         $i++;
+        //设置填充的样式和背景色
+        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':G'.$i)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':G'.$i)->getFill()->getStartColor()->setARGB('FF808080');
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A'.$i, '产品编号')
             ->setCellValue('B'.$i, '产品名称')
@@ -681,6 +688,7 @@ if( 'export' == $act ) {
                 $i++;
             }
         }
+
         $objPHPExcel->getActiveSheet()->mergeCells( 'A'.$i.':B'.$i);
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A'.$i, '合计')
@@ -688,6 +696,12 @@ if( 'export' == $act ) {
             ->setCellValue('D'.$i, $order['integral_amount'])
             ->setCellValue('E'.$i, $order['integral_given_amount'])
             ->setCellValue('F'.$i, $order['amount']);
+
+        $i++;
+        //设置填充的样式和背景色
+        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':G'.$i)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':G'.$i)->getFill()->getStartColor()->setARGB('FF808080');
+
         if( $order['express_sn'] ) {
             $i++;
             $objPHPExcel->getActiveSheet()->mergeCells('A' . $i . ':F' . $i);
@@ -708,7 +722,11 @@ if( 'export' == $act ) {
             ->setCellValue('A' . $i, '备注')
             ->setCellValue('B'.$i, $order['remark']);
 
-        $i += 2;
+        $i++;
+        //设置填充的样式和背景色
+        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':H'.$i)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':H'.$i)->getFill()->getStartColor()->setRGB('ff0000');
+        $i++;
 
     }
     $objPHPExcel->getActiveSheet()->setTitle('订单');
