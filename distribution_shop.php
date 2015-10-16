@@ -16,8 +16,8 @@ $user = null;
 if($parent_id == 0)
 {
     $user = array(
-        'nickname' => '生活圈',
-        'headimg' => 'themes/easyilife/images/slj.jpg'
+        'nickname' => '圣宝先',
+        'headimg' => 'themes/sbx/images/wang.jpg'
     );
     $get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product');
 } else {
@@ -28,7 +28,7 @@ if($parent_id == 0)
     $product_sns = $db->fetchAll($get_product_sns);
 
     $product_sn_str = implode('\', \'', $product_sns);
-    $get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `product_sn` in (\''.$product_sn_str.'\')';
+    $get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `status`=4 and `product_sn` in (\''.$product_sn_str.'\')';
 }
 
 $business = array(
@@ -52,12 +52,12 @@ assign('category', $category);
 $product_list = $db->fetchAll($get_product_list);
 assign('product_list', $product_list);
 //获取新添加的产品
-$get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `add_time`>'.(time()-3600*24*7);
+$get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `status`=4 and `add_time`>'.(time()-3600*24*7);
 $new_product = $db->fetchAll($get_product_list);
 assign('new_product_count', count($new_product));
 
 //获取猜你喜欢
-$get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' order by `add_time` DESC limit 3';
+$get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 3';
 $fav_products = $db->fetchAll($get_fav_products);
 assign('fav_products', $fav_products);
 
