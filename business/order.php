@@ -15,7 +15,7 @@ $template = 'order/';
 
 
 $action = 'view|deliver|prepare|agree|refund|delete|detail|export';
-$operation = 'deliver';
+$operation = 'deliver|express_info';
 
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
@@ -216,7 +216,6 @@ if( 'view' == $act ) {
     $get_order_list .= ' and a.is_virtual = 0';
     $get_order_list .= ' order by add_time desc';
     $get_order_list .= ' limit '.$offset.','.$count;
-    echo $get_order_list;
     $order_list = $db->fetchAll($get_order_list);
 
 //echo $get_order_list;exit;

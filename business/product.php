@@ -215,8 +215,12 @@ if( 'add' == $opera ) {
 
     //新增产品库存
     if( is_array($attr) ) {
+        $log->record_array($attr);
         foreach ($attr as $k => $v) {
-            $attributes = $db->escape(json_encode($v));
+            $attributes = json_encode($v);
+            $attributes = decodeUnicode($attributes);
+            $attributes = $db->escape($attributes);
+
             $data = array(
                 'product_sn' => $product_sn,
                 'attributes' => $attributes,

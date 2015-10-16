@@ -596,7 +596,7 @@ ul.tabs-without-js li.active a{
 /* END 系统消息未读信息提示 */
 
 /* 物流信息 */
-.express-start i, .experss-middle i, .express-complete i {
+.express-start i, .experss-middle i, .express-complete i, .express-incomplete i {
     background-image: url("../images/express_status.gif");
     background-repeat: no-repeat;
     display: inline-block;
@@ -604,7 +604,7 @@ ul.tabs-without-js li.active a{
     height: 40px;
     vertical-align: bottom;
 }
-.express-start, .experss-middle, .express-complete {
+.express-start, .experss-middle, .express-complete, .express-incomplete {
     text-indent: 20px;
     line-height: 40px;
 }
@@ -619,4 +619,9 @@ ul.tabs-without-js li.active a{
 
 .express-start i {
     background-position: -154px center;
+}
+
+.express-incomplete i {
+    background-position: -105px center;
+    transform: rotate(180deg);
 }

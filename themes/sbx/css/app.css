@@ -1707,6 +1707,11 @@ nav.ol_select_bar ul a.hover li {
     background-repeat: no-repeat;
     background-size: .95rem 1rem;
 }
+
+.address_item .tags .address-del{
+    background: url(../images/c_del.png) center no-repeat;
+    background-size: .95rem 1rem;
+}
 /* 地址列表 */
 #address-list .address_item .detail {
     padding-left: 1rem;
@@ -2978,4 +2983,38 @@ nav.ol_select_bar ul a.hover li {
 .ranking-con .ranking-list i.r123{
     background-color: #ff0000;
     color: #fff;
+}
+
+.inventory-count {
+    display: inline-block;
+    margin-left: .4rem;
+    font-size: .7rem;
+    line-height: 1.5rem;
+    color: #777;
+}
+
+/* 我的团队 */
+.myteam-header{
+    margin: .5rem 0;
+    background-color: #fff;
+}
+.myteam-header .myteam-header-info{
+    height: 3.5rem;
+}
+.myteam-header .myteam-header-info img{
+    padding: .5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 2.5rem;
+    float:left;
+
+}
+.myteam-header .myteam-header-info span{
+    font-size: .8rem;
+    padding-top: .5rem;
+    display: block;
+}
+.myteam-header .myteam-header-info em{
+    font-size: .6rem;
+    color: #999;
 }

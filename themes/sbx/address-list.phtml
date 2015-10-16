@@ -35,6 +35,7 @@
                 <div class="clear tags">
                     {if $address.is_default}<span>默认地址</span>{/if}
                     <a class="garbage" href="address.php?act=edit&id={$address.id}"></a>
+                    <a class="garbage address-del" href="javascript:delete_address_confirm({$address.id});"></a>
                 </div>
             </div>
             <div class="bottom_line"></div>
@@ -45,7 +46,109 @@
         {/if}
     </div>
 </section>
-<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<div class="cd-popup" role="alert">
+    <div class="cd-popup-container" id="confirm_dialog" style="display: none;">
+        <p>确定要删除该地址吗？</p>
+        <ul class="cd-buttons">
+            <li><a id="dialog_confirm_btn" href="javascript:void(0);">非删不可</a></li>
+            <li><a href="javascript:close_operation_dialog('confirm_dialog');">说说而已</a></li>
+        </ul>
+        <a href="javascript:close_operation_dialog('confirm_dialog');" class="cd-popup-close img-replace">X</a>
+    </div>
 
+    <div class="cd-popup-container" id="message_dialog" style="display: none;">
+        <p id="dialog-message"></p>
+        <ul class="cd-buttons">
+            <li class="cd-signle-button"><a id="dialog_close_btn" href="javascript:close_message_dialog();">确认</a></li>
+        </ul>
+        <a href="javascript:close_message_dialog();" id="dialog_close" class="cd-popup-close img-replace">X</a>
+    </div>
+
+    <div class="progressbar">
+        <img src="{$template_dir}images/loading.gif"/>
+    </div>
+</div>
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+    var id = 0;
+    function delete_address_confirm(eid) {
+        id = eid;
+        show_operation_dialog("confirm_dialog");
+        $("#dialog_confirm_btn").click(function() {
+            close_operation_dialog("confirm_dialog");
+            delete_address(id);
+        });
+    }
+
+    function delete_address(id) {
+        id = parseInt(id);
+        var msg = "";
+
+        if(isNaN(id) || id <= 0) {
+            msg += "-参数错误<br/>";
+        }
+
+        if(msg == "") {
+            var url = "address.php";
+            var data = { "opera":"delete", "eid":id };
+
+            show_mask();
+            $.post(url, data, delete_address_handler, "json");
+        } else {
+            show_message_dialog(msg);
+        }
+    }
+
+    function delete_address_handler(response) {
+        hide_mask();
+
+        show_message_dialog(response.msg);
+        if(response.error == 0) {
+            $("#dialog_close_btn").attr("href", "javascript:window.location.reload();");
+            $("#dialog_close").click(function() {
+                window.location.reload();
+            });
+        }
+    }
+
+    function show_message_dialog(message) {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").hide();
+        $("#dialog-message").html(message);
+        $("#message_dialog").show();
+    }
+
+    function close_message_dialog() {
+        $(".cd-popup").removeClass("is-visible");
+        $("#message_dialog").hide();
+    }
+
+    function show_operation_dialog(id) {
+        if(id == undefined) {
+            id = "dialog";
+        }
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").hide();
+        $("#"+id).show();
+    }
+
+    function close_operation_dialog(id) {
+        if(id == undefined) {
+            id = "dialog";
+        }
+        $(".cd-popup").removeClass("is-visible");
+        $("#"+id).hide();
+    }
+
+    function show_mask() {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").show();
+    }
+
+    function hide_mask() {
+        $(".cd-popup").removeClass("is-visible");
+        $(".progressbar").hide();
+    }
+</script>
 </body>
 </html>

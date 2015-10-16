@@ -608,20 +608,7 @@
         $("img.lazy").lazyload({
             effect : "fadeIn"
         });
-        $(".arrow_con").click(function(){
-            arrow_con_toggle();
-        });
     });
-
-    function arrow_con_toggle() {
-        if($(".arrow_d").hasClass("up")){
-            $(".option_detail").slideUp();
-            $(".arrow_d").removeClass("up");
-        } else {
-            $(".option_detail").slideDown();
-            $(".arrow_d").addClass("up");
-        }
-    }
 </script>
 <script type="text/javascript">
     TouchSlide({

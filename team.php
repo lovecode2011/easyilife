@@ -31,4 +31,4 @@ if($member_list_tmp)
 assign('member_list', $member_list);
 assign('title', '我的团队');
 
-$smarty->display('ranking.phtml');
+$smarty->display('team.phtml');

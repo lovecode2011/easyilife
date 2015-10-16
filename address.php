@@ -20,6 +20,46 @@ if($act == '')
 
 $template = 'address-list.phtml';
 
+if('delete' == $opera)
+{
+    $response = array('error'=>1, 'msg'=>'');
+
+    $id = getPOST('eid');
+
+    $id = intval($id);
+    if($id <= 0)
+    {
+        $response['msg'] = '-参数错误<br/>';
+    }
+
+    if($response['msg'] == '')
+    {
+        //检查如果地址是默认地址，则修改默认地址到下一个地址
+        $check_default = 'select `is_default` from '.$db->table('address').' where `id`='.$id.' and `account`=\''.$_SESSION['account'].'\'';
+
+        $is_default = $db->fetchOne($check_default);
+
+        if($db->autoDelete('address', '`id`='.$id.' and `account`=\''.$_SESSION['account'].'\''))
+        {
+            if($is_default)
+            {
+                $data = array(
+                    'is_default' => 1
+                );
+
+                $db->autoUpdate('address', $data, '`account`=\''.$_SESSION['account'].'\'', '', 1);
+            }
+            $response['error'] = 0;
+            $response['msg'] = '删除收货地址成功';
+        } else {
+            $response['msg'] = '001:系统繁忙，请稍后再试';
+        }
+    }
+
+    echo json_encode($response);
+    exit;
+}
+
 if('add' == $opera)
 {
     $response = array('error'=>1, 'msg'=>'');

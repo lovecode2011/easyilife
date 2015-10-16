@@ -15,6 +15,7 @@ $template = 'virtual_order/';
 
 $action = 'view|refund|detail|export';
 $act = check_action($action, getGET('act'));
+$operation = '';
 $opera = check_action($operation, getPOST('opera'));
 $act = ( $act == '' ) ? 'view' : $act;
 

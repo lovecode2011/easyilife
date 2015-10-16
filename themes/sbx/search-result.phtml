@@ -24,6 +24,27 @@
         <a href="javascript:history.back();" class="back search_back" title="返回"></a>
         <div class="search">
             <form id="search_form" title="搜索部分" method="get" action="" onsubmit="return submit_search();">
+                <div class="search-select">
+                    <div class="select-text">
+                        宝贝<i class="icon">&#xe63a;</i>
+                    </div>
+                    <div class="select-detail">
+                        <ul>
+                            <li class="select-product">
+                                <span class="icon">&#xe63c;</span>
+                                宝贝
+                            </li>
+                            <li class="select-shop">
+                                <a href="search-shop.html">
+                                    <span class="icon">&#xe63b;</span>
+                                    店铺
+                                </a>
+                            </li>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
                 <div class="text_box" name="list_search_text_box" title="搜索框" onclick="return 1;">
                     <input id="_keyword" name="keyword" type="text" placeholder="{$keyword} 共{count($product_list)}个结果" class="text" value="">
                 </div>
