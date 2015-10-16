@@ -13,4 +13,6 @@ $get_product_list = 'select p.* from '.$db->table('distribution').' as d join '.
 $product_list = $db->fetchAll($get_product_list);
 assign('product_list', $product_list);
 
-$smarty->display('distribution.phtml');
+assign('title', '我的分销');
+assign('mode', 'distribution');
+$smarty->display('wishlist.phtml');

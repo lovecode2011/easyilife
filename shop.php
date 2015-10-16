@@ -32,13 +32,18 @@ foreach($category as $key=>$c)
 
 assign('category', $category);
 //获取商家全部产品
-$get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `business_account`=\''.$sn.'\'';
+$get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `status`=4 and `business_account`=\''.$sn.'\'';
 $product_list = $db->fetchAll($get_product_list);
 assign('product_list', $product_list);
 //获取新添加的产品
-$get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `business_account`=\''.$sn.'\''.
+$get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where  `status`=4 and `business_account`=\''.$sn.'\''.
                     ' and `add_time`>'.(time()-3600*24*7);
 $new_product = $db->fetchAll($get_product_list);
 assign('new_product_count', count($new_product));
+
+//获取轮播广告
+$get_cycle_ad = 'select `img`,`url` from '.$db->table('ad').' where `ad_pos_id`=1 order by `order_view`';
+$cycle_ad = $db->fetchAll($get_cycle_ad);
+assign('cycle_ad', $cycle_ad);
 
 $smarty->display('shop.phtml');

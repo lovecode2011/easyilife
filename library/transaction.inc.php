@@ -64,6 +64,7 @@ function consume_inventory($product_sn, $attributes, $number, $mode = 0)
 function modify_inventory($product_sn, $attributes, $number)
 {
     global $db;
+    global $log;
 
     //检查库存，如果待发库存高于写入库存，则不进行操作
     $check_inventory = 'select `id` from '.$db->table('inventory').
@@ -71,12 +72,14 @@ function modify_inventory($product_sn, $attributes, $number)
                        ' `inventory_await`<='.$number;
 
     $inventory_id = $db->fetchOne($check_inventory);
+    $log->record($check_inventory);
 
     if($inventory_id)
     {
         $update_inventory = 'update '.$db->table('inventory').' set `inventory`='.$number.',`inventory_logic`='.$number.'-`inventory_await` '.
                             ' where `id`='.$inventory_id;
 
+        $log->record($update_inventory);
         return $db->update($update_inventory);
     } else {
         return false;

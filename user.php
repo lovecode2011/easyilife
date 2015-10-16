@@ -25,4 +25,19 @@ assign('order_await_pay', $order_await_pay);
 assign('order_await_receive', $order_await_receive);
 assign('order_await_comment', $order_await_comment);
 
+//获取消费总额
+$get_order_sum = 'select sum(`amount`) from '.$db->table('order').' where `account`=\''.$_SESSION['account'].'\'';
+$order_sum = $db->fetchOne($get_order_sum);
+assign('order_sum', $order_sum);
+
+//获取收藏总数
+$get_collection_count = 'select count(*) from '.$db->table('collection').' where `account`=\''.$_SESSION['account'].'\'';
+$collection_count = $db->fetchOne($get_collection_count);
+assign('collection_count', $collection_count);
+
+//获取猜你喜欢
+$get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' order by `add_time` DESC limit 3';
+$fav_products = $db->fetchAll($get_fav_products);
+assign('fav_products', $fav_products);
+
 $smarty->display('home.phtml');

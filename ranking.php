@@ -7,11 +7,11 @@
  */
 include 'library/init.inc.php';
 
-$get_user_id = 'select `id` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
+$get_user_path = 'select `path` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
 
-$id = $db->fetchOne($get_user_id);
+$path = $db->fetchOne($get_user_path);
 
-$get_member_list = 'select * from '.$db->table('member').' where `parent_id`='.$id;
+$get_member_list = 'select * from '.$db->table('member').' where `path` like \''.$path.'%\' order by (`reward`+`reward_await`) DESC limit 10';
 
 $member_list_tmp = $db->fetchAll($get_member_list);
 
@@ -29,5 +29,6 @@ if($member_list_tmp)
 }
 
 assign('member_list', $member_list);
+assign('title', '排行榜');
 
-$smarty->display('member.phtml');
+$smarty->display('ranking.phtml');

@@ -13,75 +13,37 @@
     <meta name="version" content="v.1.0.0">
     <meta http-equiv="Cache-Control" content="no-cache">
     <meta name="format-detection" content="telephone=no, address=no">
-    <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/app.css">
-    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="{$template_dir}css/common.css">
+    <link rel="stylesheet" href="{$template_dir}css/app.css">
+    <link rel="stylesheet" href="{$template_dir}css/fonts.css">
 </head>
 <body>
 <header class="header">
     <a href="javascript:history.back();" class="back"></a>
-    <h1><em>收益排行榜</em></h1>
+    <h1><em>{$title}</em></h1>
 </header>
 <!-- 收益排行榜页面 -->
 <section class="ranking">
     <section class="ranking-con">
         <ul>
+            {foreach from=$member_list item=member name=member_list}
             <li>
                 <div class="ranking-list">
-                    <img src="images/wang.jpg" alt="隔壁老王" />
+                    <img src="{if $member.headimg neq ""}{$member.headimg}{else}{$template_dir}images/wang.jpg{/if}" alt="{$member.nickname}" />
                     <div class="ranking-detail">
-                        <span>隔壁老王</span>
-                        <span>收益<em>￥111.11</em></span>
+                        <span>{$member.nickname}</span>
+                        <span>收益<em>￥{$member.reward+$member.reward_await}</em></span>
                     </div>
-                    <i class="ranking-num r123">1</i>
+                    <i class="ranking-num r123">{$smarty.foreach.member_list.iteration}</i>
                 </div>
             </li>
-            <li>
-                <div class="ranking-list">
-                    <img src="images/wang.jpg" alt="小明" />
-                    <div class="ranking-detail">
-                        <span>小明</span>
-                        <span>收益<em>￥89.11</em></span>
-                    </div>
-                    <i class="ranking-num r123">2</i>
-                </div>
-            </li>
-            <li>
-                <div class="ranking-list">
-                    <img src="images/wang.jpg" alt="思聪" />
-                    <div class="ranking-detail">
-                        <span>思聪</span>
-                        <span>收益<em>￥71.11</em></span>
-                    </div>
-                    <i class="ranking-num r123">3</i>
-                </div>
-            </li>
-            <li>
-                <div class="ranking-list">
-                    <img src="images/wang.jpg" alt="大胖" />
-                    <div class="ranking-detail">
-                        <span>大胖</span>
-                        <span>收益<em>￥51.11</em></span>
-                    </div>
-                    <i class="ranking-num">4</i>
-                </div>
-            </li>
-            <li>
-                <div class="ranking-list">
-                    <img src="images/wang.jpg" alt="叶良辰" />
-                    <div class="ranking-detail">
-                        <span>叶良辰</span>
-                        <span>收益<em>￥31.11</em></span>
-                    </div>
-                    <i class="ranking-num">5</i>
-                </div>
-            </li>
+            {/foreach}
             <!-- 收益排行列出前10即可 -->
         </ul>
     </section>
 </section>
 
-<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
 
 </body>
 </html>

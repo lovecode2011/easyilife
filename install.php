@@ -434,7 +434,7 @@ $sql[] = 'create table if not exists '.$db->table('cart').' (
     `add_time` int not null,
     `attributes` varchar(255),
     `checked` tinyint(1) not null default \'1\',
-    `is_virtual` tinyint(1) not null default \'0\'，
+    `is_virtual` tinyint(1) not null default \'0\',
     index (`openid`),
     index (`account`),
     index (`business_account`)
@@ -683,7 +683,7 @@ $sql[] = 'create table if not exists '.$db->table('content').' (
 ) default charset=utf8;';
 
 $table[] = '虚拟产品内容';
-$sql[] = 'create table if not exists'.$db->table('virtual_content').' (
+$sql[] = 'create table if not exists '.$db->table('virtual_content').' (
     `id` int not null auto_increment primary key,
     `product_sn` varchar(255) not null,
     `content` varchar(255) not null,
@@ -691,6 +691,13 @@ $sql[] = 'create table if not exists'.$db->table('virtual_content').' (
     `total` varchar(255) not null
 ) default charset=utf8;';
 
+$table[] = '短信验证码池';
+$sql[] = 'create table if not exists '.$db->table('message_code').' (
+    `id` bigint not null auto_increment unique,
+    `mobile` varchar(255) not null primary key,
+    `code` varchar(255) not null,
+    `expire` int not null
+) default charset=utf8;';
 
 echo '创建数据库表:<br/>';
 foreach($table as $key=>$name)

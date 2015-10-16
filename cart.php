@@ -96,8 +96,9 @@ if('add_to_cart' == $opera)
             $check_inventory = 'select `inventory_logic` from '.$db->table('inventory').
                                ' where `attributes`=\''.$attributes.'\' and `product_sn`=\''.$product_sn.'\'';
 
+            $log->record($check_inventory);
             $inventory_logic = $db->fetchOne($check_inventory);
-            $response['inventory_logic'] = $check_inventory;
+            $response['inventory_logic'] = $inventory_logic;
             if($inventory_logic < $buy_number)
             {
                 $buy_number = $inventory_logic;

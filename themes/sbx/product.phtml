@@ -95,7 +95,7 @@
         <div class="input"><input id="buy_num" name="buy_num" type="tel" value="1"></div>
         <span class="plus on" id="plus">+</span>
     </div>
-    {if !$attributes}
+    {if !$attributes || count($attributes) eq 1}
     <span id="inventory_count" class="inventory-count fl">库存: {$inventory_logic}</span>
     {else}
     <span id="inventory_count" class="inventory-count fl"></span>
@@ -504,25 +504,6 @@
                 var index = tmp[2];
                 var aid = tmp[3];
 
-                /*
-                 if(e.className == "on") {
-                 attributes_mode[aid] = ".*";
-                 pattern[aid] = ".*";
-                 e.className = "";
-                 } else {
-                 e.className = "on";
-                 console.info(aid+","+index+":"+attributes[aid]['values'][index]);
-                 pattern[aid] = attributes[aid]['values'][index];
-                 attributes_mode[aid] = attributes[aid]['values'][index];
-
-                 for (var i in pattern) {
-                 if (i != aid) {
-                 pattern[i] = ".*";
-                 }
-                 }
-                 }
-                 */
-
                 $("#attr_options_"+aid).children(".on").removeClass("on");
                 e.className = "on";
                 console.info(aid+","+index+":"+attributes[aid]['values'][index]);
@@ -540,69 +521,6 @@
 
             //根据条件开启/关闭可筛选条件
             function toogle_options() {
-                /*
-                 var pattern_mode = "/"+JSON.stringify(pattern)+"/";
-                 console.info(pattern_mode);
-                 pattern_mode = eval(pattern_mode);
-                 //检索库存，选出符合当前单一条件的不可选库存条件
-                 var inventory_keys = [];
-                 var unavailable_keys = [];
-                 for(var i in inventory) {
-                 if(pattern_mode.test(i)) {
-                 inventory_keys.push(i);
-                 } else {
-                 unavailable_keys.push(i);
-                 }
-                 }
-                 console.info("inventory_keys="+inventory_keys);
-
-                 for(var i in unavailable_keys) {
-                 var tmp = unavailable_keys[i];
-                 tmp = eval("["+tmp+"]");
-                 tmp = tmp[0];
-                 for(var aid in tmp) {
-                 var index = seek_val_index(aid, tmp[aid]);
-                 console.info("matched:"+JSON.stringify(tmp));
-                 if(index == -1) continue;
-                 console.info("attr_val_" + index + "_" + aid);
-                 var ele = document.getElementById("attr_val_" + index + "_" + aid);
-                 if(ele != null && ele.className != undefined) {
-                 if(ele.className != "on"){
-                 ele.className = "disabled";
-                 ele.onclick = null;
-                 }
-                 }
-                 }
-                 }
-
-                 //检索当前组合已选条件是否具有满足的产品
-                 var attributes_mode_pattern = "/"+JSON.stringify(attributes_mode)+"/";
-                 attributes_mode_pattern = eval(attributes_mode_pattern);
-
-
-                 for(var i in inventory_keys) {
-                 if(attributes_mode_pattern.test(inventory_keys[i])) {
-                 console.info("matched :"+inventory_keys[i]);
-                 var tmp = inventory_keys[i];
-                 tmp = eval("["+tmp+"]");
-                 tmp = tmp[0];
-                 for(var aid in tmp) {
-                 var index = seek_val_index(aid, tmp[aid]);
-                 if(index == -1) continue;
-                 var ele = document.getElementById("attr_val_" + index + "_" + aid);
-                 if(ele != null && ele.className != undefined) {
-                 if(ele.className != "on") {
-                 ele.className = "";
-                 ele.onclick = function() {
-                 select_attribute(this);
-                 }
-                 }
-                 }
-                 }
-                 }
-                 }
-                 */
-
                 var check_inventory_flag = select_attributes_complete();
 
 

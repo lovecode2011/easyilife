@@ -25,18 +25,20 @@
 <!-- 编辑资料 -->
 <section class="userinfo">
     <div class="edit-userinfo">
-        <label><span>账户:</span><i class="red-font">1366****11111</i></label>
-        <label><span>昵称:</span><input type="text" value="隔壁老王" placeholder="请输入昵称"></label>
-        <label for="sex"><span>选择性别:</span>
-            <select id="sex">
-                <option value="0">男</option>
-                <option value="1">女</option>
-                <option value="2">保密</option>
+        <label><span>会员卡号:</span><i class="red-font">{$user.account}</i></label>
+        <label><span>会员等级:</span><i class="red-font">{$level[{$user.level_id}]}</i></label>
+        <label><span>手机号码:</span><i class="red-font">{substr($user.mobile, 0, 3)}****{substr($user.mobile, -4)}</i></label>
+        <label><span>昵称:</span><i class="red-font">{$user.nickname}</i></label>
+        <label for="sex"><span>性别:</span>
+            <select id="sex" name="sex">
+                <option value="N" {if $user.sex eq "N"}selected="selected"{/if}>保密</option>
+                <option value="M" {if $user.sex eq "M"}selected="selected"{/if}>男</option>
+                <option value="F" {if $user.sex eq "F"}selected="selected"{/if}>女</option>
             </select>
         </label>
-        <label><span>邮箱:</span><input type="text" value="mtxlcy@qq.com" placeholder="请输入邮箱"></label>
+        <label><span>邮箱:</span><input name="email" id="email" type="email" value="{$user.email}" placeholder="请输入邮箱"></label>
         <div class="info-btn">
-            <a class="btn" href="#" onclick="return false;">确认修改</a>
+            <a class="btn" href="javascript:;" onclick="edit_profile();">确认修改</a>
         </div>
     </div>
 </section>
@@ -44,13 +46,90 @@
 <!-- 底部菜单 -->
 <section class="menu">
     <ul>
-        <li><a href="index.html"><em class="icon">&#xe601;</em><span>首页</span></a></li>
-        <li><a href="category.html"><em class="icon">&#xe603;</em><span>分类</span></a></li>
-        <li><a href="cart.html"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
-        <li><a class="active" href="#"><em class="icon">&#xe604;</em><span>我</span></a></li>
+        <li><a href="index.php"><em class="icon">&#xe601;</em><span>首页</span></a></li>
+        <li><a href="category.php"><em class="icon">&#xe603;</em><span>分类</span></a></li>
+        <li><a href="cart.php"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
+        <li><a class="active" href="user.php"><em class="icon">&#xe604;</em><span>我</span></a></li>
     </ul>
 </section>
-<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<div class="cd-popup" role="alert">
+    <div class="cd-popup-container" id="message_dialog" style="display: none;">
+        <p id="dialog-message"></p>
+        <ul class="cd-buttons">
+            <li class="cd-signle-button"><a href="javascript:close_message_dialog();" id="dialog_close_btn">确认</a></li>
+        </ul>
+        <a href="javascript:close_message_dialog();" class="cd-popup-close img-replace" id="dialog_close">X</a>
+    </div>
 
+    <div class="progressbar">
+        <img src="{$template_dir}images/loading.gif"/>
+    </div>
+</div>
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript">
+    function edit_profile() {
+        var sex = $("#sex").val();
+        var email = $("#email").val();
+        var msg = "";
+
+        if(sex == "") {
+            msg += "-请选择性别<br/>";
+        }
+
+        if(email == "") {
+            msg += "-请填写邮箱<br/>";
+        }
+
+        if(msg != "") {
+            show_message_dialog(msg);
+        } else {
+            var url = "profile.php";
+            var data = { "opera":"edit", "email":email, "sex":sex };
+
+            show_mask();
+            $.post(url, data, edit_profile_handler, "json");
+        }
+    }
+
+    function edit_profile_handler(response) {
+        hide_mask();
+        show_message_dialog(response.msg);
+        if(response.error == 0) {
+            $("#dialig_close_btn").click(function(){
+                close_message_dialog();
+                show_mask();
+                window.location.reload();
+            });
+
+            $("#dialig_close").click(function(){
+                close_message_dialog();
+                show_mask();
+                window.location.reload();
+            });
+        }
+    }
+
+    function show_message_dialog(message) {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").hide();
+        $("#dialog-message").html(message);
+        $("#message_dialog").show();
+    }
+
+    function close_message_dialog() {
+        $(".cd-popup").removeClass("is-visible");
+        $("#message_dialog").hide();
+    }
+
+    function show_mask() {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").show();
+    }
+
+    function hide_mask() {
+        $(".cd-popup").removeClass("is-visible");
+        $(".progressbar").hide();
+    }
+</script>
 </body>
 </html>

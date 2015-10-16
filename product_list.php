@@ -26,7 +26,7 @@ if('sort' == $opera)
     $mode = getPOST('mode');
 
 
-    $get_product_list = 'select `id`,`name`,`price`,`img` from '.$db->table('product').' where 1 ';
+    $get_product_list = 'select `id`,`name`,`price`,`img` from '.$db->table('product').' where  `status`=4 ';
 
     $response['filter'] = $filter;
 

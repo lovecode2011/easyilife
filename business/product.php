@@ -46,7 +46,9 @@ if( 'add' == $opera ) {
     $free_delivering = intval(getPOST('free_delivering'));
 
     $inventory = getPOST('inventory');
-    $inventory = intval($inventory);
+    $single_inventory = getPOST('single_inventory');
+    $single_inventory = intval($single_inventory);
+
     $attr = getPOST('attr');
     do {
         $sn = rand(100000, 999999);
@@ -219,6 +221,7 @@ if( 'add' == $opera ) {
                 'product_sn' => $product_sn,
                 'attributes' => $attributes,
                 'inventory' => $inventory[$k],
+                'inventory_logic' => $inventory[$k]
             );
             $table = 'inventory';
             if (!$db->autoInsert($table, array($data))) {
@@ -226,6 +229,7 @@ if( 'add' == $opera ) {
             }
         }
     } else {
+        $inventory = intval($single_inventory);
         $data = array(
             'product_sn' => $product_sn,
             'attributes' => '',
@@ -299,7 +303,7 @@ if( 'edit' == $opera ) {
     $order_view = intval(getPOST('order_view'));
     $free_delivering = intval(getPOST('free_delivering'));
 
-    $inventory = getPOST('inventory');
+    $inventory = getPOST('single_inventory');
     $inventory = intval($inventory);
 
     if( '' == $name ) {

@@ -1804,7 +1804,7 @@ nav.ol_select_bar ul a.hover li {
 }
 .filtrate_term li {
     display: inline-block;
-    width: 20%;
+    width: 19%;
     margin-right: -.15rem;
     height: 38px;
     line-height: 38px;
@@ -1882,6 +1882,7 @@ nav.ol_select_bar ul a.hover li {
     line-height: 18px;
     overflow: hidden;
     color: #4d525d;
+    margin-top: .6rem;
 }
 .goods_list li a p {
     display: block;
