@@ -306,6 +306,11 @@ $sql[] = 'create table if not exists '.$db->table('order').' (
     `integral_paid` decimal(18,2) not null default \'0\',
     `reward_paid` decimal(18,2) not null default \'0\',
     `balance_paid` decimal(18,2) not null default \'0\',
+    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品订单，1:虚拟产品订单\',
+    `product_sn` varchar(255) not null default \'\' comment \'虚拟产品编号\',
+    `product_name` varchar(255) not null default \'\' comment \'虚拟产品名称\',
+    `start_time` int not null default 0 comment \'虚拟订单消费起始时间\',
+    `end_time` int not null default 0 comment \'虚拟订单消费结束时间\',
     index (`business_account`)
 ) default charset=utf8;';
 
@@ -697,6 +702,16 @@ $sql[] = 'create table if not exists '.$db->table('message_code').' (
     `mobile` varchar(255) not null primary key,
     `code` varchar(255) not null,
     `expire` int not null
+) default charset=utf8;';
+
+$table[] = '虚拟订单内容';
+$sql[] = 'create table if not exists '.$db->table('order_content').' (
+    `id` int not null auto_increment primary key,
+    `order_sn` varchar(255) not null,
+    `product_sn` varchar(255) not null,
+    `content` varchar(255) not null,
+    `count` varchar(255) not null,
+    `total` varchar(255) not null
 ) default charset=utf8;';
 
 echo '创建数据库表:<br/>';

@@ -78,6 +78,11 @@
                     {else}
                     <img class="select-image" alt="" src="../upload/image/no-image.png">&nbsp;
                     {/if}
+                    {if $gallery_list}
+                    {foreach from=$gallery_list item=gallery}
+                    <img class="select-image" alt="" src="{$gallery.thumb_img}">&nbsp;
+                    {/foreach}
+                    {/if}
                 </p>
                 <p>
                     <label class="l-title">产品简介：</label>
@@ -177,6 +182,7 @@
             uploadJson: '../plugins/kindeditor/upload_json.php',
             fileManagerJson: '../plugins/kindeditor/file_manager_json.php'
         });
+<<<<<<< HEAD
         K('.select-image').click(function() {
             editor.loadPlugin('image', function() {
                 editor.plugin.imageDialog({
@@ -199,6 +205,8 @@
                 });
             });
         });
+=======
+>>>>>>> 7546c540e3c860f5375eb0c4d11a25f910bb7ac7
     });
     {/literal}
 </script>

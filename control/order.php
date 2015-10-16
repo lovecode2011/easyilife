@@ -84,6 +84,7 @@ if( 'view' == $act ) {
     $get_total = 'select count(*) from '.$db->table('order');
     $get_total .= ' where 1';
     $get_total .= $and_where;
+    $get_total .= ' and is_virtual = 0';
     $total = $db->fetchOne($get_total);
 
     $page = ( $page > $total ) ? $total : $page;
@@ -100,6 +101,7 @@ if( 'view' == $act ) {
 
     $get_order_list .= ' where 1';
     $get_order_list .= $and_where;
+    $get_order_list .= ' and a.is_virtual = 0';
     $get_order_list .= ' order by add_time desc';
     $get_order_list .= ' limit '.$offset.','.$count;
     $order_list = $db->fetchAll($get_order_list);
@@ -161,6 +163,7 @@ if( 'detail' == $act ) {
 
     $get_order .= ' where 1';
     $get_order .= ' and order_sn = \''.$order_sn.'\'';
+    $get_order .= ' and a.is_virtual = 0';
     $get_order .= ' limit 1';
 
     $order = $db->fetchRow($get_order);

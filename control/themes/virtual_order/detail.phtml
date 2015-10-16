@@ -1,0 +1,98 @@
+{include file="library/header.lbi"}
+<body>
+<script src="js/jquery.modal.min.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="css/jquery.modal.css" type="text/css" media="screen" />
+
+{include file="library/navbar.lbi"}
+{include file="library/sidebar.lbi"}
+<!-- content -->
+<div id="content">
+    <div class="content-title">
+        <h5 class="pull-left">订单详情</h5>
+        <div class="pull-right">
+            <a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>&nbsp;
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="basicInfo-main">
+        <p style="display: inline-block" class="clear">
+            <label class="l-title">订单编号：</label>
+            <em style="width: 132px;">{$order.order_sn}</em>
+        </p>
+        <p style="display: inline-block" class="clear">
+            <label class="l-title">下单时间：</label>
+            <em style="width: 132px;">{$order.add_time_str}</em>
+        </p>
+        <p style="display: inline-block" class="clear">
+            <label class="l-title">支付时间：</label>
+            <em style="width: 132px;">{$order.pay_time_str}</em>
+        </p>
+        <p style="display: inline-block" class="clear">
+            <label class="l-title">支付方式：</label>
+            <em style="width: 132px;">{$order.payment_name}</em>
+        </p>
+        <p style="display: inline-block" class="clear">
+            <label class="l-title">有效期：</label>
+            <em style="">{$order.expired}</em>
+        </p> <p style="display: inline-block" class="clear">
+            <label class="l-title">消费时间：</label>
+            <em style="width: 132px;">{$order.receive_time_str}</em>
+        </p>
+        <p style="display: inline-block" class="clear">
+            <label class="l-title">订单状态：</label>
+            <em style="width: 132px;">{$order.status_str}</em>
+        </p>
+        <div class="clear"></div>
+        <h5 class="pull-left">产品信息</h5>
+        <div class="clear"></div>
+        <p style="display: inline-block" class="clear">
+            <label class="l-title">产品名称：</label>
+            <em style="width: 132px;">{$order.product_name}</em>
+        </p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>消费内容</th>
+                <th>数量/规格</th>
+                <th>小计</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach from=$order_content item=content}
+            <tr>
+                <td>
+                    {$content.content}
+                </td>
+                <td>
+                    <em>{$content.count}</em>
+                </td>
+                <td>{$content.total}</td>
+            </tr>
+            {/foreach}
+            </tbody>
+            <table>
+                <div class="pull-right">
+                    结算：{$order.amount}</div>
+                <div class="clear"></div>
+                <p style="" class="clear">
+                    <label class="l-title">联系方式：</label>
+                    <em>
+                        {$order.province_name} &nbsp;
+                        {$order.city_name} &nbsp;
+                        {$order.district_name} &nbsp;
+                        {$order.address}  <br />
+                        {$order.consignee}  ( {$order.mobile}  ) <br />
+                    </em>
+                </p>
+                <p style="display: inline-block" class="clear">
+                    <label class="l-title">备注：</label>
+                    <em>{$order.remark}</em>
+                </p>
+    </div>
+</div>
+{include file="library/footer.lbi"}
+<script type="text/javascript" src="js/order/view.js">
+
+</script>
+</body>
+</html>

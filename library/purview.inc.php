@@ -58,6 +58,11 @@ $purview = array(
 //        'pur_order_del',
 //        'pur_order_edit',
     ),
+
+    'pur_virtual_order' => array(
+        'pur_virtual_order_view',
+    ),
+
     //模板控制
     /*
     'pur_template' => array(
@@ -69,6 +74,14 @@ $purview = array(
     'pur_product' => array(
         'pur_product_view',
         'pur_product_exam',
+//        'pur_product_edit',
+//        'pur_product_del',
+    ),
+
+    //虚拟产品
+    'pur_virtual_product' => array(
+        'pur_virtual_product_view',
+        'pur_virtual_product_exam',
 //        'pur_product_edit',
 //        'pur_product_del',
     ),
@@ -201,6 +214,10 @@ $L_purview = array(
 //    'pur_product_edit'=>'编辑产品',
 //    'pur_product_del'=>'删除产品',
 
+    'pur_virtual_product' => '虚拟产品管理',
+    'pur_virtual_product_view' => '查看虚拟产品',
+    'pur_virtual_product_exam' => '审核虚拟产品',
+
     'pur_self' => '个人信息',
     'pur_passwd_edit' => '密码修改',
 
@@ -208,6 +225,9 @@ $L_purview = array(
     'pur_order_view' => '查看订单',
     'pur_order_edit' => '编辑订单状态',
     'pur_order_del' => '删除订单',
+
+    'pur_virtual_order' => '虚拟订单管理',
+    'pur_virtual_order_view' => '查看虚拟订单',
 
     'pur_template' => '主题',
     'pur_template_view' => '模板列表',
@@ -256,6 +276,7 @@ $L_purview = array(
 global $menus;
 $menus = array(
     'pur_product' => array('url'=>'product.php', 'title'=>'产品管理', 'parent' => 'menu_product'),
+    'pur_virtual_product' => array('url'=>'virtual_product.php', 'title'=>'虚拟产品管理', 'parent' => 'menu_product'),
     'pur_brand' => array('url'=>'brand.php', 'title'=>'产品品牌', 'parent'=>'menu_product'),
     'pur_type' => array('url'=>'type.php', 'title'=>'产品类型', 'parent'=>'menu_product'),
     'pur_category' => array('url'=>'category.php', 'title'=>'主营分类', 'parent'=>'menu_product'),
@@ -275,6 +296,8 @@ $menus = array(
     'pur_section' => array('url' => 'section.php', 'title' => '栏目管理', 'parent' => 'menu_cms'),
     'pur_content' => array('url' => 'content.php', 'title' => '资讯管理', 'parent' => 'menu_cms'),
     'pur_order' => array('url' => 'order.php', 'title' => '订单管理', 'parent' => 'menu_order'),
+    'pur_virtual_order' => array('url' => 'virtual_order.php', 'title' => '虚拟订单管理', 'parent' => 'menu_order'),
+
 );
 
 global $topMenus;

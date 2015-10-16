@@ -33,7 +33,7 @@ if( 'exam' == $opera ) {
         exit;
     }
 
-    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 limit 1';
+    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 and is_virtual = 0 limit 1';
     $product = $db->fetchRow($get_product);
     if( empty($product) ) {
         show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
@@ -192,6 +192,7 @@ if( 'view' == $act ) {
 
     $get_total = 'select count(*) from '.$db->table('product').' as a';
     $get_total .= $where;
+    $get_total .= ' and is_virtual = 0';
     $total = $db->fetchOne($get_total);
     $total_page = ceil( $total / $count );
 
@@ -208,6 +209,7 @@ if( 'view' == $act ) {
     $get_product_list = 'select a.*, b.name as category_name from '.$db->table('product').' as a';
     $get_product_list .= ' left join '.$db->table('category').' as b on a.category_id = b.id';
     $get_product_list .= $where;
+    $get_product_list .= ' and is_virtual = 0';
     $get_product_list .= ' order by order_view asc, id desc';
     $get_product_list .= ' limit '.$offset.','.$count;
     $product_list = $db->fetchAll($get_product_list);
@@ -215,8 +217,8 @@ if( 'view' == $act ) {
     $status_array = array(
         1 => '待发布',
         2 => '待审核',
-        3 => '已下架',
-        4 => '已上架',
+        3 => '已上架',
+        4 => '已下架',
     );
 
     if( $product_list ) {
@@ -233,7 +235,7 @@ if( 'view' == $act ) {
     if( $status == 1 ) {
         $exam_count = $total;
     } else {
-        $get_exam_count = 'select count(*) from '.$db->table('product').' where status = 2';
+        $get_exam_count = 'select count(*) from '.$db->table('product').' where status = 2  and is_virtual = 0';
         $exam_count = $db->fetchOne($get_exam_count);
     }
     assign('exam_count', $exam_count);
@@ -328,6 +330,10 @@ if( 'exam' == $act ) {
     $get_brand_list = 'select * from '.$db->table('brand').' where 1 order by id asc';
     $brand_list = $db->fetchAll($get_brand_list);
     assign('brand_list', $brand_list);
+
+    $get_gallery_list = 'select * from '.$db->table('gallery').' where product_sn = \''.$product_sn.'\' order by order_view asc';
+    $gallery_list = $db->fetchAll($get_gallery_list);
+    assign('gallery_list', $gallery_list);
 }
 
 if( 'reject' == $act ) {
