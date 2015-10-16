@@ -698,6 +698,31 @@ $sql[] = 'create table if not exists '.$db->table('order_content').' (
 ) default charset=utf8;';
 
 
+$table[] = '充值记录';
+$sql[] = 'create table if not exists'.$db->table('recharge').'(
+    `recharge_sn` varchar(255) not null primary key comment \'充值编号\',
+    `account` varchar(255) not null comment \'帐号\',
+    `amount` decimal(18,2) not null comment \'充值金额\',
+    `status` tinyint not null default 1 comment \'1：到帐，2：充值中，3：取消\',
+    `add_time` int not null comment \'充值时间\',
+    `type` tinyint not null default 0 comment \'0:线上，1：线下\',
+    `bank` varchar(255) not null default \'\' comment \'银行(type=1有效)\',
+    `card_num` varchar(255) not null default \'\' comment \'卡号(type=1有效)\',
+    `solve_time` int not null default 0 comment \'处理时间(type=1有效)\'
+) default charset=utf8;';
+
+$table[] = '充值日志';
+$sql[] = 'create table if not exists'.$db->table('recharge_log').'(
+    `id` int not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `add_time` int not null,
+    `operator` varchar(255) not null,
+    `recharge_sn` varchar(255) not null,
+    `type` tinyint not null comment \'0:线上，1：线下\',
+    `status` tinyint not null comment \'0:未到帐，1：到帐\',
+    `remark` varchar(255) not null default \'\'
+) default charset=utf8;';
+
 echo '创建数据库表:<br/>';
 foreach($table as $key=>$name)
 {

@@ -145,17 +145,8 @@ if( 'edit' == $act ) {
         $db->autoInsert($table.'_log', array($data));
 
         //添加账户明细记录
-        $get_newest_log = 'select * from '.$db->table($exchange_table);
-        $get_newest_log .= $type == 0 ? ' where account = \''.$withdraw['account'].'\'' : ' where business_account = \''.$withdraw['business_account'].'\'';
-        $get_newest_log .= ' order by add_time desc limit 1';
-        $newest_log = $db->fetchRow($get_newest_log);
+        add_memeber_exchange_log($withdraw['account'], -$withdraw['amount'], 0, 0, 0, 0, $_SESSION['account'], '提现到帐');
 
-        unset($newest_log['id']);
-        $newest_log['add_time'] = time();
-        $newest_log['remark'] = '提现金额到帐';
-        $newest_log['operator'] = $_SESSION['account'];
-
-        $db->autoInsert($exchange_table, array($newest_log));
         show_system_message('操作成功', array());
         exit;
 
@@ -265,7 +256,7 @@ if( 'delete' == $act ) {
 }
 
 if( 'log' == $act ) {
-    if( !check_purview('pur_withdraw_del', $_SESSION['purview']) ) {
+    if( !check_purview('pur_withdraw_log', $_SESSION['purview']) ) {
         show_system_message('权限不足', array());
         exit;
     }

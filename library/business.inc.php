@@ -65,6 +65,14 @@ $purview = array(
         'pur_eval_view',
         'pur_eval_response',
     ),
+
+    'pur_ad' => array(
+        'pur_ad_view',
+        'pur_ad_add',
+        'pur_ad_edit',
+        'pur_ad_del'
+    ),
+
     'pur_admin' => array(
         'pur_admin_view',
         'pur_admin_add',
@@ -142,6 +150,12 @@ $L_purview = array(
     'pur_virtual_order_view' => '虚拟订单列表',
     'pur_virtual_order_edit' => '编辑虚拟订单',
     'pur_virtual_order_del' => '删除虚拟订单',
+
+    'pur_ad' => '广告管理',
+    'pur_ad_view' => '查看广告',
+    'pur_ad_add' => '添加广告',
+    'pur_ad_edit' => '编辑广告',
+    'pur_ad_del' => '删除广告',
 );
 
 global $menus;
@@ -224,6 +238,13 @@ $menus = array(
         'icon' => '&#xe607;',
         'url' => 'eval.php',
     ),
+
+    'pur_ad' => array(
+        'title' => '广告管理',
+        'icon' => '&#xe607;',
+        'url' => 'ad.php',
+    ),
+
     'pur_admin' => array(
         'title' => '管理员',
         'icon' => '&#xe602;',

@@ -35,6 +35,13 @@ $purview = array(
         'pur_withdraw_del',
         'pur_withdraw_log',
     ),
+
+    'pur_recharge' => array(
+        'pur_recharge_view',
+        'pur_recharge_edit',
+        'pur_recharge_log',
+    ),
+
     'pur_account' => array(
         'pur_account_view',
     ),
@@ -189,6 +196,12 @@ $L_purview = array(
     'pur_withdraw_del'=>'删除提现记录',
     'pur_withdraw_log'=>'查看提现日志',
 
+    'pur_recharge' => '充值管理',
+    'pur_recharge_view'=>'查看充值记录',
+    'pur_recharge_edit'=>'编辑充值状态',
+    'pur_recharge_log'=>'查看充值日志',
+
+
     'pur_exchange' => '交易记录',
     'pur_exchange_view' => '查看交易记录',
     'pur_exchange_reward' => '佣金记录',
@@ -285,6 +298,7 @@ $menus = array(
     'pur_business' => array('url' => 'business.php', 'title' => '商户管理', 'parent' => 'menu_business'),
     'pur_account' => array('url'=>'account.php', 'title'=>'账户明细', 'parent' => 'menu_account'),
     'pur_withdraw' => array('url'=>'withdraw.php', 'title'=>'提现管理', 'parent' => 'menu_account'),
+    'pur_recharge' => array('url'=>'recharge.php', 'title'=>'充值管理', 'parent' => 'menu_account'),
     'pur_exchange' => array('url'=>'exchange.php', 'title'=>'交易管理', 'parent' => 'menu_account'),
     'pur_admin' => array('url'=>'admin.php', 'title'=>'管理员管理', 'parent' => 'menu_admin'),
     'pur_role' => array('url'=>'role.php', 'title'=>'管理员角色管理', 'parent' => 'menu_admin'),
