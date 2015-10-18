@@ -38,7 +38,7 @@
 
 
     <h4 class="apply-status {if $status lt 2}apply-status-gray{/if}">3</h4>
-    <p class="apply-status-content">申请成功，账号发放</p>
+    <p class="apply-status-content">申请成功，账号发放 {if $status gt 1}商机编号：{$smarty.session.business_account}{/if}</p>
 
 </section>
 </body>

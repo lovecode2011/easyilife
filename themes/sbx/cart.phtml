@@ -87,7 +87,9 @@
             {foreach from=$cart.products item=product}
             <div class="cart_item">
                 <input type="checkbox" class="fl c_checkbox" id="cart_{$product.c_id}" onclick="select_product({$product.c_id}, this.checked);"/>
-                <img src="{$product.img}" class="fl pro_pic">
+                <a href="product.php?id={$product.p_id}">
+                    <img src="{$product.img}" class="fl pro_pic">
+                </a>
                 <div class="detail">
                     <p class="fr prd_price">￥{sprintf("%.2f", $product.price)}</p>
                     <p class="fl prd_tit"><a href="#">{$product.name}</a></p>
@@ -97,7 +99,9 @@
                         <section class="quantity">
                             <div class="number_con">
                                 <span class="minus {if $product.number gt 1}on{/if}" id="minus_{$product.c_id}" onclick="minus({$product.c_id})">-</span>
-                                <div class="input"><input type="tel" value="{$product.number}" id="product_{$product.c_id}" readonly="true"/></div>
+                                <div class="input">
+                                    <input type="tel" value="{$product.number}" id="product_{$product.c_id}" onblur="blur_caculate({$product.c_id}, this.value-1});"/>
+                                </div>
                                 <span class="plus on" id="plus_{$product.c_id}" onclick="plus({$product.c_id})">+</span>
                             </div>
                         </section>
@@ -204,6 +208,11 @@
         } else {
             $("#" + mode + "_" + cid).removeClass("on");
         }
+    }
+
+    function blur_caculate(cid, number) {
+        check_inventory(cid, number);
+        caculate_fee();
     }
 
     function plus(cid) {

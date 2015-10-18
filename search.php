@@ -7,8 +7,64 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'sort';
+$operation = 'sort|sort_shop';
 $opera = getPOST('opera');
+$template = 'search-result.phtml';
+
+if('sort_shop' == $opera)
+{
+    $response = array('error'=>1, 'msg'=>'');
+
+    $filter = getPOST('filter');
+    $response['filter'] = $filter;
+    $mode = getPOST('mode');
+
+    $get_shop_list = 'select `shop_name`,`comment`,`shop_logo`,`business_account` from '.$db->table('business').' where '.
+        ' `status`=2 ';
+
+    //分组使用筛选条件
+    //关键词
+    if(isset($filter['keyword']) && $filter['keyword'] != '')
+    {
+        $keyword = $db->escape($filter['keyword']);
+        $get_shop_list .= ' and `shop_name` like \'%'.$keyword.'%\'';
+    }
+
+    switch($mode)
+    {
+        case 'comment':
+            $get_shop_list .= ' order by `comment` DESC';
+            break;
+        case 'near':
+            $longitude = 0;
+            $latitude = 0;
+            if(isset($filter['position']))
+            {
+                $longitude = $filter['position']['longitude'];
+                $latitude = $filter['position']['latitude'];
+            }
+            $get_shop_list .= ' order by ((`longitude`-'.$longitude.')*(`longitude`+'.$longitude.')+(`latitude`-'.$latitude.')*(`latitude`+'.$latitude.'))';
+            break;
+    }
+
+    $shop_list = $db->fetchAll($get_shop_list);
+    if($shop_list)
+    {
+        foreach ($shop_list as $key => $s)
+        {
+            $get_product_list = 'select `id`,`img`,`name`,`price` from ' . $db->table('product') .
+                ' where `business_account`=\'' . $s['business_account'] . '\' and `status`=4 order by `star` DESC limit 3';
+            $shop_list[$key]['product_list'] = $db->fetchAll($get_product_list);
+        }
+    }
+
+    assign('shop_list', $shop_list);
+    $response['content'] = $smarty->fetch('search-shop-item.phtml');
+    $response['error'] = 0;
+
+    echo json_encode($response);
+    exit;
+}
 
 if('sort' == $opera)
 {
@@ -18,7 +74,10 @@ if('sort' == $opera)
     $mode = getPOST('mode');
 
 
-    $get_product_list = 'select `id`,`name`,`price`,`img`,`product_sn` from '.$db->table('product').' where `status`=4 ';
+    $get_product_list = 'select p.`id`,p.`name`,p.`price`,p.`img`,p.`product_sn`,(select `account` from '.$db->table('collection').
+        ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=p.`product_sn`) as collection from ' . $db->table('product') .
+        ' as p where p.`status`=4 ';
+
 
     $response['filter'] = $filter;
 
@@ -27,7 +86,7 @@ if('sort' == $opera)
     if(isset($filter['keyword']) && $filter['keyword'] != '')
     {
         $keyword = $db->escape($filter['keyword']);
-        $get_product_list .= ' and `name` like \'%'.$keyword.'%\'';
+        $get_product_list .= ' and p.`name` like \'%'.$keyword.'%\'';
     }
 
     //价格区间
@@ -35,34 +94,34 @@ if('sort' == $opera)
     {
         $price_l = $filter['price_l'];
         $price_l = floatval($price_l);
-        $get_product_list .= ' and `price`>='.$price_l;
+        $get_product_list .= ' and p.`price`>='.$price_l;
     }
 
     if(isset($filter['price_h']))
     {
         $price_h = $filter['price_h'];
         $price_h = floatval($price_h);
-        $get_product_list .= ' and `price`<='.$price_h;
+        $get_product_list .= ' and p.`price`<='.$price_h;
     }
 
     //免运费
     if(isset($filter['free_delivery']))
     {
-        $get_product_list .= ' and `free_delivery`=1';
+        $get_product_list .= ' and p.`free_delivery`=1';
     }
     //积分换购
     if(isset($filter['integral_exchange']))
     {
-        $get_product_list .= ' and `integral`>0';
+        $get_product_list .= ' and p.`integral`>0';
     }
 
     switch($mode)
     {
         case 'sale':
-            $get_product_list .= ' order by `sale_count` DESC';
+            $get_product_list .= ' order by p.`sale_count` DESC';
             break;
         case 'star':
-            $get_product_list .= ' order by `star` DESC';
+            $get_product_list .= ' order by p.`star` DESC';
             break;
         case 'price':
             $orderby = getPOST('orderby');
@@ -75,13 +134,13 @@ if('sort' == $opera)
 
             if($orderby == 'up')
             {
-                $get_product_list .= ' order by `price` ASC';
+                $get_product_list .= ' order by p.`price` ASC';
             } else {
-                $get_product_list .= ' order by `price` DESC';
+                $get_product_list .= ' order by p.`price` DESC';
             }
             break;
         case 'new':
-            $get_product_list .= ' order by `add_time` DESC';
+            $get_product_list .= ' order by p.`add_time` DESC';
             break;
         default:
             break;
@@ -101,50 +160,84 @@ $keyword = getGET('keyword');
 
 $keyword = $db->escape($keyword);
 
-$get_product_list = 'select `id`,`name`,`price`,`img`,`product_sn` from '.$db->table('product').' where `status`=4 and `name` like \'%'.$keyword.'%\'';
+$mode = getGET('mode');
+$mode_list = 'shop|product';
+$mode = check_action($mode_list, $mode);
+if($mode == '')
+{
+    $mode = 'product';
+}
 
-$product_list = $db->fetchAll($get_product_list);
+if($mode == 'product')
+{
+    $get_product_list = 'select p.`id`,p.`name`,p.`price`,p.`img`,p.`product_sn`,(select `account` from '.$db->table('collection').
+                        ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=p.`product_sn`) as collection from ' . $db->table('product') .
+                        ' as p where p.`status`=4 and p.`name` like \'%' . $keyword . '%\'';
 
-assign('product_list', $product_list);
-assign('keyword', $keyword);
+    $product_list = $db->fetchAll($get_product_list);
 
-$filter = array();
+    assign('product_list', $product_list);
+    assign('keyword', $keyword);
 
-$filter['keyword'] = $keyword;
+    $filter = array();
+
+    $filter['keyword'] = $keyword;
 //获取其他筛选条件
-$where =  '`name` like \'%'.$keyword.'%\'';
+    $where = '`name` like \'%' . $keyword . '%\'';
 //根据产品的分类获取筛选价格区间、品牌
-$attributes = array();
-$get_brand_ids = 'select DISTINCT `brand_id` from '.$db->table('product').' where '.$where;
-$brand_ids = $db->fetchAll($get_brand_ids);
-$brand_id_str = '';
-if($brand_ids)
-{
-    foreach ($brand_ids as $bid)
-    {
-        $brand_id_str .= $bid['brand_id'].',';
+    $attributes = array();
+    $get_brand_ids = 'select DISTINCT `brand_id` from ' . $db->table('product') . ' where ' . $where;
+    $brand_ids = $db->fetchAll($get_brand_ids);
+    $brand_id_str = '';
+    if ($brand_ids) {
+        foreach ($brand_ids as $bid) {
+            $brand_id_str .= $bid['brand_id'] . ',';
+        }
     }
+    $brand_id_str = substr($brand_id_str, 0, strlen($brand_id_str) - 1);
+    $get_brand_list = 'select `id`,`name` from ' . $db->table('brand') . ' where `id` in (' . $brand_id_str . ')';
+    $brand_list = $db->fetchAll($get_brand_list);
+    $attributes[] = array(
+        'key' => 'brand',
+        'name' => '品牌',
+        'values' => $brand_list
+    );
+    /*
+    $get_price_limit = 'select max(`price`) as `max`,min(`price`) as `min` from '.$db->table('product').' where '.$where;
+    $price_limit = $db->fetchRow($get_price_limit);
+
+    $divide = 1;
+    if($price_limit['max'] != $price_limit['min'])
+    {
+
+    }
+    */
+
+    assign('attributes', $attributes);
+
+    assign('filter', json_encode($filter));
+} else {
+    $filter = array();
+
+    $filter['keyword'] = $keyword;
+
+    $get_shop_list = 'select `shop_name`,`comment`,`shop_logo`,`business_account` from '.$db->table('business').' where '.
+                     ' `status`=2 and `shop_name` like \'%'.$keyword.'%\'';
+
+    $shop_list = $db->fetchAll($get_shop_list);
+    if($shop_list)
+    {
+        foreach ($shop_list as $key => $s)
+        {
+            $get_product_list = 'select `id`,`img`,`name`,`price` from ' . $db->table('product') .
+                ' where `business_account`=\'' . $s['business_account'] . '\' and `status`=4 order by `star` DESC limit 3';
+            $shop_list[$key]['product_list'] = $db->fetchAll($get_product_list);
+        }
+    }
+    assign('shop_list', $shop_list);
+
+    assign('filter', json_encode($filter));
+
+    $template = 'search-shop.phtml';
 }
-$brand_id_str = substr($brand_id_str, 0, strlen($brand_id_str)-1);
-$get_brand_list = 'select `id`,`name` from '.$db->table('brand').' where `id` in ('.$brand_id_str.')';
-$brand_list = $db->fetchAll($get_brand_list);
-$attributes[] = array(
-    'key'=>'brand',
-    'name'=>'品牌',
-    'values' => $brand_list
-);
-/*
-$get_price_limit = 'select max(`price`) as `max`,min(`price`) as `min` from '.$db->table('product').' where '.$where;
-$price_limit = $db->fetchRow($get_price_limit);
-
-$divide = 1;
-if($price_limit['max'] != $price_limit['min'])
-{
-
-}
-*/
-
-assign('attributes', $attributes);
-
-assign('filter', json_encode($filter));
-$smarty->display('search-result.phtml');
+$smarty->display($template);

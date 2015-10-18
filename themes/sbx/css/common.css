@@ -28,9 +28,6 @@ html,body{font-size:20px;}
 .clear {
     clear: both;
 }
-div {
-    overflow: hidden;
-}
 .clearfix:after {clear: both;display: table;content: " "}
 .fl {
     float:left
@@ -239,4 +236,12 @@ div {
 .progressbar img {
     width: 120px;
     margin: 0 auto;
+}
+
+.inventory-count {
+    display: inline-block;
+    margin-left: .4rem;
+    font-size: .7rem;
+    line-height: 1.5rem;
+    color: #777;
 }

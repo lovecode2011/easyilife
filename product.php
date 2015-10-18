@@ -81,6 +81,7 @@ if('collection' == $opera)
                 {
                     $response['error'] = 0;
                     $response['status'] = !$collection_flag;
+                    $response['product_sn'] = $product_sn;
                     $response['msg'] = '取消收藏成功';
                 } else {
                     $response['msg'] = '001:系统繁忙，请稍后再试';
@@ -90,6 +91,7 @@ if('collection' == $opera)
                 {
                     $response['error'] = 0;
                     $response['status'] = !$collection_flag;
+                    $response['product_sn'] = $product_sn;
                     $response['msg'] = '收藏产品成功';
                 } else {
                     $response['msg'] = '001:系统繁忙，请稍后再试';

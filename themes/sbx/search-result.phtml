@@ -26,19 +26,17 @@
             <form id="search_form" title="搜索部分" method="get" action="" onsubmit="return submit_search();">
                 <div class="search-select">
                     <div class="select-text">
-                        宝贝<i class="icon">&#xe63a;</i>
+                        <span id="select-text">宝贝</span><i class="icon">&#xe63a;</i>
                     </div>
                     <div class="select-detail">
                         <ul>
-                            <li class="select-product">
+                            <li class="select-product" onclick="select_mode('product');">
                                 <span class="icon">&#xe63c;</span>
                                 宝贝
                             </li>
-                            <li class="select-shop">
-                                <a href="search-shop.html">
-                                    <span class="icon">&#xe63b;</span>
-                                    店铺
-                                </a>
+                            <li class="select-shop" onclick="select_mode('shop');">
+                                <span class="icon">&#xe63b;</span>
+                                店铺
                             </li>
 
                             </li>
@@ -48,6 +46,7 @@
                 <div class="text_box" name="list_search_text_box" title="搜索框" onclick="return 1;">
                     <input id="_keyword" name="keyword" type="text" placeholder="{$keyword} 共{count($product_list)}个结果" class="text" value="">
                 </div>
+                <input type="hidden" name="mode" value="product" id="mode"/>
                 <input type="submit" value="" class="submit" id="list_search_submit" title="提交">
             </form>
         </div>
@@ -79,7 +78,7 @@
                         <p class="name">{$product.name}</p >
                     </a >
                     <p class="price"><span class="red">¥{$product.price}</span>
-                        <span name="item_collect" title="收藏" class="span_sc" onclick="javascript:collection('{$product.product_sn}');" flag="add"></span>
+                        <span name="item_collect" title="收藏" class="span_sc {if $product.collection}span_sc_on{/if}" id="fav_{$product.product_sn}" onclick="javascript:collection('{$product.product_sn}');" flag="add"></span>
                     </p >
                 </div>
             </li>
@@ -220,7 +219,21 @@
             $("#displaySalesPromotion").removeClass("on");
             $("#displayOutlets").removeClass("on");
         });
+
+        $(".select-text").bind("click", function () {
+            $(".select-detail").toggle();
+        });
     });
+
+    function select_mode(mode) {
+        $("#mode").val(mode);
+        if(mode == "product") {
+            $("#select-text").text("宝贝");
+        } else {
+            $("#select-text").text("店铺");
+        }
+        $(".select-detail").toggle();
+    }
 
     function active_up() {
         $(".arrow_up").addClass("active_up");
@@ -296,9 +309,9 @@
         hide_mask();
         if(response.error == 0) {
             if(response.status) {
-
+                $("#fav_"+response.product_sn).addClass("span_sc_on");
             } else {
-
+                $("#fav_"+response.product_sn).removeClass("span_sc_on");
             }
         }
     }

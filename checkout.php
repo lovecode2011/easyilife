@@ -306,6 +306,7 @@ if('submit_order' == $opera)
                         $cart['total_reward'] = $total_reward/2.5;
                         //计算三级分销
                         //distribution_settle($cart['total_reward'], $user_info['path']);
+                        //扣减库存
                         //计算赠送积分
                         if($total_integral_given)
                         {
@@ -491,11 +492,11 @@ if(!$address_id)
 }
 
 //读取地址信息
-if(isset($_SESSION['address_id']))
+if(!isset($_SESSION['address_id']) || $_SESSION['address_id'] <= 0)
 {
-    $address_id = $_SESSION['address_id'];
-} else {
     $_SESSION['address_id'] = $address_id;
+} else {
+    $address_id = $_SESSION['address_id'];
 }
 
 $get_address_detail = 'select p.`province_name`,c.`city_name`,d.`district_name`,g.`group_name`,a.`address`,a.`consignee`,'.
