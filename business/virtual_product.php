@@ -634,11 +634,11 @@ if( 'sale' == $act ) {
         show_system_message('产品已被删除', array());
         exit;
     }
-    $product_on_shelf = 'update '.$db->table('product').' set status = 4, prev_status = 3';
+    $product_on_shelf = 'update '.$db->table('product').' set status = 3, prev_status = 4';
     $product_on_shelf .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $product_on_shelf .= ' and product_sn = \''.$product_sn.'\' limit 1';
 
-    $product_off_shelf = 'update '.$db->table('product').' set status = 3, prev_status = 4';
+    $product_off_shelf = 'update '.$db->table('product').' set status = 4, prev_status = 3';
     $product_off_shelf .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $product_off_shelf .= ' and product_sn = \''.$product_sn.'\' limit 1';
 

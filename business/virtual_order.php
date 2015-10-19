@@ -13,7 +13,7 @@ include 'library/init.inc.php';
 business_base_init();
 $template = 'virtual_order/';
 
-$action = 'view|refund|detail|export';
+$action = 'view|refund|detail|export|pay';
 $act = check_action($action, getGET('act'));
 $operation = '';
 $opera = check_action($operation, getPOST('opera'));
@@ -468,7 +468,63 @@ if( 'export' == $act ) {
     exit;
 }
 
+//付款
+if( 'pay' == $act ) {
+    if( !check_purview('pur_virtual_order_edit', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $order_sn = trim(getGET('sn'));
+    if( '' == $order_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $order_sn = $db->escape($order_sn);
+
+    $get_order = 'select * from '.$db->table('order');
+    $get_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_order .= ' and is_virtual = 1';
+    $get_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
+
+    $order = $db->fetchRow($get_order);
+
+    if( empty($order) ) {
+        show_system_message('订单不存在', array());
+        exit;
+    }
+
+    $update_order = 'update '.$db->table('order').' set';
+    $update_order .= ' status = 4';
+    $update_order .= ', pay_time = '.time();
+    $update_order .= ', payment_name = \'线下支付\'';
+    $update_order .= ', payment_id = 0';
+    $update_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $update_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
+
+    if( $db->update($update_order) ) {
+        $log_data = array(
+            'order_sn' => $order_sn,
+            'operator' => $_SESSION['business_admin'],
+            'status' => 4,
+            'add_time' => time(),
+            'remark' => '确认已付款'
+        );
+        $db->autoInsert('order_log', array($log_data));
+
+        $links = array(
+            array('alt' => '有效订单列表', 'link' => 'virtual_order.php?status=4'),
+        );
+        show_system_message('确认客户已付款', $links);
+        exit;
+    } else {
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
+}
+
 
 $template .= $act.'.phtml';
 $smarty->display($template);
+
+
 

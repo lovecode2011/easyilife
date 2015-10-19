@@ -28,7 +28,11 @@
                 <td>{$adpos.width}</td>
                 <td>{$adpos.height}</td>
                 <td>{$adpos.number}</td>
-                <td class="text-right"><a href="?act=edit&id={$adpos.id}">编辑</a> | <a href="javascript:delete_adpos({$adpos.id});">删除</a></td>
+                <td class="text-right"><a href="?act=edit&id={$adpos.id}">编辑</a>
+                {if $adpos.id neq 1}
+                    | <a href="javascript:delete_adpos({$adpos.id});">删除</a>
+                {/if}
+                </td>
             </tr>
             {/foreach}
             {else}
