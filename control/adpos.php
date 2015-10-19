@@ -14,8 +14,8 @@ assign('subTitle', '广告位置管理');
 
 $action = 'edit|add|view|delete';
 $operation = 'edit|add';
-
 $act = check_action($action, getGET('act'));
+
 $act = ( $act == '' ) ? 'view' : $act;
 
 $opera = check_action($operation, getPOST('opera'));
@@ -205,6 +205,11 @@ if('delete' == $act)
     if($id <= 0)
     {
         show_system_message('请求失败');
+        exit;
+    }
+
+    if( $id == 1 ) {
+        show_system_message('请勿删除固定广告位', array(array('alt' => '广告位列表', 'link' => 'adpos.php')));
         exit;
     }
 
