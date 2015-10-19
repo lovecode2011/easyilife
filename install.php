@@ -184,6 +184,7 @@ $sql[] = 'create table if not exists '.$db->table('business').' (
     `email` varchar(255) not null,
     `shop_name` varchar(255),
     `shop_logo` varchar(255),
+    `shop_sign` varchar(255),
     `comment` int not null,
     `is_recommend` tinyint(1) not null default \'0\',
     `balance` decimal(18,2) not null default \'0\',

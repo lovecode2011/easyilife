@@ -35,7 +35,20 @@
                     {if $business.shop_logo eq ''}
                     <img id="show-image" alt="未选择图片" src="/upload/image/no-image.png">
                     {else}
-                    <img id="show-image" alt="" src="{$business.shop_logo_src}" />
+                    <img id="show-image" alt="" width="95" height="95" src="{$business.shop_logo_src}" />
+                    {/if}
+                </p>
+                <p>
+                    <label class="l-title">店招：</label>
+                    <input type="button" class="text-input" id="select-sign" value="请选择店招" style="cursor:pointer">
+                    <input type="hidden" class="" name="sign" id="sign" value="{$business.shop_sign}"/>
+                </p>
+                <p>
+                    <label class="l-title"></label>
+                    {if $business.shop_sign eq ''}
+                    <img id="show-sign" alt="未选择图片" src="/upload/image/no-image.png">
+                    {else}
+                    <img id="show-sign" alt="" width="370" height="95" src="{$business.shop_sign_src}" />
                     {/if}
                 </p>
                 <p>
@@ -117,6 +130,35 @@
                 });
             });
         });
+
+        var editor1 = K.editor({
+            allowFileManager : true,
+            uploadJson : '../plugins/kindeditor/upload_json.php',
+            fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+        });
+        K('#select-sign').click(function() {
+            editor1.loadPlugin('image', function() {
+                editor1.plugin.imageDialog({
+                    imageUrl : '{$business.business_account}',
+                    clickFn : function(url, title, width, height, border, align) {
+                        if( !width ) {
+                            width = (width == '') ? '370px' : width + 'px'
+                        }
+                        if( !height ) {
+                            height = (height == '') ? '95px' : height + 'px'
+                        }
+
+                        K('#sign').val(url);
+                        K('#show-sign').attr('src', url);
+                        K('#show-sign').css('width', width);
+                        K('#show-sign').css('height', height);
+                        K('#show-sign').css('display', 'block');
+                        editor1.hideDialog();
+                    }
+                });
+            });
+        });
+
     });
 </script>
 
