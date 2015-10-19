@@ -372,6 +372,10 @@ $sql[] = 'create table if not exists '.$db->table('ad_position').' (
     `code` text
 ) default charset=utf8;';
 
+$table[] = '初始化广告位数据';
+$sql[] = 'insert into '.$db->table('ad_position').' (`name`, `width`, `height`, `number`, `code`)
+ values (\'商家轮播\', \'600px\', \'400px\', \'3\', \'\');';
+
 $table[] = '广告';
 $sql[] = 'create table if not exists '.$db->table('ad').' (
     `id` bigint not null auto_increment primary key,
@@ -384,7 +388,8 @@ $sql[] = 'create table if not exists '.$db->table('ad').' (
     `ad_position_id` int not null,
     `start_time` int,
     `end_time` int,
-    `add_time` int not null
+    `add_time` int not null,
+    `business_account` varchar(255) not null default \'\'
 ) default charset=utf8;';
 
 $table[] = '管理员';
