@@ -92,6 +92,9 @@
                 <td>{$order.remark}</td>
                 <td>
                     <a href="virtual_order.php?act=detail&sn={$order.order_sn}">订单详情</a>
+                    {if $order.status eq 1}
+                    | <a href="virtual_order.php?act=pay&sn={$order.order_sn}" onclick="javascript:if(confirm('确认已付款？')) return true; else return false;">已付款</a>
+                    {/if}
                     {if $order.status eq 7}
                     | <a href="virtual_order.php?act=agree&sn={$order.order_sn}" onclick="javascript:if(confirm('确认同意退单？')) return true; else return false;">同意退单</a>
                     {/if}
@@ -192,6 +195,9 @@
                 <td>
                     <!--                    <a href="javascript:void(0);" class="order-detail" data-value="{$order.order_sn}">订单详情</a>-->
                     <a href="?act=detail&sn={$order.order_sn}">订单详情</a>
+                    {if $order.status eq 1}
+                    | <a href="virtual_order.php?act=pay&sn={$order.order_sn}" onclick="javascript:if(confirm('确认已付款？')) return true; else return false;">已付款</a>
+                    {/if}
                 </td>
             </tr>
             {/foreach}

@@ -782,6 +782,9 @@ if( 'pay' == $act ) {
 
     $update_order = 'update '.$db->table('order').' set';
     $update_order .= ' status = 4';
+    $update_order .= ', pay_time = '.time();
+    $update_order .= ', payment_name = \'线下支付\'';
+    $update_order .= ', payment_id = 0';
     $update_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $update_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
 
