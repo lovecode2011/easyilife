@@ -32,7 +32,7 @@ if('edit' == $opera)
     }
 
     $id = intval(getPOST('eid'));
-    $pos_name = getPOST('pos_name');
+    $name = getPOST('name');
     $height = getPOST('height');
     $width = getPOST('width');
     $code = getPOST('code');
@@ -43,11 +43,11 @@ if('edit' == $opera)
         $response['msg'] = '参数错误';
     }
 
-    if($pos_name == '')
+    if($name == '')
     {
-        $response['errmsg']['pos_name'] = '-请输入广告位置名称';
+        $response['errmsg']['name'] = '-请输入广告位置名称';
     } else {
-        $pos_name = $db->escape($pos_name);
+        $name = $db->escape($name);
     }
 
     $code = $db->escape($code);
@@ -75,7 +75,7 @@ if('edit' == $opera)
     if(count($response['errmsg']) == 0 && $response['msg'] == '')
     {
         $adpos_data = array(
-            'pos_name' => $pos_name,
+            'name' => $name,
             'height' => $height,
             'width' => $width,
             'code' => $code,
@@ -106,17 +106,17 @@ if('add' == $opera)
         exit;
     }
 
-    $pos_name = getPOST('pos_name');
+    $name = getPOST('name');
     $height = getPOST('height');
     $width = getPOST('width');
     $code = getPOST('code');
     $number = intval(getPOST('number'));
 
-    if($pos_name == '')
+    if($name == '')
     {
-        $response['errmsg']['pos_name'] = '-请输入广告位置名称';
+        $response['errmsg']['name'] = '-请输入广告位置名称';
     } else {
-        $pos_name = $db->escape($pos_name);
+        $name = $db->escape($name);
     }
 
     $code = $db->escape($code);
@@ -144,7 +144,7 @@ if('add' == $opera)
     if(count($response['errmsg']) == 0)
     {
         $adpos_data = array(
-            'pos_name' => $pos_name,
+            'name' => $name,
             'height' => $height,
             'width' => $width,
             'code' => $code,
@@ -188,7 +188,7 @@ if('edit' == $act)
 
     $id = intval(getGET('id'));
 
-    $get_adpos = 'select `id`,`pos_name`,`width`,`height`,`number`,`code` from '.$db->table('ad_position').' where `id`='.$id;
+    $get_adpos = 'select `id`,`name`,`width`,`height`,`number`,`code` from '.$db->table('ad_position').' where `id`='.$id;
 
     assign('adpos', $db->fetchRow($get_adpos));
 }

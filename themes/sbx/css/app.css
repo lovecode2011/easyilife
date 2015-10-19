@@ -1630,7 +1630,7 @@ nav.ol_select_bar ul a.hover li {
     font-size: .6rem;
     text-align: center;
 }
-.binding-con .btn,.address .btn,.withdrawals .btn,.bank .btn,.userinfo .btn{
+.binding-con .btn,.address .btn,.withdrawals .btn,.bank .btn,.userinfo .btn, .recharge .btn{
     background-color: #ff463c;
     color: white;
     font-size: .9rem;
@@ -2596,10 +2596,10 @@ nav.ol_select_bar ul a.hover li {
     margin-right: .2rem;
     color: #c3c3c3;
 }
-.withdrawals-btn,.bank-btn{
+.withdrawals-btn,.bank-btn, .recharge-btn{
     width: 100%;
 }
-.withdrawals-btn .btn ,.bank-btn .btn,.info-btn .btn{
+.withdrawals-btn .btn ,.bank-btn .btn,.info-btn .btn, .recharge-btn .btn{
     width: 80%;
     margin: 1rem auto;
 }
@@ -3125,4 +3125,43 @@ li.search-shop-li div{
 .myteam-header .myteam-header-info em{
     font-size: .6rem;
     color: #999;
+}
+
+/* 我要充值 */
+.recharge-tips,.recharge-info,.recharge-value{
+    background-color: #fff;
+    padding: .5rem;
+}
+.recharge-tips{
+    margin-bottom: .5rem;
+    font-size: .65rem;
+    color: #6e6e6e;
+    line-height: 1rem;
+}
+.recharge-tips i{
+    color: #f08300;
+    padding-right: .2rem;
+    font-size: .8rem;
+}
+.recharge-info h3{
+    font-size: .8rem;
+}
+.recharge-info label,.recharge-value label{
+    display: block;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    margin: .5rem 0;
+    width: 100%;
+    font-size: .65rem;
+}
+.recharge-value{
+    margin-top:.5rem;
+}
+.recharge-value input{
+    display: inline-block;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    padding-left: .5rem;
+    width: 55%;
+    font-size: .65rem;
 }

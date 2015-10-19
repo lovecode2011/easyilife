@@ -7,10 +7,98 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'get_fav|verify_pic_code|verify_message_code|get_message_code';
+$operation = 'get_fav|verify_pic_code|verify_message_code|get_message_code|verify_mobile|login|register';
 $opera = check_action($operation, getPOST('opera'));
 
 $response = array('error'=>1, 'msg'=>'');
+
+if('login' == $opera)
+{
+    $account = getPOST('account');
+    $password = getPOST('password');
+    $code = getPOST('code');
+    $code = strtolower($code);
+    $column = '`account`';
+
+    if($code != $_SESSION['code'])
+    {
+        $response['msg'] .= '-图片验证码错误<br/>';
+    }
+
+    if($account == '')
+    {
+        $response['msg'] .= '-请填写手机号码/会员卡号<br/>';
+    } else {
+        $account = $db->escape($account);
+        if(is_mobile($account))
+        {
+            $column = '`mobile`';
+        }
+    }
+
+    if($password == '')
+    {
+        $response['msg'] .= '-请填写密码<br/>';
+    } else {
+        $password = md5($password.PASSWORD_END);
+    }
+
+    if($response['msg'] == '')
+    {
+        $get_user_info = 'select `password`,`account`,`openid` from '.$db->table('member').' where '.$column.'=\''.$account.'\'';
+
+        $user_info = $db->fetchRow($get_user_info);
+
+        if($user_info['password'] == $password)
+        {
+            $_SESSION['account'] = $user_info['account'];
+            $_SESSION['openid'] = $user_info['openid'];
+            $response['error'] = 0;
+            $response['msg'] = '登录成功';
+
+            if(isset($_SERVER['HTTP_REFERER']))
+            {
+                $response['referer'] = $_SERVER['HTTP_REFERER'];
+            } else {
+                $response['referer'] = 'index.php';
+            }
+        } else {
+            $response['msg'] = '账号信息错误';
+        }
+    }
+}
+
+if('verify_mobile' == $opera)
+{
+    $mobile = getPOST('mobile');
+    $mode = getPOST('mode');
+
+    if(is_mobile($mobile))
+    {
+        if($mode == 'unique')
+        {
+            $mobile = $db->escape($mobile);
+            $check_mobile = 'select `mobile` from '.$db->table('member').' where `mobile`=\''.$mobile.'\'';
+
+            $flag = $db->fetchOne($check_mobile);
+
+            if($flag)
+            {
+                $response['msg'] = '手机号码已被使用';
+            } else {
+                $response['error'] = 0;
+                $response['mobile'] = $mobile;
+                $response['mobile_mask'] = substr($mobile, 0, 3) . '****' . substr($mobile, -4);
+            }
+        } else {
+            $response['error'] = 0;
+            $response['mobile'] = $mobile;
+            $response['mobile_mask'] = substr($mobile, 0, 3) . '****' . substr($mobile, -4);
+        }
+    } else {
+        $response['msg'] = '手机号码格式不正确';
+    }
+}
 
 if('verify_message_code' == $opera)
 {

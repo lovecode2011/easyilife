@@ -43,7 +43,7 @@ if('sort' == $opera)
     exit;
 }
 
-$get_section_list = 'select `section_name`,`id` from '.$db->table('section');
+$get_section_list = 'select `section_name`,`id` from '.$db->table('section').' limit 3';
 $section_list = $db->fetchAll($get_section_list);
 assign('section_list', $section_list);
 

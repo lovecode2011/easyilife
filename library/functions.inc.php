@@ -349,9 +349,17 @@ function back_base_init() {
 
     $withdraw_deal_count = $member_withdraw_deal_count + $business_withdraw_deal_count;
 
+    //待处理充值
+    $get_recharge_deal_count = 'select count(*) from '.$db->table('recharge').' where status = 2 and `type` = 1';
+    $recharge_deal_count = $db->fetchOne($get_recharge_deal_count);
+
+    $finance_count = $withdraw_deal_count + $recharge_deal_count;
+
     assign('member_withdraw_count', $member_withdraw_deal_count);
     assign('business_withdraw_count', $business_withdraw_deal_count);
     assign('withdraw_deal_count', $withdraw_deal_count);
+    assign('recharge_deal_count', $recharge_deal_count);
+    assign('finance_count', $finance_count);
 }
 
 
