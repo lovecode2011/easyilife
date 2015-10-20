@@ -486,6 +486,49 @@ ul.tabs li.active a{
 }
 /* END 资讯样式 */
 
+/* 没有特效的tab css*/
+ul.tabs-without-js {
+    float: left;
+    list-style: none;
+    height: 41px;
+    border-bottom: 1px solid #dddddd;
+    border-left: 1px solid #dddddd;
+    width: 100%;
+}
+ul.tabs-without-js li {
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #dddddd;
+    border-left: none;
+    margin-bottom: -1px;
+    _margin-bottom: -2px;
+    overflow: hidden;
+    position: relative;
+}
+ul.tabs-without-js li a {
+    text-decoration: none;
+    color:#666;
+    display: block;
+    padding: 0 20px;
+    border: 1px solid #fff;
+    outline: none;
+}
+ul.tabs-without-js li a:hover {
+    color:#428bca;
+}
+ul.tabs-without-js li.active, ul.tabs-without-js li.active a:hover  {
+    background: #ffffff;
+    border-bottom: 1px solid #fff;
+    color:#333333;
+}
+ul.tabs-without-js li.active{
+    border-top:2px solid #00a2ca;
+}
+ul.tabs-without-js li.active a{
+    color:#333333;
+}
+
 /* 待处理数量提示 */
 .badge {
     position: absolute;
