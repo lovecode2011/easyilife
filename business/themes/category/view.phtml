@@ -13,9 +13,11 @@
             <thead>
             <tr>
                 <th>分类名称</th>
+                <!--
                 <th>价格区间</th>
                 <th>图标</th>
                 <th>按品牌搜索</th>
+                -->
                 <th class="text-right">操作</th>
             </tr>
             </thead>
@@ -24,9 +26,11 @@
             {foreach from=$category_list item=category}
             <tr>
                 <td>{$category.name}</td>
+                <!--
                 <td>{$category.price_filter}</td>
                 <td><em class="icon">&#x{$category.icon};</em></td>
                 <td>{$category.search_brand_str}</td>
+                -->
                 <td class="text-right"><a href="?act=edit&id={$category.id}">编辑</a> | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&id={$category.id}">删除</a></td>
             </tr>
             {/foreach}

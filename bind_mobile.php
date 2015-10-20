@@ -23,14 +23,22 @@ if('bind' == $opera)
         {
             $response['msg'] .= '-请输入手机号码<br/>';
         } else {
-            $mobile = $db->escape($mobile);
+            if(is_mobile($mobile))
+            {
+                $mobile = $db->escape($mobile);
+            } else {
+                $response['msg'] .= '-手机号码格式错误<br/>';
+            }
         }
 
         if($verify == '')
         {
             $response['msg'] .= '-请输入验证码<br/>';
         } else {
-            if($verify != '123456')
+            $check_code = 'select `code`,`expire` from '.$db->table('message_code').' where `mobile`=\''.$mobile.'\'';
+            $message_code = $db->fetchRow($check_code);
+
+            if($verify != $message_code['code'])
             {
                 $response['msg'] .= '-验证码错误<br/>';
             }
@@ -63,4 +71,5 @@ if('bind' == $opera)
     exit;
 }
 
-$smarty->display('bind_mobile.phtml');
+$_SESSION['token'] = 'can send message.';
+$smarty->display('binding.phtml');

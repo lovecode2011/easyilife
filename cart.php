@@ -96,8 +96,9 @@ if('add_to_cart' == $opera)
             $check_inventory = 'select `inventory_logic` from '.$db->table('inventory').
                                ' where `attributes`=\''.$attributes.'\' and `product_sn`=\''.$product_sn.'\'';
 
+            $log->record($check_inventory);
             $inventory_logic = $db->fetchOne($check_inventory);
-            $response['inventory_logic'] = $check_inventory;
+            $response['inventory_logic'] = $inventory_logic;
             if($inventory_logic < $buy_number)
             {
                 $buy_number = $inventory_logic;
@@ -167,7 +168,7 @@ if('add_to_cart' == $opera)
 }
 
 //获取购物车产品
-$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,c.`business_account` from ('.
+$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`id` as p_id,c.`business_account` from ('.
                  $db->table('cart').' as c join '.$db->table('product').' as p using(`product_sn`)) join '.$db->table('business').
                  ' as b on (c.`business_account`=b.`business_account`) where c.`account`=\''.$_SESSION['account'].'\' order by c.`business_account`';
 
@@ -232,7 +233,8 @@ if($cart_list_tmp)
             'name' => $cart['name'],
             'img' => $cart['img'],
             'checked' => $cart['checked'],
-            'inventory' => $inventory
+            'inventory' => $inventory,
+            'p_id' => $cart['p_id']
         );
 
         $cart_json[$cart['id']] = array(

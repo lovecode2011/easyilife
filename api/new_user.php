@@ -8,7 +8,6 @@
 include 'library/init.inc.php';
 
 $log->record_array($_POST);
-//osi2_s5g53FbaLcq3VZ7UusMpvLw
 $response = array('error'=>1, 'msg'=>'');
 $openid = getPOST('openid');
 $scene_id = intval(getPOST('scene_id'));

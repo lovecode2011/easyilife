@@ -81,6 +81,7 @@ if('collection' == $opera)
                 {
                     $response['error'] = 0;
                     $response['status'] = !$collection_flag;
+                    $response['product_sn'] = $product_sn;
                     $response['msg'] = '取消收藏成功';
                 } else {
                     $response['msg'] = '001:系统繁忙，请稍后再试';
@@ -90,6 +91,7 @@ if('collection' == $opera)
                 {
                     $response['error'] = 0;
                     $response['status'] = !$collection_flag;
+                    $response['product_sn'] = $product_sn;
                     $response['msg'] = '收藏产品成功';
                 } else {
                     $response['msg'] = '001:系统繁忙，请稍后再试';
@@ -113,7 +115,7 @@ if($id <= 0)
     redirect('index.php');
 }
 
-$get_product = 'select * from '.$db->table('product').' where `id`='.$id;
+$get_product = 'select * from '.$db->table('product').' where  `status`=4 and `id`='.$id;
 
 $product = $db->fetchRow($get_product);
 
@@ -187,6 +189,10 @@ if($product)
             $attributes_map[$aid]['values'] = array_unique($value['values']);
         }
 
+        if(count($attributes_map) == 1)
+        {
+            assign('inventory_logic', $inventory_tmp['inventory_logic']);
+        }
         assign('attributes', $attributes_map);
         assign('attributes_json', json_encode($attributes_map));
     } else {

@@ -45,9 +45,10 @@ if( 'add' == $opera ) {
     $order_view = intval(getPOST('order_view'));
     $free_delivering = intval(getPOST('free_delivering'));
 
-
     $inventory = getPOST('inventory');
-    $inventory = intval($inventory);
+    $single_inventory = getPOST('single_inventory');
+    $single_inventory = intval($single_inventory);
+
     $attr = getPOST('attr');
     do {
         $sn = rand(100000, 999999);
@@ -214,12 +215,17 @@ if( 'add' == $opera ) {
 
     //新增产品库存
     if( is_array($attr) ) {
+        $log->record_array($attr);
         foreach ($attr as $k => $v) {
-            $attributes = $db->escape(json_encode($v));
+            $attributes = json_encode($v);
+            $attributes = decodeUnicode($attributes);
+            $attributes = $db->escape($attributes);
+
             $data = array(
                 'product_sn' => $product_sn,
                 'attributes' => $attributes,
                 'inventory' => $inventory[$k],
+                'inventory_logic' => $inventory[$k]
             );
             $table = 'inventory';
             if (!$db->autoInsert($table, array($data))) {
@@ -227,10 +233,12 @@ if( 'add' == $opera ) {
             }
         }
     } else {
+        $inventory = intval($single_inventory);
         $data = array(
             'product_sn' => $product_sn,
             'attributes' => '',
             'inventory' => $inventory,
+            'inventory_logic' => $inventory
         );
         $table = 'inventory';
         if (!$db->autoInsert($table, array($data))) {
@@ -298,6 +306,9 @@ if( 'edit' == $opera ) {
     $weight = floatval(getPOST('weight'));
     $order_view = intval(getPOST('order_view'));
     $free_delivering = intval(getPOST('free_delivering'));
+
+    $inventory = getPOST('single_inventory');
+    $inventory = intval($inventory);
 
     if( '' == $name ) {
         show_system_message('产品名称不能为空', array());
@@ -433,6 +444,14 @@ if( 'edit' == $opera ) {
     $order = '';
     $limit = '1';
     if( $db->autoUpdate($table, $data, $where, $order, $limit) ) {
+        //检查库存，如果存在无属性库存则更新库存
+        $check_inventory = 'select `id` from '.$db->table('inventory').' where `product_sn`=\''.$product_sn.'\' and `attributes`=\'\'';
+        $inventory_id = $db->fetchOne($check_inventory);
+        if($inventory_id)
+        {
+            modify_inventory($product_sn, '', $inventory);
+        }
+
         $links = array(
             array('link' => 'product.php', 'alt' => '产品列表'),
             array('link' => 'product.php?act=add', 'alt' => '添加产品'),
@@ -822,6 +841,7 @@ if( 'edit' == $act ) {
     assign('product', $product);
 
 
+    $inventory = 0;
     $get_attributes = 'select * from '.$db->table('inventory');
     $get_attributes .= ' where product_sn = \''.$product_sn.'\'';
     $product_attributes = $db->fetchAll($get_attributes);
@@ -834,6 +854,12 @@ if( 'edit' == $act ) {
         $product_attributes = array();
     }
 
+    if(count($product_attributes) == 1)
+    {
+        $inventory = $product_attributes[0]['inventory'];
+    }
+
+    assign('inventory', $inventory);
     assign('attributes', json_encode($product_attributes));
 
     $get_category_list = 'select * from '.$db->table('category');

@@ -13,7 +13,6 @@ include 'library/init.inc.php';
 business_base_init();
 $template = 'order/';
 
-
 $action = 'view|deliver|prepare|agree|refund|delete|detail|export|pay';
 $operation = 'deliver';
 

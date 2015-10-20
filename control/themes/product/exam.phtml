@@ -74,9 +74,9 @@
                     <label class="l-title">产品图片：</label>
                     <input type="hidden" name="img" id="img" placeholder="" value="{$product.img}">
                     {if $product.img}
-                    <img class="select-image" alt="" width="200" height="150" src="{$product.img_src}">&nbsp;
+                    <img class="select-image" alt="" width="200" height="200" src="../{$product.img_src}">&nbsp;
                     {else}
-                    <img class="select-image" alt="" src="/upload/image/no-image.png">&nbsp;
+                    <img class="select-image" alt="" src="../upload/image/no-image.png">&nbsp;
                     {/if}
                     {if $gallery_list}
                     {foreach from=$gallery_list item=gallery}
@@ -181,6 +181,29 @@
             allowFileManager: true,
             uploadJson: '../plugins/kindeditor/upload_json.php',
             fileManagerJson: '../plugins/kindeditor/file_manager_json.php'
+        });
+
+        K('.select-image').click(function() {
+            editor.loadPlugin('image', function() {
+                editor.plugin.imageDialog({
+                    imageUrl : '',
+                    clickFn : function(url, title, width, height, border, align) {
+                        if( !width ) {
+                            width = 200 + 'px';
+                        }
+                        if( !height ) {
+                            height = 200 + 'px';
+                        }
+
+                        K('#img').val(url.replace("/sbx/", ""));
+                        K('.select-image').attr('src', url.replace("/sbx/", ""));
+                        K('.select-image').css('display', 'block');
+                        K('.select-image').attr('width', width);
+                        K('.select-image').attr('height', height);
+                        editor.hideDialog();
+                    }
+                });
+            });
         });
     });
     {/literal}

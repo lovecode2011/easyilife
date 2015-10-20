@@ -60,7 +60,7 @@
                 </p>
                 <p>
                     <label class="l-title">库存：</label>
-                    <input class="text-input w150" type="text" id="inventory" name="inventory" placeholder="请输入产品库存">
+                    <input class="text-input w150" type="text" id="inventory" name="single_inventory" placeholder="请输入产品库存">
                 </p>
                 <p>
                     <label class="l-title">售价：</label>
@@ -77,7 +77,7 @@
                 <p>
                     <label class="l-title">产品图片：</label>
                     <input type="hidden" name="img" id="img" placeholder="">
-                    <img class="select-image" alt="" src="../upload/image/no-image.png" height="160px">&nbsp;
+                    <img class="select-image" alt="" src="../upload/image/no-image.png" height="200px">&nbsp;
                 </p>
                 <p>
                     <label class="l-title">产品简介：</label>
@@ -205,11 +205,11 @@
                             width = 200 + 'px';
                         }
                         if( !height ) {
-                            height = 150 + 'px';
+                            height = 200 + 'px';
                         }
 
-                        K('#img').val(url.replace("/easyilife/", ""));
-                        K('.select-image').attr('src', "../"+url.replace("/easyilife/", ""));
+                        K('#img').val(url.replace("/sbx/", ""));
+                        K('.select-image').attr('src', "../"+url.replace("/sbx/", ""));
                         K('.select-image').css('display', 'block');
                         K('.select-image').attr('width', width);
                         K('.select-image').attr('height', height);

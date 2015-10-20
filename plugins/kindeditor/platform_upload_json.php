@@ -13,7 +13,7 @@ session_start();
 if( !isset($_SESSION['account']) ) {
     alert('请先登陆');
 }
-$business_account = $_SESSION['business_account'];
+$business_account = isset($_SESSION['business_account']) ? $_SESSION['business_account'] : '';
 
 $php_path = dirname(__FILE__) . '/';
 $php_url = dirname($_SERVER['PHP_SELF']) . '/';

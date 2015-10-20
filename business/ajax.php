@@ -357,6 +357,7 @@ if( 'edit_attr' == $opera ) {
         'attributes' => $attr,
 //        'product_sn' => $product_sn,
         'inventory' => $inventory,
+        'inventory_logic' => $inventory,
     );
     $table = 'inventory';
     $where = 'id = '.$id;
@@ -368,7 +369,7 @@ if( 'edit_attr' == $opera ) {
         ));
         exit;
     } else {
-        if( $db->autoUpdate($table, $data, $where, '', 1) ) {
+        if(modify_inventory($product_sn, $attribute['attributes'], $inventory)) {
             echo json_encode(array(
                 'error' => 0,
                 'message' => '产品属性更新成功',
@@ -412,6 +413,7 @@ if( 'add_attr' == $opera ) {
         'product_sn' => $product_sn,
         'attributes' => $attr,
         'inventory' => $inventory,
+        'inventory_logic' => $inventory,
     );
 
     if( $db->autoInsert('inventory', array($data)) ) {

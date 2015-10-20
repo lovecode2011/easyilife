@@ -76,8 +76,8 @@ assign('config', $config);
 assign('template_dir', 'themes/'.$config['themes'].'/');
 
 //测试数据
-$_SESSION['account'] = 'SHQ000000';
-$_SESSION['openid'] = '01234567890x';
+//$_SESSION['account'] = 'SJ000000';
+//$_SESSION['openid'] = '0123456789';
 if(!isset($_SESSION['openid']))
 {
     $_SESSION['openid'] = '';
@@ -85,7 +85,7 @@ if(!isset($_SESSION['openid']))
 
 $code = getGET('code');
 $state = getGET('state');
-if($_SESSION['openid'] == '' && $code != '' && $state == 2048)
+if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
 {
     $wechat_user = get_user_info($code, $config['appid'], $config['appsecret'], 'userinfo');
 
@@ -122,8 +122,15 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048)
 
 if($_SESSION['openid'] == '' || $_SESSION['account'] == '')
 {
-    echo '获取用户信息失败，请联系管理员';
-    exit;
+    $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php';
+    $script_name = str_replace(ROOT_PATH, '', $_SERVER['SCRIPT_FILENAME']);
+
+    $flag = check_action($no_login_script, $script_name);
+    if($flag == '')
+    {
+        redirect('login.php');
+        exit;
+    }
 }
 
 //微信JS调用参数

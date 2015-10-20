@@ -32,9 +32,12 @@ if($id > 0)
     $get_category_ids = 'select `id` from '.$db->table('category').' where `path` like \''.$path.'%\' and `id` not in ('.$path.'0)';
     $category_ids = $db->fetchAll($get_category_ids);
     $category_ids_tmp = array();
-    foreach($category_ids as $key=>$val)
+    if($category_ids)
     {
-        $category_ids_tmp[] = $val['id'];
+        foreach($category_ids as $key=>$val)
+        {
+            $category_ids_tmp[] = $val['id'];
+        }
     }
     $category_ids_str = implode(',', $category_ids_tmp);
 
@@ -45,7 +48,7 @@ if($id > 0)
     {
         assign('state', $state);
         assign('product_list', $product_list);
-        $template = 'product_list.phtml';
+        $template = 'product-list.phtml';
     } else {
         $flag = true;
     }

@@ -26,7 +26,7 @@ if('sort' == $opera)
     $mode = getPOST('mode');
 
 
-    $get_product_list = 'select `id`,`name`,`price`,`img` from '.$db->table('product').' where 1 ';
+    $get_product_list = 'select `id`,`name`,`price`,`img` from '.$db->table('product').' where  `status`=4 ';
 
     $response['filter'] = $filter;
 
@@ -57,7 +57,7 @@ if('sort' == $opera)
         } else {
             $category_ids_str .= ','.$id;
         }
-        $get_product_list .= ' and `category_id` in ('.$category_ids_str.')';
+        $get_product_list .= ' and `category_id` in ('.$category_ids_str.') and `status`=4';
     }
 
     switch($mode)
@@ -82,7 +82,7 @@ if('sort' == $opera)
     $product_list = $db->fetchAll($get_product_list);
 
     assign('product_list', $product_list);
-    $response['content'] = $smarty->fetch('product_list_item.phtml');
+    $response['content'] = $smarty->fetch('product-list-item.phtml');
     $response['error'] = 0;
 
     echo json_encode($response);
@@ -132,7 +132,7 @@ if($category_ids_str == '')
 } else {
     $category_ids_str .= ','.$id;
 }
-$get_product_list = 'select * from '.$db->table('product').' where `category_id` in ('.$category_ids_str.')';
+$get_product_list = 'select * from '.$db->table('product').' where `status`=4 and `category_id` in ('.$category_ids_str.')';
 
 switch($state)
 {
@@ -147,4 +147,4 @@ assign('state', $state);
 assign('product_list', $product_list);
 assign('id', $id);
 
-$smarty->display('product_list.phtml');
+$smarty->display('product-list.phtml');

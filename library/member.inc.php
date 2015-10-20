@@ -266,6 +266,56 @@ function  add_member_reward($account, $reward, $integral = 0.0, $remark = '')
     }
  }
 
+/**
+ * 注册会员信息
+ * @param string $mobile
+ * @param string $password
+ * @param int $parent_id
+ * @return string 会员账号
+ */
+function register_mobile($mobile, $password, $parent_id = 0)
+{
+    global $db;
+    global $log;
+
+    $db->begin();
+    $member_data = array(
+        'account' => get_account(),
+        'mobile' => $mobile,
+        'password' => $password,
+        'add_time' => time(),
+        'parent_id' => $parent_id,
+        'nickname' => $mobile
+    );
+
+    if($db->autoInsert('member', array($member_data)))
+    {
+        $path = '';
+        $id = $db->get_last_id();
+        if($parent_id)
+        {
+            $get_parent_path = 'select `path` from '.$db->table('member').' where `id`='.$parent_id;
+            $path = $db->fetchOne($get_parent_path);
+        }
+
+        $path .= $id.',';
+
+        $update_data = array(
+            'path' => $path
+        );
+
+        if($db->autoUpdate('member', $update_data, '`id`='.$id))
+        {
+            $log->record_array($member_data);
+            $db->commit();
+            return $member_data['account'];
+        }
+    }
+
+    $db->rollback();
+    return false;
+}
+
  /**
  * 注册会员信息
  * @param string $openid

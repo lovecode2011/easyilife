@@ -18,7 +18,47 @@ if($act == '')
     $act = 'list';
 }
 
-$template = 'address.phtml';
+$template = 'address-list.phtml';
+
+if('delete' == $opera)
+{
+    $response = array('error'=>1, 'msg'=>'');
+
+    $id = getPOST('eid');
+
+    $id = intval($id);
+    if($id <= 0)
+    {
+        $response['msg'] = '-参数错误<br/>';
+    }
+
+    if($response['msg'] == '')
+    {
+        //检查如果地址是默认地址，则修改默认地址到下一个地址
+        $check_default = 'select `is_default` from '.$db->table('address').' where `id`='.$id.' and `account`=\''.$_SESSION['account'].'\'';
+
+        $is_default = $db->fetchOne($check_default);
+
+        if($db->autoDelete('address', '`id`='.$id.' and `account`=\''.$_SESSION['account'].'\''))
+        {
+            if($is_default)
+            {
+                $data = array(
+                    'is_default' => 1
+                );
+
+                $db->autoUpdate('address', $data, '`account`=\''.$_SESSION['account'].'\'', '', 1);
+            }
+            $response['error'] = 0;
+            $response['msg'] = '删除收货地址成功';
+        } else {
+            $response['msg'] = '001:系统繁忙，请稍后再试';
+        }
+    }
+
+    echo json_encode($response);
+    exit;
+}
 
 if('add' == $opera)
 {
@@ -71,9 +111,9 @@ if('add' == $opera)
 
         if($is_default == 'true')
         {
-            $is_default = true;
+            $is_default = 1;
         } else {
-            $is_default = false;
+            $is_default = 0;
         }
 
         if($response['msg'] == '')
@@ -168,9 +208,9 @@ if('edit' == $opera)
 
         if($is_default == 'true')
         {
-            $is_default = true;
+            $is_default = 1;
         } else {
-            $is_default = false;
+            $is_default = 0;
         }
 
         if($response['msg'] == '')
@@ -245,7 +285,7 @@ if('get_info' == $opera)
 
 if('select' == $act)
 {
-    $template = 'select_address.phtml';
+    $template = 'select-address.phtml';
 
     $get_address_list = 'select a.`is_default`,p.`province_name`,c.`city_name`,d.`district_name`,g.`group_name`,a.`address`,a.`consignee`,'.
                         'a.`mobile`,a.`zipcode`,a.`id` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
@@ -266,7 +306,7 @@ if('select' == $act)
 
 if('edit' == $act)
 {
-    $template = 'edit_address.phtml';
+    $template = 'edit-address.phtml';
 
     $id = intval(getGET('id'));
     if($id <= 0)
@@ -336,7 +376,7 @@ if('edit' == $act)
 
 if('add' == $act)
 {
-    $template = 'add_address.phtml';
+    $template = 'add-address.phtml';
 
     $get_province = 'select `id`,`province_name` as `name` from '.$db->table('province');
     $province = $db->fetchAll($get_province);

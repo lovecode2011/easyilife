@@ -53,6 +53,10 @@
                         <input class="text-input w-100" placeholder="请输入日期" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"{/literal} name="publishTime" value="{$content.publishTime}">
                     </p>
                     {/if}
+                    <p>
+                        <span>描述：</span>
+                        <textarea class="rn w-100" rows="5" name="description">{$content.description}</textarea>
+                    </p>
                 </fieldset>
 <!--                <fieldset>-->
 <!--                    <h5>SEO</h5>-->

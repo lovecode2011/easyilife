@@ -18,7 +18,7 @@ if('sort' == $opera)
     $mode = getPOST('mode');
 
 
-    $get_product_list = 'select `id`,`name`,`price`,`img` from '.$db->table('product').' where 1 ';
+    $get_product_list = 'select `id`,`name`,`price`,`img`,`product_sn` from '.$db->table('product').' where 1 ';
 
     $response['filter'] = $filter;
 
@@ -69,7 +69,20 @@ if('sort' == $opera)
             $get_product_list .= ' order by `star` DESC';
             break;
         case 'price':
-            $get_product_list .= ' order by `price` ASC';
+            $orderby = getPOST('orderby');
+            $orderby_list = 'up|down';
+            $orderby = check_action($orderby_list, $orderby);
+            if($orderby == '')
+            {
+                $orderby = 'up';
+            }
+
+            if($orderby == 'up')
+            {
+                $get_product_list .= ' order by `price` ASC';
+            } else {
+                $get_product_list .= ' order by `price` DESC';
+            }
             break;
         case 'new':
             $get_product_list .= ' order by `add_time` DESC';
@@ -81,7 +94,7 @@ if('sort' == $opera)
     $product_list = $db->fetchAll($get_product_list);
 
     assign('product_list', $product_list);
-    $response['content'] = $smarty->fetch('search_product_item.phtml');
+    $response['content'] = $smarty->fetch('search-product-item.phtml');
     $response['error'] = 0;
 
     echo json_encode($response);
@@ -105,12 +118,12 @@ if($sn == '')
 $sn = $db->escape($sn);
 $filter['sn'] = $sn;
 
-$get_product_list = 'select `id`,`name`,`price`,`img` from '.$db->table('product').' where `name` like \'%'.$keyword.'%\' and `business_account`=\''.$sn.'\'';
+$get_product_list = 'select `id`,`name`,`price`,`img`,`product_sn` from '.$db->table('product').' where `name` like \'%'.$keyword.'%\' and `business_account`=\''.$sn.'\'';
 
 $product_list = $db->fetchAll($get_product_list);
-
+assign('business_account', $sn);
 assign('product_list', $product_list);
 assign('keyword', $keyword);
 assign('filter', json_encode($filter));
 
-$smarty->display('shop_search.phtml');
+$smarty->display('shop-search.phtml');

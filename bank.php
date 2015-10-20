@@ -6,7 +6,7 @@
  * Time: 上午10:24
  */
 include 'library/init.inc.php';
-$template = 'bank.phtml';
+$template = 'bank-list.phtml';
 
 $action = 'add|edit|list|delete';
 $operation = 'add|edit|delete';
@@ -195,12 +195,12 @@ if('add' == $opera)
 
 if('add' == $act)
 {
-    $template = 'add_bank.phtml';
+    $template = 'add-bank.phtml';
 }
 
 if('edit' == $act)
 {
-    $template = 'edit_bank.phtml';
+    $template = 'edit-bank.phtml';
 
     $id = intval(getGET('id'));
 
@@ -218,7 +218,7 @@ if('edit' == $act)
 
 if('list' == $act)
 {
-    $template = 'bank_list.phtml';
+    $template = 'bank-list.phtml';
 
     $get_bank_list = 'select `id`,`bank`,`bank_account`,`bank_card`,`mobile` from '.$db->table('bank_card').
                      ' where `account`=\''.$_SESSION['account'].'\'';

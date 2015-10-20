@@ -707,3 +707,30 @@ function query_express($type, $postid, $id = 1, $valicode = '') {
     $params = 'type='.$type.'&postid='.$postid.'&id='.$id.'&valicode='.$valicode.'&temp='.$temp;
     return get($url, $params);
 }
+
+/**
+ * 验证手机号是否正确
+ * @author 范鸿飞
+ * @param INT $mobile
+ */
+function is_mobile($mobile) {
+    if (!is_numeric($mobile)) {
+        return false;
+    }
+    return preg_match('#^13[\d]{9}$|^14[5,7]{1}\d{8}$|^15[^4]{1}\d{8}$|^17[0,6,7,8]{1}\d{8}$|^18[\d]{9}$#', $mobile) ? true : false;
+}
+
+function sendSMS($mobile, $message)
+{
+    return true;
+}
+
+function decodeUnicode($str)
+{
+    return preg_replace_callback('/\\\\u([0-9a-f]{4})/i',
+        create_function(
+            '$matches',
+            'return mb_convert_encoding(pack("H*", $matches[1]), "UTF-8", "UCS-2BE");'
+        ),
+        $str);
+}

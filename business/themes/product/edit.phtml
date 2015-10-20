@@ -62,6 +62,10 @@
                     </select>
                 </p>
                 <p>
+                    <label class="l-title">库存：</label>
+                    <input class="text-input w150" type="text" id="inventory" name="single_inventory" placeholder="请输入产品库存" value="{$inventory}"/>
+                </p>
+                <p>
                     <label class="l-title">售价：</label>
                     <input class="text-input w150" type="text" id="price" name="price" placeholder="请输入售价" value="{$product.price}">
                 </p>
@@ -79,7 +83,7 @@
                     {if $product.img}
                     <img class="select-image" alt="" width="200" height="200" src="../{$product.img_src}">&nbsp;
                     {else}
-                    <img class="select-image" alt="" src="../upload/image/no-image.png">&nbsp;
+                    <img class="select-image" alt="" src="../upload/image/no-image.png" height="200px">&nbsp;
                     {/if}
                 </p>
                 <p>
@@ -209,11 +213,11 @@
                             width = 200 + 'px';
                         }
                         if( !height ) {
-                            height = 150 + 'px';
+                            height = 200 + 'px';
                         }
 
-                        K('#img').val(url.replace("/easyilife/", ""));
-                        K('.select-image').attr('src', "../"+url.replace("/easyilife/", ""));
+                        K('#img').val(url.replace("/sbx/", ""));
+                        K('.select-image').attr('src', "../"+url.replace("/sbx/", ""));
                         K('.select-image').css('display', 'block');
                         K('.select-image').attr('width', width);
                         K('.select-image').attr('height', height);

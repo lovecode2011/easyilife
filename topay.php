@@ -20,4 +20,8 @@ $get_order_detail = 'select * from '.$db->table('order_detail').' where `order_s
 $order_detail = $db->fetchAll($get_order_detail);
 assign('order_detail', $order_detail);
 
+//获取平台支付方式
+$get_payment_list = 'select `id`,`name`,`plugins` from '.$db->table('payment').' where `status`=1';
+$payment_list = $db->fetchAll($get_payment_list);
+assign('payment_list', $payment_list);
 $smarty->display('topay.phtml');

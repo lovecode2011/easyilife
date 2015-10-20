@@ -128,7 +128,13 @@ if( 'view' == $act ) {
             } else {
                 $member_list[$key]['subscribed'] = '未关注';
             }
-            $member_list[$key]['sex'] = ( $value['sex'] == 'M' ) ? '男' : '女';
+
+            if($value['sex'] == '' || $value['sex'] == 'N')
+            {
+                $member_list[$key]['sex'] = '保密';
+            } else {
+                $member_list[$key]['sex'] = ($value['sex'] == 'M') ? '男' : '女';
+            }
         }
     }
     assign('member_list', $member_list);
