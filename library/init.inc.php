@@ -7,8 +7,15 @@
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-//设置系统相关参数
 session_start();
+if( isset($_COOKIE['session']) ) {
+    session_id($_COOKIE['session']);
+    setcookie('session', $_COOKIE['session'], time() + 3600 * 24 * 21);
+} else {
+    setcookie('session', session_id(), time() + 3600 * 24 * 21);
+}
+
+//设置系统相关参数
 date_default_timezone_set('Asia/Shanghai');
 define('ROOT_PATH', str_replace('library/init.inc.php', '',str_replace('\\', '/', __FILE__)));
 if(!class_exists('AutoLoader'))
