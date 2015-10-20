@@ -159,6 +159,13 @@ $purview = array(
     'pur_statistics' => array(
         'pur_statistics_view',
     ),
+    //导航
+    'pur_nav' => array(
+        'pur_nav_add',
+        'pur_nav_view',
+        'pur_nav_edit',
+        'pur_nav_del',
+    ),
 );
 
 global $L_purview;
@@ -291,6 +298,12 @@ $L_purview = array(
 
     'pur_statistics' => '站点统计',
     'pur_statistics_view' => '查看统计',
+
+    'pur_nav' => '导航管理',
+    'pur_nav_add'=>'添加导航栏',
+    'pur_nav_view'=>'查看导航栏',
+    'pur_nav_edit'=>'编辑导航栏',
+    'pur_nav_del'=>'删除导航栏',
 );
 
 global $menus;
@@ -318,6 +331,7 @@ $menus = array(
     'pur_content' => array('url' => 'content.php', 'title' => '资讯管理', 'parent' => 'menu_cms'),
     'pur_order' => array('url' => 'order.php', 'title' => '订单管理', 'parent' => 'menu_order'),
     'pur_virtual_order' => array('url' => 'virtual_order.php', 'title' => '虚拟订单管理', 'parent' => 'menu_order'),
+    'pur_nav' => array('url' => 'nav.php', 'title' => '导航条', 'parent' => 'menu_site'),
 
 );
 

@@ -380,7 +380,7 @@ $sql[] = 'create table if not exists '.$db->table('ad_position').' (
 ) default charset=utf8;';
 
 $table[] = '初始化广告位数据';
-$sql[] = 'insert into '.$db->table('ad_position').' (`pos_name`, `width`, `height`, `number`, `code`)
+$sql[] = 'insert into '.$db->table('ad_position').' (`name`, `width`, `height`, `number`, `code`)
  values (\'商家轮播\', \'600px\', \'400px\', \'3\', \'\');';
 
 $table[] = '广告';
@@ -743,6 +743,16 @@ $sql[] = 'create table if not exists'.$db->table('recharge_log').'(
     `type` tinyint not null comment \'0:线上，1：线下\',
     `status` tinyint not null comment \'0:未到帐，1：到帐\',
     `remark` varchar(255) not null default \'\'
+) default charset=utf8;';
+
+$table[] = '导航栏';
+$sql[] = 'create table if not exists '.$db->table('nav').' (
+    `id` int not null auto_increment primary key,
+    `name` varchar(255) not null,
+    `url` varchar(255) not null,
+    `parent_id` int not null default \'0\',
+    `position` varchar(255) not null,
+    `order_view` int not null default \'50\'
 ) default charset=utf8;';
 
 echo '创建数据库表:<br/>';
