@@ -34,7 +34,7 @@ if('submit_order' == $opera)
 
         $address_info = $db->fetchRow($get_address_detail);
         //获取待购买产品
-        $get_cart_list = 'select p.`reward`,p.`integral_given`,b.`business_account`,c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`weight` from ('.
+        $get_cart_list = 'select p.`reward`,p.`integral_given`,b.`business_account`,c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`weight`,p.`is_virtual` from ('.
             $db->table('cart').' as c join '.$db->table('product').' as p using(`product_sn`)) join '.$db->table('business').
             ' as b on (c.`business_account`=b.`business_account`) where c.`account`=\''.$_SESSION['account'].'\' and c.`checked`=1 order by c.`business_account`';
 
@@ -107,7 +107,8 @@ if('submit_order' == $opera)
                 'business_account' => $cart['business_account'],
                 'reward' => floatval($cart['reward']),
                 'attributes' => $cart['attributes'],
-                'inventory' => $inventory
+                'inventory' => $inventory,
+                'is_virtual' => $cart['is_virtual']
             );
 
             $cart_list[$cart['b_id']]['total_amount'] += $cart['price'] * $cart['number'];
@@ -140,24 +141,35 @@ if('submit_order' == $opera)
             ' as dam join '.$db->table('delivery_area').' as da on dam.`area_id`=da.`id` join '.$db->table('delivery').
             ' as d on da.`delivery_id`=d.`id` where da.`id` in ('.$delivery_id_str.') ';
 
-        foreach($product_weight as $weight)
+        if($product_weight)
         {
-            $get_delivery = $get_delivery_sql.' and da.`business_account`=\''.$weight['business_account'].'\'';
-            $log->record($get_delivery);
-            $delivery = $db->fetchRow($get_delivery);
-            $log->record_array($delivery);
+            foreach ($product_weight as $weight)
+            {
+                $get_delivery = $get_delivery_sql . ' and da.`business_account`=\'' . $weight['business_account'] . '\'';
+                $log->record($get_delivery);
+                $delivery = $db->fetchRow($get_delivery);
+                $log->record_array($delivery);
 
-            $tmp = array(
-                'delivery_id' => $delivery['delivery_id'],
-                'delivery_name' => $delivery['name'],
-                'delivery_fee' => caculate_delivery_fee($delivery['first_weight'], $delivery['next_weight'], $delivery['free'], $weight['total_weight'])
-            );
+                $tmp = array(
+                    'delivery_id' => $delivery['delivery_id'],
+                    'delivery_name' => $delivery['name'],
+                    'delivery_fee' => caculate_delivery_fee($delivery['first_weight'], $delivery['next_weight'], $delivery['free'], $weight['total_weight'])
+                );
 
-            $log->record_array($tmp);
-            //$cart_list[$weight['b_id']]['delivery_list'] = $delivery_list_mapper;
-            $cart_list[$weight['b_id']]['total_delivery_fee'] = $tmp['delivery_fee'];
-            $cart_list[$weight['b_id']]['total_amount'] += $tmp['delivery_fee'];
-            $cart_list[$weight['b_id']]['delivery_id'] = $tmp['delivery_id'];
+                $log->record_array($tmp);
+                //$cart_list[$weight['b_id']]['delivery_list'] = $delivery_list_mapper;
+                $cart_list[$weight['b_id']]['total_delivery_fee'] = $tmp['delivery_fee'];
+                $cart_list[$weight['b_id']]['total_amount'] += $tmp['delivery_fee'];
+                $cart_list[$weight['b_id']]['delivery_id'] = $tmp['delivery_id'];
+            }
+        }
+        //检查是否存在没有运费设置的商家
+        foreach($cart_list as $key=>$cart)
+        {
+            if(empty($cart['delivery_id']))
+            {
+                $cart_list[$key]['delivery_id'] = $delivery_list[$key][0]['delivery_id'];
+            }
         }
 
         //读取用户信息
@@ -280,7 +292,7 @@ if('submit_order' == $opera)
                 $flag = true;
                 foreach($cart['products'] as $od)
                 {
-                    if(!add_order_detail($od['product_sn'], $od['product_name'], $od['product_attributes'], $od['attributes'], $od['product_price'], $od['integral'], $od['integral_given'], $od['reward'], $od['count'], $business_account, $order_sn))
+                    if(!add_order_detail($od['product_sn'], $od['product_name'], $od['product_attributes'], $od['attributes'], $od['product_price'], $od['integral'], $od['integral_given'], $od['reward'], $od['count'], $business_account, $order_sn, $od['is_virtual']))
                     {
                         $flag = false;
                     } else {
@@ -288,6 +300,20 @@ if('submit_order' == $opera)
                         {
                             //扣减库存
                             consume_inventory($od['product_sn'], $od['attributes'], $od['count']);
+                            if($od['is_virtual'])
+                            {
+                                //如果是虚拟产品，则生成预约券
+                                $get_virtual_contents = 'select `content`,`count`,`total` from ' . $db->table('virtual_content') . ' where `product_sn`=\'' . $od['product_sn'] . '\'';
+
+                                $virtual_contents = $db->fetchAll($get_virtual_contents);
+
+                                $virtual_content = '';
+                                if ($virtual_contents) {
+                                    $virtual_content = serialize($virtual_contents);
+                                }
+
+                                add_order_content($cart['business_account'], $_SESSION['account'], $address_info['mobile'], $order_sn, $od['product_sn'], $od['product_name'], $virtual_content, 2);
+                            }
                         }
                     }
                 }
@@ -305,13 +331,20 @@ if('submit_order' == $opera)
                     {
                         $cart['total_reward'] = $total_reward/2.5;
                         //计算三级分销
-                        //distribution_settle($cart['total_amount'], $user_info['path']);
-                        //扣减库存
+                        distribution_settle($cart['total_product_amount'], $user_info['path'], $order_sn);
                         //计算赠送积分
                         if($total_integral_given)
                         {
                             add_memeber_exchange_log($_SESSION['account'], 0, 0, 0, $cart['total_integral_given'], 0, 'settle', '系统结算');
                             add_member_reward($_SESSION['account'], 0, $cart['total_integral_given'], '订单'.$order_sn.'赠送积分');
+                        }
+                        //计入商家收入
+                        if(add_business_exchange($cart['business_account'], 0, $cart['total_product_amount']+$cart['total_delivery_fee'], $_SESSION['account'], $order_sn.'支付成功'))
+                        {
+                            add_business_trade($cart['business_account'], $cart['total_product_amount']+$cart['total_delivery_fee'], $order_sn);
+                        } else {
+                            //增加商家收入失败
+                            $log->record($order_sn.'计入商家收入失败');
                         }
                     }
                 } else {
@@ -510,7 +543,7 @@ $address_info = $db->fetchRow($get_address_detail);
 assign('address_info', $address_info);
 
 //获取待购买产品
-$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`weight` from ('.
+$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`weight`,c.`business_account` from ('.
     $db->table('cart').' as c join '.$db->table('product').' as p using(`product_sn`)) join '.$db->table('business').
     ' as b on (c.`business_account`=b.`business_account`) where c.`account`=\''.$_SESSION['account'].'\' and c.`checked`=1 order by c.`business_account`';
 
@@ -521,6 +554,7 @@ if(!$cart_list_tmp)
     redirect('cart.php');
 }
 
+$total_number = 0;
 $total_amount = 0;
 $total_integral = 0;
 $total_delivery_fee = 0;
@@ -534,7 +568,8 @@ foreach($cart_list_tmp as $cart)
         $cart_list[$cart['b_id']] = array(
             'b_id' => $cart['b_id'],
             'shop_name' => $cart['shop_name'],
-            'products' => array()
+            'products' => array(),
+            'business_account' => $cart['business_account']
         );
     }
 
@@ -573,6 +608,7 @@ foreach($cart_list_tmp as $cart)
 
     $total_product_amount += $cart['price'] * $cart['number'];
     $total_integral += $cart['integral'] * $cart['number'];
+    $total_number += $cart['number'];
 }
 
 //获取物流信息
@@ -587,38 +623,93 @@ $get_delivery_sql = 'select da.`id`,da.`first_weight`,da.`next_weight`,da.`free`
                     ' as d on da.`delivery_id`=d.`id` where ';
 
 $delivery_list_json = array();
-foreach($product_weight as $weight)
+if($product_weight)
 {
-    $get_delivery = $get_delivery_sql.' dam.`province`='.$address_info['province'].' and dam.`city`='.$address_info['city'].' and dam.`district`='.$address_info['district'];
-    $get_delivery .= ' and dam.`business_account`=\''.$weight['business_account'].'\'';
-    $get_delivery .= ' union '.$get_delivery_sql.' dam.`province`='.$address_info['province'].' and dam.`city`='.$address_info['city'];
-    $get_delivery .= ' and dam.`business_account`=\''.$weight['business_account'].'\'';
-    $get_delivery .= ' union '.$get_delivery_sql.' dam.`province`='.$address_info['province'];
-    $get_delivery .= ' and dam.`business_account`=\''.$weight['business_account'].'\'';
-
-    $delivery_list = $db->fetchAll($get_delivery);
-
-    $delivery_list_mapper = array();
-    foreach($delivery_list as $delivery)
+    foreach ($product_weight as $weight)
     {
-        $tmp = array(
-            'delivery_id' => $delivery['id'],
-            'delivery_name' => $delivery['name'],
-            'delivery_fee' => caculate_delivery_fee($delivery['first_weight'], $delivery['next_weight'], $delivery['free'], $weight['total_weight'])
-        );
+        $get_delivery = $get_delivery_sql . ' dam.`province`=' . $address_info['province'] . ' and dam.`city`=' . $address_info['city'] . ' and dam.`district`=' . $address_info['district'];
+        $get_delivery .= ' and dam.`business_account`=\'' . $weight['business_account'] . '\'';
+        $get_delivery .= ' union ' . $get_delivery_sql . ' dam.`province`=' . $address_info['province'] . ' and dam.`city`=' . $address_info['city'];
+        $get_delivery .= ' and dam.`business_account`=\'' . $weight['business_account'] . '\'';
+        $get_delivery .= ' union ' . $get_delivery_sql . ' dam.`province`=' . $address_info['province'];
+        $get_delivery .= ' and dam.`business_account`=\'' . $weight['business_account'] . '\'';
 
-        $delivery_list_mapper[] = $tmp;
-        $delivery_list_json[$weight['b_id']][] = $tmp;
+        $delivery_list = $db->fetchAll($get_delivery);
+
+        $delivery_list_mapper = array();
+        foreach ($delivery_list as $delivery)
+        {
+            $tmp = array(
+                'delivery_id' => $delivery['id'],
+                'delivery_name' => $delivery['name'],
+                'delivery_fee' => caculate_delivery_fee($delivery['first_weight'], $delivery['next_weight'], $delivery['free'], $weight['total_weight'])
+            );
+
+            $delivery_list_mapper[] = $tmp;
+            $delivery_list_json[$weight['b_id']][] = $tmp;
+        }
+        $cart_list[$weight['b_id']]['delivery_list'] = $delivery_list_mapper;
     }
-    $cart_list[$weight['b_id']]['delivery_list'] = $delivery_list_mapper;
 }
 
+$delivery_support = true;
 //把运费计入总金额
-foreach($cart_list as $cart)
+foreach($cart_list as $key=>$cart)
 {
-    $total_delivery_fee += $cart['delivery_list'][0]['delivery_fee'];
-    $delivery_list_json[$cart['b_id']][0]['selected'] = 1;
+    if(isset($cart['delivery_list']))
+    {
+        $total_delivery_fee += $cart['delivery_list'][0]['delivery_fee'];
+        $delivery_list_json[$cart['b_id']][0]['selected'] = 1;
+    } else {
+        $get_delivery = $get_delivery_sql . ' dam.`province`=' . $address_info['province'] . ' and dam.`city`=' . $address_info['city'] . ' and dam.`district`=' . $address_info['district'];
+        $get_delivery .= ' and dam.`business_account`=\'' . $cart['business_account'] . '\'';
+        $get_delivery .= ' union ' . $get_delivery_sql . ' dam.`province`=' . $address_info['province'] . ' and dam.`city`=' . $address_info['city'];
+        $get_delivery .= ' and dam.`business_account`=\'' . $cart['business_account'] . '\'';
+        $get_delivery .= ' union ' . $get_delivery_sql . ' dam.`province`=' . $address_info['province'];
+        $get_delivery .= ' and dam.`business_account`=\'' . $cart['business_account'] . '\'';
+
+        $delivery = $db->fetchRow($get_delivery);
+
+        if($delivery)
+        {
+            //所有产品重量都为0或者所有产品都包邮，获取商家的任意快递方式，并设置运费为0
+            $tmp = array(
+                'delivery_id' => $delivery['id'],
+                'delivery_name' => $delivery['name'],
+                'delivery_fee' => 0
+            );
+
+            $cart['delivery_list'] = array(
+                $tmp
+            );
+
+            $cart_list[$key] = $cart;
+            $delivery_list_json[$cart['b_id']][] = $tmp;
+        } else {
+            //商家不支持该地区的配送，则剔除该产品
+            $db->autoUpdate('cart', array('checked'=>0), '`business_account`=\''.$cart['business_account'].'\'');
+            unset($cart_list[$key]);
+            foreach($cart['products'] as $p)
+            {
+                $total_product_amount -= $p['price']*$p['number'];
+                $total_number -= $p['number'];
+            }
+            $delivery_support = false;
+        }
+    }
 }
+
+if(!$delivery_support)
+{
+    if(count($cart_list) == 0)
+    {
+        assign('target', 'cart.php');
+    } else {
+        assign('target', '');
+    }
+}
+assign('delivery_support', $delivery_support);
+
 $total_amount = $total_product_amount + $total_delivery_fee;
 $_SESSION['total_amount'] = $total_amount;
 
@@ -632,7 +723,7 @@ assign('total_amount', $total_amount);
 assign('total_product_amount', $total_product_amount);
 assign('total_delivery_fee', $total_delivery_fee);
 assign('total_integral', $total_integral);
-assign('total_number', count($cart_list_tmp));
+assign('total_number', $total_number);
 assign('cart_list', $cart_list);
 
 $smarty->display('checkout.phtml');

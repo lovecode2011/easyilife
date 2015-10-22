@@ -145,7 +145,7 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
     }
 }
 
-if($_SESSION['openid'] == '' || $_SESSION['account'] == '')
+if($_SESSION['openid'] == '' && $_SESSION['account'] == '')
 {
     $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php|index.php|article.php|article_list.php|';
     $no_login_script .= 'category.php|product.php|cart.php|product_list.php|search.php|shop.php|distribution_shop.php|notify.php';

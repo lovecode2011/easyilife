@@ -380,7 +380,7 @@ $sql[] = 'create table if not exists '.$db->table('ad_position').' (
 ) default charset=utf8;';
 
 $table[] = '初始化广告位数据';
-$sql[] = 'insert into '.$db->table('ad_position').' (`name`, `width`, `height`, `number`, `code`)
+$sql[] = 'insert into '.$db->table('ad_position').' (`pos_name`, `width`, `height`, `number`, `code`)
  values (\'商家轮播\', \'600px\', \'400px\', \'3\', \'\');';
 
 $table[] = '广告';

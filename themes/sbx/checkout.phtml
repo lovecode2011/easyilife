@@ -35,7 +35,7 @@
                     <span id="mobile">{$address_info.mobile}</span>
                 </div>
                 <div class="address-detail">
-                    <div class="address-content">
+                    <div class="address-content" id="address_detail">
                         {$address_info.province_name}
                         {$address_info.city_name}
                         {$address_info.district_name}
@@ -143,9 +143,9 @@
     <div class="cd-popup-container" id="message_dialog" style="display: none;">
         <p id="dialog-message"></p>
         <ul class="cd-buttons">
-            <li class="cd-signle-button"><a href="javascript:close_message_dialog();">确认</a></li>
+            <li class="cd-signle-button"><a href="javascript:close_message_dialog();" id="dialog_close_btn">确认</a></li>
         </ul>
-        <a href="javascript:close_message_dialog();" class="cd-popup-close img-replace">X</a>
+        <a href="javascript:close_message_dialog();" class="cd-popup-close img-replace" id="dialog_close">X</a>
     </div>
 
     <div class="progressbar">
@@ -157,6 +157,7 @@
     var delivery_list = {$delivery_list_json};
     var total_amount = {$total_amount};
     var total_product_amount = {$total_product_amount};
+    var total_number = {$total_number};
 
     $(function(){
         hide_mask();
@@ -182,6 +183,20 @@
         if($("#use_balance") != undefined) {
             $("#use_balance").bind("click", function() { use_mode(); });
         }
+
+        {if !$delivery_support}
+        //如果部分商品不支持配送，则提示用户
+        show_message_dialog("部分商品不支持您所在地区的配送或服务，系统已自动为您剔除");
+        {if $target neq ""}
+//        $("#dialog_close_btn").click(function(){
+//            window.location.href = "{$target}";
+//        });
+//
+//        $("#dialog_close").click(function(){
+//            window.location.href = "{$target}";
+//        });
+        {/if}
+        {/if}
     });
 
     function submit_order() {
@@ -190,6 +205,11 @@
         var comments = {};
         var comment_ele = $("input[type='text']");
         var msg = "";
+
+        if(total_number <= 0) {
+            show_message_dialog("请选择要购买的产品");
+            return false;
+        }
 
         var data = { "opera":"submit_order", "use_integral": false, "use_reward": false, "use_balance": false, "address_id": address_id, "payment_id": payment_id, "comments": comments, "delivery_list": delivery_list };
         if($("#use_integral") != undefined && $("#use_integral").is(":checked")) {

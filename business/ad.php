@@ -37,7 +37,7 @@ if( 'add' == $opera ) {
     $alt = getPOST('alt');
     $forever = getPOST('forever');
     $order_view = intval(getPOST('order_view'));
-    $start_time = getPOST('begin_time');
+    $begin_time = getPOST('begin_time');
     $end_time = getPOST('end_time');
 
     if($alt == '') {
@@ -51,19 +51,19 @@ if( 'add' == $opera ) {
     }
 
     if($forever == 0) {
-        if($start_time == '' || $end_time == '') {
+        if($begin_time == '' || $end_time == '') {
             $response['errmsg']['time'] = '-请选择有效时间';
         } else {
-            $start_time = strtotime($start_time);
+            $begin_time = strtotime($begin_time);
             $end_time = strtotime($end_time);
 
-            if($start_time == -1 || !$start_time || $end_time == -1 || !$end_time || $start_time > $end_time) {
+            if($begin_time == -1 || !$begin_time || $end_time == -1 || !$end_time || $begin_time > $end_time) {
                 $response['errmsg']['time'] = '-请选择有效时间';
             }
         }
     } else {
         $forever = 1;
-        $start_time = time();
+        $begin_time = time();
         $end_time = -1;
     }
 
@@ -84,11 +84,11 @@ if( 'add' == $opera ) {
             'url' => $url,
             'img' => $img,
             'add_time' => time(),
-            'start_time' => $start_time,
+            'begin_time' => $begin_time,
             'end_time' => $end_time,
             'alt' => $alt,
             'order_view' => $order_view,
-            'ad_position_id' => 1,
+            'ad_pos_id' => 3,
             'forever' => $forever,
             'business_account' => $_SESSION['business_account'],
         );
@@ -119,7 +119,7 @@ if( 'edit' == $opera ) {
     $alt = getPOST('alt');
     $forever = getPOST('forever');
     $order_view = intval(getPOST('order_view'));
-    $start_time = getPOST('begin_time');
+    $begin_time = getPOST('begin_time');
     $end_time = getPOST('end_time');
     $id = intval(getPOST('eid'));
 
@@ -147,19 +147,19 @@ if( 'edit' == $opera ) {
     }
 
     if($forever == 0) {
-        if($start_time == '' || $end_time == '') {
+        if($begin_time == '' || $end_time == '') {
             $response['errmsg']['time'] = '-请选择有效时间';
         } else {
-            $start_time = strtotime($start_time);
+            $begin_time = strtotime($begin_time);
             $end_time = strtotime($end_time);
 
-            if($start_time == -1 || !$start_time || $end_time == -1 || !$end_time || $start_time > $end_time) {
+            if($begin_time == -1 || !$begin_time || $end_time == -1 || !$end_time || $begin_time > $end_time) {
                 $response['errmsg']['time'] = '-请选择有效时间';
             }
         }
     } else {
         $forever = 1;
-        $start_time = time();
+        $begin_time = time();
         $end_time = -1;
     }
 
@@ -179,7 +179,7 @@ if( 'edit' == $opera ) {
         $ad_data = array(
             'url' => $url,
             'img' => $img,
-            'start_time' => $start_time,
+            'begin_time' => $begin_time,
             'end_time' => $end_time,
             'alt' => $alt,
             'order_view' => $order_view,

@@ -172,7 +172,7 @@ function do_submit() {
         $("#submit-btn").addClass("btn-disabled");
         $("#mask").show();
 
-        var params = { "opera":"add", "alt":alt, "img":img, "end_time":end_time, "begin_time":begin_time, "forever":forever, "url":url, "order_view":order_view, "ad_pos_id":ad_pos_id };
+        var params = { "opera":"add", "alt":alt, "img":img, "end_time":end_time, "begin_time":begin_time, "forever":forever, "url":url, "order_view":order_view, "ad_pos_id":3 };
         var url = "ad.php";
         $.post(url, params, do_response, "json");
     }

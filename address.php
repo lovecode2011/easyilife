@@ -7,7 +7,7 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'add|edit|delete|get_info';
+$operation = 'add|edit|delete|get_info|select';
 $action = 'add|edit|select|list';
 
 $act = check_action($action, getGET('act', 'list'));
@@ -19,6 +19,27 @@ if($act == '')
 }
 
 $template = 'address-list.phtml';
+
+if('select' == $opera)
+{
+    $response = array('error'=>1, 'msg'=>'');
+
+    $address_id = intval(getPOST('address_id'));
+
+    if(!check_cross_domain())
+    {
+        if($address_id > 0)
+        {
+            $_SESSION['address_id'] = $address_id;
+            $response['error'] = 0;
+        }
+    } else {
+        $response['msg'] = '404:参数错误';
+    }
+
+    echo json_encode($response);
+    exit;
+}
 
 if('delete' == $opera)
 {
@@ -139,6 +160,11 @@ if('add' == $opera)
             {
                 $response['error'] = 0;
                 $response['msg'] = '新增收货地址成功';
+                $response['id'] = $db->get_last_id();
+                if($is_default)
+                {
+                    $_SESSION['address_id'] = $response['id'];
+                }
             } else {
                 $response['msg'] = '001:系统繁忙，请稍后再试';
             }
@@ -235,6 +261,11 @@ if('edit' == $opera)
             {
                 $response['error'] = 0;
                 $response['msg'] = '收货地址修改成功';
+                $response['id'] = $db->get_last_id();
+                if($is_default)
+                {
+                    $_SESSION['address_id'] = $response['id'];
+                }
             } else {
                 $response['msg'] = '001:系统繁忙，请稍后再试';
             }

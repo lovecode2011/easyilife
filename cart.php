@@ -107,9 +107,10 @@ if('add_to_cart' == $opera)
             if($inventory_logic >= $buy_number)
             {
                 //获取产品信息
-                $get_product = 'select `price`,`integral`,`business_account` from '.$db->table('product').
+                $get_product = 'select `price`,`integral`,`business_account`,`is_virtual`,`promote_price`,`promote_begin`,`promote_end` from '.$db->table('product').
                                ' where `product_sn`=\''.$product_sn.'\'';
                 $product = $db->fetchRow($get_product);
+                $now = time();
 
                 //获取产品砍价总额
                 $get_product_discount = 'select sum(`reduce`) from '.$db->table('discount').
@@ -124,6 +125,11 @@ if('add_to_cart' == $opera)
                         'number' => $buy_number,
                         'price' => $product['price'] - $discount
                     );
+
+                    if($product['promote_end'] > $now && $product['promote_begin'] <= $now)
+                    {
+                        $cart_data['price'] = $product['promote_price'];
+                    }
 
                     if($db->autoUpdate('cart', $cart_data, '`id`='.$cart['id']))
                     {
@@ -143,8 +149,14 @@ if('add_to_cart' == $opera)
                         'price' => $product['price'] - $discount,
                         'integral' => $product['integral'],
                         'business_account' => $product['business_account'],
-                        'attributes' => $attributes
+                        'attributes' => $attributes,
+                        'is_virtual' => $product['is_virtual']
                     );
+
+                    if($product['promote_end'] > $now && $product['promote_begin'] <= $now)
+                    {
+                        $cart_data['price'] = $product['promote_price'];
+                    }
 
                     if($db->autoInsert('cart', array($cart_data)))
                     {

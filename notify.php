@@ -54,7 +54,7 @@ if($data)
             }
         } else {
             //产品订单
-            $get_order_info = 'select `amount`,`account`,`business_account` from '.$db->table('order').' where `order_sn`=\''.$sn.'\'';
+            $get_order_info = 'select `amount`,`account`,`business_account`,`product_amount`,`mobile`,`delivery_fee` from '.$db->table('order').' where `order_sn`=\''.$sn.'\'';
 
             $order = $db->fetchRow($get_order_info);
 
@@ -67,17 +67,40 @@ if($data)
                     'pay_time' => time()
                 );
 
-                if($db->autoUpdate('order', $order_data, '`order_sn`=\''.$sn.'\''))
+                if($db->autoUpdate('order', $order_data, '`order_sn`=\''.$sn.'\' and `status`<>3'))
                 {
                     //2. 订单结算
                     $get_path = 'select `path` from '.$db->table('member').' where `account`=\''.$order['account'].'\'';
-                    //distribution_settle($order['amount'], $path);
+                    distribution_settle($order['product_amount'], $path, sn);
                     //3. 新增商家收入
-                    if(add_business_exchange($order['business_account'], 0, $order['amount'], $order['account'], '用户在线支付'))
+                    if(add_business_exchange($order['business_account'], 0, $order['product_amount']+$order['delivery_fee'], $order['account'], '用户在线支付'))
                     {
-                        add_business_trade($order['business_account'], $order['amount'], $sn);
+                        add_business_trade($order['business_account'], $order['product_amount']+$order['delivery_fee'], $sn);
                     } else {
                         //增加商家收入失败
+                    }
+
+                    $get_order_detail = 'select `product_sn`,`product_name`,`count`,`is_virtual`,`attributes` from '.$db->table('order_detail').' where `order_sn`=\''.$sn.'\'';
+                    $order_detail = $db->fetchAll($get_order_detail);
+                    foreach($order_detail as $od)
+                    {
+                        //扣减库存
+                        consume_inventory($od['product_sn'], $od['attributes'], $od['count']);
+                        //如果是虚拟产品，则生成预约券
+                        if($od['is_virtual'])
+                        {
+                            $get_virtual_contents = 'select `content`,`count`,`total` from ' . $db->table('virtual_content') . ' where `product_sn`=\'' . $od['product_sn'] . '\'';
+
+                            $virtual_contents = $db->fetchAll($get_virtual_contents);
+
+                            $virtual_content = '';
+                            if ($virtual_contents)
+                            {
+                                $virtual_content = serialize($virtual_contents);
+                            }
+
+                            add_order_content($order['business_account'], $order['account'], $order['mobile'], $order_sn, $od['product_sn'], $od['product_name'], $virtual_content, 2);
+                        }
                     }
                 }
             } else {
