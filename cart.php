@@ -50,7 +50,7 @@ if('add_to_cart' == $opera)
     $number = intval(getPOST('number'));
     $attributes = getPOST('attributes');
 
-    if(!check_cross_domain())
+    if(!check_cross_domain() && isset($_SESSION['account']) && $_SESSION['account'])
     {
         if ($product_sn == '')
         {
@@ -158,9 +158,14 @@ if('add_to_cart' == $opera)
                 $response['msg'] = '产品库存不足';
             }
         }
-
     } else {
-        $response['msg'] = '404:参数错误';
+        if(empty($_SESSION['account']))
+        {
+            $response['msg'] = '请先登录';
+            $response['error'] = 2;
+        } else {
+            $response['msg'] = '404:参数错误';
+        }
     }
 
     echo json_encode($response);

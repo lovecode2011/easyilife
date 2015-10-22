@@ -305,7 +305,7 @@ if('submit_order' == $opera)
                     {
                         $cart['total_reward'] = $total_reward/2.5;
                         //计算三级分销
-                        //distribution_settle($cart['total_reward'], $user_info['path']);
+                        //distribution_settle($cart['total_amount'], $user_info['path']);
                         //扣减库存
                         //计算赠送积分
                         if($total_integral_given)

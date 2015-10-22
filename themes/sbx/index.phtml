@@ -88,6 +88,25 @@
     </div>
 </section>
 {/foreach}
+
+<!-- 猜你喜欢 -->
+<section class="f-section might-like">
+    <h3>
+        <i class="icon">&#xe617;</i>猜你喜欢
+        <a href="javascript:change_fav();"><span class="icon">&#xe618;</span>&nbsp;换一批</a>
+    </h3>
+    <ul id="fav_list">
+        {foreach from=$fav_products item=p}
+        <li>
+            <a href="product.php?id={$p.id}">
+                <img src="{$p.img}" alt="{$p.name}">
+                <span>{$p.name}</span>
+                <em>￥{$p.price}</em>
+            </a>
+        </li>
+        {/foreach}
+    </ul>
+</section>
 <div style="height:1rem; "></div>
 <!-- 底部菜单 -->
 <section class="menu">
@@ -129,6 +148,19 @@
         scrollup.Delay = 35;           //延时
         scrollup.Start();             //文字自动滚动
         scrollup.Direction = "down"; //文字向下滚动
+    }
+</script>
+<script type="text/javascript">
+    function change_fav() {
+        var url = "data_center.php";
+        var data = { "opera":"get_fav" };
+        $.post(url, data, change_fav_handler, "json");
+    }
+
+    function change_fav_handler(response) {
+        if(response.error == 0) {
+            $("#fav_list").html(response.content);
+        }
     }
 </script>
 </body>

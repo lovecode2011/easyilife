@@ -18,7 +18,7 @@ if('distribution' == $opera)
 
     $response = array('error'=>1, 'msg'=>'');
 
-    if(!check_cross_domain())
+    if(!check_cross_domain() && !empty($_SESSION['account']))
     {
         if($product_sn != '')
         {
@@ -52,7 +52,13 @@ if('distribution' == $opera)
             $response['msg'] = '000:参数错误';
         }
     } else {
-        $response['msg'] = '404:参数错误';
+        if(empty($_SESSION['account']))
+        {
+            $response['msg'] = '请先登录';
+            $response['error'] = 2;
+        } else {
+            $response['msg'] = '404:参数错误';
+        }
     }
 
     echo json_encode($response);
@@ -65,7 +71,7 @@ if('collection' == $opera)
 
     $response = array('error'=>1, 'msg'=>'');
 
-    if(!check_cross_domain())
+    if(!check_cross_domain() && !empty($_SESSION['account']))
     {
         if($product_sn != '')
         {
@@ -101,7 +107,13 @@ if('collection' == $opera)
             $response['msg'] = '000:参数错误';
         }
     } else {
-        $response['msg'] = '404:参数错误';
+        if(empty($_SESSION['account']))
+        {
+            $response['msg'] = '请先登录';
+            $response['error'] = 2;
+        } else {
+            $response['msg'] = '404:参数错误';
+        }
     }
 
     echo json_encode($response);
@@ -258,9 +270,21 @@ if($product)
 
     //检查产品的收藏状态
     $get_collection = 'select `product_sn` from '.$db->table('collection').
-        ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=\''.$product_sn.'\'';
+                      ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=\''.$product_sn.'\'';
     $collection_flag = $db->fetchOne($get_collection) ? true : false;
     assign('collection_flag', $collection_flag);
+
+    //获取产品的推广链接
+    $param = array('url'=>'product.php?id='.$product['id'], 'opera'=>'get_url', 'account'=>$_SESSION['account']);
+    $get_url_response = post('http://'.$_SERVER['HTTP_HOST'].'/sbx/d/index.php', $param);
+
+    $get_url_response = json_decode($get_url_response);
+    if($get_url_response->error == 0)
+    {
+        assign('recommend_url', $get_url_response->url);
+    } else {
+        assign('recommend_url', '');
+    }
 } else {
     redirect('index.php');
 }

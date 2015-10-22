@@ -35,6 +35,7 @@
 
 <!-- 订单列表 -->
 <section class="order-list" id="order-list">
+    {if $order_list}
     {foreach from=$order_list item=order}
     <div class="block">
         <div class="order_list">
@@ -102,6 +103,17 @@
         </div>
     </div>
     {/foreach}
+    {else}
+    <div class="block">
+        <div class="empty-con">
+            <span class="icon">&#xe63d;</span>
+            <span class="empty-tips">您还未订购过任何商品!</span>
+            <span class="empty-btn">
+                <a href="index.php" class="btn">去逛逛</a>
+            </span>
+        </div>
+    </div>
+    {/if}
 </section>
 <div style="height: 2.8rem;"></div>
 <div class="cd-popup" role="alert">

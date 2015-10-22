@@ -17,6 +17,21 @@ if('edit' == $opera)
 
     $email = getPOST('email');
     $sex = getPOST('sex');
+    $mobile = getPOST('mobile');
+
+    if(!is_mobile($mobile))
+    {
+        $response['msg'] .= '-手机号码格式不正确<br/>';
+    } else {
+        $mobile = $db->escape($mobile);
+        //检查号码是否已被使用
+        $check_mobile = 'select `account` from '.$db->table('member').' where `mobile`=\''.$mobile.'\' and `account`<>\''.$_SESSION['account'].'\'';
+
+        if($db->fetchOne($check_mobile))
+        {
+            $response['msg'] = '-该号码已被其他用户使用<br/>';
+        }
+    }
 
     if($email == '')
     {
@@ -42,7 +57,8 @@ if('edit' == $opera)
     {
         $member_data = array(
             'email' => $email,
-            'sex' => $sex
+            'sex' => $sex,
+            'mobile' => $mobile
         );
 
         if($db->autoUpdate('member', $member_data, '`account`=\''.$_SESSION['account'].'\''))

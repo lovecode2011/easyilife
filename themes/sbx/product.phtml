@@ -56,13 +56,15 @@
 <!-- 推广链接二维码 -->
 <section class="qr-link">
     <div class="top">
-        <span><a href="#"><em class="icon" style="color: #dd2727;">&#xe60f;</em>&nbsp;获取推广二维码</a></span>
-        <span><a href="#"><em class="icon" style="color: #dd2727;">&#xe615;</em>&nbsp;获取推广链接</a></span>
+        <span><a href="javascript:get_qrcode({$product.id});"><em class="icon" style="color: #dd2727;">&#xe60f;</em>&nbsp;获取推广二维码</a></span>
+        <span><a href="javascript:get_url({$product.id});"><em class="icon" style="color: #dd2727;">&#xe615;</em>&nbsp;获取推广链接</a></span>
     </div>
     <div class="bottom">
         <span><a href="shop.php?sn={$product.business_account}"><em class="icon" style="color: #dd2727;">&#xe610;</em>&nbsp;进店逛逛</a></span>
         <span><a href="tel:{$product.business.mobile}"><em class="icon" style="color: #dd2727;">&#xe613;</em>&nbsp;联系掌柜</a></span>
     </div>
+    <div id="url">推广链接: {$recommend_url}</div>
+    <div id="qrcode"></div>
 </section>
 <!-- 产品属性选择 -->
 {if $attributes}
@@ -202,9 +204,9 @@
     <div class="cd-popup-container" id="message_dialog" style="display: none;">
         <p id="dialog-message"></p>
         <ul class="cd-buttons">
-            <li class="cd-signle-button"><a href="javascript:close_message_dialog();">确认</a></li>
+            <li class="cd-signle-button"><a href="javascript:close_message_dialog();" id="dialog_close_btn">确认</a></li>
         </ul>
-        <a href="javascript:close_message_dialog();" class="cd-popup-close img-replace">X</a>
+        <a href="javascript:close_message_dialog();" class="cd-popup-close img-replace" id="dialog_close">X</a>
     </div>
 
     <div class="progressbar">
@@ -220,18 +222,13 @@
             effect : "fadeIn"
         });
         $(".option .arrow_con").click(function(){
-            if($(".option .arrow_d").hasClass("up")){
-                $(".option_detail").slideUp();
-                $(".option .arrow_d").removeClass("up");
-            }else{
-                $(".option_detail").slideDown();
-                $(".option .arrow_d").addClass("up");
-            }
+            toggle_option_bar();
         });
         $(".option_detail ul li").click(function(){
             $(this).siblings().removeClass("on");
             $(this).addClass("on");
         });
+
         $(".detail-con .arrow_con").click(function(){
             if($(".detail-con .arrow_d").hasClass("up")){
                 $("#detail-con").slideUp();
@@ -241,7 +238,34 @@
                 $(".detail-con .arrow_d").addClass("up");
             }
         })
+
+        $("#buy_num").blur(function(){
+            var buy_num = $(this).val();
+
+            buy_num = parseInt(buy_num);
+
+            if(isNaN(buy_num) || buy_num <= 0)
+            {
+                buy_num = 1;
+            }
+
+            $(this).val(buy_num);
+
+            if(select_attributes_complete()) {
+                check_inventory();
+            }
+        });
     });
+
+    function toggle_option_bar() {
+        if($(".option .arrow_d").hasClass("up")){
+            $(".option_detail").slideUp();
+            $(".option .arrow_d").removeClass("up");
+        }else{
+            $(".option_detail").slideDown();
+            $(".option .arrow_d").addClass("up");
+        }
+    }
 </script>
 <script type="text/javascript" src="{$template_dir}js/TouchSlide.1.1.js"></script>
 <script type="text/javascript">
@@ -250,357 +274,450 @@
     var attributes_mode = {$attributes_mode};//筛选条件表达式
     var pattern = {$attributes_mode};//泛解析表达式
     var collection_flag = {if $collection_flag}true{else}false{/if};
-        var distribution_flag = {if $distribution_flag}true{else}false{/if};
-            var operation = 0;
+    var distribution_flag = {if $distribution_flag}true{else}false{/if};
+    var operation = 0;
 
-            function add_to_cart(product_sn) {
-                var url = "cart.php";
-                var buy_num = parseInt($("#buy_num").val());
+    function get_qrcode(product_id) {
+        if(product_id > 0) {
+            var url = 'data_center.php';
+            var data = { "opera":"get_qrcode", "url":"product.php?id="+product_id };
 
-                if(isNaN(buy_num) || buy_num <= 0) {
-                    show_message_dialog("请输入购买数量");
-                    return false;
-                }
+            show_mask();
+            $.post(url, data, get_qrcode_handler, "json");
+            return true;
+        }
 
-                if(!select_attributes_complete()) {
-                    show_message_dialog("请选择产品规格 包装");
-                    window.location.href = "#attributes";
-                    arrow_con_toggle();
-                    return false;
-                }
+        show_message_dialog("参数错误");
+        return false;
+    }
 
-                var data = { "opera":"add_to_cart", "product_sn": product_sn, "number": buy_num, "attributes": attributes_mode };
-                show_mask();
-                $.post(url, data, add_to_cart_handler, "json");
+    function get_qrcode_handler(response) {
+        hide_mask();
+        if(response.error == 0) {
+            $("#qrcode").html('<img src="'+response.url+'"/>');
+            $("#qrcode").show();
+        } else {
+            show_message_dialog(response.msg);
+        }
+    }
+
+    function get_url(product_id) {
+        if(product_id > 0) {
+            var url = 'd/index.php';
+            var data = { "opera":"get_url", "url":"product.php?id="+product_id };
+
+            show_mask();
+            $.post(url, data, get_url_handler, "json");
+            return true;
+        }
+
+        show_message_dialog("参数错误");
+        return false;
+    }
+
+    function get_url_handler(response) {
+        hide_mask();
+        if(response.error == 0) {
+            $("#url").text("推广链接: "+response.url);
+            $("#url").show();
+        } else {
+            show_message_dialog(response.msg);
+        }
+    }
+
+    function add_to_cart(product_sn) {
+        var url = "cart.php";
+        var buy_num = parseInt($("#buy_num").val());
+
+        if(isNaN(buy_num) || buy_num <= 0) {
+            show_message_dialog("请输入购买数量");
+            return false;
+        }
+
+        if(!select_attributes_complete()) {
+            show_message_dialog("请选择产品规格 包装");
+            window.location.href = "#attributes";
+            toggle_option_bar();
+            return false;
+        }
+
+        var data = { "opera":"add_to_cart", "product_sn": product_sn, "number": buy_num, "attributes": attributes_mode };
+        show_mask();
+        $.post(url, data, add_to_cart_handler, "json");
+    }
+
+    function add_to_cart_handler(response) {
+        if(response.error == 0) {
+            show_operation_dialog();
+        } else {
+            show_message_dialog(response.msg);
+            if(response.error == 2) {
+                $("#dialog_close_btn").click(function(){
+                    window.location.href = "login.php";
+                });
+
+                $("#dialog_close").click(function(){
+                    window.location.href = "login.php";
+                });
             }
+        }
+    }
 
-            function add_to_cart_handler(response) {
-                if(response.error == 0) {
-                    show_operation_dialog();
-                } else {
-                    show_message_dialog(response.msg);
-                }
+    function buy_now(product_sn) {
+        var url = "cart.php";
+        var buy_num = parseInt($("#buy_num").val());
+
+        if(isNaN(buy_num) || buy_num <= 0) {
+            show_message_dialog("请输入购买数量");
+            return false;
+        }
+
+        if(!select_attributes_complete()) {
+            show_message_dialog("请选择产品规格 包装");
+            window.location.href = "#attributes";
+            toggle_option_bar();
+            return false;
+        }
+
+        var data = { "opera":"add_to_cart", "product_sn": product_sn, "number": buy_num, "attributes": attributes_mode };
+        show_mask();
+        $.post(url, data, buy_now_handler, "json");
+    }
+
+    function buy_now_handler(response) {
+        if(response.error == 0) {
+            window.location.href= "cart.php";
+        } else {
+            show_message_dialog(response.msg);
+            if(response.error == 2) {
+                $("#dialog_close_btn").click(function(){
+                    window.location.href = "login.php";
+                });
+
+                $("#dialog_close").click(function(){
+                    window.location.href = "login.php";
+                });
             }
+        }
+    }
 
-            function buy_now(product_sn) {
-                var url = "cart.php";
-                var buy_num = parseInt($("#buy_num").val());
+    function show_message_dialog(message) {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").hide();
+        $("#dialog-message").text(message);
+        $("#message_dialog").show();
+    }
 
-                if(isNaN(buy_num) || buy_num <= 0) {
-                    show_message_dialog("请输入购买数量");
-                    return false;
-                }
+    function close_message_dialog() {
+        $(".cd-popup").removeClass("is-visible");
+        $("#message_dialog").hide();
+    }
 
-                if(!select_attributes_complete()) {
-                    show_message_dialog("请选择产品规格 包装");
-                    window.location.href = "#attributes";
-                    arrow_con_toggle();
-                    return false;
-                }
+    function show_operation_dialog(id) {
+        if(id == undefined) {
+            id = "dialog";
+        }
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").hide();
+        $("#"+id).show();
+    }
 
-                var data = { "opera":"add_to_cart", "product_sn": product_sn, "number": buy_num, "attributes": attributes_mode };
-                show_mask();
-                $.post(url, data, buy_now_handler, "json");
+    function close_operation_dialog(id) {
+        if(id == undefined) {
+            id = "dialog";
+        }
+        $(".cd-popup").removeClass("is-visible");
+        $("#"+id).hide();
+    }
+
+    function show_mask() {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").show();
+    }
+
+    function hide_mask() {
+        $(".cd-popup").removeClass("is-visible");
+        $(".progressbar").hide();
+    }
+
+    function collection(product_sn) {
+        var url = "product.php";
+        var data = { "opera":"collection", "product_sn":product_sn };
+
+        show_mask();
+        $.post(url, data, collection_handler, "json");
+    }
+
+    function collection_handler(response) {
+        hide_mask();
+        show_message_dialog(response.msg);
+        if(response.error == 0) {
+            if(response.status) {
+                $(".addfav").addClass("addfav-on");
+                $("#collection_desc").text("取消收藏");
+            } else {
+                $(".addfav").removeClass("addfav-on");
+                $("#collection_desc").text("收藏");
             }
+        } else {
+            if(response.error == 2) {
+                $("#dialog_close_btn").click(function(){
+                    window.location.href = "login.php";
+                });
 
-            function buy_now_handler(response) {
-                if(response.error == 0) {
-                    window.location.href= "cart.php";
-                } else {
-                    show_message_dialog(response.msg);
-                }
+                $("#dialog_close").click(function(){
+                    window.location.href = "login.php";
+                });
             }
+        }
+    }
 
-            function show_message_dialog(message) {
-                $(".cd-popup").addClass("is-visible");
-                $(".progressbar").hide();
-                $("#dialog-message").text(message);
-                $("#message_dialog").show();
-            }
-
-            function close_message_dialog() {
-                $(".cd-popup").removeClass("is-visible");
-                $("#message_dialog").hide();
-            }
-
-            function show_operation_dialog(id) {
-                if(id == undefined) {
-                    id = "dialog";
-                }
-                $(".cd-popup").addClass("is-visible");
-                $(".progressbar").hide();
-                $("#"+id).show();
-            }
-
-            function close_operation_dialog(id) {
-                if(id == undefined) {
-                    id = "dialog";
-                }
-                $(".cd-popup").removeClass("is-visible");
-                $("#"+id).hide();
-            }
-
-            function show_mask() {
-                $(".cd-popup").addClass("is-visible");
-                $(".progressbar").show();
-            }
-
-            function hide_mask() {
-                $(".cd-popup").removeClass("is-visible");
-                $(".progressbar").hide();
-            }
-
-            function collection(product_sn) {
-                var url = "product.php";
-                var data = { "opera":"collection", "product_sn":product_sn };
-
-                show_mask();
-                $.post(url, data, collection_handler, "json");
-            }
-
-            function collection_handler(response) {
-                hide_mask();
-                show_message_dialog(response.msg);
-                if(response.error == 0) {
-                    if(response.status) {
-                        $(".addfav").addClass("addfav-on");
-                        $("#collection_desc").text("取消收藏");
-                    } else {
-                        $(".addfav").removeClass("addfav-on");
-                        $("#collection_desc").text("收藏");
-                    }
-                }
-            }
-
-            function distribution_confirm(product_sn) {
-                operation = 1;
-                if(distribution_flag) {
-                    show_operation_dialog("confirm_dialog");
-                    $("#dialog_confirm_btn").click(function () {
-                        close_operation_dialog("confirm_dialog");
-                        if(distribution_flag && operation--) {
-                            distribution(product_sn);
-                        }
-                    });
-                } else {
+    function distribution_confirm(product_sn) {
+        operation = 1;
+        if(distribution_flag) {
+            show_operation_dialog("confirm_dialog");
+            $("#dialog_confirm_btn").click(function () {
+                close_operation_dialog("confirm_dialog");
+                if(distribution_flag && operation--) {
                     distribution(product_sn);
                 }
-            }
-
-            function distribution(product_sn) {
-                var url = "product.php";
-                var data = { "opera":"distribution", "product_sn":product_sn };
-
-                show_mask();
-                $.post(url, data, distribution_handler, "json");
-            }
-
-            function distribution_handler(response) {
-                hide_mask();
-                show_message_dialog(response.msg);
-                if(response.error == 0) {
-                    if(response.status) {
-                        $(".distribution").addClass("distribution-on");
-                        $("#distribution_desc").text("取消分销");
-                        distribution_flag = true;
-                    } else {
-                        $(".distribution").removeClass("distribution-on");
-                        $("#distribution_desc").text("分销");
-                        distribution_flag = false;
-                    }
-                }
-            }
-
-            function plus() {
-                var buy_num = $("#buy_num").val();
-
-                buy_num = parseInt(buy_num);
-                if(isNaN(buy_num) || buy_num <= 0) {
-                    minus_disable();
-                    $("#buy_num").val(1);
-                } else {
-                    buy_num++;
-                    $("#buy_num").val(buy_num);
-                    minus_disable();
-                    minus_enable();
-                }
-            }
-
-            function minus() {
-                var buy_num = $("#buy_num").val();
-
-                console.info("minus "+buy_num);
-                buy_num = parseInt(buy_num);
-                if(isNaN(buy_num) || buy_num <= 1) {
-                    minus_disable();
-                    $("#buy_num").val(1);
-                } else {
-                    buy_num--;
-                    $("#buy_num").val(buy_num);
-                    if(buy_num <= 1) {
-                        minus_disable();
-                    }
-                    plus_disable();
-                    plus_enable();
-                }
-            }
-
-            function minus_enable() {
-                $("#minus").addClass("on");
-                $("#minus").bind("click", minus);
-            }
-
-            function minus_disable() {
-                $("#minus").removeClass("on");
-                $("#minus").unbind("click");
-            }
-
-            function plus_enable() {
-                $("#plus").addClass("on");
-                $("#plus").bind("click", plus);
-            }
-
-            function plus_disable() {
-                $("#plus").removeClass("on");
-                $("#plus").unbind("click");
-            }
-
-            TouchSlide({
-                slideCell:"#focus",
-                titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
-                mainCell:".bd ul",
-                effect:"left",
-                autoPlay:false,//自动播放
-                autoPage:true, //自动分页
-                switchLoad:"_src" //切换加载，真实图片路径为"_src"
             });
+        } else {
+            distribution(product_sn);
+        }
+    }
 
-            $(function(){
-                var options = $(".option_detail");
-                var options_values = options.children().children("li");
-                options_values.each(function(i, e) {
-                    e.onclick = function() {
-                        select_attribute(this);
-                    }
+    function distribution(product_sn) {
+        var url = "product.php";
+        var data = { "opera":"distribution", "product_sn":product_sn };
+
+        show_mask();
+        $.post(url, data, distribution_handler, "json");
+    }
+
+    function distribution_handler(response) {
+        hide_mask();
+        show_message_dialog(response.msg);
+        if(response.error == 0) {
+            if(response.status) {
+                $(".distribution").addClass("distribution-on");
+                $("#distribution_desc").text("取消分销");
+                distribution_flag = true;
+            } else {
+                $(".distribution").removeClass("distribution-on");
+                $("#distribution_desc").text("分销");
+                distribution_flag = false;
+            }
+        } else {
+            if(response.error == 2) {
+                $("#dialog_close_btn").click(function(){
+                    window.location.href = "login.php";
                 });
 
-                $("#plus").bind("click", plus);
-                $("#minus").bind("click", minus);
-
-                $("#collection_btn").bind("click", function() { collection("{$product.product_sn}"); });
-                $("#distribution_btn").bind("click", function() { distribution_confirm("{$product.product_sn}"); });
-
-                $("#add_to_cart_btn").bind("click", function() { add_to_cart("{$product.product_sn}"); });
-                $("#buy_now_btn").bind("click", function() { buy_now("{$product.product_sn}"); });
-
-                $(".detail-content").children("img").each(function (i, e){
-                    $(this).attr("width", "100%");
+                $("#dialog_close").click(function(){
+                    window.location.href = "login.php";
                 });
-            });
+            }
+        }
+    }
 
-            //选择产品属性
-            function select_attribute(e) {
-                var tmp = e.id.split("_");
-                var index = tmp[2];
-                var aid = tmp[3];
+    function plus() {
+        var buy_num = $("#buy_num").val();
 
-                $("#attr_options_"+aid).children(".on").removeClass("on");
-                e.className = "on";
-                console.info(aid+","+index+":"+attributes[aid]['values'][index]);
-                pattern[aid] = attributes[aid]['values'][index];
-                attributes_mode[aid] = attributes[aid]['values'][index];
+        buy_num = parseInt(buy_num);
+        if(isNaN(buy_num) || buy_num <= 0) {
+            minus_disable();
+            $("#buy_num").val(1);
+        } else {
+            buy_num++;
+            $("#buy_num").val(buy_num);
+            minus_disable();
+            minus_enable();
+        }
 
-                for (var i in pattern) {
-                    if (i != aid) {
-                        pattern[i] = ".*";
-                    }
-                }
+        if(select_attributes_complete()) {
+            check_inventory();
+        }
+    }
 
-                toogle_options();
+    function minus() {
+        var buy_num = $("#buy_num").val();
+
+        buy_num = parseInt(buy_num);
+        if(isNaN(buy_num) || buy_num <= 1) {
+            minus_disable();
+            $("#buy_num").val(1);
+        } else {
+            buy_num--;
+            $("#buy_num").val(buy_num);
+            if(buy_num <= 1) {
+                minus_disable();
+            }
+            plus_disable();
+            plus_enable();
+        }
+
+        if(select_attributes_complete()) {
+            check_inventory();
+        }
+    }
+
+    function minus_enable() {
+        $("#minus").addClass("on");
+        $("#minus").bind("click", minus);
+    }
+
+    function minus_disable() {
+        $("#minus").removeClass("on");
+        $("#minus").unbind("click");
+    }
+
+    function plus_enable() {
+        $("#plus").addClass("on");
+        $("#plus").bind("click", plus);
+    }
+
+    function plus_disable() {
+        $("#plus").removeClass("on");
+        $("#plus").unbind("click");
+    }
+
+    TouchSlide({
+        slideCell:"#focus",
+        titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+        mainCell:".bd ul",
+        effect:"left",
+        autoPlay:false,//自动播放
+        autoPage:true, //自动分页
+        switchLoad:"_src" //切换加载，真实图片路径为"_src"
+    });
+
+    $(function(){
+        var options = $(".option_detail");
+        var options_values = options.children().children("li");
+        options_values.each(function(i, e) {
+            e.onclick = function() {
+                select_attribute(this);
+            }
+        });
+
+        $("#plus").bind("click", plus);
+        $("#minus").bind("click", minus);
+
+        $("#collection_btn").bind("click", function() { collection("{$product.product_sn}"); });
+        $("#distribution_btn").bind("click", function() { distribution_confirm("{$product.product_sn}"); });
+
+        $("#add_to_cart_btn").bind("click", function() { add_to_cart("{$product.product_sn}"); });
+        $("#buy_now_btn").bind("click", function() { buy_now("{$product.product_sn}"); });
+
+        $(".detail-content").children("img").each(function (i, e){
+            $(this).attr("width", "100%");
+        });
+    });
+
+    //选择产品属性
+    function select_attribute(e) {
+        var tmp = e.id.split("_");
+        var index = tmp[2];
+        var aid = tmp[3];
+
+        $("#attr_options_"+aid).children(".on").removeClass("on");
+        e.className = "on";
+
+        pattern[aid] = attributes[aid]['values'][index];
+        attributes_mode[aid] = attributes[aid]['values'][index];
+
+        for (var i in pattern) {
+            if (i != aid) {
+                pattern[i] = ".*";
+            }
+        }
+
+        toogle_options();
+    }
+
+    //根据条件开启/关闭可筛选条件
+    function toogle_options() {
+        var check_inventory_flag = select_attributes_complete();
+
+
+        if(check_inventory_flag) {
+            check_inventory();
+        } else {
+            var buy_num = $("#buy_num").val();
+            if(buy_num <= 1) {
+                minus_disable();
+            } else {
+                minus_disable();
+                minus_enable();
             }
 
-            //根据条件开启/关闭可筛选条件
-            function toogle_options() {
-                var check_inventory_flag = select_attributes_complete();
+            plus_disable();
+            plus_enable();
+        }
+    }
 
+    //判断是否已经完成产品规格选择
+    function select_attributes_complete() {
+        var check_inventory_flag = true;
 
-                if(check_inventory_flag) {
-                    check_inventory();
-                } else {
-                    var buy_num = $("#buy_num").val();
-                    if(buy_num <= 1) {
-                        minus_disable();
-                    } else {
-                        minus_disable();
-                        minus_enable();
-                    }
+        //无产品属性时用
+        if(attributes_mode == "") {
+            return check_inventory_flag;
+        }
 
-                    plus_disable();
-                    plus_enable();
-                }
+        for(var i in attributes_mode) {
+            if(attributes_mode[i] == ".*") {
+                check_inventory_flag = false;
             }
+        }
 
-            //判断是否已经完成产品规格选择
-            function select_attributes_complete() {
-                var check_inventory_flag = true;
+        return check_inventory_flag;
+    }
 
-                //无产品属性时用
-                if(attributes_mode == "") {
-                    return check_inventory_flag;
-                }
+    function check_inventory() {
+        var index = JSON.stringify(attributes_mode);
+        var current_inventory = inventory[index];
+        if(current_inventory == undefined) {
+            current_inventory = 0;
+        }
 
-                for(var i in attributes_mode) {
-                    if(attributes_mode[i] == ".*") {
-                        check_inventory_flag = false;
-                    }
-                }
+        var buy_num = $("#buy_num").val();
+        buy_num = parseInt(buy_num);
+        current_inventory = parseInt(current_inventory);
 
-                return check_inventory_flag;
+        if(buy_num > current_inventory) {
+            //如果购买数量超过当前库存,则将购买数量设置为库存
+            $("#buy_num").val(current_inventory);
+        }
+
+        if(buy_num == current_inventory) {
+            plus_disable();
+        } else {
+            plus_disable();
+            plus_enable();
+        }
+
+        if(buy_num > 1) {
+            minus_disable();
+            minus_enable();
+        } else {
+            minus_disable();
+        }
+
+        $("#inventory_count").text("库存："+current_inventory);
+        return true;
+    }
+
+    function seek_val_index(aid, val) {
+        for(var i in attributes[aid]['values']) {
+            if(attributes[aid]['values'][i] == val) {
+                return i;
             }
+        }
 
-            function check_inventory() {
-                var index = JSON.stringify(attributes_mode);
-                console.info("inventory index: "+index);
-                var current_inventory = inventory[index];
-                if(current_inventory == undefined) {
-                    current_inventory = 0;
-                }
-
-                console.info("current inventory:"+current_inventory);
-
-                var buy_num = $("#buy_num").val();
-
-                if(buy_num > current_inventory) {
-                    $("#buy_num").val(current_inventory);
-
-                    if(current_inventory == 1) {
-                        minus_disable();
-                    }
-
-                    plus_disable();
-                    return false;
-                } else {
-                    plus_disable();
-                    plus_enable();
-                }
-
-                if(buy_num == current_inventory) {
-                    plus_disable();
-                }
-
-                $("#inventory_count").text("库存："+current_inventory);
-                return true;
-            }
-
-            function seek_val_index(aid, val) {
-                for(var i in attributes[aid]['values']) {
-                    if(attributes[aid]['values'][i] == val) {
-                        return i;
-                    }
-                }
-
-                return -1;
-            }
+        return -1;
+    }
 </script>
 <script type="text/javascript" src="{$template_dir}js/jquery.lazyload.min.js"></script>
 <script type="text/javascript">
@@ -621,5 +738,112 @@
         switchLoad:"_src" //切换加载，真实图片路径为"_src"
     });
 </script>
+{if is_weixin()}
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+<script type="text/javascript">
+    wx.config({
+            appId: '{$signPackage.appId}',
+            timestamp: {$signPackage.timestamp},
+            nonceStr: '{$signPackage.nonceStr}',
+            signature: '{$signPackage.signature}',
+            jsApiList: [
+                'chooseWXPay',
+                'closeWindow',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'onMenuShareQZone'
+            ]
+    });
+
+    wx.ready(function() {
+        var share_title = '我在{$config.site_name}淘到一款好产品，快来看哦';
+        var share_link = '{$recommend_url}';
+        var share_img = '{$product.img}';
+        var share_desc = '{$product.desc}';
+        //分享到朋友圈
+        wx.onMenuShareTimeline({
+            title: share_title, // 分享标题
+            link: share_link, // 分享链接
+            imgUrl: share_img, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+                show_message_dialog("分享到朋友圈成功了呢!");
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+                show_message_dialog("为什么要取消分享呢，不喜欢人家了吗？");
+            }
+        });
+
+        //分享给朋友
+        wx.onMenuShareAppMessage({
+            title: share_title, // 分享标题
+            desc: share_desc, // 分享描述
+            link: share_link, // 分享链接
+            imgUrl: share_img, // 分享图标
+            type: 'link', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+                // 用户确认分享后执行的回调函数
+                show_message_dialog("分享给朋友成功了哦！");
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+                show_message_dialog("喜欢我就把我推荐给你的朋友嘛~~");
+            }
+        });
+
+        //分享到QQ
+        wx.onMenuShareQQ({
+            title: share_link, // 分享标题
+            desc: share_desc, // 分享描述
+            link: share_link, // 分享链接
+            imgUrl: share_img, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+                show_message_dialog("分享到QQ成功！");
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+                show_message_dialog("听说颜值高的人都会把我分享出去的哦");
+            }
+        });
+
+        //分享到腾讯微博
+        wx.onMenuShareWeibo({
+            title: share_title, // 分享标题
+            desc: share_desc, // 分享描述
+            link: share_link, // 分享链接
+            imgUrl: share_img, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+                show_message_dialog("分享到腾讯微博成功!");
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+                show_message_dialog("把我分享到微博去玩玩嘛~");
+            }
+        });
+
+        //分享到QQ空间
+        wx.onMenuShareQZone({
+            title: share_title, // 分享标题
+            desc: share_desc, // 分享描述
+            link: share_link, // 分享链接
+            imgUrl: share_img, // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+                show_message_dialog("分享到QQ空间成功");
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+                show_message_dialog("人家想去QQ空间看看啦~");
+            }
+        });
+    });
+</script>
+{/if}
 </body>
 </html>

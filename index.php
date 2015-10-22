@@ -28,4 +28,9 @@ $get_perform_ad = 'select `img`,`url`,`alt` from '.$db->table('ad').' where `ad_
 $perform_ad = $db->fetchAll($get_perform_ad);
 assign('perform_ad', $perform_ad);
 
+//获取猜你喜欢
+$get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 6';
+$fav_products = $db->fetchAll($get_fav_products);
+assign('fav_products', $fav_products);
+
 $smarty->display('index.phtml');

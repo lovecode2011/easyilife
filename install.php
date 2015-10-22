@@ -682,6 +682,7 @@ $sql[] = 'create table if not exists '.$db->table('content').' (
     `author` varchar(255) not null,
     `add_time` int not null,
     `content` text,
+    `wap_content` text,
     `last_modify` timestamp,
     `keywords` varchar(255),
     `description` varchar(255),

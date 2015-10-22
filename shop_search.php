@@ -18,7 +18,9 @@ if('sort' == $opera)
     $mode = getPOST('mode');
 
 
-    $get_product_list = 'select `id`,`name`,`price`,`img`,`product_sn` from '.$db->table('product').' where 1 ';
+    $get_product_list = 'select p.`id`,p.`name`,p.`price`,p.`img`,p.`product_sn`,(select `account` from '.$db->table('collection').
+                        ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=p.`product_sn`) as collection from ' . $db->table('product') .
+                        ' as p where p.`status`=4 ';
 
     $response['filter'] = $filter;
 
@@ -27,7 +29,7 @@ if('sort' == $opera)
     if(isset($filter['keyword']) && $filter['keyword'] != '')
     {
         $keyword = $db->escape($filter['keyword']);
-        $get_product_list .= ' and `name` like \'%'.$keyword.'%\'';
+        $get_product_list .= ' and p.`name` like \'%'.$keyword.'%\'';
     }
 
     //价格区间
@@ -35,38 +37,38 @@ if('sort' == $opera)
     {
         $price_l = $filter['price_l'];
         $price_l = floatval($price_l);
-        $get_product_list .= ' and `price`>='.$price_l;
+        $get_product_list .= ' and p.`price`>='.$price_l;
     }
 
     if(isset($filter['price_h']))
     {
         $price_h = $filter['price_h'];
         $price_h = floatval($price_h);
-        $get_product_list .= ' and `price`<='.$price_h;
+        $get_product_list .= ' and p.`price`<='.$price_h;
     }
 
     //免运费
     if(isset($filter['free_delivery']))
     {
-        $get_product_list .= ' and `free_delivery`=1';
+        $get_product_list .= ' and p.`free_delivery`=1';
     }
     //积分换购
     if(isset($filter['integral_exchange']))
     {
-        $get_product_list .= ' and `integral`>0';
+        $get_product_list .= ' and p.`integral`>0';
     }
 
     //店铺
     $filter['sn'] = $db->escape($filter['sn']);
-    $get_product_list .= ' and `business_account`=\''.$filter['sn'].'\'';
+    $get_product_list .= ' and p.`business_account`=\''.$filter['sn'].'\'';
 
     switch($mode)
     {
         case 'sale':
-            $get_product_list .= ' order by `sale_count` DESC';
+            $get_product_list .= ' order by p.`sale_count` DESC';
             break;
         case 'star':
-            $get_product_list .= ' order by `star` DESC';
+            $get_product_list .= ' order by p.`star` DESC';
             break;
         case 'price':
             $orderby = getPOST('orderby');
@@ -79,13 +81,13 @@ if('sort' == $opera)
 
             if($orderby == 'up')
             {
-                $get_product_list .= ' order by `price` ASC';
+                $get_product_list .= ' order by p.`price` ASC';
             } else {
-                $get_product_list .= ' order by `price` DESC';
+                $get_product_list .= ' order by p.`price` DESC';
             }
             break;
         case 'new':
-            $get_product_list .= ' order by `add_time` DESC';
+            $get_product_list .= ' order by p.`add_time` DESC';
             break;
         default:
             break;
@@ -118,8 +120,9 @@ if($sn == '')
 $sn = $db->escape($sn);
 $filter['sn'] = $sn;
 
-$get_product_list = 'select `id`,`name`,`price`,`img`,`product_sn` from '.$db->table('product').' where `name` like \'%'.$keyword.'%\' and `business_account`=\''.$sn.'\'';
-
+$get_product_list = 'select p.`id`,p.`name`,p.`price`,p.`img`,p.`product_sn`,(select `account` from '.$db->table('collection').
+                    ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=p.`product_sn`) as collection from ' . $db->table('product') .
+                    ' as p where p.`status`=4 and p.`business_account`=\''.$sn.'\'';
 $product_list = $db->fetchAll($get_product_list);
 assign('business_account', $sn);
 assign('product_list', $product_list);

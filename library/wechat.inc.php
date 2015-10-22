@@ -181,6 +181,10 @@ function get_access_token($appid, $secretkey)
         $data = array('value'=>($request_time + $response->expires_in));
 
         $db->autoUpdate('sysconf', $data, '`key`=\'expired\'');
+
+        $data = array('value'=>$response->access_token);
+
+        $db->autoUpdate('sysconf', $data, '`key`=\'access_token\'');
         $log->record('access_token expired in '.date('Y-m-d H:i:s', ($request_time + $response->expires_in)));
         return $response->access_token;
     }
@@ -210,4 +214,92 @@ function check_signature($signature, $timestamp, $nonce, $token)
 	} else {
 		return false;
 	}
+}
+
+/**
+ * 生成预支付交易单
+ */
+function create_prepay($appid, $mch_id, $mch_key, $openid, $total_fee, $body, $detail, $out_trade_no, $params = array())
+{
+    $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
+
+    $now = time();
+    $data = array(
+        'appid' => $appid,
+        'mch_id' => $mch_id,
+        'openid' => $openid,
+        'total_fee' => $total_fee*100,
+        'nonce_str' => get_nonce_str(),
+        'spbill_create_ip' => $_SERVER['REMOTE_ADDR'],
+        'fee_type' => 'CNY',
+        'time_start' => date('YmdHis', $now),
+        'time_expire' => date('YmdHis', ($now+3600*24*7)),//支付链接7天后无效
+        'notify_url' => 'http://sbx.kwanson.com/notify.php',//完成支付后的回调地址
+        'trade_type' => 'JSAPI',//交易类型，可选：JSAPI, NATIVE, APP, WAP
+        //  'limit_pay' => 'no_credit', //此项将不允许使用信用卡支付
+        'body' => $body,
+        'detail' => $detail,
+        'out_trade_no' => $out_trade_no//订单编号
+    );
+
+    $data = array_merge($data, $params);
+
+    ksort($data);
+    $param_str = '';
+    $xml = new SimpleXMLElement('<xml></xml>');
+
+    foreach($data as $key=>$value)
+    {
+        if(empty($value))
+        {
+            unset($data[$key]);
+        } else {
+            $param_str .= $key.'='.$value.'&';
+            $xml->addChild($key, $value);
+        }
+    }
+
+    $param_str .= 'key='.$mch_key;
+
+    $sign = md5($param_str);
+    $sign = strtoupper($sign);
+    $xml->addChild('sign', $sign);
+
+    $response = post($url, $xml->asXML(), false);
+    return $response;
+}
+
+function tenpay_sign($data, $mch_key)
+{
+    ksort($data);
+    $param_str = '';
+    foreach($data as $key=>$value)
+    {
+        if($key != 'sign')
+        {
+            $param_str .= $key . '=' . $value . '&';
+        }
+    }
+    $param_str .= 'key='.$mch_key;
+
+    $sign = md5($param_str);
+    return strtolower($sign);
+}
+
+/**
+ * 生成随机字符串
+ */
+function get_nonce_str()
+{
+    $seed = '01234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM';
+
+    $strlen = 32;
+
+    $nonce_str = '';
+    while($strlen--)
+    {
+        $nonce_str .= $seed[rand(0, strlen($seed)-1)];
+    }
+
+    return $nonce_str;
 }

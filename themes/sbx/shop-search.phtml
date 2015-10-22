@@ -59,7 +59,7 @@
                         <p class="name">{$product.name}</p >
                     </a >
                     <p class="price"><span class="red">¥{$product.price}</span>
-                        <span name="item_collect" title="收藏" class="span_sc" onclick="javascript:collection('{$product.product_sn}');" flag="add"></span>
+                        <span name="item_collect" title="收藏" class="span_sc {if $product.collection}span_sc_on{/if}" id="fav_{$product.product_sn}" onclick="javascript:collection('{$product.product_sn}');" flag="add"></span>
                     </p >
                 </div>
             </li>
@@ -276,9 +276,9 @@
         hide_mask();
         if(response.error == 0) {
             if(response.status) {
-
+                $("#fav_"+response.product_sn).addClass("span_sc_on");
             } else {
-
+                $("#fav_"+response.product_sn).removeClass("span_sc_on");
             }
         }
     }

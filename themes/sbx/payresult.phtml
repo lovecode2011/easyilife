@@ -26,17 +26,22 @@
 <section class="paycon">
     <div class="paydetail">
         <ul>
-            <h3 class="s_tips"><i class="icon">&#xe635;</i>支付成功</h3>
-            <li>订单编号：20150825151133123456</li>
-            <li>订单详情：圣宝先 松花粉</li>
-            <li>支付金额：<i class="red_money">174.00元</i></li>
+            <h3 class="s_tips"><i class="icon">&#xe635;</i>支付成功，请等待后台确认</h3>
+            <li>订单编号：{$order.order_sn}</li>
+            <li>订单详情：</li>
+            {foreach from=$order_detail item=od}
+            <li>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {$od.product_name}x{$od.count}
+            </li>
+            {/foreach}
+            <li>支付金额：<i class="red_money">{sprintf("%.2f", $order.amount)}元</i></li>
         </ul>
         <div class="paybtn-con">
-            <a href="#" class="paybtn">确认</a>
+            <a href="order.php?status=6" class="paybtn">确认</a>
         </div>
     </div>
 </section>
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
-
 </body>
 </html>
