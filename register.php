@@ -45,7 +45,7 @@ if('reg' == $opera)
     {
         $password = md5($password.PASSWORD_END);
 
-        if($account = register_mobile($mobile, $password))
+        if($account = register_mobile($mobile, $password, $_SESSION['parent_id']))
         {
             $response['error'] = 0;
             //发送短信提示用户

@@ -44,6 +44,9 @@ if( 'add' == $opera ) {
     $count = getPOST('count');
     $total = getPOST('total');
 
+    $single_inventory = getPOST('single_inventory');
+    $single_inventory = intval($single_inventory);
+
     do {
         $sn = rand(100000, 999999);
         $product_sn = 'EIF'.$sn;
@@ -169,6 +172,7 @@ if( 'add' == $opera ) {
     if( !$db->autoInsert($table, array($data)) ) {
         $transaction = false;
     }
+
     $links = array(
         array('link' => 'virtual_product.php', 'alt' => '虚拟产品列表'),
         array('link' => 'virtual_product.php?act=add', 'alt' => '继续添加'),
@@ -188,6 +192,20 @@ if( 'add' == $opera ) {
                 $transaction = false;
             }
         }
+    }
+
+    //产品库存
+    $inventory = intval($single_inventory);
+    $data = array(
+        'product_sn' => $product_sn,
+        'attributes' => '',
+        'inventory' => $inventory,
+        'inventory_logic' => $inventory
+    );
+
+    $table = 'inventory';
+    if (!$db->autoInsert($table, array($data))) {
+        $transaction = false;
     }
 
     if( $transaction == false ) {
@@ -242,6 +260,9 @@ if( 'edit' == $opera ) {
     $promote_begin = trim(getPOST('promote_begin'));
     $promote_end = trim(getPOST('promote_end'));
     $order_view = intval(getPOST('order_view'));
+
+    $inventory = getPOST('single_inventory');
+    $inventory = intval($inventory);
 
     if( '' == $name ) {
         show_system_message('产品名称不能为空', array());
@@ -334,6 +355,14 @@ if( 'edit' == $opera ) {
     $order = '';
     $limit = '1';
     if( $db->autoUpdate($table, $data, $where, $order, $limit) ) {
+        //检查库存，如果存在无属性库存则更新库存
+        $check_inventory = 'select `id` from '.$db->table('inventory').' where `product_sn`=\''.$product_sn.'\' and `attributes`=\'\'';
+        $inventory_id = $db->fetchOne($check_inventory);
+        if($inventory_id)
+        {
+            modify_inventory($product_sn, '', $inventory);
+        }
+
         $links = array(
             array('link' => 'virtual_product.php', 'alt' => '虚拟产品列表'),
             array('link' => 'virtual_product.php?act=add', 'alt' => '添加虚拟产品'),

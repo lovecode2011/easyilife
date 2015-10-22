@@ -23,6 +23,7 @@
     <h1><em>{$title}</em></h1>
 </header>
 
+{if $product_list}
 <!-- 内容开始 -->
 <section class="wishlist">
     <ul>
@@ -40,6 +41,15 @@
         {/foreach}
     </ul>
 </section>
+{else}
+<div class="empty-con">
+    <span class="icon">&#xe640;</span>
+    <span class="empty-tips">{$title}空空如也!</span>
+        <span class="empty-btn">
+            <a href="index.php" class="btn">去逛逛</a>
+        </span>
+</div>
+{/if}
 <div class="cd-popup" role="alert">
     <div class="cd-popup-container" id="confirm_dialog" style="display: none;">
         <p>居然取消分销，沉思啊客官</p>

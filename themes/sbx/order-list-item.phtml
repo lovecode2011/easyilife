@@ -1,4 +1,5 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+{if $order_list}
 {foreach from=$order_list item=order}
 <div class="block">
     <div class="order_list">
@@ -66,3 +67,14 @@
     </div>
 </div>
 {/foreach}
+{else}
+<div class="block">
+    <div class="empty-con">
+        <span class="icon">&#xe63d;</span>
+        <span class="empty-tips">找不到任何订单!</span>
+            <span class="empty-btn">
+                <a href="index.php" class="btn">去逛逛</a>
+            </span>
+    </div>
+</div>
+{/if}

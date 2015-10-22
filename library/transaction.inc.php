@@ -7,6 +7,108 @@
  */
 
 /**
+ * 新增商家交易记录
+ */
+function add_business_exchange($business_account, $balance, $trade, $operator, $remark = '')
+{
+    global $db;
+
+    $update_business = 'update '.$db->table('business').' set `balance`=`balance`+'.$balance.',`trade`=`trade`+'.$trade.
+                       ' where `business_account`=\''.$business_account.'\'';
+
+    if($db->update($update_business))
+    {
+        $log_data = array(
+            'business_account' => $business_account,
+            'balance' => $balance,
+            'trade' => $trade,
+            'operator' => $operator,
+            'remark' => $remark,
+            'add_time' => time()
+        );
+
+        $db->autoInsert('business_exchange_log', array($log_data));
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * 新增商家担保交易
+ */
+function add_business_trade($business_account, $trade, $remark, $status = 0)
+{
+    global $db;
+
+    $trade_data = array(
+        'business_account' => $business_account,
+        'trade' => $trade,
+        'remark' => $remark,
+        'status' => $status,
+        'settle_time' => time()
+    );
+
+    return $db->autoInsert('trade', array($trade_data));
+}
+
+/**
+ * 新增充值记录
+ */
+function add_recharge($account, $amount, $type = 0, $bank = '', $card_num = '', $remark = '')
+{
+    global $db;
+
+    $recharge_data = array(
+        'account' => $account,
+        'amount' => $amount,
+        'status' => 0,
+        'add_time' => time(),
+        'type' => $type,
+        'bank' => $bank,
+        'card_num' => $card_num
+    );
+
+    $recharge_sn = '';
+    do
+    {
+        $recharge_sn = 'R'.time().rand(100, 999);
+
+        $check_recharge_sn = 'select `recharge_sn` from '.$db->table('recharge').' where `recharge_sn`=\''.$recharge_sn.'\'';
+    } while($db->fetchOne($check_recharge_sn));
+
+    $recharge_data['recharge_sn'] = $recharge_sn;
+
+    if($db->autoInsert('recharge', array($recharge_data)))
+    {
+        add_recharge_log($recharge_sn, $account, $_SESSION['account'], $type, 0, $remark);
+        return $recharge_sn;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * 充值日志记录
+ */
+function add_recharge_log($recharge_sn, $account, $operator, $type, $status, $remark = '')
+{
+    global $db;
+
+    $log_data = array(
+        'recharge_sn' => $recharge_sn,
+        'account' => $account,
+        'add_time' => time(),
+        'operator' => $operator,
+        'type' => $type,
+        'status' => $status,
+        'remark' => $remark
+    );
+
+    return $db->autoInsert('recharge_log', array($log_data));
+}
+/**
  * 检查产品库存
  * @param string $product_sn
  * @param string $attributes

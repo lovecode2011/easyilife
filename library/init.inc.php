@@ -75,16 +75,40 @@ assign('config', $config);
 //设置模板路径
 assign('template_dir', 'themes/'.$config['themes'].'/');
 
-//测试数据
-//$_SESSION['account'] = 'SJ000000';
-//$_SESSION['openid'] = '0123456789';
+//读取ukey参数，记录推荐人信息
+$ukey = getGET('ukey');
+if($ukey != '')
+{
+    $ukey = intval($ukey);
+
+    if($ukey > 0)
+    {
+        $get_member_id = 'select `id` from '.$db->table('member').' where `id`='.$ukey;
+
+        if($member_id = $db->fetchOne($get_member_id))
+        {
+            $_SESSION['parent_id'] = $member_id;
+        }
+    }
+}
+
+if(!isset($_SESSION['parent_id'])){
+    $_SESSION['parent_id'] = 0;
+}
+
 if(!isset($_SESSION['openid']))
 {
     $_SESSION['openid'] = '';
 }
 
+if(!isset($_SESSION['account']))
+{
+    $_SESSION['account'] = '';
+}
+
 $code = getGET('code');
 $state = getGET('state');
+//微信获取和同步用户信息
 if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
 {
     $wechat_user = get_user_info($code, $config['appid'], $config['appsecret'], 'userinfo');
@@ -99,8 +123,9 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
 
         if(!$account)
         {
+            //如果用户不存在，则直接新注册用户
             $log->record("register new member");
-            register_member($_SESSION['openid']);
+            register_member($_SESSION['openid'], $_SESSION['parent_id']);
         }
 
         $member_data = array(
@@ -122,7 +147,8 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
 
 if($_SESSION['openid'] == '' || $_SESSION['account'] == '')
 {
-    $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php';
+    $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php|index.php|article.php|article_list.php|';
+    $no_login_script .= 'category.php|product.php|cart.php|product_list.php|search.php|shop.php|distribution_shop.php|notify.php';
     $script_name = str_replace(ROOT_PATH, '', $_SERVER['SCRIPT_FILENAME']);
 
     $flag = check_action($no_login_script, $script_name);

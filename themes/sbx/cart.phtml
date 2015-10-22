@@ -23,58 +23,9 @@
     <div class="h_label">购物车</div>
     <!--<a href="javascript: void(0)" class="edit">编辑</a>-->
 </header>
+{if $cart_list}
 <!-- 购物车列表 -->
 <section class="cart">
-    <!--
-    <div class="block">
-        <div class="cart_list">
-            <div class="shop_title">
-                <input type="checkbox" class="fl c_checkbox">
-                <div class="fl"><a class="shopLink eclipse" href="#">隔壁老王专卖店</a></div>
-                <a class="fl right_arrow" href="#"></a>
-                <a class="c_edit" id="e__0"></a>
-            </div>
-            <div class="cart_item">
-                <input type="checkbox" class="fl c_checkbox">
-                <img src="{$template_dir}images/product_1.jpg" class="fl pro_pic">
-                <div class="detail">
-                    <p class="fr prd_price">￥69.00</p>
-                    <p class="fl prd_tit"><a href="#">松花粉</a></p>
-                    <div class="clear tags">
-                        <section class="quantity" style="display: none;">
-                            <div class="number_con">
-                                <span class="minus">-</span>
-                                <div class="input"><input type="text" value="1"></div>
-                                <span class="plus on">+</span>
-                            </div>
-                        </section>
-                        <a class="garbage" style="display: none;"></a>
-                    </div>
-                </div>
-                <div class="bottom_line"></div>
-            </div>
-            <div class="cart_item">
-                <input type="checkbox" class="fl c_checkbox">
-                <img src="{$template_dir}images/product_1.jpg" class="fl pro_pic">
-                <div class="detail">
-                    <p class="fr prd_price">￥69.00</p>
-                    <p class="fl prd_tit"><a href="#">松花粉</a></p>
-                    <div class="clear tags">
-                        <section class="quantity" style="display: none;">
-                            <div class="number_con">
-                                <span class="minus">-</span>
-                                <div class="input"><input type="text" value="1"></div>
-                                <span class="plus on">+</span>
-                            </div>
-                        </section>
-                        <a class="garbage" style="display: none;"></a>
-                    </div>
-                </div>
-                <div class="bottom_line"></div>
-            </div>
-        </div>
-    </div>
-    -->
     <div class="block">
         {foreach from=$cart_list item=cart}
         <div class="cart_list">
@@ -100,7 +51,7 @@
                             <div class="number_con">
                                 <span class="minus {if $product.number gt 1}on{/if}" id="minus_{$product.c_id}" onclick="minus({$product.c_id})">-</span>
                                 <div class="input">
-                                    <input type="tel" value="{$product.number}" id="product_{$product.c_id}" onblur="blur_caculate({$product.c_id}, this.value-1});"/>
+                                    <input type="tel" value="{$product.number}" id="product_{$product.c_id}" onblur="blur_caculate({$product.c_id}, this.value);"/>
                                 </div>
                                 <span class="plus on" id="plus_{$product.c_id}" onclick="plus({$product.c_id})">+</span>
                             </div>
@@ -133,6 +84,18 @@
         </p>
     </div>
 </footer>
+{else}
+<!-- 购物车为空 -->
+<section class="empty">
+    <div class="empty-con">
+        <span class="icon">&#xe63e;</span>
+        <span class="empty-tips">您的购物车空空如也!</span>
+        <span class="empty-btn">
+            <a href="index.php" class="btn">去逛逛</a>
+        </span>
+    </div>
+</section>
+{/if}
 <div class="cd-popup" role="alert">
     <div class="cd-popup-container" id="message_dialog" style="display: none;">
         <p id="dialog-message"></p>
@@ -211,6 +174,14 @@
     }
 
     function blur_caculate(cid, number) {
+        number = parseInt(number);
+
+        if(isNaN(number) || number <= 0) {
+            number = 1;
+        }
+
+        $("#product_"+cid).val(number);
+
         check_inventory(cid, number);
         caculate_fee();
     }

@@ -8,7 +8,7 @@
 include 'library/init.inc.php';
 
 $template = 'order-list.phtml';
-$action = 'list|detail|comment|express_info';
+$action = 'list|detail|comment|express_info|product_comment';
 $act = check_action($action, getGET('act'));
 $operation = 'pay_now|cancel|rollback|receive|comment|product_comment|sort';
 $opera = check_action($operation, getPOST('opera'));
@@ -343,6 +343,24 @@ if('pay_now' == $opera)
 
     echo json_encode($response);
     exit;
+}
+
+if('product_comment' == $act)
+{
+    $product_sn = getGET('product_sn');
+
+    if($product_sn == '')
+    {
+        redirect('index.php');
+    }
+
+    $template = 'product_comment.phtml';
+
+    $get_product = 'select `name`,`product_sn`,`img` from '.$db->table('product').' where `product_sn`=\''.$product_sn.'\'';
+
+    $product = $db->fetchRow($get_product);
+
+    assign('product', $product);
 }
 
 if('express_info' == $act)

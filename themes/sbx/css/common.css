@@ -2,7 +2,7 @@
 /*1px线问题（ios8）*/
 html.hairlines *{border-width:0.5px !important;}
 /** 全局reset **/
-body,header,footer,section,div,span,p,img,a,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,em,i,b,u,del,menu,nav,fieldset,legend,article,aside,details,figcaption,hgroup,pre,code,from,blockquote,th,td,tr,hr,table,img,figure,button,input,textarea{padding:0;margin:0;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;-o-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-text-size-adjust:none;-webkit-tap-highlight-color:rgba(0,0,0,0);font-family:Microsoft Yahei,Helvetica,Arial;}
+body,header,footer,section,div,span,p,img,a,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,em,i,b,u,del,menu,nav,fieldset,legend,article,aside,details,figcaption,hgroup,pre,code,from,blockquote,th,td,tr,hr,table,img,figure,button,input,textarea{padding:0;margin:0;-webkit-user-select:auto;-moz-user-select:auto;-ms-user-select:auto;-o-user-select:auto;user-select:auto;-webkit-touch-callout:auto;-webkit-text-size-adjust:none;-webkit-tap-highlight-color:rgba(0,0,0,0);font-family:Microsoft Yahei,Helvetica,Arial;}
 body{background-color:#fff;}
 /* webkit引擎的浏览器取消默认样式(-webkit-appearance) */
 input,textarea{-webkit-user-select:auto !important;user-select:auto !important;/*-webkit-appearance:none;*/}
@@ -165,11 +165,11 @@ html,body{font-size:20px;}
     background-color: #c5ccd8;
 }
 .cd-popup-container .cd-buttons li:last-child a {
-    background: #fc7169;
+    background: #ff0000;
     border-radius: 0 0 .25rem 0;
 }
 .no-touch .cd-popup-container .cd-buttons li:last-child a:hover {
-    background-color: #fc8982;
+    background-color: #ff0000;
 }
 .cd-popup-container .cd-popup-close {
     position: absolute;
@@ -225,6 +225,10 @@ html,body{font-size:20px;}
     width: 100%;
 }
 
+.cd-popup-container .cd-buttons li.cd-signle-button a {
+    border-radius: 0 0 .25rem .25rem;
+}
+
 .progressbar {
     position: fixed;
     width: 100%;
@@ -234,7 +238,7 @@ html,body{font-size:20px;}
 }
 
 .progressbar img {
-    width: 120px;
+    width: 100px;
     margin: 0 auto;
 }
 

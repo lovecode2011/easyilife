@@ -42,7 +42,7 @@
             </li>
         </ul>
         <div class="paybtn-con">
-            <a href="javascript:topay();" class="paybtn">确认支付</a>
+            <a href="javascript:topay();" class="paybtn" id="pay_btn">确认支付</a>
         </div>
     </div>
 </section>
@@ -60,7 +60,12 @@
     </div>
 </div>
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+{if is_weixin()}
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+{/if}
 <script type="text/javascript">
+    var global_result = null;
+
     $(function() {
         $(".paydetail ul li span").click(function(){
             $(this).siblings().removeClass("on");
@@ -69,7 +74,7 @@
     });
 
     function topay() {
-        show_message_dialog("等待支付接口申请下来");
+//        show_message_dialog("等待支付接口申请下来");
     }
 
     function show_message_dialog(message) {
@@ -85,8 +90,73 @@
     }
 
     function get_pay_link(plugins) {
-
+        switch(plugins)
+        {
+            case "wechat":
+                get_prepay_id();
+                break;
+            default:
+                show_message_dialog("该支付方式暂无接口支持");
+                break;
+        }
     }
+
+    function get_prepay_id() {
+        var data = { "opera":"wechat" };
+        var url = "topay.php";
+
+        show_mask();
+        $.post(url, data, get_prepay_id_handler, "json");
+    }
+
+    function get_prepay_id_handler(result) {
+        hide_mask();
+        if(result.error == 0) {
+            global_result = result;
+            $("#pay_btn").bind("click", function() {
+                wx.chooseWXPay({
+                    timestamp: global_result.timestamp,
+                    nonceStr: global_result.nonce_str,
+                    package: 'prepay_id='+global_result.prepay_id,
+                    signType: 'MD5',
+                    paySign: global_result.sign,
+                    success: function (res) {
+                        // 支付成功后的回调函数
+                        if(res.errMsg == "chooseWXPay:ok") {
+                            window.location.href = "payresult.php";
+                        } else {
+                            show_message_dialog(res.errMsg+":支付失败");
+                        }
+                    }
+                });
+            });
+        } else {
+            show_message_dialog(result.msg);
+        }
+    }
+
+    function show_mask() {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").show();
+    }
+
+    function hide_mask() {
+        $(".cd-popup").removeClass("is-visible");
+        $(".progressbar").hide();
+    }
+
+    {if is_weixin()}
+    wx.config({
+        appId: '{$signPackage.appId}',
+        timestamp: {$signPackage.timestamp},
+        nonceStr: '{$signPackage.nonceStr}',
+        signature: '{$signPackage.signature}',
+        jsApiList: [
+            'chooseWXPay',
+            'closeWindow'
+        ]
+    });
+    {/if}
 </script>
 </body>
 </html>

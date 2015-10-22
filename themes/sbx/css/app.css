@@ -264,6 +264,9 @@ body{background-color: #f8f8f8;}
     font-size: .55rem;
     padding: .8rem 0;
 }
+.cart_item .detail {
+    overflow: hidden;
+}
 .tags{
     overflow: hidden;
 }
@@ -274,10 +277,11 @@ body{background-color: #f8f8f8;}
 }
 .cart_item .prd_tit {
     width: 50%;
+    clear: left;
 }
 .cart_item .prd_tit a {
     width: 100%;
-    height: 3.2rem;
+    /*height: 3.2rem;*/
     overflow: hidden;
     line-height: .8rem;
     display: block;
@@ -789,6 +793,11 @@ aside span.blue{background-color:#008cd6;}
 .actionBar-container .action-bar .distribution {
     max-width: 2.5rem;
 }
+
+.distribution-on, .addfav-on {
+    color: orange;
+}
+
 .actionBar-container .action-bar .cell {
     height: 2.49rem;
     text-align: center;
@@ -1017,7 +1026,7 @@ aside span.blue{background-color:#008cd6;}
 }
 .might-like ul li a,.hot-product ul li a{
     display: block;
-    background-color: #f1f2e2;
+    background-color: #fff;
     overflow: hidden;
     padding-bottom: .375rem;
     border: 1px solid #f2f2f2;
@@ -1037,7 +1046,7 @@ aside span.blue{background-color:#008cd6;}
     margin-bottom: .25rem;
     font-size: .65rem;
     line-height: .9rem;
-    height: 1.8rem;
+    /*height: 1.8rem;*/
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
@@ -1319,6 +1328,7 @@ nav.ol_select_bar ul a.hover li {
 }
 .order-list{
     padding-top: 2rem;
+    height: 100%;
 }
 .order-list .cart_item {
     border-bottom: 1px solid #E1E1E1;
@@ -1787,8 +1797,8 @@ nav.ol_select_bar ul a.hover li {
     background-color: #f8f8f8;
 }
 .paydetail span.on {
-    border: 1px solid #fe435d;
-    background-color: #fe435d;
+    border: 1px solid #ff0000;
+    background-color: #ff0000;
     color: #ffffff;
 }
 .paybtn-con{
@@ -1801,7 +1811,7 @@ nav.ol_select_bar ul a.hover li {
     width: 5rem;
     height: 1.5rem;
     line-height: 1.5rem;
-    background-color: #FF463C;
+    background-color: #ff0000;
     border-radius: 3px;
     font-size: .75rem;
     color: #ffffff;
@@ -1924,8 +1934,7 @@ nav.ol_select_bar ul a.hover li {
     width: 100%;
 }
 .goods_list li .name {
-    height: 36px;
-    line-height: 18px;
+    line-height: 1.8rem;
     overflow: hidden;
     color: #4d525d;
 }
@@ -2951,11 +2960,11 @@ nav.ol_select_bar ul a.hover li {
     color: #ffce28;
 }
 .comment-detail .comment-text{
-    width: 100%;
+    width: 90%;
     height: 5rem;
-    margin-left: .3em;
     border: 0;
-    font-size: .6rem;
+    font-size: .8rem;
+    padding: 1rem 5%;
     color: #6e6e6e;
     -webkit-appearance: none;
 }
@@ -3164,4 +3173,57 @@ li.search-shop-li div{
     padding-left: .5rem;
     width: 55%;
     font-size: .65rem;
+}
+
+/* 购物车，订单等为空 */
+.empty-con span{
+    display: block;
+    text-align: center;
+}
+.empty-con .icon{
+    font-size: 5rem;
+    color: #cacaca;
+    padding: 1rem;
+}
+.empty-con .empty-tips{
+    color:#999;
+    font-size: .7rem;
+}
+.empty-btn{
+    text-align: center;
+    margin: .5rem 0;
+}
+.empty-btn a{
+    font-size: .7rem;
+}
+.empty-btn .btn{
+    color: #fff;
+    background-color: #ff0000;
+    border-radius: .2rem;
+    padding: .3rem .8rem;
+}
+
+/* 产品评论 */
+.product-comment-name, .product-comment-operation {
+    line-height: 1.5rem;
+    font-size: .8rem;
+}
+
+.product-comment-operation {
+    border-radius: .25rem;
+    background: #ff463c;
+    display: inline-block;
+    color: #fff;
+    padding: 0 .8rem;
+}
+
+/* 推广链接 */
+#url {
+    padding: .5rem 0;
+    font-size: .8rem;
+    background-color: orange;
+    text-align: center;
+    border-radius: .3rem;
+    color: #fff;
+    display: none;
 }

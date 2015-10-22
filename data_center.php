@@ -7,10 +7,59 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'get_fav|verify_pic_code|verify_message_code|get_message_code|verify_mobile|login|register';
+$operation = 'get_fav|verify_pic_code|verify_message_code|get_message_code|verify_mobile|login|register|get_qrcode';
 $opera = check_action($operation, getPOST('opera'));
 
 $response = array('error'=>1, 'msg'=>'');
+
+if($opera == 'get_qrcode')
+{
+    $response = array('error'=>1, 'msg'=>'');
+
+    if(!check_cross_domain())
+    {
+        $url = getPOST('url');
+        $account = getPOST('account');
+
+        if($url == '')
+        {
+            $response['msg'] = '参数为空';
+        } else {
+            if(!empty($_SESSION['account']))
+            {
+                $get_member_id = 'select `id` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
+                $member_id = $db->fetchOne($get_member_id);
+                //获取链接的二维码
+                $param = array('url'=>$url, 'opera'=>'get_url', 'account'=>$_SESSION['account']);
+                $get_url_response = post('http://localhost/sbx/d/index.php', $param);
+
+                $get_url_response = json_decode($get_url_response);
+                if($get_url_response->error == 0)
+                {
+                    $loader->includeClass('Qrcode');
+
+                    $save_file = 'upload/qrcode/'.$member_id.'.png';
+                    if(QRcode::png($get_url_response->url, $save_file, QR_ECLEVEL_M, 6))
+                    {
+                        $response['error'] = 0;
+                        $response['url'] = $save_file;
+                    } else {
+                        $response['msg'] = '系统繁忙，请稍后再试';
+                    }
+                } else {
+                    $response['msg'] = $get_url_response->msg;
+                }
+            } else {
+                $response['msg'] = '请先登录';
+            }
+        }
+    } else {
+        $response['msg'] = '404:参数错误';
+    }
+
+    echo json_encode($response);
+    exit;
+}
 
 if('login' == $opera)
 {
@@ -56,7 +105,7 @@ if('login' == $opera)
             $response['error'] = 0;
             $response['msg'] = '登录成功';
 
-            if(isset($_SERVER['HTTP_REFERER']))
+            if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != 'login.php')
             {
                 $response['referer'] = $_SERVER['HTTP_REFERER'];
             } else {
@@ -78,7 +127,7 @@ if('verify_mobile' == $opera)
         if($mode == 'unique')
         {
             $mobile = $db->escape($mobile);
-            $check_mobile = 'select `mobile` from '.$db->table('member').' where `mobile`=\''.$mobile.'\'';
+            $check_mobile = 'select `mobile` from '.$db->table('member').' where `mobile`=\''.$mobile.'\' and `account`<>\''.$_SESSION['account'].'\'';
 
             $flag = $db->fetchOne($check_mobile);
 
@@ -207,7 +256,7 @@ if('verify_pic_code' == $opera)
 
 if('get_fav' == $opera)
 {
-    $get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' order by `add_time` DESC limit 3';
+    $get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 6';
     $fav_products = $db->fetchAll($get_fav_products);
     assign('product_list', $fav_products);
 
