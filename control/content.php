@@ -35,6 +35,7 @@ if( 'add' == $opera ) {
     $keywords = trim(getPOST('keywords'));
     $description = trim(getPOST('description'));
     $content = trim(getPOST('content'));
+    $wap_content = trim(getPOST('wap_content'));
     $publishTime = trim(getPOST('publishTime'));
     $isAutoPublish = trim(getPOST('isAutoPublish'));
     $add_time = time();
@@ -67,21 +68,7 @@ if( 'add' == $opera ) {
         $author = $db->escape(htmlspecialchars($author));
     }
 
-//    if( '' == $keywords ) {
-//        show_system_message('出于SEO的考虑，请务必填写关键词', array());
-//        exit;
-//    } else {
-//        $keywords = $db->escape(htmlspecialchars($keywords));
-//    }
-//
-//    if( '' == $description )
-//    {
-//        show_system_message('出于SEO的考虑，请务必填写摘要', array());
-//        exit;
-//    } else {
-//        $description = $db->escape(htmlspecialchars($description));
-//    }
-    $keywords = '';
+    $keywords = $db->escape(htmlspecialchars($keywords));
     $description = $db->escape(htmlspecialchars($description));
 
     if( '' == $section_id || 0 >= intval($section_id) ) {
@@ -90,12 +77,9 @@ if( 'add' == $opera ) {
     } else {
         $section_id = intval($section_id);
     }
-    if( empty($content) ) {
-        show_system_message('文章内容不能为空', array());
-        exit;
-    } else {
-        $content = $db->escape($content);
-    }
+
+    $content = $db->escape($content);
+    $wap_content = $db->escape($wap_content);
 
     $isAutoPublish = intval($isAutoPublish);
     if('' == $isAutoPublish || 0 == intval($isAutoPublish) )
@@ -129,6 +113,7 @@ if( 'add' == $opera ) {
     $data = array(
         'title' => $title,
         'content' => $content,
+        'wap_content' => $wap_content,
         'author' => $author,
         'add_time' => $add_time,
         'keywords' => $keywords,
@@ -171,6 +156,7 @@ if( 'edit' == $opera ) {
     $keywords = trim(getPOST('keywords'));
     $description = trim(getPOST('description'));
     $content = trim(getPOST('content'));
+    $wap_content = trim(getPOST('wap_content'));
     $publishTime = trim(getPOST('publishTime'));
     $isAutoPublish = trim(getPOST('isAutoPublish'));
     $original_url = trim(getPOST('original-url'));
@@ -203,21 +189,7 @@ if( 'edit' == $opera ) {
         $author = $db->escape(htmlspecialchars($author));
     }
 
-//    if( '' == $keywords ) {
-//        show_system_message('出于SEO的考虑，请务必填写关键词', array());
-//        exit;
-//    } else {
-//        $keywords = $db->escape(htmlspecialchars($keywords));
-//    }
-//
-//    if( '' == $description )
-//    {
-//        show_system_message('出于SEO的考虑，请务必填写摘要', array());
-//        exit;
-//    } else {
-//        $description = $db->escape(htmlspecialchars($description));
-//    }
-    $keywords = '';
+    $keywords = $db->escape(htmlspecialchars($keywords));
     $description = $db->escape(htmlspecialchars($description));
 
     if( '' == $section_id || 0 >= intval($section_id) ) {
@@ -226,12 +198,8 @@ if( 'edit' == $opera ) {
     } else {
         $section_id = intval($section_id);
     }
-    if( empty($content) ) {
-        show_system_message('文章内容不能为空', array());
-        exit;
-    } else {
-        $content = $db->escape($content);
-    }
+    $content = $db->escape($content);
+    $wap_content = $db->escape($wap_content);
 
     $isAutoPublish = intval($isAutoPublish);
     if('' == $isAutoPublish || 0 == intval($isAutoPublish) ) {
@@ -263,6 +231,7 @@ if( 'edit' == $opera ) {
 
     $data = array(
         'title' => $title,
+        'wap_content' => $wap_content,
         'content' => $content,
         'author' => $author,
         'keywords' => $keywords,

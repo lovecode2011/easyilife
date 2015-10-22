@@ -7,8 +7,15 @@
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-//设置系统相关参数
 session_start();
+if( isset($_COOKIE['session']) ) {
+    session_id($_COOKIE['session']);
+    setcookie('session', $_COOKIE['session'], time() + 3600 * 24 * 21);
+} else {
+    setcookie('session', session_id(), time() + 3600 * 24 * 21);
+}
+
+//设置系统相关参数
 date_default_timezone_set('Asia/Shanghai');
 define('ROOT_PATH', str_replace('library/init.inc.php', '',str_replace('\\', '/', __FILE__)));
 if(!class_exists('AutoLoader'))
@@ -158,4 +165,38 @@ if(is_weixin())
     $jssdk = new JSSDK($config['appid'], $config['appsecret']);
     $signPackage = $jssdk->GetSignPackage();
     assign('signPackage', $signPackage);
+}
+
+//统计PV,UV
+if( 1 == $config['statistics'] ) {
+    $date = date('Ym', time());
+    $table = 'statistics'.$date;
+    $sql = 'create table if not exists '.$db->table($table).' (
+        `id` bigint not null auto_increment primary key,
+        `request_time` int not null,
+        `ip` varchar(255) not null,
+        `source` varchar(255) not null,
+        `destination` varchar(255) not null,
+        `keep_alive` int,
+        `cookie` varchar(255) not null,
+        `agent` varchar(255) not null,
+        `markup` varchar(255)
+    ) default charset=utf8;';
+
+    $db->query($sql);
+
+    $source = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER']: '';
+
+    $data = array(
+        'request_time' => time(),
+        'ip' => $_SERVER['REMOTE_ADDR'],
+        'source' => $source,
+        'destination' => $_SERVER['PHP_SELF'],
+        'keep_alive' => 0,
+        'cookie' => session_id(),
+        'agent' => $_SERVER['HTTP_USER_AGENT'],
+        'markup' => 'wechat',
+    );
+
+    $db->autoInsert($table, array($data));
 }
