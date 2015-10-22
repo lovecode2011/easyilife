@@ -18,6 +18,8 @@ if( isset($_COOKIE['session']) ) {
 //设置系统相关参数
 date_default_timezone_set('Asia/Shanghai');
 define('ROOT_PATH', str_replace('library/init.inc.php', '',str_replace('\\', '/', __FILE__)));
+define('BASE_DIR', str_replace($_SERVER['DOCUMENT_ROOT'], '', ROOT_PATH));
+
 if(!class_exists('AutoLoader'))
 {
     include('AutoLoader.class.php');

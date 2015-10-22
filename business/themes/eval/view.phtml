@@ -89,12 +89,11 @@
                     {if $comment.img neq ''}
                     <img width="80" height="60" src="{$comment.img}" alt=""/>
                     {else}
-                    <img width="80" height="60" src="/upload/image/no-image.png" alt=""/>
+                    <img width="80" height="60" src="../upload/image/no-image.png" alt=""/>
                     {/if}
                 </td>
                 <td>{$comment.account}</td>
                 <td class="text-right">
-
                     <a href="?act=response&id={$comment.id}">回复</a>
                 </td>
             </tr>

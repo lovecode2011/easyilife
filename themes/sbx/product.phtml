@@ -39,7 +39,7 @@
 <section class="product-detail">
     <article>{$product.name}</article>
     <div class="left">
-        <b>￥<span id="main_price">{$product.price}</span></b>
+        <b>￥<span id="main_price">{sprintf("%.2f", $product.price)}</span></b>
         <aside>
             <span class="blue"><em class="icon">&#xe614;</em>返利{ceil($product.reward/2.5)}元</span>
         </aside>
@@ -118,12 +118,6 @@
         <div class="arrow_d">商品详情</div>
     </a>
     <section id="detail-con" style="display: none;">
-<!--        <div class="detail-con-style">-->
-<!--            <div class="clear"></div>-->
-<!--            <div class="detail-con-style-list">品牌：八方好运</div>-->
-<!--            <div class="detail-con-style-list">规格：12包/盒 </div>-->
-<!--            <div class="detail-con-style-list">适用人群：不限</div>-->
-<!--        </div>-->
         <div class="detail-content">
             {$product.detail}
         </div>

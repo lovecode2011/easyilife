@@ -948,7 +948,7 @@ if( 'gallery' == $act ) {
     if( $gallery_list ) {
         foreach( $gallery_list as $key => $gallery ) {
             if( file_exists(realpath('../'.$gallery['original_img'])) ) {
-                $gallery_list[$key]['original_img_src'] = '../'.$gallery['original_img'];
+                $gallery_list[$key]['original_img_src'] = $gallery['original_img'];
             } else {
                 $gallery_list[$key]['original_img_src'] = $gallery['original_img'];
             }
@@ -957,14 +957,14 @@ if( 'gallery' == $act ) {
         for( $i = $count; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '../upload/image/no-image.png';
+            $gallery_list[$i]['original_img_src'] = 'upload/image/no-image.png';
             $gallery_list[$i]['order_view'] = '';
         }
     } else {
         for( $i = 0; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '../upload/image/no-image.png';
+            $gallery_list[$i]['original_img_src'] = 'upload/image/no-image.png';
             $gallery_list[$i]['order_view'] = '';
         }
     }

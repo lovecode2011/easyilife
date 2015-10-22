@@ -22,7 +22,12 @@
             {foreach from=$sectionList item=section}
             <tr>
                 <td>{$section.section_name}</td>
-                <td class="text-right"><a href="?act=edit&id={$section.id}">编辑</a> | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&id={$section.id}">删除</a></td>
+                <td class="text-right">
+                    <a href="?act=edit&id={$section.id}">编辑</a>
+                    {if $section.id gt 9}
+                    |
+                    <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&id={$section.id}">删除</a></td>
+                    {/if}
             </tr>
             {/foreach}
             {else}

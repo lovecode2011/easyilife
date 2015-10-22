@@ -25,8 +25,8 @@
                             <div class="pull-left" style="height: 262px;">
                                 <p class="clear" style="display: inline-block">
                                     <input type="hidden" name="id[]" value="{$gallery.id}" />
-                                    <input type="hidden" name="img[]" class="image-value" placeholder="" value="{$gallery.original_img}">
-                                    <img class="select-image" alt="" width="200" height="150" src="{$gallery.original_img_src}">&nbsp;
+                                    <input type="hidden" name="img[]" class="image-value" placeholder="" value="../{$gallery.original_img}">
+                                    <img class="select-image" alt="" width="200" height="150" src="../{$gallery.original_img_src}">&nbsp;
                                 </p>
                                 <p>
                                     <input class="text-input w180" type="text" name="order_view[]" placeholder="排序，默认50"  value="{$gallery.order_view}"/>
@@ -76,16 +76,13 @@
             var second = $(this).parent().prev();
             var first = second.prev();
             first.children('input').val('');
-            first.children('img').attr('src', '/upload/image/iconfont-jia.png');
+            first.children('img').attr('src', '../upload/image/no-image.png');
             second.children('input').val('');
             $(this).css('display', 'none');
         });
 
     });
 
-
-
-    {literal}
     KindEditor.ready(function(K) {
         var editor = K.editor({
             allowFileManager: true,
@@ -104,8 +101,8 @@
                             height = 150 + 'px';
                         }
 
-                        K('.editing-image-value').val(url.replace("/easyilife/",""));
-                        K('.editing-image').attr('src', ".."+url.replace("/easyilife/", ""));
+                        K('.editing-image-value').val(url.replace("{$smarty.const.BASE_DIR}", ""));
+                        K('.editing-image').attr('src', "../"+url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('.select-image').attr('width', width);
                         K('.select-image').attr('height', height);
                         $('.editing-image').parent().next().next().children('button').css('display', 'inline-block');
@@ -115,7 +112,6 @@
             });
         });
     });
-    {/literal}
 </script>
 {include file="library/footer.lbi"}
 </body>

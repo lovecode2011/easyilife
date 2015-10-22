@@ -114,7 +114,7 @@
                             K('#show-image-license').css('height', height);
                         }
 
-                        K('#license').val(url);
+                        K('#license').val(url.replace("{$smarty.const.BASE_DIR}", ""));
 //                        K('#select-image').val('');
                         K('#show-image-license').attr('src', url);
                         editor.hideDialog();
@@ -135,11 +135,11 @@
                             K('#show-image-identity').css('width', width);
                         }
                         if( !height ) {
-                            K('#show-image-identity').css('height', height);                        K('#show-image').css('display', 'block');
-
+                            K('#show-image-identity').css('height', height);
+                            K('#show-image').css('display', 'block');
                         }
 
-                        K('#identity').val(url);
+                        K('#identity').val(url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('#show-image-identity').attr('src', url);
                         editor1.hideDialog();
                     }

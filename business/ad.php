@@ -90,7 +90,7 @@ if( 'add' == $opera ) {
             'order_view' => $order_view,
             'ad_pos_id' => 3,
             'forever' => $forever,
-            'business_account' => $_SESSION['business_account'],
+            'business_account' => '',
         );
 
         if($db->autoInsert('ad', array($ad_data))) {
@@ -127,7 +127,7 @@ if( 'edit' == $opera ) {
         $response['msg'] = '参数错误';
     }
 
-    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \'\' limit 1';
     $ad = $db->fetchRow($get_ad);
     if( empty($ad) ) {
         show_system_message('广告不存在');
@@ -208,7 +208,7 @@ if( 'view' == $act ) {
     }
 
     $get_ad_list = 'select * from '.$db->table('ad');
-    $get_ad_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_ad_list .= ' where business_account = \'\'';
     $get_ad_list .= ' order by order_view asc, add_time desc';
 
     $ad_list = $db->fetchAll($get_ad_list);
@@ -224,7 +224,7 @@ if( 'add' == $act ) {
     $get_number = 'select `number` from '.$db->table('ad_position').' where id = 1 limit 1';
     $number = $db->fetchOne($get_number);
 
-    $get_total = 'select count(*) from '.$db->table('ad').' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_total = 'select count(*) from '.$db->table('ad').' where business_account = \'\'';
     $total = $db->fetchOne($get_total);
 
     if( $total >= $number ) {
@@ -241,7 +241,7 @@ if('edit' == $act) {
 
     $id = intval(getGET('id'));
 
-    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \'\' limit 1';
 
     $ad = $db->fetchRow($get_ad);
     if( empty($ad) ) {
@@ -265,7 +265,7 @@ if( 'delete' == $act ) {
         exit;
     }
 
-    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \'\' limit 1';
     $ad = $db->fetchRow($get_ad);
     if( empty($ad) ) {
         show_system_message('广告不存在');

@@ -178,7 +178,6 @@
 <!-- kindeditor编辑器 -->
 <script type="text/javascript" src="../plugins/kindeditor/kindeditor-all-min.js"></script>
 <script type="text/javascript">
-    {literal}
     KindEditor.ready(function(K) {
         var editor1 = K.create("textarea[name='detail']", {
             height: '400px',
@@ -216,8 +215,8 @@
                             height = 200 + 'px';
                         }
 
-                        K('#img').val(url.replace("/sbx/", ""));
-                        K('.select-image').attr('src', "../"+url.replace("/sbx/", ""));
+                        K('#img').val(url.replace("{$smarty.const.BASE_DIR}", ""));
+                        K('.select-image').attr('src', "../"+url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('.select-image').css('display', 'block');
                         K('.select-image').attr('width', width);
                         K('.select-image').attr('height', height);
@@ -227,7 +226,6 @@
             });
         });
     });
-    {/literal}
 </script>
 <script type="text/javascript" src="js/product/edit.js"></script>
 {include file="library/footer.lbi"}

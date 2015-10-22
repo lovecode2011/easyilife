@@ -190,7 +190,7 @@ function do_response(result) {
         alert(result.msg);
         document.forms['ad-form'].reset();
         $("#available-time").hide();
-        $("#show-image").attr("src", "http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image");
+        $("#show-image").attr("src", "../upload/image/no-image.png");
     } else {
         if(result.msg != "") {
             alert(result.msg);
@@ -220,7 +220,8 @@ function do_response(result) {
                 editor.plugin.imageDialog({
                     imageUrl : '',
                     clickFn : function(url, title, width, height, border, align) {
-                        K('#img').val(url);
+                        alert(url);
+                        K('#img').val(url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('#show-image').attr('src', url);
                         K('#show-image').css('display', 'block');
                         editor.hideDialog();
