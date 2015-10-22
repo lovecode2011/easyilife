@@ -12,13 +12,20 @@ back_base_init();
 $template = 'member/';
 assign('subTitle', '会员管理');
 
-$action = 'edit|view|delete|revoke|network';
+$action = 'edit|view|delete|revoke|network|upgrade|downgrade';
 $operation = 'edit';
 
 $act = check_action($action, getGET('act'));
 $act = ( $act == '' ) ? 'view' : $act;
 
 $opera = check_action($operation, getPOST('opera'));
+
+$level_str = array(
+    0 => '消费者',
+    1 => '合伙人',
+    2 => '高级合伙人',
+);
+
 //===========================================================================
 //修改会员信息
 if('edit' == $opera) {
@@ -115,7 +122,7 @@ if( 'view' == $act ) {
     create_pager($page, $total_page, $total);
     assign('count', $count);
 
-    $get_member_list = 'select `id`, `sex`, `account`, `nickname`, `mobile`, `email`, `add_time`, `leave_time`, `status`';
+    $get_member_list = 'select `id`, `sex`, `account`, `nickname`, `mobile`, `email`, `add_time`, `leave_time`, `status`, `level_id`';
     $get_member_list .= ' from '.$db->table('member');
     $get_member_list .= ' where 1 order by `add_time` desc';
     $get_member_list .= ' limit '.$offset.','.$count;
@@ -135,6 +142,7 @@ if( 'view' == $act ) {
             } else {
                 $member_list[$key]['sex'] = ($value['sex'] == 'M') ? '男' : '女';
             }
+            $member_list[$key]['level_str'] = $level_str[$value['level_id']];
         }
     }
     assign('member_list', $member_list);
@@ -297,6 +305,60 @@ if( 'network' == $act ) {
     assign('account', $member['account']);
     assign('data', json_encode(array($data)));
 
+}
+
+if( 'upgrade' == $act ) {
+    if( !check_purview('pur_member_edit', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $account = trim(getGET('account'));
+    if( '' == $account ) {
+        show_system_message('参数错误');
+    }
+    $account = $db->escape($account);
+    $get_member = 'select * from '.$db->table('member').' where account = \''.$account.'\' limit 1';
+    $member = $db->fetchRow($get_member);
+
+    if( $member['level_id'] == 2 ) {
+        show_system_message('当前会员等级已是最高级');
+    }
+
+    $upgrade_member = 'update '.$db->table('member').' set level_id = level_id + 1';
+    $upgrade_member .= ' where account = \''.$account.'\' limit 1';
+
+    if( $db->update($upgrade_member) ) {
+        show_system_message('会员升级成功');
+    } else {
+        show_system_message('系统繁忙，请稍后重试');
+    }
+}
+
+if( 'downgrade' == $act ) {
+    if( !check_purview('pur_member_edit', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $account = trim(getGET('account'));
+    if( '' == $account ) {
+        show_system_message('参数错误');
+    }
+    $account = $db->escape($account);
+    $get_member = 'select * from '.$db->table('member').' where account = \''.$account.'\' limit 1';
+    $member = $db->fetchRow($get_member);
+
+    if( $member['level_id'] == 0 ) {
+        show_system_message('当前会员等级已是最底级');
+    }
+
+    $downgrade_member = 'update '.$db->table('member').' set level_id = level_id - 1';
+    $downgrade_member .= ' where account = \''.$account.'\' limit 1';
+
+    if( $db->update($downgrade_member) ) {
+        show_system_message('会员降级成功');
+    } else {
+        show_system_message('系统繁忙，请稍后重试');
+    }
 }
 
 assign('act', $act);
