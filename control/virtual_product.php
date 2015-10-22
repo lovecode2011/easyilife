@@ -63,7 +63,7 @@ if( 'exam' == $opera ) {
     }
 
     $update_product = 'update '.$db->table('product').' set ';
-    $update_product .= ' status = 3';
+    $update_product .= ' status = 4';
     $update_product .= ', prev_status = 2';
     $update_product .= ', reward = \''.$reward.'\'';
     $update_product .= ', integral = \''.$integral.'\'';
@@ -215,8 +215,8 @@ if( 'view' == $act ) {
     $status_array = array(
         1 => '待发布',
         2 => '待审核',
-        3 => '已上架',
-        4 => '已下架',
+        3 => '已下架',
+        4 => '已上架',
     );
 
     if( $product_list ) {
