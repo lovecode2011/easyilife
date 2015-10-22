@@ -58,7 +58,6 @@ $purview = array(
     'pur_virtual_order' => array(
         'pur_virtual_order_view',
         'pur_virtual_order_edit',
-        'pur_virtual_order_del',
     ),
 
     'pur_eval' => array(
@@ -146,10 +145,9 @@ $L_purview = array(
     'pur_virtual_product_edit' => '编辑虚拟产品',
     'pur_virtual_product_del' => '删除虚拟产品',
 
-    'pur_virtual_order' => '虚拟订单',
-    'pur_virtual_order_view' => '虚拟订单列表',
-    'pur_virtual_order_edit' => '编辑虚拟订单',
-    'pur_virtual_order_del' => '删除虚拟订单',
+    'pur_virtual_order' => '消费券',
+    'pur_virtual_order_view' => '消费券列表',
+    'pur_virtual_order_edit' => '使用消费券',
 
     'pur_ad' => '广告管理',
     'pur_ad_view' => '查看广告',
@@ -228,7 +226,7 @@ $menus = array(
     ),
 
     'pur_virtual_order' => array(
-        'title' => '虚拟订单管理',
+        'title' => '消费券管理',
         'icon' => '&#xe604;',
         'url' => 'virtual_order.php',
     ),

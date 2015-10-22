@@ -250,8 +250,8 @@ $L_purview = array(
     'pur_order_edit' => '编辑订单状态',
     'pur_order_del' => '删除订单',
 
-    'pur_virtual_order' => '虚拟订单管理',
-    'pur_virtual_order_view' => '查看虚拟订单',
+    'pur_virtual_order' => '消费券管理',
+    'pur_virtual_order_view' => '查看消费券',
 
     'pur_template' => '主题',
     'pur_template_view' => '模板列表',
@@ -330,7 +330,7 @@ $menus = array(
     'pur_section' => array('url' => 'section.php', 'title' => '栏目管理', 'parent' => 'menu_cms'),
     'pur_content' => array('url' => 'content.php', 'title' => '资讯管理', 'parent' => 'menu_cms'),
     'pur_order' => array('url' => 'order.php', 'title' => '订单管理', 'parent' => 'menu_order'),
-    'pur_virtual_order' => array('url' => 'virtual_order.php', 'title' => '虚拟订单管理', 'parent' => 'menu_order'),
+    'pur_virtual_order' => array('url' => 'virtual_order.php', 'title' => '消费券管理', 'parent' => 'menu_order'),
     'pur_nav' => array('url' => 'nav.php', 'title' => '导航条', 'parent' => 'menu_site'),
 
 );
