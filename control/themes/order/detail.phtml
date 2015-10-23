@@ -51,7 +51,7 @@
             <tr>
                 <td>
                     <div class="pull-left">
-                        <img src="..{$detail.img}" width="50" height="50"/>
+                        <img src="../{$detail.img}" width="50" height="50"/>
                     </div>
                     <div class="pull-left">
                         <em> {$detail.product_name} </em>
@@ -85,19 +85,19 @@
                 </p>
                 <p style="display: inline-block" class="clear">
                     <label class="l-title">配送方式：</label>
-                    <em>{$order.delivery_name}</em>
+                    <em>{if $order.delivery_name}{$order.delivery_name}{else}&nbsp;{/if}</em>
                 </p>
                 <p style="display: inline-block" class="clear">
                     <label class="l-title">物流公司：</label>
-                    <em>{$order.express_name}</em>
+                    <em>{if $order.express_name}{$order.express_name}{else}&nbsp;{/if}</em>
                 </p>
                 <p style="display: inline-block" class="clear">
                     <label class="l-title">快递单号：</label>
-                    <em>{$order.express_sn}</em>
+                    <em>{if $order.express_sn}{$order.express_sn}{else}&nbsp;{/if}</em>
                 </p>
                 <p style="display: inline-block" class="clear">
                     <label class="l-title">备注：</label>
-                    <em>{$order.remark}</em>
+                    <em>{if $order.remark}{$order.remark}{else}&nbsp;{/if}</em>
                 </p>
     </div>
 </div>

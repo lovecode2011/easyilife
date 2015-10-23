@@ -50,6 +50,7 @@ if('edit' == $opera) {
     $mobile = trim(getPOST('mobile'));
     $reward = floatval(getPOST('reward'));
     $integral = floatval(getPOST('integral'));
+    $level_id = intval(getPOST('level_id'));
 
     if( '' == $mobile ) {
         show_system_message('手机不能为空', array());
@@ -64,10 +65,15 @@ if('edit' == $opera) {
     $reward = ( $reward < 0 ) ? 0 : $reward;
     $integral = ($integral < 0 ) ? 0 : $integral;
 
+    if( in_array($level_id, array(0, 1, 2)) ) {
+        $level_id = 0;
+    }
+
     $data = array(
         'mobile' => $mobile,
         'reward' => $reward,
         'integral' => $integral,
+        'level_id' => $level_id,
     );
     $where = 'account = \''.$account.'\'';
     if( $db->autoUpdate('member', $data, $where) ) {
@@ -77,8 +83,8 @@ if('edit' == $opera) {
                 'account' => $account,
                 'add_time' => time(),
                 'balance' => $member['balance'],
-                'reward' => $reward,
-                'integral' => $integral,
+                'reward' => $reward - $member['reward'],
+                'integral' => $integral - $member['integral'],
                 'remark' => '修改会员资料',
                 'reward_await' => $member['reward_await'],
                 'integral_await' => $member['integral_await'],
@@ -261,14 +267,14 @@ if( 'network' == $act ) {
     $data = array();
     if( !empty($grand) ) {
         $data = array(
-            'name' => '上上家-'.$grand['account'],
+            'name' => '二级推荐人-'.$grand['account'],
             'account' => $grand['account'],
             'parentId' => $grand['parent_id'],
             'isParent' => true,
             'open' => true,
         );
         $data['children'] = array(array(
-            'name' => '上家-'.$parent['account'],
+            'name' => '一级推荐人-'.$parent['account'],
             'account' => $parent['account'],
             'parentId' => $parent['parent_id'],
             'isParent' => true,
@@ -282,7 +288,7 @@ if( 'network' == $act ) {
         ));
     } else if( !empty($parent) ) {
         $data = array(
-            'name' => '上家-'.$parent['account'],
+            'name' => '一级推荐人-'.$parent['account'],
             'account' => $parent['account'],
             'parentId' => $parent['parent_id'],
             'isParent' => true,
@@ -305,60 +311,6 @@ if( 'network' == $act ) {
     assign('account', $member['account']);
     assign('data', json_encode(array($data)));
 
-}
-
-if( 'upgrade' == $act ) {
-    if( !check_purview('pur_member_edit', $_SESSION['purview']) ) {
-        show_system_message('权限不足', array());
-        exit;
-    }
-    $account = trim(getGET('account'));
-    if( '' == $account ) {
-        show_system_message('参数错误');
-    }
-    $account = $db->escape($account);
-    $get_member = 'select * from '.$db->table('member').' where account = \''.$account.'\' limit 1';
-    $member = $db->fetchRow($get_member);
-
-    if( $member['level_id'] == 2 ) {
-        show_system_message('当前会员等级已是最高级');
-    }
-
-    $upgrade_member = 'update '.$db->table('member').' set level_id = level_id + 1';
-    $upgrade_member .= ' where account = \''.$account.'\' limit 1';
-
-    if( $db->update($upgrade_member) ) {
-        show_system_message('会员升级成功');
-    } else {
-        show_system_message('系统繁忙，请稍后重试');
-    }
-}
-
-if( 'downgrade' == $act ) {
-    if( !check_purview('pur_member_edit', $_SESSION['purview']) ) {
-        show_system_message('权限不足', array());
-        exit;
-    }
-    $account = trim(getGET('account'));
-    if( '' == $account ) {
-        show_system_message('参数错误');
-    }
-    $account = $db->escape($account);
-    $get_member = 'select * from '.$db->table('member').' where account = \''.$account.'\' limit 1';
-    $member = $db->fetchRow($get_member);
-
-    if( $member['level_id'] == 0 ) {
-        show_system_message('当前会员等级已是最底级');
-    }
-
-    $downgrade_member = 'update '.$db->table('member').' set level_id = level_id - 1';
-    $downgrade_member .= ' where account = \''.$account.'\' limit 1';
-
-    if( $db->update($downgrade_member) ) {
-        show_system_message('会员降级成功');
-    } else {
-        show_system_message('系统繁忙，请稍后重试');
-    }
 }
 
 assign('act', $act);

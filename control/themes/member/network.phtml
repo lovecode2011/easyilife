@@ -35,8 +35,16 @@
     };
 
     function filter(treeId, parentNode, responseData) {
-        console.log(treeId);
-        console.log(responseData.data);
+        if ( parentNode.account == account ) {
+            for( var key in responseData.data ) {
+                responseData.data[key].name = '初代-' + responseData.data[key].name;
+            }
+        } else {
+            for( var key in responseData.data ) {
+                responseData.data[key].name = '二代-' + responseData.data[key].name;
+            }
+        }
+
         if ( responseData.error ) {
             alert(responseData.message);
             return null;

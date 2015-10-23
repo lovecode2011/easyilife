@@ -61,18 +61,12 @@
                 <td>{$member.subscribed}</td>
                 <td>{$member.level_str}</td>
                 <td class="text-right">
-                    <a href="?act=network&account={$member.account}">查看</a>
+                    <a href="?act=network&account={$member.account}">会员网络图</a>
                     | <a href="?act=edit&account={$member.account}">编辑</a>
                     {if $member.status eq 1}
                     | <a onclick="javascript:if(confirm('确认要拉黑？')) return true; else return false;" href="?act=delete&account={$member.account}">拉黑</a>
                     {else}
                     | <a onclick="javascript:if(confirm('确认要撤销拉黑？')) return true; else return false;" href="?act=revoke&account={$member.account}">撤销</a>
-                    {/if}
-                    {if $member.level_id lt 2}
-                    | <a onclick="javascript:if(confirm('确认要升级{$member.account}？')) return true; else return false;" href="?act=upgrade&account={$member.account}">升级</a>
-                    {/if}
-                    {if $member.level_id gt 0}
-                    | <a onclick="javascript:if(confirm('确认要降级{$member.account}？')) return true; else return false;" href="?act=downgrade&account={$member.account}">降级</a>
                     {/if}
                 </td>
             </tr>
