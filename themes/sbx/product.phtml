@@ -39,10 +39,18 @@
 <section class="product-detail">
     <article>{$product.name}</article>
     <div class="left">
-        <b>￥<span id="main_price">{$product.price}</span></b>
+        <b>￥<span id="main_price">{sprintf("%.2f", $product.price)}</span></b>
         <aside>
             <span class="blue"><em class="icon">&#xe614;</em>返利{ceil($product.reward/2.5)}元</span>
         </aside>
+        {if isset($product.promote_left) and $product.promote_left gt 0}
+        <p class="promote">
+            秒杀倒计时:
+            <span id="hour">{$product.hour}</span>小时
+            <span id="min">{$product.min}</span>分钟
+            <span id="second">{$product.second}</span>秒
+        </p>
+        {/if}
     </div>
     <div class="right">
         <ul>
@@ -110,12 +118,6 @@
         <div class="arrow_d">商品详情</div>
     </a>
     <section id="detail-con" style="display: none;">
-<!--        <div class="detail-con-style">-->
-<!--            <div class="clear"></div>-->
-<!--            <div class="detail-con-style-list">品牌：八方好运</div>-->
-<!--            <div class="detail-con-style-list">规格：12包/盒 </div>-->
-<!--            <div class="detail-con-style-list">适用人群：不限</div>-->
-<!--        </div>-->
         <div class="detail-content">
             {$product.detail}
         </div>
@@ -146,7 +148,7 @@
                 <div class="time"><span class="c_96 fr">{date('Y-m-d', $comment.add_time)}</span></div>
             </div>
             {if isset($comment.reply)}
-            <div class="block" style="background: #f1f1f1;">
+            <div class="block" style="background: #fefefe;">
                 <div class="div1">
                     <span class="user_name">{$product.business.shop_name}客服回复:</span>
                 </div>
@@ -217,6 +219,11 @@
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript" src="{$template_dir}js/jquery.lazyload.min.js"></script>
 <script type="text/javascript">
+    var hour = 0;
+    var min = 0;
+    var second = 0;
+    var interval = null;
+
     $(function() {
         $("img.lazy").lazyload({
             effect : "fadeIn"
@@ -255,7 +262,40 @@
                 check_inventory();
             }
         });
+
+        {if isset($product.promote_left) and $product.promote_left gt 0}
+        hour = {$product.hour};
+        min = {$product.min};
+        second = {$product.second};
+
+        interval = setInterval(trick, 1000);
+        {/if}
     });
+
+    function trick() {
+        if(hour == 0 && min == 0 && second == 0) {
+            $(".promote").hide();
+            clearInterval(interval);
+        } else {
+            if(second > 0) {
+                second--;
+            } else {
+                if(min > 0) {
+                    second = 59;
+                    min--;
+                } else {
+                    if(hour > 0) {
+                        min = 59;
+                        hour--;
+                    }
+                }
+            }
+
+            $("#hour").text(hour);
+            $("#min").text(min);
+            $("#second").text(second);
+        }
+    }
 
     function toggle_option_bar() {
         if($(".option .arrow_d").hasClass("up")){
@@ -676,7 +716,7 @@
     }
 
     function check_inventory() {
-        var index = JSON.stringify(attributes_mode);
+        var index = attributes_mode != "" ? JSON.stringify(attributes_mode) : "";
         var current_inventory = inventory[index];
         if(current_inventory == undefined) {
             current_inventory = 0;

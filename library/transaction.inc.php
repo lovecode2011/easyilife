@@ -7,6 +7,47 @@
  */
 
 /**
+ * @param $order_sn
+ * @param $product_sn
+ * @param $product_name
+ * @param $content
+ * @param int $keep_alive
+ * @return mixed
+ */
+function add_order_content($business_account, $account, $mobile, $order_sn, $product_sn, $product_name, $content, $keep_alive = 2)
+{
+    global $db;
+
+    $content_data = array(
+        'business_account' => $business_account,
+        'account' => $account,
+        'mobile' => $mobile,
+        'order_sn' => $order_sn,
+        'product_sn' => $product_sn,
+        'product_name' => $product_name,
+        'content' => $content,
+        'begin_time' => time(),
+        'end_time' => (time()+3600*24*$keep_alive)
+    );
+
+    $code = '';
+    do
+    {
+        $code = date('Y md ').rand(1000, 9999).' '.rand(1000, 9999);
+
+        $check_code = 'select `id` from '.$db->table('order_content').' where `code`=\''.$code.'\'';
+    } while($db->fetchOne($check_code));
+
+    $content_data['code'] = $code;
+
+    if($db->autoInsert('order_content', array($content_data)))
+    {
+        return $code;
+    } else {
+        return false;
+    }
+}
+/**
  * 新增商家交易记录
  */
 function add_business_exchange($business_account, $balance, $trade, $operator, $remark = '')
@@ -193,7 +234,7 @@ function modify_inventory($product_sn, $attributes, $number)
  * @param string $path
  * @return bool
  */
-function distribution_settle($reward, $path)
+function distribution_settle($reward, $path, $order_sn = '')
 {
     global $db;
     global $config;
@@ -201,25 +242,37 @@ function distribution_settle($reward, $path)
     $ids_arr = explode(',', $path);
     array_pop($ids_arr);
 
-    $rebate = $reward;
     $current_id = array_pop($ids_arr);
-    //检查是否第一次购买
-    $get_account = 'select `account` from '.$db->table('member').' where `id`='.$current_id;
-    $account = $db->fetchOne($get_account);
+    /*
+     * $level = array(
+     *      0 => '消费者',
+     *      1 => '合伙人',
+     *      2 => '高级合伙人'
+     * );
+     */
+    $get_account = 'select `account`,`level_id` from '.$db->table('member').' where `id`='.$current_id;
+    $member = $db->fetchRow($get_account);
+    $refund = $reward * $config['refund_rate'];
 
-    $check_order = 'select count(*) from '.$db->table('order').' where `account`=\''.$account.'\'';
-    if($db->fetchOne($check_order))
+    //合伙人以上级别享受返利
+    if($member['level_id'] > 0 && $refund)
     {
-        add_memeber_exchange_log($account, 0, 0, 0, 0, $rebate, 'settle', '系统结算');
-        add_member_reward($account, $rebate, 0, '系统结算');
-        $rebate = 0;
+        add_memeber_exchange_log($member['account'], 0, 0, 0, 0, $refund, 'settle', $order_sn . '合伙人返利');
+        add_member_reward($member['account'], $refund, 0, $order_sn);
+        $refund = 0;
     }
+
+    $ids_arr_str = implode(',', $ids_arr);
+    //获取合伙人
+    $get_senior_member = 'select `id`,`account`,`level_id` from '.$db->table('member').' where `id` in ('.$ids_arr_str.') and `level_id`>=1 order by `path` DESC';
+    $senior_member = $db->fetchAll($get_senior_member);
 
     while(count($ids_arr) > 3)
     {
         array_shift($ids_arr);
     }
 
+    //三级分销部分
     $level = 1;
     while($id = array_pop($ids_arr))
     {
@@ -228,17 +281,37 @@ function distribution_settle($reward, $path)
         $get_account = 'select `account` from '.$db->table('member').' where `id`='.$id;
         $account = $db->fetchOne($get_account);
 
-        if($rebate)
-        {
-            add_memeber_exchange_log($account, 0, 0, 0, 0, $rebate, 'settle', '系统结算');
-            add_member_reward($account, $rebate, 0, '系统结算');
-            $rebate = 0;
-        }
-
         if($reward_tmp)
         {
-            add_memeber_exchange_log($account, 0, 0, 0, 0, $reward_tmp, 'settle', '系统结算');
-            add_member_reward($account, $reward_tmp, 0, '系统结算');
+            add_memeber_exchange_log($account, 0, 0, 0, 0, $reward_tmp, 'settle', $order_sn.'推广奖');
+            add_member_reward($account, $reward_tmp, 0, $order_sn);
+        }
+    }
+
+    //这种计算方法仅适用于子节点的id大于父节点
+    //团队奖部分
+    if($senior_member)
+    {
+        foreach($senior_member as $member)
+        {
+            //团队奖
+            if($member['level_id'] > 1)
+            {
+                $reward_tmp = $reward * $config['group_prize_rate'];
+
+                if ($reward_tmp) {
+                    add_memeber_exchange_log($member['account'], 0, 0, 0, 0, $reward_tmp, 'settle', $order_sn . '团队奖');
+                    add_member_reward($member['account'], $reward_tmp, 0, $order_sn);
+                }
+            }
+
+            //返利
+            if($refund)
+            {
+                add_memeber_exchange_log($member['account'], 0, 0, 0, 0, $refund, 'settle', $order_sn . '合伙人返利');
+                add_member_reward($member['account'], $refund, 0, $order_sn);
+                $refund = 0;
+            }
         }
     }
 
@@ -278,7 +351,7 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
  * @return bool
  */
  function add_order_detail($product_sn, $product_name, $product_attributes, $attributes, $product_price, $integral,
-                           $integral_given, $reward, $count, $business_account, $order_sn)
+                           $integral_given, $reward, $count, $business_account, $order_sn, $is_virtual = 0)
  {
     global $db;
 
@@ -293,7 +366,8 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
         'reward' => $reward,
         'count' => $count,
         'business_account' => $business_account,
-        'order_sn' => $order_sn
+        'order_sn' => $order_sn,
+        'is_virtual' => $is_virtual
     );
 
     if($db->autoInsert('order_detail', array($order_detail_data)))
@@ -325,7 +399,8 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
  * @return mixed
  */
  function add_order($integral_amount, $product_amount, $delivery_fee, $delivery_id, $business_account, $integral_given_amount,
-                    $payment_id, $address_id, $reward_amount, $account, $integral_paid = 0.0, $reward_paid = 0.0, $balance_paid = 0.0, $status = 1, $self_delivery = 0, $remark = '')
+                    $payment_id, $address_id, $reward_amount, $account, $integral_paid = 0.0, $reward_paid = 0.0, $balance_paid = 0.0,
+                    $status = 1, $self_delivery = 0, $remark = '', $is_virtual = 0)
  {
     global $db;
     global $config;
@@ -347,7 +422,8 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
         'self_delivery' => $self_delivery,
         'status' => $status,
         'add_time' => time(),
-        'remark' => $remark
+        'remark' => $remark,
+        'is_virtual' => $is_virtual
     );
 
     //获取地址信息

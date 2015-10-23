@@ -51,12 +51,12 @@
                 <p class="clear" id="img-input">
                     <label class="l-title">广告图片：</label>
                     <input type="button" class="text-input" id="select-image" value="请选择广告图片" style="cursor:pointer">
-                    <input type="hidden" class="" name="img" id="img" value="{$ad.img}"/>
+                    <input type="hidden" class="" name="img" id="img" value="../{$ad.img}"/>
                     <span class="error-input" id="img-error">{if isset($error.img)}{$error.img}{/if}</span>
                 </p>
                 <p id="img-show">
                     <label class="l-title"></label>
-                    <img id="show-image" alt="" src="{$ad.img}">
+                    <img id="show-image" alt="" src="../{$ad.img}">
                 </p>
                 <p>
                     <label class="l-title"></label>
@@ -246,14 +246,14 @@ function do_response(result) {
         var editor = K.editor({
             allowFileManager : true,
             uploadJson : 'plugin_upload_json.php',
-            fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+            fileManagerJson : '../plugins/kindeditor/platform_file_manager_json.php'
         });
         K('#select-image').click(function() {
             editor.loadPlugin('fileupload', function() {
                 editor.plugin.imageDialog({
                     imageUrl : '',
                     clickFn : function(url, title, width, height, border, align) {
-                        K('#img').val(url);
+                        K('#img').val(url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('#show-image').attr('src', url);
                         K('#show-image').css('display', 'block');
                         editor.hideDialog();

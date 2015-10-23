@@ -3227,3 +3227,28 @@ li.search-shop-li div{
     color: #fff;
     display: none;
 }
+
+.shop-stat {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: .25rem;
+    background-color: white;
+    padding: .5rem;
+}
+
+.shop-stat a {
+    display: inline-block;
+    width: 30%;
+    font-size: .7rem;
+}
+
+.shop-stat a em {
+    margin-right: .3rem;
+}
+
+/** 产品促销 */
+.promote {
+    font-size: .7rem;
+    line-height: 1rem;
+    padding: .3rem 0;
+}

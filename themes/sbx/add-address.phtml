@@ -133,6 +133,11 @@
         hide_mask();
         show_message_dialog(response.msg);
         if(response.error == 0) {
+            var is_default = document.getElementById("is_default").checked;
+
+            if(is_default) {
+                window.localStorage.setItem("address_id", response.id);
+            }
             $("#dialog_close").bind("click", function() { window.history.back(); });
             $("#dialog_close_btn").bind("click", function() { window.history.back(); });
         }

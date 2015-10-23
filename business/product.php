@@ -108,7 +108,7 @@ if( 'add' == $opera ) {
     $promote_price = ( $promote_price <= 0 ) ? 0 : $promote_price;
 
     if( '' != $promote_begin ) {
-        if(preg_match('^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$', $promote_begin)) {
+        if(strtotime($promote_begin) != -1) {
             $dateTime = explode(' ', $promote_begin);
             $date = explode('-', $dateTime[0]);
             $time = explode(':', $dateTime[1]);
@@ -123,7 +123,7 @@ if( 'add' == $opera ) {
     }
 
     if( '' != $promote_end ) {
-        if(preg_match('^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$', $promote_end)) {
+        if(strtotime($promote_end) != -1) {
             $dateTime = explode(' ', $promote_end);
             $date = explode('-', $dateTime[0]);
             $time = explode(':', $dateTime[1]);
@@ -359,14 +359,14 @@ if( 'edit' == $opera ) {
     $promote_price = ( $promote_price <= 0 ) ? 0 : $promote_price;
 
     if( '' != $promote_begin ) {
-        if(preg_match('^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$', $publishTime)) {
+        if(strtotime($promote_begin) != -1) {
             $dateTime = explode(' ', $promote_begin);
             $date = explode('-', $dateTime[0]);
             $time = explode(':', $dateTime[1]);
 
             $promote_begin = mktime($time[0], $time[1], $time[2], $date[1], $date[2], $date[0]);
         } else {
-            show_system_message('时间格式不正确', array());
+            show_system_message('开始时间格式不正确'.$promote_begin, array());
             exit;
         }
     } else {
@@ -374,7 +374,7 @@ if( 'edit' == $opera ) {
     }
 
     if( '' != $promote_end ) {
-        if(preg_match('^(?:(?!0000)[0-9]{4}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]{2}(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)\ \d{1,2}:\d{1,2}:\d{1,2}$', $publishTime)) {
+        if(strtotime($promote_end) != -1) {
             $dateTime = explode(' ', $promote_end);
             $date = explode('-', $dateTime[0]);
             $time = explode(':', $dateTime[1]);
@@ -948,7 +948,7 @@ if( 'gallery' == $act ) {
     if( $gallery_list ) {
         foreach( $gallery_list as $key => $gallery ) {
             if( file_exists(realpath('../'.$gallery['original_img'])) ) {
-                $gallery_list[$key]['original_img_src'] = '../'.$gallery['original_img'];
+                $gallery_list[$key]['original_img_src'] = $gallery['original_img'];
             } else {
                 $gallery_list[$key]['original_img_src'] = $gallery['original_img'];
             }
@@ -957,14 +957,14 @@ if( 'gallery' == $act ) {
         for( $i = $count; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '../upload/image/no-image.png';
+            $gallery_list[$i]['original_img_src'] = 'upload/image/no-image.png';
             $gallery_list[$i]['order_view'] = '';
         }
     } else {
         for( $i = 0; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '../upload/image/no-image.png';
+            $gallery_list[$i]['original_img_src'] = 'upload/image/no-image.png';
             $gallery_list[$i]['order_view'] = '';
         }
     }

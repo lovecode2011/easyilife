@@ -37,7 +37,7 @@ if( 'add' == $opera ) {
     $alt = getPOST('alt');
     $forever = getPOST('forever');
     $order_view = intval(getPOST('order_view'));
-    $start_time = getPOST('begin_time');
+    $begin_time = getPOST('begin_time');
     $end_time = getPOST('end_time');
 
     if($alt == '') {
@@ -51,19 +51,19 @@ if( 'add' == $opera ) {
     }
 
     if($forever == 0) {
-        if($start_time == '' || $end_time == '') {
+        if($begin_time == '' || $end_time == '') {
             $response['errmsg']['time'] = '-请选择有效时间';
         } else {
-            $start_time = strtotime($start_time);
+            $begin_time = strtotime($begin_time);
             $end_time = strtotime($end_time);
 
-            if($start_time == -1 || !$start_time || $end_time == -1 || !$end_time || $start_time > $end_time) {
+            if($begin_time == -1 || !$begin_time || $end_time == -1 || !$end_time || $begin_time > $end_time) {
                 $response['errmsg']['time'] = '-请选择有效时间';
             }
         }
     } else {
         $forever = 1;
-        $start_time = time();
+        $begin_time = time();
         $end_time = -1;
     }
 
@@ -84,13 +84,13 @@ if( 'add' == $opera ) {
             'url' => $url,
             'img' => $img,
             'add_time' => time(),
-            'start_time' => $start_time,
+            'begin_time' => $begin_time,
             'end_time' => $end_time,
             'alt' => $alt,
             'order_view' => $order_view,
-            'ad_position_id' => 1,
+            'ad_pos_id' => 3,
             'forever' => $forever,
-            'business_account' => $_SESSION['business_account'],
+            'business_account' => '',
         );
 
         if($db->autoInsert('ad', array($ad_data))) {
@@ -119,7 +119,7 @@ if( 'edit' == $opera ) {
     $alt = getPOST('alt');
     $forever = getPOST('forever');
     $order_view = intval(getPOST('order_view'));
-    $start_time = getPOST('begin_time');
+    $begin_time = getPOST('begin_time');
     $end_time = getPOST('end_time');
     $id = intval(getPOST('eid'));
 
@@ -127,7 +127,7 @@ if( 'edit' == $opera ) {
         $response['msg'] = '参数错误';
     }
 
-    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \'\' limit 1';
     $ad = $db->fetchRow($get_ad);
     if( empty($ad) ) {
         show_system_message('广告不存在');
@@ -147,19 +147,19 @@ if( 'edit' == $opera ) {
     }
 
     if($forever == 0) {
-        if($start_time == '' || $end_time == '') {
+        if($begin_time == '' || $end_time == '') {
             $response['errmsg']['time'] = '-请选择有效时间';
         } else {
-            $start_time = strtotime($start_time);
+            $begin_time = strtotime($begin_time);
             $end_time = strtotime($end_time);
 
-            if($start_time == -1 || !$start_time || $end_time == -1 || !$end_time || $start_time > $end_time) {
+            if($begin_time == -1 || !$begin_time || $end_time == -1 || !$end_time || $begin_time > $end_time) {
                 $response['errmsg']['time'] = '-请选择有效时间';
             }
         }
     } else {
         $forever = 1;
-        $start_time = time();
+        $begin_time = time();
         $end_time = -1;
     }
 
@@ -179,7 +179,7 @@ if( 'edit' == $opera ) {
         $ad_data = array(
             'url' => $url,
             'img' => $img,
-            'start_time' => $start_time,
+            'begin_time' => $begin_time,
             'end_time' => $end_time,
             'alt' => $alt,
             'order_view' => $order_view,
@@ -208,7 +208,7 @@ if( 'view' == $act ) {
     }
 
     $get_ad_list = 'select * from '.$db->table('ad');
-    $get_ad_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_ad_list .= ' where business_account = \'\'';
     $get_ad_list .= ' order by order_view asc, add_time desc';
 
     $ad_list = $db->fetchAll($get_ad_list);
@@ -224,7 +224,7 @@ if( 'add' == $act ) {
     $get_number = 'select `number` from '.$db->table('ad_position').' where id = 1 limit 1';
     $number = $db->fetchOne($get_number);
 
-    $get_total = 'select count(*) from '.$db->table('ad').' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_total = 'select count(*) from '.$db->table('ad').' where business_account = \'\'';
     $total = $db->fetchOne($get_total);
 
     if( $total >= $number ) {
@@ -241,7 +241,7 @@ if('edit' == $act) {
 
     $id = intval(getGET('id'));
 
-    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \'\' limit 1';
 
     $ad = $db->fetchRow($get_ad);
     if( empty($ad) ) {
@@ -265,7 +265,7 @@ if( 'delete' == $act ) {
         exit;
     }
 
-    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \'\' limit 1';
     $ad = $db->fetchRow($get_ad);
     if( empty($ad) ) {
         show_system_message('广告不存在');

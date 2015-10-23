@@ -56,7 +56,7 @@
                 </p>
                 <p id="img-show">
                     <label class="l-title"></label>
-                    <img id="show-image" alt="" src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image">
+                    <img id="show-image" alt="" src="../upload/image/no-image.png">
                 </p>
                 <p>
                     <label class="l-title"></label>
@@ -216,7 +216,7 @@ function do_response(result) {
         alert(result.msg);
         document.forms['ad-form'].reset();
         $("#available-time").hide();
-        $("#show-image").attr("src", "http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image");
+        $("#show-image").attr("src", "../upload/image/no-image.png");
     } else {
         if(result.msg != "") {
             alert(result.msg);
@@ -239,14 +239,14 @@ function do_response(result) {
         var editor = K.editor({
             allowFileManager : true,
             uploadJson : 'plugin_upload_json.php',
-            fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+            fileManagerJson : '../plugins/kindeditor/platform_file_manager_json.php'
         });
         K('#select-image').click(function() {
             editor.loadPlugin('fileupload', function() {
                 editor.plugin.imageDialog({
                     imageUrl : '',
                     clickFn : function(url, title, width, height, border, align) {
-                        K('#img').val(url);
+                        K('#img').val(url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('#show-image').attr('src', url);
                         K('#show-image').css('display', 'block');
                         editor.hideDialog();

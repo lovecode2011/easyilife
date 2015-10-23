@@ -226,7 +226,7 @@
                 editor.plugin.imageDialog({
                     imageUrl : '',
                     clickFn : function(url, title, width, height, border, align) {
-                        K('#img').val(url);
+                        K('#img').val(url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('#show-image').attr('src', url);
                         K('#show-image').css('display', 'block');
                         editor.hideDialog();

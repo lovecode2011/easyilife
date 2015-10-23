@@ -48,6 +48,8 @@
         window.localStorage.setItem("address_id", id);
 
         window.history.back();
+
+        $.post("address.php", { "opera":"select", "address_id":id });
     }
 
     $(function() {

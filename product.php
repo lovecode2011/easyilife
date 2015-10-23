@@ -133,8 +133,30 @@ $product = $db->fetchRow($get_product);
 
 if($product)
 {
-    $product['gallery'] = array($product['img']);
     $product_sn = $product['product_sn'];
+    //如果产品正在促销时间，则将产品价格赋值为促销价格
+    //促销的产品不参与砍价
+    $now = time();
+    if($product['promote_end'] > $now && $product['promote_begin'] <= $now)
+    {
+        $product['price'] = $product['promote_price'];
+        $product['promote_left'] = $product['promote_end'] - $now;
+        $left_time = $product['promote_left'];
+        $product['hour'] = intval($left_time/3600);
+        $left_time = $left_time%3600;
+        $product['min'] = intval($left_time/60);
+        $left_time = $left_time%60;
+        $product['second'] = $left_time;
+    } else {
+        //获取产品砍价总额
+        $get_product_discount = 'select sum(`reduce`) from '.$db->table('discount').
+                                ' where `product_sn`=\''.$product_sn.'\' and `owner`=\''.$_SESSION['account'].'\'';
+
+        $discount = $db->fetchOne($get_product_discount);
+        $product['price'] -= $discount;
+    }
+
+    $product['gallery'] = array($product['img']);
 
     //读取产品相册
     $get_gallery = 'select `big_img` from '.$db->table('gallery').' where `product_sn`=\''.$product_sn.'\'';
@@ -276,7 +298,7 @@ if($product)
 
     //获取产品的推广链接
     $param = array('url'=>'product.php?id='.$product['id'], 'opera'=>'get_url', 'account'=>$_SESSION['account']);
-    $get_url_response = post('http://'.$_SERVER['HTTP_HOST'].'/sbx/d/index.php', $param);
+    $get_url_response = post('http://'.$_SERVER['HTTP_HOST'].BASE_DIR.'d/index.php', $param);
 
     $get_url_response = json_decode($get_url_response);
     if($get_url_response->error == 0)

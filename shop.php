@@ -42,7 +42,7 @@ $new_product = $db->fetchAll($get_product_list);
 assign('new_product_count', count($new_product));
 
 //获取轮播广告
-$get_cycle_ad = 'select `img`,`url` from '.$db->table('ad').' where `ad_pos_id`=1 order by `order_view`';
+$get_cycle_ad = 'select `img`,`url` from '.$db->table('ad').' where `ad_pos_id`=3 and `business_account`=\''.$sn.'\' order by `order_view`';
 $cycle_ad = $db->fetchAll($get_cycle_ad);
 assign('cycle_ad', $cycle_ad);
 

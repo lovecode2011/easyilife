@@ -31,7 +31,7 @@ if($opera == 'get_qrcode')
                 $member_id = $db->fetchOne($get_member_id);
                 //获取链接的二维码
                 $param = array('url'=>$url, 'opera'=>'get_url', 'account'=>$_SESSION['account']);
-                $get_url_response = post('http://localhost/sbx/d/index.php', $param);
+                $get_url_response = post('http://'.$_SERVER['HTTP_HOST'].BASE_DIR.'d/index.php', $param);
 
                 $get_url_response = json_decode($get_url_response);
                 if($get_url_response->error == 0)
@@ -67,6 +67,8 @@ if('login' == $opera)
     $password = getPOST('password');
     $code = getPOST('code');
     $code = strtolower($code);
+    $ref = getPOST('ref');
+
     $column = '`account`';
 
     if($code != $_SESSION['code'])
@@ -105,12 +107,13 @@ if('login' == $opera)
             $response['error'] = 0;
             $response['msg'] = '登录成功';
 
-            if(isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] != 'login.php')
+            if(isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'] ,'login.php') === false)
             {
                 $response['referer'] = $_SERVER['HTTP_REFERER'];
             } else {
                 $response['referer'] = 'index.php';
             }
+            $response['referer'] = $ref;
         } else {
             $response['msg'] = '账号信息错误';
         }

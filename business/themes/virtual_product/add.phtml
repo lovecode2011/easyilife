@@ -37,13 +37,15 @@
                         {/foreach}
                     </select>
                 </p>
+                <!--
                 <p class="clear">
                     <label class="l-title">消费内容：</label>
                     <input style="cursor: pointer;" class="text-input" type="button" id="add-content" value="增加消费内容" />
                 </p>
+                -->
                 <p class="clear" id="show-content">
                 </p>
-                <p>
+                <p class="clear">
                     <label class="l-title">库存：</label>
                     <input class="text-input w150" type="text" id="inventory" name="single_inventory" placeholder="请输入产品库存">
                 </p>
@@ -146,7 +148,6 @@
 <!-- kindeditor编辑器 -->
 <script type="text/javascript" src="../plugins/kindeditor/kindeditor-all-min.js"></script>
 <script type="text/javascript">
-    {literal}
     KindEditor.ready(function(K) {
         var editor1 = K.create("textarea[name='detail']", {
             height: '400px',
@@ -184,8 +185,8 @@
                             height = 200 + 'px';
                         }
 
-                        K('#img').val(url.replace("/sbx/", ""));
-                        K('.select-image').attr('src', "../"+url.replace("/sbx/", ""));
+                        K('#img').val(url.replace("{$smarty.const.BASE_DIR}", ""));
+                        K('.select-image').attr('src', "../"+url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('.select-image').css('display', 'block');
                         K('.select-image').attr('width', width);
                         K('.select-image').attr('height', height);
@@ -195,7 +196,6 @@
             });
         });
     });
-    {/literal}
 </script>
 <script type="text/javascript" src="js/virtual_product/add.js"></script>
 {include file="library/footer.lbi"}

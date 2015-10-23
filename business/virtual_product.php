@@ -728,7 +728,30 @@ if( 'edit' == $act ) {
     $get_contents .= ' where product_sn = \''.$product_sn.'\' order by id asc';
     $virtual_contents = $db->fetchAll($get_contents);
 //    var_dump($product_attributes);exit;
+    $inventory = 0;
+    $get_attributes = 'select * from '.$db->table('inventory');
+    $get_attributes .= ' where product_sn = \''.$product_sn.'\'';
+    $product_attributes = $db->fetchAll($get_attributes);
+//    var_dump($product_attributes);exit;
+    if( $product_attributes ) {
+        foreach( $product_attributes as $key => $attributes ) {
+            $product_attributes[$key]['attributes'] = json_decode($attributes['attributes']);
+        }
+    } else {
+        $product_attributes = array();
+    }
 
+    if(count($product_attributes) == 1)
+    {
+        $inventory = $product_attributes[0]['inventory'];
+    }
+
+    assign('inventory', $inventory);
+
+    if(empty($virtual_contents))
+    {
+        $virtual_contents = array();
+    }
     assign('virtual_contents', json_encode($virtual_contents));
 
     $get_category_list = 'select * from '.$db->table('category');
@@ -791,7 +814,7 @@ if( 'gallery' == $act ) {
     if( $gallery_list ) {
         foreach( $gallery_list as $key => $gallery ) {
             if( file_exists(realpath('..'.$gallery['original_img'])) ) {
-                $gallery_list[$key]['original_img_src'] = '..'.$gallery['original_img'];
+                $gallery_list[$key]['original_img_src'] = $gallery['original_img'];
             } else {
                 $gallery_list[$key]['original_img_src'] = $gallery['original_img'];
             }
@@ -800,14 +823,14 @@ if( 'gallery' == $act ) {
         for( $i = $count; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '/upload/image/iconfont-jia.png';
+            $gallery_list[$i]['original_img_src'] = 'upload/image/no-image.png';
             $gallery_list[$i]['order_view'] = '';
         }
     } else {
         for( $i = 0; $i < $gallery_count; $i++ ) {
             $gallery_list[$i]['id'] = '';
             $gallery_list[$i]['original_img'] = '';
-            $gallery_list[$i]['original_img_src'] = '/upload/image/iconfont-jia.png';
+            $gallery_list[$i]['original_img_src'] = 'upload/image/no-image.png';
             $gallery_list[$i]['order_view'] = '';
         }
     }

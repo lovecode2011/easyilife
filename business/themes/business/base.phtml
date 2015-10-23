@@ -33,9 +33,9 @@
                 <p>
                     <label class="l-title"></label>
                     {if $business.shop_logo eq ''}
-                    <img id="show-image" alt="未选择图片" src="/upload/image/no-image.png">
+                    <img id="show-image" alt="未选择图片" src="../upload/image/no-image.png">
                     {else}
-                    <img id="show-image" alt="" width="95" height="95" src="{$business.shop_logo_src}" />
+                    <img id="show-image" alt="" width="95" height="95" src="../{$business.shop_logo_src}" />
                     {/if}
                 </p>
                 <p>
@@ -46,9 +46,9 @@
                 <p>
                     <label class="l-title"></label>
                     {if $business.shop_sign eq ''}
-                    <img id="show-sign" alt="未选择图片" src="/upload/image/no-image.png">
+                    <img id="show-sign" alt="未选择图片" src="../upload/image/no-image.png">
                     {else}
-                    <img id="show-sign" alt="" width="370" height="95" src="{$business.shop_sign_src}" />
+                    <img id="show-sign" alt="" width="370" height="95" src="../{$business.shop_sign_src}" />
                     {/if}
                 </p>
                 <p>
@@ -120,7 +120,7 @@
                             height = (height == '') ? '75px' : height + 'px'
                         }
 
-                        K('#img').val(url);
+                        K('#img').val(url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('#show-image').attr('src', url);
                         K('#show-image').css('width', width);
                         K('#show-image').css('height', height);
@@ -148,7 +148,7 @@
                             height = (height == '') ? '95px' : height + 'px'
                         }
 
-                        K('#sign').val(url);
+                        K('#sign').val(url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('#show-sign').attr('src', url);
                         K('#show-sign').css('width', width);
                         K('#show-sign').css('height', height);

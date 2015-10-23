@@ -104,7 +104,7 @@
         }
 
         var url = "data_center.php";
-        var data = { "opera":"login", "code":code, "account":account, "password":password };
+        var data = { "opera":"login", "code":code, "account":account, "password":password, "ref": document.referrer };
 
         show_mask();
         $.post(url, data, verify_member_info_handler, "json");
