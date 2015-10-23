@@ -221,8 +221,8 @@ if( 'view' == $act ) {
 
     if( $product_list ) {
         foreach( $product_list as $key => $product ) {
-            if( file_exists(realpath('..'.$product['img']))) {
-                $product[$key]['img'] = '..'.$product['img'];
+            if( file_exists(realpath('../'.$product['img']))) {
+                $product[$key]['img'] = '../'.$product['img'];
             }
             $product_list[$key]['status_str'] = $status_array[$product['status']];
             $product_list[$key]['exam_str'] = ( $product['status'] == 2 ) ? '审核' : '';
@@ -311,7 +311,7 @@ if( 'reject' == $act ) {
         exit;
     }
 
-    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 and is_virtual = 1 limit 1';
+    $get_product = 'selecvt * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 and is_virtual = 1 limit 1';
     $product = $db->fetchRow($get_product);
     if( empty($product) ) {
         show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));

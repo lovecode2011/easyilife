@@ -267,14 +267,14 @@ if( 'network' == $act ) {
     $data = array();
     if( !empty($grand) ) {
         $data = array(
-            'name' => '上上家-'.$grand['account'],
+            'name' => '二级推荐人-'.$grand['account'],
             'account' => $grand['account'],
             'parentId' => $grand['parent_id'],
             'isParent' => true,
             'open' => true,
         );
         $data['children'] = array(array(
-            'name' => '上家-'.$parent['account'],
+            'name' => '一级推荐人-'.$parent['account'],
             'account' => $parent['account'],
             'parentId' => $parent['parent_id'],
             'isParent' => true,
@@ -288,7 +288,7 @@ if( 'network' == $act ) {
         ));
     } else if( !empty($parent) ) {
         $data = array(
-            'name' => '上家-'.$parent['account'],
+            'name' => '一级推荐人-'.$parent['account'],
             'account' => $parent['account'],
             'parentId' => $parent['parent_id'],
             'isParent' => true,
