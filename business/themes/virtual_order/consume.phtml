@@ -27,7 +27,6 @@
                         提交<img src="images/btn_loading.gif" class="btn-loading-img"/>
                     </a>&nbsp;
                     <input type="hidden" name="opera" value="consume"/>
-                    <input type="hidden" id="id" name="id" value="{$content.id}"/>
                     <a href="javascript:history.go(-1);" class="btn btn-primary">返回</a>
                 </p>
             </fieldset>
@@ -51,15 +50,8 @@
     function do_submit() {
         //参数校验
         var flag = true;
-        var id = $("#id").val();
         var mobile = $("#mobile").val().trim();
         var code = $("#code").val().trim();
-
-        id = parseInt(id);
-        if(id <= 0) {
-            alert("参数错误");
-            flag = false;
-        }
 
         if(mobile == "") {
             $("#mobile-error").text("-请输入手机号码");
@@ -87,7 +79,7 @@
             $("#submit-btn").addClass("btn-disabled");
             $("#mask").show();
 
-            var params = { "opera":"consume", "id":id, "mobile":mobile, "code":code}
+            var params = { "opera":"consume", "mobile":mobile, "code":code}
             var url = "virtual_order.php";
             $.post(url, params, do_response, "json");
         }

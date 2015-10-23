@@ -36,15 +36,30 @@ if( 'consume' == $opera ) {
         echo json_encode($response);
         exit;
     }
-    $id = trim(getPOST('id'));
-    if( 0 >= $id ) {
+    $mobile = trim(getPOST('mobile'));
+    $code = trim(getPOST('code'));
+
+    if( '' == $mobile || 11 != strlen($mobile) ) {
         $response['msg'] = '参数错误';
+        $response['errmsg']['mobile'] = '-请输入手机号码';
+    }
+
+    if( '' == $code ) {
+        $response['msg'] = '参数错误';
+        $response['errmsg']['code'] = '-请输入消费码';
+    }
+
+    if( 0 != count($response['errmsg']) ) {
         echo json_encode($response);
         exit;
     }
+    $mobile = $db->escape($mobile);
+    $code = $db->escape($code);
 
     $get_content = 'select * from '.$db->table('order_content');
-    $get_content .= ' where id = \''.$id.'\' and business_account = \''.$_SESSION['business_account'].'\'';
+    $get_content .= ' where `mobile` = \''.$mobile.'\'';
+    $get_content .= ' and `business_account` = \''.$_SESSION['business_account'].'\'';
+    $get_content .= ' and `code` = \''.$code.'\'';
     $get_content .= ' limit 1';
 
     $content = $db->fetchRow($get_content);
@@ -66,44 +81,11 @@ if( 'consume' == $opera ) {
         exit;
     }
 
-    $mobile = trim(getPOST('mobile'));
-    $code = trim(getPOST('code'));
-
-    if( '' == $mobile || 11 != strlen($mobile) ) {
-        $response['msg'] = '参数错误';
-        $response['errmsg']['mobile'] = '-请输入手机号码';
-    }
-
-    if( '' == $code ) {
-        $response['msg'] = '参数错误';
-        $response['errmsg']['code'] = '-请输入消费码';
-    }
-
-    if( 0 != count($response['errmsg']) ) {
-        echo json_encode($response);
-        exit;
-    }
-
-    if( $content['mobile'] != $mobile ) {
-        $response['msg'] = '手机号码错误';
-        $response['errmsg']['mobile'] = '-手机号码错误';
-    }
-
-    if( $content['code'] != $code ) {
-        $response['msg'] .= ($response['msg']) ? ',消费码错误' : '消费码错误';
-        $response['errmsg']['code'] = '-消费码错误';
-    }
-
-    if( 0 != count($response['errmsg']) ) {
-        echo json_encode($response);
-        exit;
-    }
-
 
     //存在一个实体产品则不改变订单状态
     $need_change_order_status = true;
 
-    $get_detail_list = 'select * from '.$db->table('order_detail').' where order_sn = \''.$content['order'].'\'';
+    $get_detail_list = 'select * from '.$db->table('order_detail').' where order_sn = \''.$content['order_sn'].'\'';
     $detail_list = $db->fetchAll($get_detail_list);
 
     if( $detail_list ) {
@@ -116,7 +98,7 @@ if( 'consume' == $opera ) {
 
     //同张订单的所有卡券都消费完则改变订单状态
     if( $need_change_order_status ) {
-        $get_content_list = 'select * from '.$db->table('order_content').' where order_sn = \''.$content['order'].'\' and id <> '.$id;
+        $get_content_list = 'select * from '.$db->table('order_content').' where order_sn = \''.$content['order_sn'].'\' and id <> '.$content['id'];
         $content_list = $db->fetchAll($get_content_list);
 
         $all_use = true;
@@ -138,7 +120,7 @@ if( 'consume' == $opera ) {
 
     $db->begin();
     $transaction = true;
-    if( !$db->autoUpdate('order_content', $data, 'id = '.$id) ) {
+    if( !$db->autoUpdate('order_content', $data, 'id = '.$content['id']) ) {
         $transaction = false;
     }
 
@@ -190,12 +172,12 @@ if( 'view' == $act ) {
         assign('order_status', $status_str[$status - 1]);
     }
 
-    $mobile = trim(getGET('mobile'));
-    if( $mobile ) {
-        $mobile = $db->escape($mobile);
-        $and_where .= ' and mobile like \'%'.$mobile.'%\'';
+    $order_sn = trim(getGET('order_sn'));
+    if( $order_sn ) {
+        $order_sn = $db->escape($order_sn);
+        $and_where .= ' and order_sn like \'%'.$order_sn.'%\'';
     }
-    assign('mobile', $mobile);
+    assign('order_sn', $order_sn);
 
     //分页参数
     $page = intval(getGET('page'));
@@ -241,25 +223,6 @@ if( 'consume' == $act ) {
         show_system_message('权限不足', array());
         exit;
     }
-    $id = trim(getGET('id'));
-    if( 0 >= $id ) {
-        show_system_message('参数错误');
-    }
-
-    $get_content = 'select * from '.$db->table('order_content');
-    $get_content .= ' where id = \''.$id.'\' and business_account = \''.$_SESSION['business_account'].'\'';
-    $get_content .= ' limit 1';
-
-    $content = $db->fetchRow($get_content);
-    if( empty($content) ) {
-        show_system_message('消费券不存在');
-    }
-
-    if( 0 != $content['status'] ) {
-        show_system_message('消费券无法使用');
-    }
-
-    assign('content', $content);
 }
 
 
