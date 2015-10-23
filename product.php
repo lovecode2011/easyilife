@@ -7,10 +7,47 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'collection|distribution';
+$operation = 'collection|distribution|delete_history';
 
 $opera = check_action($operation, getPOST('opera'));
 
+//我的足迹
+if('delete_history' == $opera)
+{
+    $product_sn = getPOST('product_sn');
+
+    $response = array('error'=>1, 'msg'=>'');
+
+    if(!check_cross_domain() && !empty($_SESSION['account']))
+    {
+        if($product_sn != '')
+        {
+            $product_sn = $db->escape($product_sn);
+
+            $delete_history = 'delete from '.$db->table('history').' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=\''.$product_sn.'\'';
+            if($db->delete($delete_history))
+            {
+                $response['error'] = 0;
+                $response['msg'] = '删除足迹成功';
+            } else {
+                $response['msg'] = '001:系统繁忙，请稍后再试';
+            }
+        } else {
+            $response['msg'] = '000:参数错误';
+        }
+    } else {
+        if(empty($_SESSION['account']))
+        {
+            $response['msg'] = '请先登录';
+            $response['error'] = 2;
+        } else {
+            $response['msg'] = '404:参数错误';
+        }
+    }
+
+    echo json_encode($response);
+    exit;
+}
 //产品分销
 if('distribution' == $opera)
 {
@@ -298,7 +335,7 @@ if($product)
 
     //获取产品的推广链接
     $param = array('url'=>'product.php?id='.$product['id'], 'opera'=>'get_url', 'account'=>$_SESSION['account']);
-    $get_url_response = post('http://'.$_SERVER['HTTP_HOST'].BASE_DIR.'d/index.php', $param);
+    $get_url_response = post('http://'.$_SERVER['HTTP_HOST'].'/'.BASE_DIR.'d/index.php', $param);
 
     $get_url_response = json_decode($get_url_response);
     if($get_url_response->error == 0)
@@ -306,6 +343,12 @@ if($product)
         assign('recommend_url', $get_url_response->url);
     } else {
         assign('recommend_url', '');
+    }
+
+    //加入我的足迹
+    if(isset($_SESSION['account']) && $_SESSION['account'] != '')
+    {
+        add_history($_SESSION['account'], $product_sn);
     }
 } else {
     redirect('index.php');

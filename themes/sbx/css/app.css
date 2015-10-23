@@ -1672,7 +1672,7 @@ nav.ol_select_bar ul a.hover li {
     text-align: right;
     float: left;
 }
-.address input[type="text"],.withdrawals input,.bank input,.userinfo input{
+.address input[type="text"],.address input[type="tel"],.address input[type="email"],.withdrawals input,.bank input,.userinfo input{
     background: #fff;
     display: inline-block;
     height: 1.5rem;
@@ -1681,6 +1681,7 @@ nav.ol_select_bar ul a.hover li {
     padding-left: .5rem;
     width: 55%;
     border: 1px solid #ececec;
+    font-size: .8rem;
 }
 .address select,.userinfo select {
     color: #686868;
@@ -3251,4 +3252,48 @@ li.search-shop-li div{
     font-size: .7rem;
     line-height: 1rem;
     padding: .3rem 0;
+}
+
+/* 商家入驻 */
+.file-btn {
+    display: inline-block;
+    height: 4rem;
+    border-radius: 5px;
+    border: 2px dashed #CCC;
+    background: #FFF url("../images/add_btn.gif") no-repeat scroll center center / 45% auto;
+    width: 4.1rem;
+    margin-right: 0.5rem;
+    position: relative;
+    text-align: center;
+    vertical-align: bottom;
+    line-height: 7rem;
+    position: relative;
+}
+
+.file-btn input[type="file"] {
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.apply-status {
+    display: block;
+    margin: 10px auto;
+    width: 3rem;
+    line-height: 3rem;
+    font-size: 2rem;
+    color: #fff;
+    background: #ff0000;
+    border-radius: 2rem;
+    text-align: center;
+}
+
+.apply-status-content {
+    text-align: center;
+    line-height: 2rem;
+}
+
+.apply-status-gray {
+    background-color: #ddd;
 }

@@ -8,12 +8,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
+/*
 if( isset($_COOKIE['session']) ) {
     session_id($_COOKIE['session']);
     setcookie('session', $_COOKIE['session'], time() + 3600 * 24 * 21);
 } else {
     setcookie('session', session_id(), time() + 3600 * 24 * 21);
 }
+*/
 
 //设置系统相关参数
 date_default_timezone_set('Asia/Shanghai');
@@ -149,7 +151,7 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
 
 if($_SESSION['openid'] == '' && $_SESSION['account'] == '')
 {
-    $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php|index.php|article.php|article_list.php|';
+    $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php|index.php|article.php|article_list.php|install.php|';
     $no_login_script .= 'category.php|product.php|cart.php|product_list.php|search.php|shop.php|distribution_shop.php|notify.php';
     $script_name = str_replace(ROOT_PATH, '', $_SERVER['SCRIPT_FILENAME']);
 

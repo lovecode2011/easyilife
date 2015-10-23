@@ -8,11 +8,11 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'tenpay|alipay';
+$operation = 'wechat|alipay';
 $opera = check_action($operation, getPOST('opera'));
 
 //支付方式变更时生成支付代码
-if('tenpay' == $opera)
+if('wechat' == $opera)
 {
     $amount = getPOST('amount');
     $amount = floatval($amount);
@@ -22,7 +22,7 @@ if('tenpay' == $opera)
 
     $response = array('error'=>1, 'msg'=>'');
 
-    $_SESSION['payment'] = 'tenpay';
+    $_SESSION['payment'] = 'wechat';
 
     if($amount <= 0)
     {

@@ -82,6 +82,14 @@ $sql[] = 'create table if not exists '.$db->table('comment').' (
     `parent_id` int not null default \'0\'
 ) default charset=utf8;';
 
+$table[] = '我的足迹';
+$sql[] = 'create table if not exists '.$db->table('history').' (
+    `product_sn` varchar(20) not null,
+    `account` varchar(20) not null,
+    `add_time` timestamp,
+    primary key (`product_sn`,`account`)
+) default charset=utf8;';
+
 $table[] = '产品收藏';
 $sql[] = 'create table if not exists '.$db->table('collection').' (
     `product_sn` varchar(255) not null,
@@ -307,11 +315,7 @@ $sql[] = 'create table if not exists '.$db->table('order').' (
     `integral_paid` decimal(18,2) not null default \'0\',
     `reward_paid` decimal(18,2) not null default \'0\',
     `balance_paid` decimal(18,2) not null default \'0\',
-    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品订单，1:虚拟产品订单\',
-    `product_sn` varchar(255) not null default \'\' comment \'虚拟产品编号\',
-    `product_name` varchar(255) not null default \'\' comment \'虚拟产品名称\',
-    `start_time` int not null default 0 comment \'虚拟订单消费起始时间\',
-    `end_time` int not null default 0 comment \'虚拟订单消费结束时间\',
+    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品订单，1:虚拟产品订单\'
     index (`business_account`)
 ) default charset=utf8;';
 

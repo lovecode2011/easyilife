@@ -93,6 +93,7 @@ function get_user_info($code, $appid, $appsecret, $mode = 'base')
 function get_qrcode($openid, $access_token)
 {
     global $db;
+    global $log;
 
     $get_ticket = 'select `ticket` from '.$db->table('user').' where `openid`=\''.$openid.'\' and `expired`>'.time();
     $ticket = $db->fetchOne($get_ticket);
@@ -100,6 +101,7 @@ function get_qrcode($openid, $access_token)
     if($ticket)
     {
         $qrcode = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='.$ticket;
+        $log->record('ticket is avaiable.');
         return $qrcode;
     }
 
@@ -129,7 +131,7 @@ function get_qrcode($openid, $access_token)
 
     if(isset($response->errcode))
     {
-        echo $response->errcode.':'.$response->errmsg;
+        $log->record('get qrcode fail:'.$response->errcode.':'.$response->errmsg);
         return false;
     } else {
         $data = array(
@@ -163,8 +165,10 @@ function get_access_token($appid, $secretkey)
     {
         $get_access_token = 'select `value` from '.$db->table('sysconf').' where `key`=\'access_token\'';
 
+        $log->record('access_token is not expired, expired in '.date('Y-m-d H:i:s', $expired));
         return $db->fetchOne($get_access_token);
     }
+    $log->record('access_token is expired, refresh.');
     //对于access_token超时，则重新获取access_token
     $request_time = time();
     $url_get_access_token = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s';
@@ -221,6 +225,8 @@ function check_signature($signature, $timestamp, $nonce, $token)
  */
 function create_prepay($appid, $mch_id, $mch_key, $openid, $total_fee, $body, $detail, $out_trade_no, $params = array())
 {
+    global $config;
+
     $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
 
     $now = time();
@@ -234,7 +240,7 @@ function create_prepay($appid, $mch_id, $mch_key, $openid, $total_fee, $body, $d
         'fee_type' => 'CNY',
         'time_start' => date('YmdHis', $now),
         'time_expire' => date('YmdHis', ($now+3600*24*7)),//支付链接7天后无效
-        'notify_url' => 'http://sbx.kwanson.com/notify.php',//完成支付后的回调地址
+        'notify_url' => 'http://shop.kwanson.com/notify.php',//完成支付后的回调地址
         'trade_type' => 'JSAPI',//交易类型，可选：JSAPI, NATIVE, APP, WAP
         //  'limit_pay' => 'no_credit', //此项将不允许使用信用卡支付
         'body' => $body,
@@ -271,6 +277,13 @@ function create_prepay($appid, $mch_id, $mch_key, $openid, $total_fee, $body, $d
 
 function tenpay_sign($data, $mch_key)
 {
+    $data_ = array();
+    foreach($data as $key=>$value)
+    {
+        $data_[$key] = $value;
+    }
+    $data = $data_;
+
     ksort($data);
     $param_str = '';
     foreach($data as $key=>$value)

@@ -28,12 +28,19 @@ assign('order_await_comment', $order_await_comment);
 //获取消费总额
 $get_order_sum = 'select sum(`amount`) from '.$db->table('order').' where `account`=\''.$_SESSION['account'].'\'';
 $order_sum = $db->fetchOne($get_order_sum);
+$order_sum = floatval($order_sum);
+$order_sum = sprintf("%.2f", $order_sum);
 assign('order_sum', $order_sum);
 
 //获取收藏总数
 $get_collection_count = 'select count(*) from '.$db->table('collection').' where `account`=\''.$_SESSION['account'].'\'';
 $collection_count = $db->fetchOne($get_collection_count);
 assign('collection_count', $collection_count);
+
+//获取我的足迹
+$get_history_count = 'select count(*) from '.$db->table('history').' where `account`=\''.$_SESSION['account'].'\'';
+$history_count = $db->fetchOne($get_history_count);
+assign('history_count', intval($history_count));
 
 //获取猜你喜欢
 $get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 3';

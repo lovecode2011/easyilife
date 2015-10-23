@@ -43,7 +43,7 @@
                     {/foreach}
                 </select>
             </label>
-            <label for="industry"><span>主营分类:</span>
+            <label for="category"><span>主营分类:</span>
                 <select name="category" id="category">
                     <option value="0">主营分类</option>
                     {foreach from=$category item=cat}
@@ -86,8 +86,8 @@
                 </div>
             </label>
             <label><span>联系人:</span><input type="text" id="contact" name="contact" placeholder="与法人身份证姓名一致"></label>
-            <label><span>手机号码:</span><input type="tel" id="mobile" name="mobile"></label>
-            <label><span>邮箱:</span><input type="email" id="email" name="email"></label>
+            <label><span>手机号码:</span><input type="tel" id="mobile" name="mobile" placeholder="请输入联系人手机号码"></label>
+            <label><span>邮箱:</span><input type="email" id="email" name="email" placeholder="请输入联系人邮箱"></label>
             <div class="address-btn">
                 <input type="hidden" name="opera" value="apply"/>
                 <a class="btn" href="javascript:submit_apply();">确定</a>
