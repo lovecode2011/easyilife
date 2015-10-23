@@ -25,6 +25,14 @@
                     <input class="text-input w300" type="text" maxlength="64" id="integral" name="integral" value="{$member.integral}" />
                 </p>
                 <p>
+                    <label class="l-title">等级：</label>
+                    <select name="level_id" class="w150">
+                        <option value="0" {if $member.level_id eq 0}selected="selected"{/if}>消费者</option>
+                        <option value="1" {if $member.level_id eq 1}selected="selected"{/if}>合伙人</option>
+                        <option value="2" {if $member.level_id eq 2}selected="selected"{/if}>高级合伙人</option>
+                    </select>
+                </p>
+                <p>
                     <label class="l-title"></label>
                     <button class="btn btn-primary" type="submit">保存</button>
                     <a class="btn btn-primary" href="member.php">返回</a>
