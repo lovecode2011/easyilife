@@ -44,8 +44,26 @@ $(function(){
 function menu1(dx, dx1, dx3) {
     var urla = window.location.href;
     tmp = urla.split("/");
-    wza = tmp[tmp.length - 1];
-    wza = wza.split("?")[0];
+    temp = tmp[tmp.length - 1];
+    wza = temp.split("?")[0];
+    if( temp.split("?")[1] ) {
+        param = temp.split("?")[1];
+        params = param.split("&");
+        console.log(param);
+
+        if( isNaN(params[1]) ) {
+            console.log(params[0]);
+            wza += '?' + params[0];
+        } else {
+            for( var i = 0; i < params.length; i++ ) {
+                temp = params[i].split("=");
+                if( temp[0] == 'act' ) {
+                    wza += '?' + params[i];
+                }
+            }
+        }
+    }
+
     $(dx).slideDown();
     $("a.nav-top-item").removeClass("hover");
     $(dx3).addClass("hover").siblings().removeClass("hover");
