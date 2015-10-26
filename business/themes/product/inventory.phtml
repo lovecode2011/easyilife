@@ -35,7 +35,7 @@
                     <td>库存 = 逻辑库存 + 待发库存<br />修改库存时不能小于后两者之和</td>
                     <td>
                     <a type="submit" class="btn btn-primary submit-btn" id="submit-btn-{$inventory.id}" data-id="{$inventory.id}" href="javascript:;">
-                        修改<img src="images/btn_loading.gif" class="btn-loading-img" id="btn-loading-img-{$btn-loading-img}"/>
+                        修改<img src="images/btn_loading.gif" class="btn-loading-img" id="btn-loading-img-{$inventory.id}"/>
                     </a>&nbsp;
                     <input type="hidden" name="opera" value="inventory" />
                     <input type="hidden" name="id" id="id-{$inventory.id}" value="{$inventory.id}" />
