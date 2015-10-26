@@ -71,6 +71,15 @@
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
     var id = 0;
+
+    $(function(){
+        var need_refresh = window.localStorage.getItem("need_refresh");
+        if(need_refresh == 1) {
+            window.localStorage.setItem("need_refresh", 0);
+            window.location.reload();
+        }
+    });
+
     function delete_address_confirm(eid) {
         id = eid;
         show_operation_dialog("confirm_dialog");

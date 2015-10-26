@@ -17,8 +17,8 @@ if('sort' == $opera)
     $filter = getPOST('filter');
     $mode = getPOST('mode');
 
-
-    $get_product_list = 'select p.`id`,p.`name`,p.`price`,p.`img`,p.`product_sn`,(select `account` from '.$db->table('collection').
+    $now = time();
+    $get_product_list = 'select p.`id`,p.`name`,if(p.`promote_end`>'.$now.',p.`promote_price`,p.`price`) as `price`,p.`img`,p.`product_sn`,(select `account` from '.$db->table('collection').
                         ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=p.`product_sn`) as collection from ' . $db->table('product') .
                         ' as p where p.`status`=4 ';
 
@@ -32,19 +32,27 @@ if('sort' == $opera)
         $get_product_list .= ' and p.`name` like \'%'.$keyword.'%\'';
     }
 
+    $promote_condition = '';
     //价格区间
     if(isset($filter['price_l']))
     {
         $price_l = $filter['price_l'];
         $price_l = floatval($price_l);
-        $get_product_list .= ' and p.`price`>='.$price_l;
+        $get_product_list .= ' and `price`>='.$price_l;
+        $promote_condition .= ' and `promote_price`>='.$price_l;
     }
 
     if(isset($filter['price_h']))
     {
         $price_h = $filter['price_h'];
         $price_h = floatval($price_h);
-        $get_product_list .= ' and p.`price`<='.$price_h;
+        $get_product_list .= ' and `price`<='.$price_h;
+        $promote_condition .= ' and `promote_price`<='.$price_h;
+    }
+
+    if($promote_condition != '')
+    {
+        $get_product_list .= ' or (`promote_end`>'.$now.$promote_condition.')';
     }
 
     //免运费

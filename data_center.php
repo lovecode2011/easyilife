@@ -259,7 +259,7 @@ if('verify_pic_code' == $opera)
 
 if('get_fav' == $opera)
 {
-    $get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 6';
+    $get_fav_products = 'select `name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 6';
     $fav_products = $db->fetchAll($get_fav_products);
     assign('product_list', $fav_products);
 

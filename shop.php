@@ -32,7 +32,8 @@ foreach($category as $key=>$c)
 
 assign('category', $category);
 //获取商家全部产品
-$get_product_list = 'select `name`,`price`,`id`,`img` from '.$db->table('product').' where `status`=4 and `business_account`=\''.$sn.'\'';
+$now = time();
+$get_product_list = 'select `name`,if(p.`promote_end`>'.$now.',p.`promote_price`,p.`price`) as `price`,`id`,`img` from '.$db->table('product').' where `status`=4 and `business_account`=\''.$sn.'\'';
 $product_list = $db->fetchAll($get_product_list);
 assign('product_list', $product_list);
 //获取新添加的产品

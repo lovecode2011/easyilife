@@ -7,7 +7,8 @@
  */
 include 'library/init.inc.php';
 
-$get_product_list = 'select p.* from '.$db->table('history').' as d join '.$db->table('product').' as p '.
+$now = time();
+$get_product_list = 'select p.`product_sn`,p.`name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,p.`id`,p.`img` from '.$db->table('history').' as d join '.$db->table('product').' as p '.
     ' using(`product_sn`) where d.`account`=\''.$_SESSION['account'].'\' order by d.`add_time` DESC';
 
 $product_list = $db->fetchAll($get_product_list);

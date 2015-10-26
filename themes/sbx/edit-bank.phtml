@@ -111,6 +111,7 @@
 
         show_message_dialog(response.msg);
         if(response.error == 0) {
+            window.localStorage.setItem("need_refresh", 1);
             $("#dialog_close_btn").attr("href", "javascript:history.back();");
             $("#dialog_close").click(function() {
                 history.back();
