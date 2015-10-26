@@ -166,6 +166,24 @@ $purview = array(
         'pur_nav_edit',
         'pur_nav_del',
     ),
+    //微信菜单
+    'pur_wechat_menu' => array(
+        'pur_wechat_menu_edit',
+    ),
+    //微信客服
+    'pur_wechat_kf' => array(
+        'pur_wechat_kf_add',
+        'pur_wechat_kf_view',
+        'pur_wechat_kf_edit',
+        'pur_wechat_kf_del',
+    ),
+    //微信回复规则
+    'pur_wechat_rule' => array(
+        'pur_wechat_rule_add',
+        'pur_wechat_rule_view',
+        'pur_wechat_rule_edit',
+        'pur_wechat_rule_del',
+    )
 );
 
 global $L_purview;
@@ -304,6 +322,21 @@ $L_purview = array(
     'pur_nav_view'=>'查看导航栏',
     'pur_nav_edit'=>'编辑导航栏',
     'pur_nav_del'=>'删除导航栏',
+
+    'pur_wechat_menu' => '微信菜单管理',
+    'pur_wechat_menu_edit' => '微信菜单管理',
+
+    'pur_wechat_kf' => '微信客服管理',
+    'pur_wechat_kf_add' => '微信客服添加',
+    'pur_wechat_kf_view' => '微信客服查看',
+    'pur_wechat_kf_edit' => '微信客服编辑',
+    'pur_wechat_kf_del' => '微信客服删除',
+
+    'pur_wechat_rule' => '微信规则管理',
+    'pur_wechat_rule_add' => '添加微信规则',
+    'pur_wechat_rule_view' => '查看微信规则',
+    'pur_wechat_rule_edit' => '编辑微信规则',
+    'pur_wechat_rule_del' => '删除微信规则',
 );
 
 global $menus;
@@ -332,7 +365,9 @@ $menus = array(
     'pur_order' => array('url' => 'order.php', 'title' => '订单管理', 'parent' => 'menu_order'),
     'pur_virtual_order' => array('url' => 'virtual_order.php', 'title' => '消费券管理', 'parent' => 'menu_order'),
     'pur_nav' => array('url' => 'nav.php', 'title' => '导航条', 'parent' => 'menu_site'),
-
+    'pur_wechat_menu' => array('url' => 'wechat_menu.php', 'title' => '微信菜单管理', 'parent' => 'menu_wechat'),
+    'pur_wechat_kf' => array('url' => 'wechat_kf.php', 'title' => '客服管理', 'parent' => 'menu_wechat'),
+    'pur_wechat_rule' => array('url' => 'wechat_rule.php', 'title' => '回复规则管理', 'parent' => 'menu_wechat'),
 );
 
 global $topMenus;
@@ -345,6 +380,7 @@ $topMenus = array(
     'menu_order' => array('title' => '订单管理', 'icon' => '&#xe603;'),
     'menu_admin' => array('title' => '权限管理', 'icon' => '&#xe601;'),
     'menu_self' => array('title' => '个人信息', 'icon' => '&#xe602;'),
-    'menu_stastics' => array('title' => '站点统计', 'icon' => '&#xe604;'),
-    'menu_cms' => array('title' => 'cms管理', 'icon' => '&#xe604;'),
+    'menu_stastics' => array('title' => '站点统计', 'icon' => '&#xe603;'),
+    'menu_cms' => array('title' => '资讯管理', 'icon' => '&#xe603;'),
+    'menu_wechat' => array('title' => '微信管理', 'icon' => '&#xe603;'),
 );

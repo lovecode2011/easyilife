@@ -182,7 +182,7 @@ function get_access_token($appid, $secretkey)
         $log->record('get access_token '.$response->errmsg.':'.$errors[$response->errcode]);
         return false;
     } else {
-        $data = array('value'=>($request_time + $response->expires_in));
+        $data = array('value'=>($request_time + ($response->expires_in/2)));
 
         $db->autoUpdate('sysconf', $data, '`key`=\'expired\'');
 

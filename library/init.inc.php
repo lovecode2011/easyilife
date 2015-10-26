@@ -31,7 +31,7 @@ $loader = AutoLoader::getInstance();
 $configs = array('script_path'=>ROOT_PATH.'library/', 'class_path'=>ROOT_PATH.'library/');
 $loader->setConfigs($configs);
 
-$class_list = array('Smarty', 'Logs', 'MySQL', 'Code', 'JSSDK');
+$class_list = array('Smarty', 'Logs', 'MySQL', 'Code', 'JSSDK', 'WechatResponse');
 $loader->includeClass($class_list);
 $script_list = array('configs','functions','lang', 'member', 'transaction', 'wechat');
 $loader->includeScript($script_list);
@@ -152,7 +152,7 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
 if($_SESSION['openid'] == '' && $_SESSION['account'] == '')
 {
     $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php|index.php|article.php|article_list.php|install.php|';
-    $no_login_script .= 'category.php|product.php|cart.php|product_list.php|search.php|shop.php|distribution_shop.php|notify.php';
+    $no_login_script .= 'category.php|product.php|cart.php|product_list.php|search.php|shop.php|distribution_shop.php|notify.php|wechat.php';
     $script_name = str_replace(ROOT_PATH, '', $_SERVER['SCRIPT_FILENAME']);
 
     $flag = check_action($no_login_script, $script_name);

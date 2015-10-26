@@ -560,3 +560,125 @@ ul.tabs-without-js li.active a{
     color: #fff;
 }
 /* END 待处理数量提示 */
+
+/* menu */
+.custom-menu-list
+{
+    display: inline-block;
+    width: 200px;
+    border: 1px solid #e7e7eb;
+    border-top: 0;
+    min-height: 530px;
+    float: left;
+}
+.custom-menu-toolbar
+{
+    background: #f7f8f9;
+    line-height: 38px;
+    overflow: hidden;
+    padding: 0 12px;
+    border-bottom: 1px solid #e7e7eb;
+}
+#add-item
+{
+    float: right;
+    background: url(img/icon.png) no-repeat 0px -4204px;
+    height: 16px;
+    width: 16px;
+    margin: 10px 0;
+}
+#add-item:hover
+{
+    background-position: 0 -4230px;
+}
+.custom-menu-item
+{
+    line-height: 32px;
+}
+.menu-group
+{
+    border-top: 1px solid #e7e7eb;
+    text-indent: 20px;
+}
+.menu-group:first-child
+{
+    border-top: 0;
+}
+.menu-group-item
+{
+    cursor: pointer;
+}
+.menu-group-item-hover
+{
+    background: #f7f8f9;
+}
+.menu-group-subitem
+{
+    cursor: pointer;
+    text-indent: 30px;
+}
+.menu-group-subitem-hover
+{
+    background: #f7f8f9;
+}
+.custom-menu-content
+{
+    float: left;
+    width: 537px;
+    display: inline-block;
+    min-height: 530px;
+    border: 1px solid #e7e7eb;
+    border-left: 0;
+    border-top: 0;
+}
+.menu-form-label,.menu-input-error
+{
+    float: left;
+    line-height: 32px;
+    padding: 0 10px 0 20px;
+    margin-left: 122px;
+    color: #ff0000;
+    font-size: 14px;
+}
+.menu-input-error
+{
+    padding-right: 0;
+    width: 190px;
+}
+.menu-input-wrapper
+{
+    width: 210px;
+}
+.custom-menu-add-form
+{
+    padding: 20px 0;
+}
+.menu-form-item
+{
+    padding-bottom: 20px;
+}
+.menu-remove, .menu-add
+{
+    background: url(img/icon.png) 0 -3369px no-repeat;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+}
+.menu-add:hover
+{
+    background-position: 0 -3393px;
+}
+.menu-remove
+{
+    background-position: 0 -3465px;
+}
+.menu-remove:hover
+{
+    background-position: 0 -3489px;
+}
+.menu-item-toolbar
+{
+    display: inline-block;
+    float: right;
+    padding: 9px 7px;
+}

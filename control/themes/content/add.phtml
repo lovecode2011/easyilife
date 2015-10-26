@@ -104,14 +104,13 @@
 <!-- kindeditor编辑器 -->
 <script type="text/javascript" src="../plugins/kindeditor/kindeditor-all-min.js"></script>
 <script type="text/javascript">
-    {literal}
     KindEditor.ready(function(K) {
         var editor1 = K.create("textarea[name='content']", {
             height: '400px',
             width: '93%',
             cssPath: '../plugins/kindeditor/plugins/code/prettify.css',
-            uploadJson: '../plugins/kindeditor/upload_json.php',
-            fileManagerJson: '../plugins/kindeditor/file_manager_json.php',
+            uploadJson: '../plugins/kindeditor/platform_upload_json.php',
+            fileManagerJson: '../plugins/kindeditor/platform_file_manager_json.php',
             allowFileManager: true,
             afterCreate: function () {
                 var self = this;
@@ -130,8 +129,8 @@
             height: '400px',
             width: '93%',
             cssPath: '../plugins/kindeditor/plugins/code/prettify.css',
-            uploadJson: '../plugins/kindeditor/upload_json.php',
-            fileManagerJson: '../plugins/kindeditor/file_manager_json.php',
+            uploadJson: '../plugins/kindeditor/platform_upload_json.php',
+            fileManagerJson: '../plugins/kindeditor/platform_file_manager_json.php',
             allowFileManager: true,
             afterCreate: function () {
                 var self = this;
@@ -148,8 +147,8 @@
 
         var editor = K.editor({
             allowFileManager: true,
-            uploadJson: '../plugins/kindeditor/section_upload_json.php',
-            fileManagerJson: '../plugins/kindeditor/file_manager_json.php'
+            uploadJson: '../plugins/kindeditor/platform_upload_json.php',
+            fileManagerJson: '../plugins/kindeditor/platform_file_manager_json.php'
         });
         K('#select-image').click(function() {
             editor.loadPlugin('image', function() {
@@ -157,13 +156,13 @@
                     imageUrl : '',
                     clickFn : function(url, title, width, height, border, align) {
                         if( !width ) {
-                            width = 187 + 'px';
+                            width = 180 + 'px';
                         }
                         if( !height ) {
-                            height = 140 + 'px';
+                            height = 180 + 'px';
                         }
 
-                        K('#img').val(url);
+                        K('#img').val(url.replace("{$smarty.const.BASE_DIR}", ""));
                         K('#show-image').attr('src', url);
                         K('#show-image').css('display', 'block');
                         K('#show-image').attr('width', width);
@@ -182,7 +181,6 @@
             $(this).parent().next().slideUp();
         }
     });
-    {/literal}
 </script>
 <!-- END kindeditor编辑器 -->
 {include file="library/footer.lbi"}
