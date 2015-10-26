@@ -194,7 +194,7 @@ if( 'view' == $act ) {
                 $category['name'] = $temp;
             }
             if( empty($category['icon']) ) {
-                $category['icon'] = '../upload/image/no-image.png';
+                $category['icon'] = 'upload/image/no-image.png';
             }
             $category_list[$key] = $category;
         }

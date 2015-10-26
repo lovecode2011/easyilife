@@ -78,15 +78,17 @@
 </div>
 <!-- END content -->
 <script type="text/javascript">
-    var temp = [{$wechat_menus}];
+    var menu_temp = [{$wechat_menus}];
 
     {literal}
     window.onload = function() {
-        if(temp != "") {
-            temp = temp[0];
+        if(menu_temp != "") {
+            console.info(menu_temp);
+            menu_temp = menu_temp[0];
         } else {
-            temp = new Array();
+            menu_temp = new Array();
         }
+
         var save = $("#save-btn");
         save.bind("click", function() {
             var eid = $("#eid").val();
@@ -99,7 +101,7 @@
                 var key = $("#key").val();
 
                 var o = {"name":name,"type":type,"key":key,"parent_id":parent_id,"id":eid, "opera":opera};
-                temp[index] = o;
+                menu_temp[index] = o;
                 $.ajax({
                     "url" : "wechat_menu.php",
                     "type": "post",
@@ -109,8 +111,8 @@
                         if(response.error == 0) {
                             data = response.data;
                             console.info(data.id);
-                            temp[data.id] = data;
-                            console.info(temp[data.id]);
+                            menu_temp[data.id] = data;
+                            console.info(menu_temp[data.id]);
                             $("#eid").val(data.id);
                             $("#parent_id").val(data.parent_id);
                             perform(data);
@@ -139,8 +141,8 @@
             });
         });
 
-        for(var i in temp) {
-            perform(temp[i]);
+        for(var i in menu_temp) {
+            perform(menu_temp[i]);
         }
 
         $("#add-item").bind("click", function() {
@@ -167,18 +169,18 @@
 
     function edit(id) {
         showForm();
-        if(temp[id]) {
-            $("#name").val(temp[id].name);
-            $("#type").val(temp[id].type);
-            $("#key").val(temp[id].key);
-            $("#parent_id").val(temp[id].parent_id);
-            $("#eid").val(temp[id].id);
+        if(menu_temp[id]) {
+            $("#name").val(menu_temp[id].name);
+            $("#type").val(menu_temp[id].type);
+            $("#key").val(menu_temp[id].key);
+            $("#parent_id").val(menu_temp[id].parent_id);
+            $("#eid").val(menu_temp[id].id);
             $("#opera").val("edit");
 
             $(".menu-group-item-hover").removeClass("menu-group-item-hover");
             $("#menu-"+id).addClass("menu-group-item-hover");
 
-            if(temp[id].parent_id == 0 && $("#menu-"+id).siblings("dd").length) {
+            if(menu_temp[id].parent_id == 0 && $("#menu-"+id).siblings("dd").length) {
                 {/literal}
                 $("#menu-notice").text("添加子菜单后，一级菜单的菜单值将不起作用");
                 {literal}
@@ -197,7 +199,7 @@
         }
         $("#menu-notice").text("");
         showForm();
-        if(temp[id]) {
+        if(menu_temp[id]) {
             $("#name").val("");
             $("#type").val("view");
             $("#key").val("");
@@ -208,8 +210,8 @@
     }
 
     function remove(id) {
-        if(temp[id]) {
-            if(temp[id].parent_id == 0) {
+        if(menu_temp[id]) {
+            if(menu_temp[id].parent_id == 0) {
                 if($("#menu-"+id).siblings("dd").length > 0) {
                     {/literal}
                     alert("该菜单有子菜单，不能被移除");
@@ -227,7 +229,7 @@
                     "data" : {"opera":"remove","id":id},
                     "success": function(response) {
                         if(response.error == 0) {
-                            if(temp[id].parent_id == 0) {
+                            if(menu_temp[id].parent_id == 0) {
                                 $("#menu-"+id).parent().remove();
                             } else {
                                 $("#menu-"+id).remove();
@@ -238,7 +240,7 @@
                             $("#parent_id").val(0);
                             $("#eid").val(0);
                             $("#opera").val("add");
-                            delete(temp[id]);
+                            delete(menu_temp[id]);
                         } else {
                             alert(response.msg);
                         }

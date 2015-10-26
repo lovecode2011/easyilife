@@ -241,18 +241,18 @@ if('view' == $act)
         $menu = array();
     }
 
-    $menus = array();
+    $wechat_menus = array();
     foreach($menu as $key=>$m)
     {
-        $menus[$m['id']] = $m;
+        $wechat_menus[$m['id']] = $m;
     }
 
-    if(count($menus) == 0)
+    if(count($wechat_menus) == 0)
     {
-        $menus = '';
+        $wechat_menus = '';
     }
 
-    $smarty->assign('wechat_menus', json_encode($menus));
+    $smarty->assign('wechat_menus', json_encode($wechat_menus));
 }
 
 $template .= $act.'.phtml';
