@@ -156,17 +156,17 @@ if( 'view' == $act ) {
     }
 
     $status = intval(getGET('status'));
+    $and_where = '';
     if( $status == 0 ) {
         assign('status', 0);
         assign('order_status', '');
-        $and_where = '';
     } else {
         switch( $status ) {
             case 1: $and_where .= ' and a.status = 0';break;
             case 2: $and_where .= ' and a.status = 1';break;
             case 3: $and_where .= ' and a.status = 2';break;
             case 4: $and_where .= ' and a.status = 3';break;
-            default: $and_where = '';break;
+            default: $and_where .= '';break;
         }
         assign('status', $status);
         assign('order_status', $status_str[$status - 1]);
