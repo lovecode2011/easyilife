@@ -123,9 +123,9 @@ if('add' == $opera)
             $address = $db->escape($address);
         }
 
-        if($mobile == '')
+        if(!is_mobile($mobile))
         {
-            $response['msg'] .= "-请填写手机号码";
+            $response['msg'] .= "-手机号码格式错误";
         } else {
             $mobile = $db->escape($mobile);
         }
@@ -142,6 +142,16 @@ if('add' == $opera)
             if($is_default)
             {
                 $db->autoUpdate('address', array('is_default'=>0), '`account`=\''.$_SESSION['account'].'\'');
+            } else {
+                //检查用户地址如果为空则默认为默认地址
+                $check_address = 'select count(*) from '.$db->table('address').' where `account`=\''.$_SESSION['account'].'\'';
+
+                $address_count = intval($db->fetchOne($check_address));
+
+                if($address_count == 0)
+                {
+                    $is_default = 1;
+                }
             }
 
             $address_data = array(
@@ -225,9 +235,9 @@ if('edit' == $opera)
             $address = $db->escape($address);
         }
 
-        if($mobile == '')
+        if(!is_mobile($mobile))
         {
-            $response['msg'] .= "-请填写手机号码";
+            $response['msg'] .= "-手机号码格式错误";
         } else {
             $mobile = $db->escape($mobile);
         }
@@ -244,6 +254,17 @@ if('edit' == $opera)
             if($is_default)
             {
                 $db->autoUpdate('address', array('is_default'=>0), '`account`=\''.$_SESSION['account'].'\'');
+            } else {
+                //检查用户地址如果为空则默认为默认地址
+                $check_address = 'select count(*) from '.$db->table('address').' where `account`=\''.$_SESSION['account'].'\'';
+
+                $address_count = $db->fetchOne($check_address);
+                $address_count = intval($address_count);
+
+                if($address_count == 1)
+                {
+                    $is_default = 1;
+                }
             }
 
             $address_data = array(
@@ -469,10 +490,13 @@ if('list' == $act)
 
     $address_list = $db->fetchAll($get_address_list);
 
-    foreach($address_list as $key=>$address)
+    if($address_list)
     {
-        $address_list[$key]['detail_address'] = $address['province_name'].' '.$address['city_name'].' '.$address['district_name'].' '.
-            $address['group_name'].' '.$address['address'];
+        foreach ($address_list as $key => $address)
+        {
+            $address_list[$key]['detail_address'] = $address['province_name'] . ' ' . $address['city_name'] . ' ' . $address['district_name'] . ' ' .
+                $address['group_name'] . ' ' . $address['address'];
+        }
     }
 
     assign('address_list', $address_list);

@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{$template_dir}css/fonts.css">
 </head>
 <body>
-<header class="header" style="position:fixed">
+<header class="header" style="position: fixed;">
     <a href="javascript:history.back();" class="back"></a>
     <h1><em>{$title}</em></h1>
 </header>
@@ -34,7 +34,19 @@
                 <dl>
                     <dt> {$product.name} </dt>
                     <dd>￥{$product.price}</dd>
-                    <span class="p-delete" onclick="{if $mode eq 'collection'}collection('{$product.product_sn}');{else}distribution_confirm('{$product.product_sn}');{/if}return false;">删除</span>
+                    <span class="p-delete"
+                          onclick="{if $mode eq 'collection'}
+                                    collection('{$product.product_sn}');
+                                   {else}
+                                   {if $mode eq 'distribution'}
+                                    distribution_confirm('{$product.product_sn}');
+                                    {else}
+                                    delete_history('{$product.product_sn}');
+                                    {/if}
+                                   {/if}
+                                   return false;">
+                        删除
+                    </span>
                 </dl>
             </a>
         </li>
@@ -42,7 +54,7 @@
     </ul>
 </section>
 {else}
-<div class="empty-con">
+<div class="empty-con" style="padding-top: 2rem;">
     <span class="icon">&#xe640;</span>
     <span class="empty-tips">{$title}空空如也!</span>
         <span class="empty-btn">
@@ -76,6 +88,28 @@
 <script type="text/javascript">
     var distribution_flag = true;
     var operation = 1;
+    function delete_history(product_sn) {
+        var url = "product.php";
+        var data = { "opera":"delete_history", "product_sn":product_sn };
+
+        show_mask();
+        $.post(url, data, delete_history_handler, "json");
+    }
+
+    function delete_history_handler(response) {
+        hide_mask();
+        show_message_dialog(response.msg);
+        if(response.error == 0) {
+            $("#close_dialog_btn").click(function(){
+                window.location.reload();
+            });
+
+            $("#close_dialog").click(function(){
+                window.location.reload();
+            });
+        }
+    }
+
     function collection(product_sn) {
         var url = "product.php";
         var data = { "opera":"collection", "product_sn":product_sn };

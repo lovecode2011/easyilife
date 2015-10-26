@@ -19,7 +19,7 @@
 </head>
 <body>
 <header class="header">
-    <a href="javascript:history.back();" class="back"></a>
+    <a href="javascript:back();" class="back"></a>
     <h1><em>商品详情</em></h1>
 </header>
 <!-- 产品图片轮播区 -->
@@ -188,7 +188,7 @@
     <div class="cd-popup-container" id="dialog" style="display: none;">
         <p>宝贝已成功加入购物车！</p>
         <ul class="cd-buttons">
-            <li><a href="javascript:window.history.back();">继续购物</a></li>
+            <li><a href="javascript:back();">继续购物</a></li>
             <li><a href="javascript:window.location.href='cart.php'">前往结算</a></li>
         </ul>
         <a href="javascript:close_operation_dialog();" class="cd-popup-close img-replace">X</a>
@@ -223,6 +223,14 @@
     var min = 0;
     var second = 0;
     var interval = null;
+
+    function back() {
+        if(document.referer == "" || document.referer == undefined) {
+            window.location.href = "index.php";
+        } else {
+            window.history.back();
+        }
+    }
 
     $(function() {
         $("img.lazy").lazyload({
@@ -800,7 +808,7 @@
     wx.ready(function() {
         var share_title = '我在{$config.site_name}淘到一款好产品，快来看哦';
         var share_link = '{$recommend_url}';
-        var share_img = '{$product.img}';
+        var share_img = '{$config.domain}{$product.img}';
         var share_desc = '{$product.desc}';
         //分享到朋友圈
         wx.onMenuShareTimeline({

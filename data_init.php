@@ -55,13 +55,12 @@ $data[] = array(
  */
 $table[] = 'card_pool';
 $data[] = array(
-    array('account'=>'SJ000001', 'status'=>1)
+    array('account'=>'SJ000000', 'status'=>1)
 );
 
 $table[] = 'payment';
 $data[] = array(
-    array('name'=>'微信支付', 'plugins'=>'wechat', 'desc'=>'微信支付', 'status'=>1),
-    array('name'=>'支付宝', 'plugins'=>'wap_alipay', 'desc'=>'支付宝', 'status'=>1)
+    array('name'=>'微信支付', 'plugins'=>'wechat', 'desc'=>'微信支付', 'status'=>1)
 );
 
 echo '初始化数据:<br/>';

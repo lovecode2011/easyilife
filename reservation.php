@@ -62,10 +62,13 @@ if('list' == $act)
 
     $order_content = $db->fetchAll($get_order_content);
 
-    foreach ($order_content as $key => $oc)
+    if($order_content)
     {
-        $oc['show_status'] = $oc_status[$oc['status']];
-        $order_content[$key] = $oc;
+        foreach ($order_content as $key => $oc)
+        {
+            $oc['show_status'] = $oc_status[$oc['status']];
+            $order_content[$key] = $oc;
+        }
     }
     assign('order_content', $order_content);
 }

@@ -66,6 +66,7 @@
         {else}
         menu1("", "", ".coin_{$menuMark.name} a.nav-top-item");
         {/if}
+        $("#sidebar").css("height", document.body.scrollHeight+"px");
     })
     {/if}
 </script>

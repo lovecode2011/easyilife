@@ -22,6 +22,7 @@ $act = ( $act == '' ) ? 'view' : $act;
 $opera = check_action($operation, getPOST('opera'));
 
 $status_str = array(
+    0 => '待支付',
     1 => '已到帐',
     2 => '未到帐',
     3 => '已取消',
@@ -234,6 +235,7 @@ if( 'log' == $act ) {
     assign('count', $count);
     assign('st', $st);
     assign('et', $et);
+    assign('type', '');
 
     create_pager($page, $total_page, $total);
 

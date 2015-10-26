@@ -37,10 +37,10 @@
         </div>
         -->
         <div class="recharge-value">
-            <label><span>充值金额：</span><input type="tel" value="" placeholder="请填写金额（元）" id="amount"></label>
+            <label><span>充值金额：</span><input type="number" value="" placeholder="请填写金额（元）" id="amount"></label>
         </div>
         <div class="recharge-btn">
-            <a class="btn" href="javascript:void(0);" onclick="get_pay_link('tenpay');">确认充值</a>
+            <a class="btn" href="javascript:void(0);" onclick="get_pay_link('wechat');">确认充值</a>
         </div>
     </div>
 </section>
@@ -51,7 +51,7 @@
         <li><a href="index.php"><em class="icon">&#xe601;</em><span>首页</span></a></li>
         <li><a href="category.php"><em class="icon">&#xe603;</em><span>分类</span></a></li>
         <li><a href="cart.php"><em class="icon">&#xe602;</em><span>购物车</span></a></li>
-        <li><a class="active" href="#"><em class="icon">&#xe604;</em><span>我</span></a></li>
+        <li><a class="active" href="user.php"><em class="icon">&#xe604;</em><span>我</span></a></li>
     </ul>
 </section>
 <div class="cd-popup" role="alert">
@@ -68,6 +68,9 @@
     </div>
 </div>
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
+{if is_weixin()}
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+{/if}
 <script type="text/javascript">
     var global_result = null;
 
@@ -86,7 +89,7 @@
     function get_pay_link(plugins) {
         switch(plugins)
         {
-            case "tenpay":
+            case "wechat":
                 get_prepay_id();
                 break;
             default:
@@ -104,7 +107,7 @@
             return false;
         }
 
-        var data = { "opera":"tenpay", "amount":amount };
+        var data = { "opera":"wechat", "amount":amount };
         var url = "recharge.php";
 
         show_mask();
@@ -115,22 +118,20 @@
         hide_mask();
         if(result.error == 0) {
             global_result = result;
-            $("#pay_btn").bind("click", function() {
-                wx.chooseWXPay({
-                    timestamp: global_result.timestamp,
-                    nonceStr: global_result.nonce_str,
-                    package: 'prepay_id='+global_result.prepay_id,
-                    signType: 'MD5',
-                    paySign: global_result.sign,
-                    success: function (res) {
-                        // 支付成功后的回调函数
-                        if(res.errMsg == "chooseWXPay:ok") {
-                            show_message_dialog("充值成功");
-                        } else {
-                            show_message_dialog(res.errMsg+":支付失败");
-                        }
+            wx.chooseWXPay({
+                timestamp: global_result.timestamp,
+                nonceStr: global_result.nonce_str,
+                package: 'prepay_id='+global_result.prepay_id,
+                signType: 'MD5',
+                paySign: global_result.sign,
+                success: function (res) {
+                    // 支付成功后的回调函数
+                    if(res.errMsg == "chooseWXPay:ok") {
+                        show_message_dialog("充值成功");
+                    } else {
+                        show_message_dialog(res.errMsg+":支付失败");
                     }
-                });
+                }
             });
         } else {
             show_message_dialog(result.msg);

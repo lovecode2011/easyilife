@@ -82,6 +82,14 @@ $sql[] = 'create table if not exists '.$db->table('comment').' (
     `parent_id` int not null default \'0\'
 ) default charset=utf8;';
 
+$table[] = '我的足迹';
+$sql[] = 'create table if not exists '.$db->table('history').' (
+    `product_sn` varchar(20) not null,
+    `account` varchar(20) not null,
+    `add_time` timestamp,
+    primary key (`product_sn`,`account`)
+) default charset=utf8;';
+
 $table[] = '产品收藏';
 $sql[] = 'create table if not exists '.$db->table('collection').' (
     `product_sn` varchar(255) not null,
@@ -265,7 +273,8 @@ $sql[] = 'create table if not exists '.$db->table('member').' (
     `ticket` varchar(255),
     `expired` int not null default \'0\',
     `scene_id` int not null default \'0\',
-    `level_id` int not null default \'0\'
+    `level_id` int not null default \'0\',
+    `kf_id` int not null default \'0\'
 ) default charset=utf8;';
 
 $table[] = '订单';
@@ -307,11 +316,7 @@ $sql[] = 'create table if not exists '.$db->table('order').' (
     `integral_paid` decimal(18,2) not null default \'0\',
     `reward_paid` decimal(18,2) not null default \'0\',
     `balance_paid` decimal(18,2) not null default \'0\',
-    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品订单，1:虚拟产品订单\',
-    `product_sn` varchar(255) not null default \'\' comment \'虚拟产品编号\',
-    `product_name` varchar(255) not null default \'\' comment \'虚拟产品名称\',
-    `start_time` int not null default 0 comment \'虚拟订单消费起始时间\',
-    `end_time` int not null default 0 comment \'虚拟订单消费结束时间\',
+    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品订单，1:虚拟产品订单\'
     index (`business_account`)
 ) default charset=utf8;';
 
@@ -754,6 +759,56 @@ $sql[] = 'create table if not exists '.$db->table('nav').' (
     `parent_id` int not null default \'0\',
     `position` varchar(255) not null,
     `order_view` int not null default \'50\'
+) default charset=utf8;';
+
+//微信模块
+$table[] = '微信菜单';
+$sql[] = 'create table if not exists '.$db->table('wx_menu').' (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) NOT NULL,
+    `key` varchar(255) NOT NULL,
+    `type` varchar(255) NOT NULL,
+    `parent_id` int(11) NOT NULL DEFAULT \'0\',
+    `path` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) default charset=utf8;';
+
+$table[] = '微信客服';
+$sql[] = 'create table if not exists '.$db->table('wx_kf').' (
+    `id` bigint not null auto_increment unique,
+    `kf_account` varchar(255) not null,
+    `nickname` varchar(255) not null,
+    `password` varchar(255) not null,
+    `headimg` varchar(255)
+) default charset=utf8;';
+
+$table[] = '回复规则';
+$sql[] = 'create table if not exists '.$db->table('wx_rule').' (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `enabled` tinyint(1) NOT NULL DEFAULT \'1\',
+    `rule` varchar(255) NOT NULL,
+    `match_mode` int(11) NOT NULL DEFAULT \'0\',
+    `response_id` int(11) NOT NULL,
+    `order_view` int(11) NOT NULL DEFAULT \'50\',
+    `is_default` tinyint(1) NOT NULL DEFAULT \'0\',
+    `name` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`)
+) default charset=utf8;';
+
+$table[] = '回复内容';
+$sql[] = 'create table if not exists '.$db->table('wx_response').' (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `msgType` varchar(255) NOT NULL,
+    `content` text,
+    `title` text,
+    `description` text,
+    `musicUrl` varchar(255) DEFAULT NULL,
+    `HQMusicUrl` varchar(255) DEFAULT NULL,
+    `url` text,
+    `picUrl` text,
+    `mediaId` int(11) DEFAULT NULL,
+    `thumbMediaId` int(11) DEFAULT NULL,
+    PRIMARY KEY (`id`)
 ) default charset=utf8;';
 
 echo '创建数据库表:<br/>';

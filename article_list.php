@@ -43,13 +43,31 @@ if('sort' == $opera)
     exit;
 }
 
-$get_section_list = 'select `section_name`,`id` from '.$db->table('section').' limit 3';
-$section_list = $db->fetchAll($get_section_list);
-assign('section_list', $section_list);
+$id = getGET('id');
+$id = intval($id);
 
-$get_article_list = 'select `title`,`id`,`add_time`,`description` from '.$db->table('content').' order by `add_time` DESC';
-$article_list = $db->fetchAll($get_article_list);
+if($id <= 4)
+{
+    $get_section_list = 'select `section_name`,`id` from ' . $db->table('section') . ' limit 3';
+    $section_list = $db->fetchAll($get_section_list);
+    assign('section_list', $section_list);
 
-assign('article_list', $article_list);
+    $get_article_list = 'select `title`,`id`,`add_time`,`description` from ' . $db->table('content') . ' order by `add_time` DESC';
+    $article_list = $db->fetchAll($get_article_list);
+
+    assign('article_list', $article_list);
+    assign('title', '消息中心');
+} else {
+    $get_article_list = 'select `title`,`id`,`add_time`,`description` from ' . $db->table('content') . ' where `section_id`='.$id.' order by `add_time` DESC';
+    $article_list = $db->fetchAll($get_article_list);
+
+    assign('article_list', $article_list);
+
+    assign('section_list', '');
+
+    $get_section = 'select `section_name` from '.$db->table('section').' where `id`='.$id;
+    $section = $db->fetchRow($get_section);
+    assign('title', $section['section_name']);
+}
 
 $smarty->display('news-list.phtml');

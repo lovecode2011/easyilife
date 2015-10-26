@@ -31,7 +31,7 @@ if($opera == 'get_qrcode')
                 $member_id = $db->fetchOne($get_member_id);
                 //获取链接的二维码
                 $param = array('url'=>$url, 'opera'=>'get_url', 'account'=>$_SESSION['account']);
-                $get_url_response = post('http://'.$_SERVER['HTTP_HOST'].BASE_DIR.'d/index.php', $param);
+                $get_url_response = post('http://'.$_SERVER['HTTP_HOST'].'/'.BASE_DIR.'d/index.php', $param);
 
                 $get_url_response = json_decode($get_url_response);
                 if($get_url_response->error == 0)
@@ -71,7 +71,7 @@ if('login' == $opera)
 
     $column = '`account`';
 
-    if($code != $_SESSION['code'])
+    if(!isset($_SESSION['code']) || $code != $_SESSION['code'])
     {
         $response['msg'] .= '-图片验证码错误<br/>';
     }

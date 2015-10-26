@@ -640,7 +640,7 @@ if($product_weight)
         foreach ($delivery_list as $delivery)
         {
             $tmp = array(
-                'delivery_id' => $delivery['id'],
+                'delivery_id' => $delivery['delivery_id'],
                 'delivery_name' => $delivery['name'],
                 'delivery_fee' => caculate_delivery_fee($delivery['first_weight'], $delivery['next_weight'], $delivery['free'], $weight['total_weight'])
             );
@@ -674,7 +674,7 @@ foreach($cart_list as $key=>$cart)
         {
             //所有产品重量都为0或者所有产品都包邮，获取商家的任意快递方式，并设置运费为0
             $tmp = array(
-                'delivery_id' => $delivery['id'],
+                'delivery_id' => $delivery['delivery_id'],
                 'delivery_name' => $delivery['name'],
                 'delivery_fee' => 0
             );

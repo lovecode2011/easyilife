@@ -20,11 +20,12 @@
 <body>
 <header class="header" style="position:fixed">
     <a href="javascript:history.back();" class="back"></a>
-    <h1><em>消息中心</em></h1>
+    <h1><em>{$title}</em></h1>
 </header>
 
 <!-- 内容开始 -->
 <section class="newslist">
+    {if $section_list}
     <nav class="newslist-nav">
         <ul>
             <li id="index_all" class="on"><a href="javascript:sort('all');">全部</a></li>
@@ -33,6 +34,7 @@
             {/foreach}
         </ul>
     </nav>
+    {/if}
     <ul class="newslist-con" id="news-list">
         {foreach from=$article_list item=article}
         <li>

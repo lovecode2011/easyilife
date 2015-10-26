@@ -8,6 +8,40 @@
  */
 
 /**
+ * 新增我的足迹
+ * @param $account
+ * @param $product_sn
+ */
+function add_history($account, $product_sn)
+{
+    global $db;
+
+    $check_history_count = 'select count(*) from '.$db->table('history').' where `account`=\''.$account.'\'';
+
+    $history_count = $db->fetchOne($check_history_count);
+
+    if($history_count > 15)
+    {
+        $delete_history = 'delete from '.$db->table('history').' order by `add_time` ASC limit 1';
+
+        $db->delete($delete_history);
+    }
+
+    $check_history = 'select `product_sn` from '.$db->table('history').' where `product_sn`=\''.$product_sn.'\' and `account`=\''.$account.'\'';
+
+    if(!$db->fetchOne($check_history))
+    {
+        $history_data = array(
+            'account' => $account,
+            'product_sn' => $product_sn
+        );
+
+        return $db->autoInsert('history', array($history_data));
+    } else {
+
+    }
+}
+/**
  * 会员奖金记录
  * @param string $account
  * @param float $reward
