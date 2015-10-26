@@ -9,6 +9,15 @@
                     <em class="icon">&#xe606;</em>首页
                 </a>
             </li>
+            <li class="coin_menu_self">
+                <a href="self.php" class="nav-top-item">
+                    <em class="icon">&#xe607;</em>帐号管理
+                </a>
+                <ul class="submenu" id="menu_self"  style="display: none">
+                    <li><a href="self.php">帐号资料</a></li>
+                    <li><a href="self.php?act=password">修改密码</a></li>
+                </ul>
+            </li>
             {foreach from=$menus item=menu}
             <li class="coin_{$menu.key}">
                 {if $menu.count eq 1}
@@ -46,6 +55,11 @@
 <!-- END sidebar -->
 {if $is_main eq false}
 <script type="text/javascript">
+    {if $activeNav eq 'self.php'}
+    $(function () {
+        menu1("#menu_self", "#menu_self a", ".coin_menu_self a.nav-top-item");
+    })
+    {else}
     $(function () {
         {if $menuMark.count gt 1}
         menu1("#{$menuMark.name}", "#{$menuMark.name} a", ".coin_{$menuMark.name} a.nav-top-item");
@@ -54,6 +68,7 @@
         {/if}
         $("#sidebar").css("height", document.body.scrollHeight+"px");
     })
+    {/if}
 </script>
 {else}
 <script type="text/javascript">

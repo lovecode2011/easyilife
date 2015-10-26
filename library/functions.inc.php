@@ -734,3 +734,8 @@ function decodeUnicode($str)
         ),
         $str);
 }
+
+function is_email($email) {
+    $pattern = "/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i";
+    return preg_match($pattern, $email);
+}

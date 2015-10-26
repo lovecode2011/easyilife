@@ -291,9 +291,10 @@ function create_business_menu() {
  * 商户管理后台初始化
  * @author 王仁欢
  */
-function business_base_init() {
+function business_base_init()
+{
 
-    if( !isset($_SESSION['business_account']) ) {
+    if (!isset($_SESSION['business_account'])) {
         $links = array(
             array('link' => 'index.php', 'alt' => '登陆'),
         );
@@ -302,12 +303,12 @@ function business_base_init() {
     }
 
     global $db;
-    $get_business = 'select * from '.$db->table('business');
-    $get_business .= ' where business_account = \''.$_SESSION['business_account'].'\' and status = 2';
+    $get_business = 'select * from ' . $db->table('business');
+    $get_business .= ' where business_account = \'' . $_SESSION['business_account'] . '\' and status = 2';
     $business = $db->fetchRow($get_business);
 
-    if( empty($business) ) {
-        if( isset($_SESSION['business_account']) ) {
+    if (empty($business)) {
+        if (isset($_SESSION['business_account'])) {
             unset($_SESSION['business_shop_name']);
             unset($_SESSION['business_account']);
             unset($_SESSION['business_purview']);
@@ -321,7 +322,7 @@ function business_base_init() {
 
     $current_shop = $_SESSION['business_shop_name'];
     assign('current_shop', $current_shop);
-    assign('pageTitle', '网店'.$current_shop.'管理后台');
+    assign('pageTitle', '网店' . $current_shop . '管理后台');
 
     create_business_menu();
 
@@ -329,11 +330,19 @@ function business_base_init() {
     $active_nav = explode('.', $active_nav);
     $active_nav = $active_nav[0];
     assign('active_nav', $active_nav);
-    assign('menu_mark', 'menu_'.$active_nav);
+    assign('menu_mark', 'menu_' . $active_nav);
 
     //未读消息数量
-    $get_unread_message_count = 'select count(*) from '.$db->table('message');
-    $get_unread_message_count .= ' where business_account = \''.$_SESSION['business_account'].'\' and status = 0';
+    $get_unread_message_count = 'select count(*) from ' . $db->table('message');
+    $get_unread_message_count .= ' where business_account = \'' . $_SESSION['business_account'] . '\' and status = 0';
     $unread_message_count = $db->fetchOne($get_unread_message_count);
     assign('unread_message_count', $unread_message_count);
+
+    if ( $_SESSION['business_account'] == $_SESSION['business_admin'] ) {
+        $primary_account = true;
+    } else {
+        $primary_account = false;
+    }
+    assign('primary_account', $primary_account);
+
 }
