@@ -364,7 +364,7 @@ $menus = array(
     'pur_content' => array('url' => 'content.php', 'title' => '资讯管理', 'parent' => 'menu_cms'),
     'pur_order' => array('url' => 'order.php', 'title' => '订单管理', 'parent' => 'menu_order'),
     'pur_virtual_order' => array('url' => 'virtual_order.php', 'title' => '消费券管理', 'parent' => 'menu_order'),
-    'pur_nav' => array('url' => 'nav.php', 'title' => '导航条', 'parent' => 'menu_site'),
+    'pur_nav' => array('url' => 'nav.php', 'title' => 'PC端导航栏', 'parent' => 'menu_site'),
     'pur_wechat_menu' => array('url' => 'wechat_menu.php', 'title' => '微信菜单管理', 'parent' => 'menu_wechat'),
     'pur_wechat_kf' => array('url' => 'wechat_kf.php', 'title' => '客服管理', 'parent' => 'menu_wechat'),
     'pur_wechat_rule' => array('url' => 'wechat_rule.php', 'title' => '回复规则管理', 'parent' => 'menu_wechat'),

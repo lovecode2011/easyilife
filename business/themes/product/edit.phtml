@@ -13,7 +13,7 @@
 <script src="js/jquery.modal.min.js" type="text/javascript" charset="utf-8"></script>
 <link rel="stylesheet" href="css/jquery.modal.css" type="text/css" media="screen" />
 <script type="text/javascript" >
-//    var data_product_attr = {$json_attr_list};
+    var data_product_attr = {$json_attr_list};
     var attributes = {$attributes};
 </script>
 <!-- content -->
@@ -42,62 +42,17 @@
                         {/foreach}
                     </select>
                 </p>
-                <p class="clear">
-                    <label class="l-title">产品类型：</label>
-                    <select name="type" id="product_type" class="w150">
-                        <option value="0">|--请选择--|</option>
-                        {foreach from=$product_type_list item=product_type}
-                        <option value="{$product_type.id}" {if $product_type.id eq $product.product_type_id}selected="selected"{/if}>{$product_type.name}</option>
-                        {/foreach}
-                    </select>
-                </p>
-                <p class="clear" id="paoduct_attr">
-                <p class="clear" id="show-attr">
-                    <div class="pull-left" style="width: 80%;" id="show-attr-0">
-                        <p style="display: inline-block" class="clear">
-                            <label class="l-title">颜色：</label>
-                            <em>红色</em>
-                            <select name="attr[0][1]" class="w100 product-attribute" label="颜色" style="display: none;">
-                                <option value="红色">红色</option><option value="绿色">绿色</option>
-                            </select>
-                        </p>
-                        <p style="display: inline-block" class="clear">
-                            <label class="l-title">尺码：</label>
-                            <em>SL</em>
-                            <select name="attr[0][2]" class="w100 product-attribute" label="尺码" style="display: none;">
-                                <option value="SL">SL</option>
-                                <option value="L">L</option>
-                                <option value="ML">ML</option>
-                                <option value="XL">XL</option>
-                                <option value="XXL">XXL</option>
-                            </select>
-                        </p>
-                        <p style="display: inline-block" class="clear">
-                            <label class="l-title">印花主题：</label>
-                            <em>123</em>
-                            <input type="text" class="text-input w50 product-attribute required" name="attr[0][3]" label="印花主题" style="border: 1px solid rgb(213, 213, 213); color: rgb(0, 0, 0); display: none;">
-                        </p>
-                        <p style="display: inline-block" class="clear">
-                            <label class="l-title">上市时间：</label><em>123</em><input type="text" class="text-input w50 product-attribute required" name="attr[0][4]" label="上市时间" style="border: 1px solid rgb(213, 213, 213); color: rgb(0, 0, 0); display: none;"></p>
-                        <p style="display: inline-block" class="clear">
-                            <label class="l-title">面料：</label>
-                            <em>123</em>
-                            <input type="text" class="text-input w50 product-attribute required" name="attr[0][9]" label="面料" style="border: 1px solid rgb(213, 213, 213); color: rgb(0, 0, 0); display: none;">
-                        </p>
-                        <p style="display: inline-block" class="clear"><label class="l-title">季度：</label>
-                            <em>123</em>
-                            <input type="text" class="text-input w50 product-attribute required" name="attr[0][10]" label="季度" style="border: 1px solid rgb(213, 213, 213); color: rgb(0, 0, 0); display: none;">
-                        </p>
-                        <p style="display: inline-block" class="clear">
-                            <label class="l-title">库存：</label>
-                            <em>123</em>
-                            <input class="text-input w50 product-attribute" type="text" name="inventory[0]" placeholder="请输入库存" label="库存" style="display: none;">
-                        </p>
-                    </div>
-                    <div class="pull-right">
-                        <button class="btn btn-primary edit-attr" type="button">编辑</button>&nbsp;<button class="btn btn-primary remove-attr" type="button">删除</button>&nbsp;
-                    </div>
-                </p>
+<!--                <p class="clear">-->
+<!--                    <label class="l-title">产品类型：</label>-->
+<!--                    <select name="type" id="product_type" class="w150">-->
+<!--                        <option value="0">|--请选择--|</option>-->
+<!--                        {foreach from=$product_type_list item=product_type}-->
+<!--                        <option value="{$product_type.id}" {if $product_type.id eq $product.product_type_id}selected="selected"{/if}>{$product_type.name}</option>-->
+<!--                        {/foreach}-->
+<!--                    </select>-->
+<!--                </p>-->
+<!--                <p class="clear" id="product_attr">-->
+<!--                </p>-->
                 <p class="clear">
                     <label class="l-title">品牌：</label>
                     <select name="brand" class="w150">
@@ -107,10 +62,10 @@
                         {/foreach}
                     </select>
                 </p>
-                <p>
-                    <label class="l-title">库存：</label>
-                    <input class="text-input w150" type="text" disabled="disabled" id="inventory" name="single_inventory" placeholder="请输入产品库存" value="{$inventory}"/>
-                </p>
+<!--                <p>-->
+<!--                    <label class="l-title">库存：</label>-->
+<!--                    <input class="text-input w150" type="text" {if $has_attr}disabled="disabled"{/if} id="inventory" name="single_inventory" placeholder="请输入产品库存" value="{$inventory}"/>-->
+<!--                </p>-->
                 <p>
                     <label class="l-title">售价：</label>
                     <input class="text-input w150" type="text" id="price" name="price" placeholder="请输入售价" value="{$product.price}">
@@ -273,7 +228,7 @@
         });
     });
 </script>
-<script type="text/javascript" src="js/product/edit.js"></script>
+<!--<script type="text/javascript" src="js/product/edit.js"></script>-->
 {include file="library/footer.lbi"}
 </body>
 </html>

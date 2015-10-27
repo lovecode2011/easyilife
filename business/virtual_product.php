@@ -24,8 +24,7 @@ if( 'add' == $opera ) {
         show_system_message('权限不足', array());
         exit;
     }
-
-    $status = intval(getPOST('status'));
+    $status = intval(getPOST('publish'));
     $name = trim(getPOST('name'));
     $category = intval(getPOST('category'));
     $price = floatval(getPOST('price'));
@@ -54,7 +53,7 @@ if( 'add' == $opera ) {
         $exists = $db->fetchRow($sql);
     } while( $exists );
 
-    $status = ( $status == 1 ) ? 2 : 1;
+    $status = ( $status == 1 ) ? 1 : 2;
 
     if( '' == $name ) {
         show_system_message('产品名称不能为空', array());
@@ -87,6 +86,7 @@ if( 'add' == $opera ) {
     }
     $img = $db->escape($img);
 
+    $desc = $desc == '可不填' ? '' : $desc;
     $desc = $db->escape($desc);
 
     $detail = $db->escape($detail);
@@ -941,6 +941,20 @@ if( 'delete' == $act ) {
         show_system_message('产品已被删除', array());
         exit;
     }
+
+    //检查是否有待发库存
+    $get_inventory_list = 'select * from '.$db->table('inventory');
+    $get_inventory_list .= ' where product_sn = \''.$product_sn.'\'';
+    $inventory_list = $db->fetchAll($get_inventory_list);
+    $flag = true;
+    if( $inventory_list ) {
+        foreach( $inventory_list as $inventory ) {
+            if( $inventory['inventory_await'] > 0 ) {
+                show_system_message('产品待发中，不可删除', array());
+            }
+        }
+    }
+
     $update_product = 'update '.$db->table('product').' set status = 5';
     $update_product .= ', prev_status = '.$product['status'];
     $update_product .= ' where product_sn = \''.$product_sn.'\'';
@@ -1095,6 +1109,19 @@ if( 'remove' == $act ) {
     if( $product['status'] != 5 ) {
         show_system_message('产品未被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品列表')));
         exit;
+    }
+
+    //检查是否有待发库存
+    $get_inventory_list = 'select * from '.$db->table('inventory');
+    $get_inventory_list .= ' where product_sn = \''.$product_sn.'\'';
+    $inventory_list = $db->fetchAll($get_inventory_list);
+    $flag = true;
+    if( $inventory_list ) {
+        foreach( $inventory_list as $inventory ) {
+            if( $inventory['inventory_await'] > 0 ) {
+                show_system_message('产品待发中，不可删除', array());
+            }
+        }
     }
 
     $db->begin();
