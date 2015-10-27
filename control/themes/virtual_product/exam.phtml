@@ -87,13 +87,13 @@
                     <label class="l-title">产品图片：</label>
                     <input type="hidden" name="img" id="img" placeholder="" value="{$product.img}">
                     {if $product.img}
-                    <img class="select-image" alt="" width="200" height="150" src="{$product.img_src}">&nbsp;
+                    <img class="select-image" alt="" height="150" src="../{$product.img_src}">&nbsp;
                     {else}
-                    <img class="select-image" alt="" src="/upload/image/no-image.png">&nbsp;
+                    <img class="select-image" alt="" src="../upload/image/no-image.png">&nbsp;
                     {/if}
                     {if $gallery_list}
                     {foreach from=$gallery_list item=gallery}
-                    <img class="select-image" alt="" src="{$gallery.thumb_img}">&nbsp;
+                    <img class="select-image" alt="" src="../{$gallery.thumb_img}">&nbsp;
                     {/foreach}
                     {/if}
                 </p>

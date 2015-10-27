@@ -707,9 +707,12 @@ if( 'export' == $act ) {
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A' . $i, '物流信息');
             $i++;
+
+            $get_express_name = 'select `name` from '.$db->table('express').' where `id`='.$order['express_id'];
+            $delivery_name = $db->fetchOne($get_express_name);
             $objPHPExcel->setActiveSheetIndex(0)
                 ->setCellValue('A' . $i, '物流公司')
-                ->setCellValue('B' . $i, $order['delivery_name'])
+                ->setCellValue('B' . $i, $delivery_name)
                 ->setCellValue('C' . $i, '发货单号')
                 ->setCellValue('D' . $i, $order['express_sn'])
                 ->setCellValue('E' . $i, '发货时间')

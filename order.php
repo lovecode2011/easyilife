@@ -260,6 +260,19 @@ if('receive' == $opera)
             {
                 add_order_log($order_sn, $_SESSION['account'], 7, '用户确认收货');
                 //将款项打到商家账户中
+                //读取担保交易记录，并将款项打入到商家的余额中
+                $get_trade = 'select `id`,`business_account`,`trade` from '.$db->table('trade').' where `remark`=\''.$order_sn.'\' and `status`=0';
+                $trade = $db->fetchRow($get_trade);
+
+                if(add_business_exchange($trade['business_account'], $trade['trade'], -1*$trade['trade'], $_SESSION['account'], '用户确认收货'))
+                {
+                    $trade_status = array(
+                        'status' => 1,
+                        'solve_time' => time()
+                    );
+
+                    $db->autoUpdate('trade', $trade_status, '`id`='.$trade['id']);
+                }
                 $response['error'] = 0;
                 $response['msg'] = '确认收货成功';
             } else {

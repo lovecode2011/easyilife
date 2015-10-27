@@ -186,17 +186,6 @@ if( 'detail' == $act ) {
 
     $order_detail = $db->fetchAll($get_order_detail);
 
-    if( $order_detail ) {
-        foreach( $order_detail as $key => $detail ) {
-            $temp = json_decode($detail['product_attributes']);
-            $str = '';
-            foreach( $temp as $k => $v ) {
-                $str .= $k . ':' . $v.'&nbsp;&nbsp;';
-            }
-            $order_detail[$key]['product_attributes'] = $str;
-        }
-    }
-
     assign('order', $order);
     assign('order_detail', $order_detail);
 }

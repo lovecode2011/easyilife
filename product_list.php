@@ -25,8 +25,8 @@ if('sort' == $opera)
     $filter = getPOST('filter');
     $mode = getPOST('mode');
 
-
-    $get_product_list = 'select `id`,`name`,`price`,`img` from '.$db->table('product').' where  `status`=4 ';
+    $now = time();
+    $get_product_list = 'select `id`,`name`,if(p.`promote_end`>'.$now.',p.`promote_price`,p.`price`) as `price`,`img` from '.$db->table('product').' where  `status`=4 ';
 
     $response['filter'] = $filter;
 
@@ -132,7 +132,9 @@ if($category_ids_str == '')
 } else {
     $category_ids_str .= ','.$id;
 }
-$get_product_list = 'select * from '.$db->table('product').' where `status`=4 and `category_id` in ('.$category_ids_str.')';
+
+$now = time();
+$get_product_list = 'select `product_sn`,`name`,`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img` from '.$db->table('product').' where `status`=4 and `category_id` in ('.$category_ids_str.')';
 
 switch($state)
 {

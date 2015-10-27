@@ -109,6 +109,13 @@ if( 'view' == $act ) {
         exit;
     }
 
+    $where = '';
+    $account = trim(getGET('account'));
+    if($account != '')
+    {
+        $account = $db->escape($account);
+        $where .= ' and `account`=\''.$account.'\'';
+    }
     $page = intval(getGET('page'));
     $count = intval(getGET('count'));
     $count_expected = array(10, 25, 50, 100);
@@ -116,7 +123,7 @@ if( 'view' == $act ) {
         $count = 10;
     }
 
-    $get_total = 'select count(*) from '.$db->table('member').' where 1';
+    $get_total = 'select count(*) from '.$db->table('member').' where 1'.$where;
     $total = $db->fetchOne($get_total);
     $total_page = ceil($total / $count);
 
@@ -128,15 +135,15 @@ if( 'view' == $act ) {
     create_pager($page, $total_page, $total);
     assign('count', $count);
 
-    $get_member_list = 'select `id`, `sex`, `account`, `nickname`, `mobile`, `email`, `add_time`, `leave_time`, `status`, `level_id`';
+    $get_member_list = 'select `openid`,`id`, `sex`, `account`, `nickname`, `mobile`, `email`, `add_time`, `leave_time`, `status`, `level_id`';
     $get_member_list .= ' from '.$db->table('member');
-    $get_member_list .= ' where 1 order by `add_time` desc';
+    $get_member_list .= ' where 1 '.$where.' order by `add_time` desc';
     $get_member_list .= ' limit '.$offset.','.$count;
 
     $member_list = $db->fetchAll($get_member_list);
     if( $member_list ) {
         foreach ($member_list as $key => $value) {
-            if (empty($value['leave_time'])) {
+            if (empty($value['leave_time']) && !empty($value['openid'])) {
                 $member_list[$key]['subscribed'] = '已关注';
             } else {
                 $member_list[$key]['subscribed'] = '未关注';

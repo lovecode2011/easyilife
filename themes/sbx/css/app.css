@@ -1633,7 +1633,7 @@ nav.ol_select_bar ul a.hover li {
     background-color: #b9b9b9;
 }
 .binding-con button.new {
-    background-color: #ff463c;
+    background-color: #ff0000;
 }
 .binding-tips{
     margin-top: 3.5rem;
@@ -1641,7 +1641,7 @@ nav.ol_select_bar ul a.hover li {
     text-align: center;
 }
 .binding-con .btn,.address .btn,.withdrawals .btn,.bank .btn,.userinfo .btn, .recharge .btn{
-    background-color: #ff463c;
+    background-color: #ff0000;
     color: white;
     font-size: .9rem;
     text-align: center;
@@ -3268,6 +3268,7 @@ li.search-shop-li div{
     vertical-align: bottom;
     line-height: 7rem;
     position: relative;
+    margin-left: .5rem;
 }
 
 .file-btn input[type="file"] {

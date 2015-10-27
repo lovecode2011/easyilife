@@ -98,6 +98,12 @@
         $(".font-gray").each(function(i, e){
             $(e).hide();
         });
+
+        var need_refresh = window.localStorage.getItem("need_refresh");
+        if(need_refresh == 1) {
+            window.localStorage.setItem("need_refresh", 0);
+            window.location.reload();
+        }
     });
 
     function delete_bank_confirm(eid) {
