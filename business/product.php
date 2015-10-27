@@ -573,7 +573,7 @@ if( 'inventory' == $opera ) {
     }
 
     $new_inventory = intval(getPOST('inventory'));
-    if( 0 >= $new_inventory ) {
+    if( 0 > $new_inventory ) {
         $response['msg'] = '参数错误';
         echo json_encode($response);
         exit;
@@ -593,8 +593,9 @@ if( 'inventory' == $opera ) {
         exit;
     }
 
-    if( $inventory['inventory_await'] > 0 && ($inventory['inventory_logic'] + $inventory['inventory_await']) > $new_inventory ) {
-        $response['msg'] = '库存 = 逻辑库存 + 待发库存。修改库存时不能小于后两者之和';
+    if( $inventory['inventory_await'] > 0 && $inventory['inventory_await'] > $new_inventory ) {
+        $response['msg'] = '待发库存不为0时，新库存不能小于待发库存';
+        $response['edit_id'] = $inventory['id'];
         echo json_encode($response);
         exit;
     }
@@ -902,8 +903,12 @@ if( 'edit' == $act ) {
     $get_attributes .= ' where product_sn = \''.$product_sn.'\'';
     $product_attributes = $db->fetchAll($get_attributes);
 //    var_dump($product_attributes);exit;
+    $has_attr = false;
     if( $product_attributes ) {
         foreach( $product_attributes as $key => $attributes ) {
+            if( $attributes['attributes'] ) {
+                $has_attr = true;
+            }
             $product_attributes[$key]['attributes'] = json_decode($attributes['attributes']);
         }
     } else {
@@ -915,6 +920,7 @@ if( 'edit' == $act ) {
         $inventory = $product_attributes[0]['inventory'];
     }
 
+    assign('has_attr', $has_attr);
     assign('inventory', $inventory);
     assign('attributes', json_encode($product_attributes));
 
@@ -943,7 +949,7 @@ if( 'edit' == $act ) {
     $product_type_list = $db->fetchAll($get_product_type_list);
     assign('product_type_list', $product_type_list);
 
-    $get_product_attr_list = 'select * from '.$db->table('product_attributes').' where 1 order by product_type_id asc, id asc';
+    $get_product_attr_list = 'select * from '.$db->table('product_attributes').' where product_type_id = \''.$product['product_type_id'].'\' order by product_type_id asc, id asc';
     $product_attr_list = $db->fetchAll($get_product_attr_list);
 
     $target_attr_list = array();
@@ -957,7 +963,7 @@ if( 'edit' == $act ) {
         } while( $i < $length && $pid == $product_attr_list[$i]['product_type_id'] );
         $target_attr_list[$pid] = $temp;
     }
-    assign('json_attr_list', json_encode($target_attr_list));
+    assign('attr_list', $target_attr_list);
 
 
     $get_brand_list = 'select * from '.$db->table('brand').' where 1 order by id asc';

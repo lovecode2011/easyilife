@@ -34,12 +34,12 @@
                     <td>{$inventory.inventory_await}</td>
                     <td>待发库存不为0时<br />新库存不能小于待发库存</td>
                     <td>
-                    <a type="submit" class="btn btn-primary submit-btn" id="submit-btn-{$inventory.id}" data-id="{$inventory.id}" href="javascript:;">
-                        修改<img src="images/btn_loading.gif" class="btn-loading-img" id="btn-loading-img-{$inventory.id}"/>
-                    </a>&nbsp;
-                    <input type="hidden" name="opera" value="inventory" />
-                    <input type="hidden" name="id" id="id-{$inventory.id}" value="{$inventory.id}" />
-                    <input type="hidden" name="sn" id="sn-{$inventory.id}" value="{$inventory.product_sn}" />
+                        <a type="submit" class="btn btn-primary submit-btn" id="submit-btn-{$inventory.id}" data-id="{$inventory.id}" href="javascript:;">
+                            修改<img src="images/btn_loading.gif" class="btn-loading-img" id="btn-loading-img-{$inventory.id}"/>
+                        </a>&nbsp;
+                        <input type="hidden" name="opera" value="inventory" />
+                        <input type="hidden" name="id" id="id-{$inventory.id}" value="{$inventory.id}" />
+                        <input type="hidden" name="sn" id="sn-{$inventory.id}" value="{$inventory.product_sn}" />
                     </td>
                 </tr>
             </form>
@@ -57,12 +57,12 @@
      * 3、仅支持post方式提交表单;
      * 4、需要在提交按钮加入提交中的加载图片，以及遮罩层代码<div id="mask"></div>
      **/
-$(function() {
-    $('.submit-btn').click(function() {
-        var id = $(this).attr('data-id');
-        do_submit(id);
+    $(function() {
+        $('.submit-btn').click(function() {
+            var id = $(this).attr('data-id');
+            do_submit(id);
+        });
     });
-});
 
     function do_submit(id) {
         //参数校验
@@ -84,7 +84,7 @@ $(function() {
             $("#mask").show();
 
             var params = { "opera":"inventory", "inventory":inventory, 'id':id};
-            var url = "product.php";
+            var url = "virtual_product.php";
             $.post(url, params, do_response, "json");
         }
 

@@ -84,6 +84,7 @@
                     <a href="?act=edit&sn={$product.product_sn}">编辑</a>|
                     {/if}
                     <a href="?act=gallery&sn={$product.product_sn}">上传图片</a>
+                    | <a href="?act=inventory&sn={$product.product_sn}">修改库存</a>
                     | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&&sn={$product.product_sn}">删除</a>
                 </td>
             </tr>
