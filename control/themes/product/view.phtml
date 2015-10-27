@@ -52,6 +52,9 @@
                 <th>分类</th>
                 <th>市场价</th>
                 <th>售价</th>
+                <th>优选产品</th>
+                <th>兑换产品</th>
+                <th>特价产品</th>
                 <th>状态</th>
                 <th>排序</th>
                 <th class="text-right">操作</th>
@@ -73,11 +76,29 @@
                 <td>{$product.category_name}</td>
                 <td>{$product.shop_price}</td>
                 <td>{$product.price}</td>
+                <td>{if $product.is_recommend eq 1}是{else}否{/if}</td>
+                <td>{if $product.is_exchange eq 1}是{else}否{/if}</td>
+                <td>{if $product.is_promote eq 1}是{else}否{/if}</td>
                 <td>{$product.status_str}</td>
                 <td>{$product.order_view}</td>
                 <td class="text-right">
                     {if $product.status eq 2}
                     <a href="?act=exam&sn={$product.product_sn}">审核</a>
+                    {/if}
+                    {if $product.is_promote eq 0}
+                    <a href="?act=set&sn={$product.product_sn}&module=promote">设为特价产品</a>
+                    {else}
+                    <a href="?act=unset&sn={$product.product_sn}&module=promote">取消特价产品</a>
+                    {/if}
+                    {if $product.is_exchange eq 0}
+                    <a href="?act=set&sn={$product.product_sn}&module=exchange">设为兑换产品</a>
+                    {else}
+                    <a href="?act=unset&sn={$product.product_sn}&module=exchange">取消兑换产品</a>
+                    {/if}
+                    {if $product.is_recommend eq 0}
+                    <a href="?act=set&sn={$product.product_sn}&module=recommend">设为优选产品</a>
+                    {else}
+                    <a href="?act=unset&sn={$product.product_sn}&module=recommend">取消优选产品</a>
                     {/if}
                 </td>
             </tr>

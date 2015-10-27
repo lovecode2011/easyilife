@@ -13,7 +13,7 @@ back_base_init();
 $template = 'product/';
 assign('subTitle', '产品管理');
 
-$action = 'view|exam|reject';
+$action = 'view|exam|reject|set|unset';
 $operation = 'exam|reject';
 
 $act = check_action($action, getGET('act'));
@@ -239,6 +239,62 @@ if( 'view' == $act ) {
         $exam_count = $db->fetchOne($get_exam_count);
     }
     assign('exam_count', $exam_count);
+}
+
+if( 'unset' == $act )
+{
+    $product_sn = trim(getGET('sn'));
+    if( '' == $product_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+
+    $module_list = 'promote|recommend|exchange';
+    $module = check_action($module_list, getGET('module'));
+
+    if($module != '')
+    {
+        $product_data = array(
+            'is_'.$module => 0
+        );
+
+        if($db->autoUpdate('product', $product_data, '`product_sn`=\''.$product_sn.'\''))
+        {
+            show_system_message('取消产品设置成功', array());
+        } else {
+            show_system_message('系统繁忙，请稍后再试', array());
+        }
+    } else {
+        show_system_message('参数错误', array());
+    }
+}
+
+if( 'set' == $act )
+{
+    $product_sn = trim(getGET('sn'));
+    if( '' == $product_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+
+    $module_list = 'promote|recommend|exchange';
+    $module = check_action($module_list, getGET('module'));
+
+    if($module != '')
+    {
+        $product_data = array(
+            'is_'.$module => 1
+        );
+
+        if($db->autoUpdate('product', $product_data, '`product_sn`=\''.$product_sn.'\''))
+        {
+            show_system_message('产品设置成功', array());
+        } else {
+            show_system_message('系统繁忙，请稍后再试', array());
+        }
+    } else {
+        show_system_message('参数错误', array());
+    }
 }
 
 if( 'exam' == $act ) {
