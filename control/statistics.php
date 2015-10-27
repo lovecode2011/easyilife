@@ -110,7 +110,7 @@ if( 'view' == $act ) {
         //uv一天各个时间访问量
         $get_uv_list = 'select `request_time`, `cookie` from '.$db->table($table);
         $get_uv_list .= ' where `request_time` > '.$day_start.' and `request_time` < '.$day_end;
-        $get_uv_list .= ' group by `cookie`';
+        $get_uv_list .= ' group by `ip`';
         $get_uv_list .= ' order by `id` asc';
         $uv_list = $db->fetchAll($get_uv_list);
         $uv_target = array(0,0,0,0,0,0,0,0,0,0,0,0);
