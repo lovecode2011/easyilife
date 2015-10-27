@@ -249,7 +249,7 @@ if( 'edit' == $act ) {
         show_system_message('主营分类不存在', array());
         exit;
     }
-    $category['img'] = empty($category['img']) ? '/upload/image/no-image.png' : $category['img'];
+    $category['icon'] = empty($category['icon']) ? '/upload/image/no-image.png' : $category['icon'];
     assign('category', $category);
 
     $get_category_list = 'select * from '.$db->table('category');
