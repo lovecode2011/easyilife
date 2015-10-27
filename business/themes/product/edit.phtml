@@ -42,16 +42,17 @@
                         {/foreach}
                     </select>
                 </p>
-                <p class="clear">
-                    <label class="l-title">产品类型：</label>
-                    <select name="type" id="product_type" class="w150">
-                        <option value="0">|--请选择--|</option>
-                        {foreach from=$product_type_list item=product_type}
-                        <option value="{$product_type.id}" {if $product_type.id eq $product.product_type_id}selected="selected"{/if}>{$product_type.name}</option>
-                        {/foreach}
-                    </select>
-                </p>
-                <p style="display: none" id="product_attr" class="clear"></p>
+<!--                <p class="clear">-->
+<!--                    <label class="l-title">产品类型：</label>-->
+<!--                    <select name="type" id="product_type" class="w150">-->
+<!--                        <option value="0">|--请选择--|</option>-->
+<!--                        {foreach from=$product_type_list item=product_type}-->
+<!--                        <option value="{$product_type.id}" {if $product_type.id eq $product.product_type_id}selected="selected"{/if}>{$product_type.name}</option>-->
+<!--                        {/foreach}-->
+<!--                    </select>-->
+<!--                </p>-->
+<!--                <p class="clear" id="product_attr">-->
+<!--                </p>-->
                 <p class="clear">
                     <label class="l-title">品牌：</label>
                     <select name="brand" class="w150">
@@ -61,10 +62,10 @@
                         {/foreach}
                     </select>
                 </p>
-                <p>
-                    <label class="l-title">库存：</label>
-                    <input class="text-input w150" type="text" id="inventory" name="single_inventory" placeholder="请输入产品库存" value="{$inventory}"/>
-                </p>
+<!--                <p>-->
+<!--                    <label class="l-title">库存：</label>-->
+<!--                    <input class="text-input w150" type="text" {if $has_attr}disabled="disabled"{/if} id="inventory" name="single_inventory" placeholder="请输入产品库存" value="{$inventory}"/>-->
+<!--                </p>-->
                 <p>
                     <label class="l-title">售价：</label>
                     <input class="text-input w150" type="text" id="price" name="price" placeholder="请输入售价" value="{$product.price}">
@@ -227,7 +228,7 @@
         });
     });
 </script>
-<script type="text/javascript" src="js/product/edit.js"></script>
+<!--<script type="text/javascript" src="js/product/edit.js"></script>-->
 {include file="library/footer.lbi"}
 </body>
 </html>

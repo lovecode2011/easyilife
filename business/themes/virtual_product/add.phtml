@@ -26,7 +26,6 @@
                 <p>
                     <label class="l-title">名称：</label>
                     <input class="text-input w300" type="text" id="name" name="name" placeholder="请输入产品名称">
-                    <input type="checkbox" id="status" name="status" value="1"><em>发布</em>
                 </p>
                 <p class="clear">
                     <label class="l-title">产品分类：</label>
@@ -68,7 +67,9 @@
                 </p>
                 <p>
                     <label class="l-title">产品简介：</label>
-                    <textarea name="desc" rows="5" cols="93"></textarea>
+                    {literal}
+                    <textarea name="desc" rows="5" cols="93" onfocus="if(value=='可不填'){value=''}" onblur="if (value ==''){value='可不填'}">可不填</textarea>
+                    {/literal}
                 </p>
                 <p>
                     <label class="l-title">产品详情：</label>
@@ -93,45 +94,12 @@
                 <p>
                     <label class="l-title"></label>
                     <input type="hidden" name="opera" value="add" />
-                    <button class="btn btn-primary" type="submit">添加</button> &nbsp;<a href="javascript:history.go(-1);" class="btn btn-primary">返回</a>
+                    <button class="btn btn-primary" type="submit" name="publish" value="1">保存不发布</button> &nbsp;
+                    <button type="submit" class="btn btn-primary" name="publish" value="2">审核发布</button>
                 </p>
 
             </fieldset>
         </form>
-    </div>
-    <div id="modal-consume-content" class="modal modal-large">
-        <div class="modal-dialog">
-            <div class="modal-head">
-                <h1 class="modal-title">消费内容</h1>
-                <a href="javascript: void(0)" class="close-modal" rel="modal:close">&times;</a>
-            </div>
-            <div class="modal-body">
-
-            </div>
-            <div class="modal-footer">
-                <div class="pull-right">
-                    <button class="btn btn-primary" type="button" id="confirm">确定</button>&nbsp;
-                    <a class="btn btn-primary" rel="modal:close">取消</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="modal-edit-consume-content" class="modal modal-large">
-        <div class="modal-dialog">
-            <div class="modal-head">
-                <h1 class="modal-title">消费内容</h1>
-                <a href="javascript: void(0)" class="close-modal" rel="modal:close">&times;</a>
-            </div>
-            <div class="modal-body">
-
-            </div>
-            <div class="modal-footer">
-                <div class="pull-right">
-                    <button class="btn btn-primary" type="button" id="edit-confirm">确定</button>&nbsp;
-                    <a class="btn btn-primary" rel="modal:close">取消</a>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <!-- END content -->
@@ -197,7 +165,6 @@
         });
     });
 </script>
-<script type="text/javascript" src="js/virtual_product/add.js"></script>
 {include file="library/footer.lbi"}
 </body>
 </html>

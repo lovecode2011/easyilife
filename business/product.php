@@ -14,7 +14,7 @@ business_base_init();
 $template = 'product/';
 
 $action = 'view|add|edit|delete|cycle|revoke|remove|sale|release|gallery|del-gallery|inventory';
-$operation = 'add|edit|gallery|inventory';
+$operation = 'add|edit|gallery|inventory|check_inventory|add_attr';
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
 $act = ( $act == '' ) ? 'view' : $act;
@@ -101,6 +101,7 @@ if( 'add' == $opera ) {
     }
     $img = $db->escape($img);
 
+    $desc = $desc == '可不填' ? '' : $desc;
     $desc = $db->escape($desc);
 
     $detail = $db->escape($detail);
@@ -307,8 +308,8 @@ if( 'edit' == $opera ) {
     $order_view = intval(getPOST('order_view'));
     $free_delivering = intval(getPOST('free_delivering'));
 
-    $inventory = getPOST('single_inventory');
-    $inventory = intval($inventory);
+//    $inventory = getPOST('single_inventory');
+//    $inventory = intval($inventory);
 
     if( '' == $name ) {
         show_system_message('产品名称不能为空', array());
@@ -428,7 +429,7 @@ if( 'edit' == $opera ) {
         'desc' => $desc,
         'detail' => $detail,
         'category_id' => $category,
-        'product_type_id' => $product_type,
+//        'product_type_id' => $product_type,
         'promote_price' => $promote_price,
         'promote_begin' => $promote_begin,
         'promote_end' => $promote_end,
@@ -444,13 +445,13 @@ if( 'edit' == $opera ) {
     $order = '';
     $limit = '1';
     if( $db->autoUpdate($table, $data, $where, $order, $limit) ) {
-        //检查库存，如果存在无属性库存则更新库存
-        $check_inventory = 'select `id` from '.$db->table('inventory').' where `product_sn`=\''.$product_sn.'\' and `attributes`=\'\'';
-        $inventory_id = $db->fetchOne($check_inventory);
-        if($inventory_id)
-        {
-            modify_inventory($product_sn, '', $inventory);
-        }
+//        //检查库存，如果存在无属性库存则更新库存
+//        $check_inventory = 'select `id` from '.$db->table('inventory').' where `product_sn`=\''.$product_sn.'\' and `attributes`=\'\'';
+//        $inventory_id = $db->fetchOne($check_inventory);
+//        if($inventory_id)
+//        {
+//            modify_inventory($product_sn, '', $inventory);
+//        }
 
         $links = array(
             array('link' => 'product.php', 'alt' => '产品列表'),
@@ -573,7 +574,7 @@ if( 'inventory' == $opera ) {
     }
 
     $new_inventory = intval(getPOST('inventory'));
-    if( 0 >= $new_inventory ) {
+    if( 0 > $new_inventory ) {
         $response['msg'] = '参数错误';
         echo json_encode($response);
         exit;
@@ -593,8 +594,9 @@ if( 'inventory' == $opera ) {
         exit;
     }
 
-    if( $inventory['inventory_await'] > 0 && ($inventory['inventory_logic'] + $inventory['inventory_await']) > $new_inventory ) {
-        $response['msg'] = '库存 = 逻辑库存 + 待发库存。修改库存时不能小于后两者之和';
+    if( $inventory['inventory_await'] > 0 && $inventory['inventory_await'] > $new_inventory ) {
+        $response['msg'] = '待发库存不为0时，新库存不能小于待发库存';
+        $response['edit_id'] = $inventory['id'];
         echo json_encode($response);
         exit;
     }
@@ -618,6 +620,173 @@ if( 'inventory' == $opera ) {
         echo json_encode($response);
         exit;
     }
+}
+
+if( 'check_inventory' == $opera ) {
+    $response = array('error' => 1, 'msg' => '', 'errmsg' => array());
+    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+        $response['msg'] = '权限不足';
+        echo json_encode($response);
+        exit;
+    }
+    $sn = trim(getPOST('sn'));
+    $type = intval(getPOST('type'));
+    if( '' == $sn ) {
+        $response['msg'] = '参数错误';
+        echo json_encode($response);
+        exit;
+    }
+    if( 0 >= $type ) {
+        $response['msg'] = '参数错误';
+        echo json_encode($response);
+        exit;
+    }
+    $sn = $db->escape($sn);
+
+    $get_product_type_id = 'select product_type_id from '.$db->table('product');
+    $get_product_type_id .= ' where product_sn = \''.$sn.'\' and is_virtual = 0 limit 1';
+    $product_type_id = $db->fetchOne($get_product_type_id);
+
+    if( empty($product_type_id) ) {
+        $response['msg'] = '产品不存在';
+        echo json_encode($response);
+        exit;
+    }
+
+    $get_inventory_list = 'select * from '.$db->table('inventory').' where product_sn = \''.$sn.'\'';
+    $inventory_list = $db->fetchAll($get_inventory_list);
+    //添加同类型属性
+    if( $type == $product_type_id ) {
+        if( $inventory_list ) {
+            //空属性且有待发库存
+            if( count($inventory_list) == 1 && $inventory_list[0]['attributes'] == '' && $inventory_list[0]['inventory_await'] > 0 ) {
+                $response['msg'] = '有产品待发，无法添加新属性';
+            } else {
+               $response['error'] = 0;
+            }
+        } else {
+            $response['msg'] = '系统繁忙，请稍后重试';
+            echo json_encode($response);
+            exit;
+        }
+    } else {
+        if( $inventory_list ) {
+            //存在待发库存则不能变换类型
+            $addible = true;
+            foreach( $inventory_list as $inventory ) {
+                if( $inventory['inventory_await'] > 0 ) {
+                    $addible = false;
+                    break;
+                }
+            }
+            if( $addible ) {
+                $response['error'] = 0;
+            } else {
+                $response['msg'] = '有产品待发，无法添加新属性';
+            }
+
+        } else {
+            $response['msg'] = '系统繁忙，请稍后重试';
+        }
+    }
+    echo json_encode($response);
+    exit;
+
+
+}
+
+if( 'add_attr' == $opera ) {
+    $response = array('error' => 1, 'msg' => '', 'errmsg' => array());
+    if( !check_purview('pur_product_edit', $_SESSION['business_purview']) ) {
+        $response['msg'] = '权限不足';
+        echo json_encode($response);
+        exit;
+    }
+    $sn = trim(getPOST('sn'));
+    $type = intval(getPOST('type'));
+    $attr = trim(getPOST('attr'));
+    $inventory = intval(getPOST('inventory'));
+    if( '' == $sn ) {
+        $response['msg'] = '参数错误';
+        echo json_encode($response);
+        exit;
+    }
+    if( 0 >= $type ) {
+        $response['msg'] = '参数错误';
+        echo json_encode($response);
+        exit;
+    }
+    $sn = $db->escape($sn);
+    $attr = $db->escape($attr);
+    $inventory = ( 0 > $inventory ) ? 0 : $inventory;
+
+    $get_product_type_id = 'select product_type_id from '.$db->table('product');
+    $get_product_type_id .= ' where product_sn = \''.$sn.'\' and is_virtual = 0 limit 1';
+    $product_type_id = $db->fetchOne($get_product_type_id);
+
+    if( empty($product_type_id) ) {
+        $response['msg'] = '产品不存在';
+        echo json_encode($response);
+        exit;
+    }
+
+    $get_inventory_list = 'select * from '.$db->table('inventory').' where product_sn = \''.$sn.'\'';
+    $inventory_list = $db->fetchAll($get_inventory_list);
+    //添加同类型属性
+    if( $type == $product_type_id ) {
+        if( $inventory_list ) {
+            //空属性且有待发库存
+            if( count($inventory_list) == 1 && $inventory_list[0]['attributes'] == '' && $inventory_list[0]['inventory_await'] > 0 ) {
+                $response['msg'] = '有产品待发，无法添加新属性';
+            } else {
+                //可添加
+                $data = array(
+                    'product_sn' => $product_sn,
+                    'attributes' => $attr,
+                    'inventory' => $inventory,
+                    'inventory_logic' => $inventory,
+                );
+
+                if( $db->autoInsert('inventory', array($data)) ) {
+                    $response['error'] = 0;
+                } else {
+                    $response['msg'] = '系统繁忙，请稍后重试';
+                }
+            }
+        } else {
+            $response['msg'] = '系统繁忙，请稍后重试';
+        }
+    } else {
+        //可添加，删除原来所有，事务
+        $db->begin();
+        $transaction = true;
+
+        $delete_inventory = 'delete from '.$db->table('inventory').' where product_sn = \''.$sn.'\'';
+        if( !$db->delete($delete_inventory) ) {
+            $transaction = false;
+        }
+
+        $data = array(
+            'product_sn' => $product_sn,
+            'attributes' => $attr,
+            'inventory' => $inventory,
+            'inventory_logic' => $inventory,
+        );
+
+        if( !$db->autoInsert('inventory', array($data)) ) {
+            $transaction = false;
+        }
+
+        if( $transaction ) {
+            $db->commit();
+            $response['error'] = 0;
+        } else {
+            $db->rollback();
+            $response['msg'] = '系统繁忙，请稍后重试';
+        }
+    }
+    echo json_encode($response);
+    exit;
 }
 
 //===============================================================================
@@ -902,8 +1071,12 @@ if( 'edit' == $act ) {
     $get_attributes .= ' where product_sn = \''.$product_sn.'\'';
     $product_attributes = $db->fetchAll($get_attributes);
 //    var_dump($product_attributes);exit;
+    $has_attr = false;
     if( $product_attributes ) {
         foreach( $product_attributes as $key => $attributes ) {
+            if( $attributes['attributes'] ) {
+                $has_attr = true;
+            }
             $product_attributes[$key]['attributes'] = json_decode($attributes['attributes']);
         }
     } else {
@@ -915,6 +1088,7 @@ if( 'edit' == $act ) {
         $inventory = $product_attributes[0]['inventory'];
     }
 
+    assign('has_attr', $has_attr);
     assign('inventory', $inventory);
     assign('attributes', json_encode($product_attributes));
 
@@ -943,7 +1117,7 @@ if( 'edit' == $act ) {
     $product_type_list = $db->fetchAll($get_product_type_list);
     assign('product_type_list', $product_type_list);
 
-    $get_product_attr_list = 'select * from '.$db->table('product_attributes').' where 1 order by product_type_id asc, id asc';
+    $get_product_attr_list = 'select * from '.$db->table('product_attributes').' where product_type_id = \''.$product['product_type_id'].'\' order by product_type_id asc, id asc';
     $product_attr_list = $db->fetchAll($get_product_attr_list);
 
     $target_attr_list = array();
@@ -957,8 +1131,8 @@ if( 'edit' == $act ) {
         } while( $i < $length && $pid == $product_attr_list[$i]['product_type_id'] );
         $target_attr_list[$pid] = $temp;
     }
+    assign('attr_list', $target_attr_list);
     assign('json_attr_list', json_encode($target_attr_list));
-
 
     $get_brand_list = 'select * from '.$db->table('brand').' where 1 order by id asc';
     $brand_list = $db->fetchAll($get_brand_list);
@@ -1083,6 +1257,20 @@ if( 'delete' == $act ) {
         show_system_message('产品已被删除', array());
         exit;
     }
+
+    //检查是否有待发库存
+    $get_inventory_list = 'select * from '.$db->table('inventory');
+    $get_inventory_list .= ' where product_sn = \''.$product_sn.'\'';
+    $inventory_list = $db->fetchAll($get_inventory_list);
+    $flag = true;
+    if( $inventory_list ) {
+        foreach( $inventory_list as $inventory ) {
+            if( $inventory['inventory_await'] > 0 ) {
+                show_system_message('产品待发中，不可删除', array());
+            }
+        }
+    }
+
     $update_product = 'update '.$db->table('product').' set status = 5';
     $update_product .= ', prev_status = '.$product['status'];
     $update_product .= ' where product_sn = \''.$product_sn.'\'';
@@ -1237,6 +1425,19 @@ if( 'remove' == $act ) {
     if( $product['status'] != 5 ) {
         show_system_message('产品未被删除', array(array('link' => 'product.php', 'alt' => '产品列表')));
         exit;
+    }
+
+    //检查是否有待发库存
+    $get_inventory_list = 'select * from '.$db->table('inventory');
+    $get_inventory_list .= ' where product_sn = \''.$product_sn.'\'';
+    $inventory_list = $db->fetchAll($get_inventory_list);
+    $flag = true;
+    if( $inventory_list ) {
+        foreach( $inventory_list as $inventory ) {
+            if( $inventory['inventory_await'] > 0 ) {
+                show_system_message('产品待发中，不可删除', array());
+            }
+        }
     }
 
     $db->begin();

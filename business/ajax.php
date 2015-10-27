@@ -25,7 +25,7 @@ if( check_cross_domain() ) {
     exit;
 }
 
-$operation = 'order_detail|edit_attr|add_attr|delete_attr|add_content|edit_content|delete_content';
+$operation = 'order_detail|edit_attr|add_attr|delete_attr|add_content|edit_content|delete_content|get_attr';
 $opera = check_action($operation, getPOST('opera'));
 
 //编辑消费内容
@@ -499,6 +499,34 @@ if( 'delete_attr' == $opera ) {
         echo json_encode(array(
             'error' => 1,
             'message' => '系统繁忙，请稍后重试',
+        ));
+        exit;
+    }
+}
+
+//获取某个分类下的产品属性名
+if( 'get_attr' == $opera ) {
+    $type_id = intval(getPOST('id'));
+    if( 0 >= $type_id ) {
+        echo json_encode(array(
+            'error' => 1,
+            'message' => '参数错误',
+        ));
+        exit;
+    }
+    $get_attr_list = 'select * from '.$db->table('product_attributes').' where product_type_id = \''.$type_id.'\'';
+    $attr_list = $db->fetchAll($get_attr_list);
+    if( $attr_list ) {
+
+        $target = array();
+        foreach( $attr_list as $key => $attr ) {
+            $target[$attr['id']] = $attr;
+        }
+
+        echo json_encode(array(
+            'error' => 0,
+            'message' => '参数错误',
+            'data' => $target,
         ));
         exit;
     }
