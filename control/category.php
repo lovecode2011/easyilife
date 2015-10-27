@@ -178,23 +178,24 @@ if( 'view' == $act ) {
         exit;
     }
 
-    $get_category_list = 'select * from '.$db->table('category');
+    $get_category_list = 'select `id` as pid, `name`, `icon`, `parent_id`, `path`, (select count(*) from sbx_category where `parent_id` = pid and business_account = \'\') as `count` from '.$db->table('category');
     $get_category_list .= ' where business_account = \'\'';
     $get_category_list .= ' order by `path` ASC';
-
+//    echo $get_category_list;exit;
     $category_list = $db->fetchAll($get_category_list);
     if( $category_list ) {
         foreach ($category_list as $key => $category) {
             $count = count(explode(',', $category['path']));
             if ($count > 1) {
-                $temp = '|--' . $category['name'];
-                while ($count--) {
-                    $temp = '&nbsp;&nbsp;' . $temp;
+                $temp = '';
+                while (--$count) {
+                    $temp .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
                 }
-                $category['name'] = $temp;
+                $category['prefix'] = $temp;
             }
+            $category['id'] = $category['pid'];
             if( empty($category['icon']) ) {
-                $category['icon'] = '../upload/image/no-image.png';
+                $category['icon'] = 'upload/image/no-image.png';
             }
             $category_list[$key] = $category;
         }
