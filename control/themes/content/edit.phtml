@@ -86,7 +86,14 @@
                     <p>
                         <input type="button" class="text-input" id="select-image" value="请选择资讯封面" style="cursor:pointer">
                         <input type="hidden" name="img" id="img" value="{$content.original}" />
-                        <img src="../{$content.original}" id="show-image" width="187px" height="140px" style="{if $content.original eq ''}display:none{/if}" />
+                        <p class="clear"></p>
+                        {if $content.original}
+                        <img src="../{$content.original}" id="show-image" width="120" height="120" />
+                        {else}
+                        <img src="../upload/image/no-image.png" id="show-image" width="120" height="120" />
+                        {/if}
+                        <br />
+                        <span class="error-input" id="img-notice">120*120px，图片大小不要超过100k</span>
                     </p>
                 </fieldset>
             </div>
@@ -161,10 +168,10 @@
                     imageUrl : '',
                     clickFn : function(url, title, width, height, border, align) {
                         if( !width ) {
-                            width = 180 + 'px';
+                            width = 120 + 'px';
                         }
                         if( !height ) {
-                            height = 180 + 'px';
+                            height = 120 + 'px';
                         }
 
                         K('#img').val(url.replace("{$smarty.const.BASE_DIR}", ""));

@@ -18,7 +18,16 @@
                 <p>
                     <label class="l-title">LOGO：</label>
                     <input type="hidden" name="logo" id="logo" placeholder="">
-                    <img class="select-image" alt="" src="{$business.shop_logo}">&nbsp;
+                    <img class="select-image" alt="" src="{$business.shop_logo}" width="95px" height="95px">&nbsp;
+                </p>
+                <p>
+                    <label class="l-title">店招：</label>
+                    <input type="hidden" name="sign" id="sign" placeholder="">
+                    {if $business.shop_sign}
+                    <img id="show-sign" alt="" width="370" height="95" src="../{$business.shop_sign}" />
+                    {else}
+                    <img id="show-sign" alt="" width="370" height="95" src="../upload/image/no-image.png}" />
+                    {/if}
                 </p>
                 <p>
                     <label class="l-title">主营行业：</label>
