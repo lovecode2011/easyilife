@@ -13,14 +13,56 @@ back_base_init();
 $template = 'product/';
 assign('subTitle', '产品管理');
 
-$action = 'view|exam|reject';
-$operation = 'exam|reject';
+$action = 'view|exam|reject|set|unset|activity';
+$operation = 'exam|reject|activity';
 
 $act = check_action($action, getGET('act'));
 $act = ( $act == '' ) ? 'view' : $act;
 
 $opera = check_action($operation, getPOST('opera'));
 //===========================================================================
+if( 'activity' == $opera ) {
+    if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $id = intval(getPOST('id'));
+    if( 0 >= $id ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+
+    $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 4 limit 1';
+    $product = $db->fetchRow($get_product);
+    if( empty($product) ) {
+        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+
+    $db->autoDelete('activity_mapper', '`product_sn`=\''.$product['product_sn'].'\'');
+    $activity_id_arr = array();
+    $activity_id = getPOST('activity_id');
+    foreach($activity_id as $aid)
+    {
+        $aid = intval($aid);
+
+        if($aid > 0)
+        {
+            $activity_id_arr[] = array(
+                'activity_id' => $aid,
+                'product_sn' => $product['product_sn']
+            );
+        }
+    }
+
+    if( $db->autoInsert('activity_mapper', $activity_id_arr) ) {
+        show_system_message('活动设置成功', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    } else {
+        show_system_message('系统繁忙，请稍后重试', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+}
 
 if( 'exam' == $opera ) {
     if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
@@ -239,6 +281,69 @@ if( 'view' == $act ) {
         $exam_count = $db->fetchOne($get_exam_count);
     }
     assign('exam_count', $exam_count);
+}
+
+if( 'activity' == $act ) {
+    if( !check_purview('pur_product_exam', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $product_sn = trim(getGET('sn'));
+    if( '' == $product_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $product_sn = $db->escape($product_sn);
+
+    $get_product = 'select a.* from '.$db->table('product').' as a';
+    $get_product .= ' where a.product_sn = \''.$product_sn.'\' and status = 4 limit 1';
+    $product = $db->fetchRow($get_product);
+    if( !$product ) {
+        show_system_message('产品不存在', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+    if( $product['status'] == 5 ) {
+        show_system_message('产品已被删除', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
+
+    $product['promote_begin'] = ( $product['promote_begin'] ) ? date('Y-m-d H:i:s', $product['promote_begin']) : '';
+    $product['promote_end'] = ( $product['promote_end'] ) ? date('Y-m-d H:i:s', $product['promote_end']) : '';
+    $product['img_src'] = (file_exists('..'.$product['img'])) ? '..'.$product['img'] : $product['img'];
+
+    assign('product', $product);
+
+    $get_gallery_list = 'select * from '.$db->table('gallery').' where product_sn = \''.$product_sn.'\' order by order_view asc';
+    $gallery_list = $db->fetchAll($get_gallery_list);
+    assign('gallery_list', $gallery_list);
+
+    //获取活动列表
+    $get_activity_list = 'select * from '.$db->table('activity');
+    $activity_list = $db->fetchAll($get_activity_list);
+
+    $get_mapper = 'select `activity_id` as aid from '.$db->table('activity_mapper').' where `product_sn`=\''.$product_sn.'\'';
+    $mapper = $db->fetchAll($get_mapper);
+
+    $activity_json = array();
+    foreach ($activity_list as $key => $value) {
+        $activity_json[$value['id']] = $value['name'];
+    }
+
+    $selected_activity = array();
+    if($mapper) {
+        foreach ($activity_list as $key => $value) {
+            foreach ($mapper as $aid) {
+                if ($value['id'] == $aid['aid']) {
+                    $selected_activity[] = $value;
+                    unset($activity_list[$key]);
+                }
+            }
+        }
+    }
+
+    assign('activity_json', json_encode($activity_json));
+    assign('selected_activity', $selected_activity);
+    assign('activity_list', $activity_list);
 }
 
 if( 'exam' == $act ) {

@@ -208,7 +208,7 @@ if( 'view' == $act ) {
     }
 
     $get_ad_list = 'select * from '.$db->table('ad');
-    $get_ad_list .= ' where business_account = \'\'';
+    $get_ad_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_ad_list .= ' order by order_view asc, add_time desc';
 
     $ad_list = $db->fetchAll($get_ad_list);

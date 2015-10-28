@@ -164,7 +164,7 @@ if('remove' == $opera)
 if('post' == $opera)
 {
     $response = array('msg'=>'');
-    $getMenu = 'select `id`,`name`,`key`,`type` from '.$db->table('wx_menu').' where `parent_id`=0 and `publicAccount`=\''.$_SESSION['public_account'].'\'';
+    $getMenu = 'select `id`,`name`,`key`,`type` from '.$db->table('wx_menu').' where `parent_id`=0';
     $menus = $db->fetchAll($getMenu);
 
     if(!$menus)
@@ -213,15 +213,16 @@ if('post' == $opera)
             $url = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='.$access_token;
 
             $content = urldecode(json_encode(array('button'=>$format)));
+            $response['content'] = $content;
             $data = post($url, $content, false);
-
+$response['data'] = $data;
             $data = json_decode($data);
             //3.判断状态码
             if($data->errcode == 0)
             {
                 $response['msg'] = '发布菜单成功，24小时之内将可在微信上看到结果';
             } else {
-                $response['msg'] = $errors[$data->errcode];
+                $response['msg'] = $data->errcode.':'.$data->errmsg;
             }
         } else {
             $response['msg'] = '获取access_token失败';

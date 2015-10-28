@@ -190,6 +190,12 @@ if('submit_order' == $opera)
         foreach($cart_list as $key=>$cart)
         {
             $log->record('开始计算使用积分/余额/奖金');
+            if($cart['total_integral'])
+            {
+                $cart['integral_paid'] = $cart['total_integral'];
+                $use_integral -= $cart['integral_paid'];
+            }
+
             if ($use_integral && $cart['total_amount'] > 0 && $user_integral)
             {
                 if ($cart['total_amount'] >= $user_integral / $config['integral_rate'])
@@ -282,7 +288,7 @@ if('submit_order' == $opera)
                     $order_data = array('pay_time'=>time());
 
                     $db->autoUpdate('order', $order_data, '`order_sn`=\''.$order_sn.'\'');
-                    add_order_log($order_sn, $_SESSION['account'], $status, "使用余额/圈币/积分支付");
+                    add_order_log($order_sn, $_SESSION['account'], $status, "使用余额/佣金/积分支付");
                 }
 
                 if($cart['balance_paid'] || $cart['reward_paid'] || $cart['integral_paid'])
@@ -466,9 +472,31 @@ if('checkout' == $opera)
                 }
             }
 
+            //检查积分
             if($commit)
             {
                 $db->commit();
+                $get_cart_list = 'select * from '.$db->table('cart').' where `account`=\''.$_SESSION['account'].'\' and `checked`=1';
+
+                $cart_list = $db->fetchAll($get_cart_list);
+
+                $total_integral = 0;
+                foreach($cart_list as $c)
+                {
+                    $total_integral += $c['integral']*$c['number'];
+                }
+
+                $get_user_integral = 'select `integral` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
+                $user_integral = $db->fetchOne($get_user_integral);
+                if($total_integral > $user_integral)
+                {
+                    $response['msg'] = '您的积分不足，不能购买积分兑换产品';
+                    $commit = false;
+                }
+            }
+
+            if($commit)
+            {
                 //检查库存
                 $get_inventory_list = 'select c.`id`,c.`number`,i.`inventory_logic` from '.$db->table('cart').' as c join '.
                                  $db->table('inventory').' as i on c.`product_sn`=i.`product_sn` and c.`attributes`=i.`attributes`'.

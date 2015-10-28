@@ -70,7 +70,11 @@
                                     <p class="product_name">{$product.name}</p>
                                     <p class="product_name">{$product.attributes}</p>
                                     <p>
+                                        {if !isset($product.integral)}
                                         <span class="red_money">￥{sprintf("%.2f", $product.price)}</span>
+                                        {else}
+                                        <span class="red_money">{sprintf("%.2f", $product.integral)}积分</span>
+                                        {/if}
                                         <span>&nbsp;×{$product.number}</span>
                                     </p>
                                 </div>
@@ -95,7 +99,7 @@
         </div>
         {/foreach}
     </section>
-    {if $user_info.integral gt 0 or $user_info.reward gt 0 or $user_info.balance gt 0}
+    {if ($user_info.integral gt 0 or $user_info.reward gt 0 or $user_info.balance gt 0) and $total_amount gt 0}
     <section class="preferential border_bottom">
         <ul class="preferential-list">
             {if $user_info.reward gt 0}

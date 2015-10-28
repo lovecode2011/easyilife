@@ -78,7 +78,11 @@
                                 <div class="product_info cr_2">
                                     <p class="product_name">{$od.product_name}</p>
                                     <p>
+                                        {if $od.integral gt 0}
+                                        <span class="red_money">{$od.integral}积分</span>
+                                        {else}
                                         <span class="red_money">￥{$od.product_price}</span>
+                                        {/if}
                                         <span>&nbsp;×{$od.count}</span>
                                     </p>
                                     {if $order.status eq 1}
@@ -95,6 +99,11 @@
                     <span class="t_span">产品总额：</span>
                     <span class="right_action"><em class="red_money">￥{$order.product_amount}</em></span>
                     <br/>
+                    {if $order.integral_amount gt 0}
+                    <span class="t_span">积分总额：</span>
+                    <span class="right_action"><em class="red_money">￥{sprintf("%.2f", $order.integral_amount/$config.integral_rate)}</em></span>
+                    <br/>
+                    {/if}
                     <span class="t_span">运费：</span>
                     <span class="right_action"><em class="red_money">￥{$order.delivery_fee}</em></span>
                     <br/>

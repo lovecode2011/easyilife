@@ -3,6 +3,7 @@ include('library/init.inc.php');
 
 //接收信息
 $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+$log->record_array($_GET);
 $log->record($xml);
 $data = simplexml_load_string($xml);
 $temp = '';
@@ -40,9 +41,10 @@ switch(strtolower($data->MsgType))
 {
 //文本消息
     case 'text':
-        $get_rules  = 'select `response_id`,`rule`,`match_mode` from '.$db->table('rules').'';
-        $get_rules .= ' and `enabled`=1 order by `order_view`';
+        $get_rules  = 'select `response_id`,`rule`,`match_mode` from '.$db->table('wx_rule').'';
+        $get_rules .= ' where `enabled`=1 order by `order_view`';
 
+        $log->record('text :'.$get_rules);
         $rules = $db->fetchAll($get_rules);
         foreach($rules as $rule)
         {
@@ -54,12 +56,17 @@ switch(strtolower($data->MsgType))
                     break;
                 }
             } else {//正则匹配
-                if(preg_match($rule['rule'], $data->Content))
+                if(preg_match('/'.$rule['rule'].'/', $data->Content))
                 {
                     $response_id = $rule['response_id'];
                     break;
                 }
             }
+        }
+
+        if($response_id == 0)
+        {
+            $log->record('没有响应的文字规则'.$data->Content);
         }
         break;
 //事件消息
@@ -98,7 +105,7 @@ switch(strtolower($data->MsgType))
                 }
 
 
-                $get_response_id  = 'select `response_id` from '.$db->table('rules').' where `rule`=\'subscribe\'';
+                $get_response_id  = 'select `response_id` from '.$db->table('wx_rule').' where `rule`=\'subscribe\'';
 
                 $response_id = $db->fetchOne($get_response_id);
 
@@ -161,8 +168,9 @@ switch(strtolower($data->MsgType))
                     <EventKey><![CDATA[EVENTKEY]]></EventKey>
                 </xml>
                  */
-                $get_response_id  = 'select `response_id` from '.$db->table('rules').' where ';
-                $get_response_id .= ' and `enabled`=1 and `rule`=\'click_'.$data->EventKey.'\' limit 1;';
+                $get_response_id  = 'select `response_id` from '.$db->table('wx_rule').' where ';
+                $get_response_id .= ' `enabled`=1 and `rule`=\'click_'.$data->EventKey.'\' limit 1;';
+                $log->record('click event:'.$get_response_id);
 
                 $response_id = $db->fetchOne($get_response_id);
 
@@ -207,7 +215,7 @@ $response_id = intval($response_id);
 if(0 < $response_id)
 {
     $get_response  = 'select `msgType`,`content`,`title`,`description`,`musicUrl`,`HQMusicUrl`,`url`,`picUrl`,`mediaId`,`thumbMediaId` from ';
-    $get_response .= $db->table('response').' where `id`='.$response_id;
+    $get_response .= $db->table('wx_response').' where `id`='.$response_id;
 
     $response_rule = $db->fetchRow($get_response);
 
@@ -242,12 +250,16 @@ if(0 < $response_id)
         case 'themes':
             //事件处理
             $content = $response_rule['content'];
+            $log->record('themes :'.$content);
 
             $loader->includeClass($content);
-            $responseObj = new $content($public_account, $openid, isset($data->Content) ? $data->Content : $temp);
-
+            $log->record('load themes success');
+            $responseObj = new $content($public_account, $openid, $data->Content);
+            $log->record('init themes success');
             $responseObj->run();
+            $log->record('themes run');
             $response = $responseObj->__toString();
+            $log->record('themes toString');
 
             break;
     }

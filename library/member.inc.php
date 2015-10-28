@@ -372,16 +372,25 @@ function register_mobile($mobile, $password, $parent_id = 0)
     {
         $path = '';
         $id = $db->get_last_id();
+        $kf_id = 0;
+
         if($parent_id)
         {
             $get_parent_path = 'select `path` from '.$db->table('member').' where `id`='.$parent_id;
             $path = $db->fetchOne($get_parent_path);
+
+            $get_kf_id = 'select `kf_id` from '.$db->table('member').' where `id`='.$parent_id;
+            $kf_id = $db->fetchOne($get_kf_id);
+        } else {
+            $get_kf_id = 'select `kf_id`,count(*) as c from '.$db->table('member').' group by `kf_id` order by c';
+            $kf_id = $db->fetchOne($get_kf_id);
         }
 
         $path .= $id.',';
 
         $update_data = array(
-            'path' => $path
+            'path' => $path,
+            'kf_id' => $kf_id
         );
 
         if($db->autoUpdate('member', $update_data, '`id`='.$id))

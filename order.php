@@ -485,12 +485,12 @@ if('detail' == $act)
     }
     $order_sn = $db->escape($order_sn);
 
-    $get_order = 'select o.`remark`,o.`product_amount`,o.`integral_paid`,o.`balance_paid`,o.`reward_paid`,o.`add_time`,o.`delivery_fee`,o.`pay_time`,o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`province`,o.`city`,o.`district`,o.`group`,o.`mobile`,o.`consignee`,o.`address` from '.$db->table('order').' as o join '.
+    $get_order = 'select o.`remark`,o.`product_amount`,o.`integral_paid`,o.`balance_paid`,o.`reward_paid`,o.`add_time`,o.`delivery_fee`,o.`pay_time`,o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`province`,o.`city`,o.`district`,o.`group`,o.`mobile`,o.`consignee`,o.`address`,o.`integral_amount` from '.$db->table('order').' as o join '.
                  $db->table('business').' as b using(`business_account`) where o.`account`=\''.$_SESSION['account'].'\' and o.`order_sn`=\''.$order_sn.'\'';
 
     $order = $db->fetchRow($get_order);
 
-    $get_order_detail = 'select od.`product_attributes`,od.`product_price`,od.`product_name`,od.`product_sn`,p.`id`,p.`img`,od.`count` from '.$db->table('order_detail').' as od '.
+    $get_order_detail = 'select `od`.`integral`,od.`product_attributes`,od.`product_price`,od.`product_name`,od.`product_sn`,p.`id`,p.`img`,od.`count` from '.$db->table('order_detail').' as od '.
             ' join '.$db->table('product').' as p using(`product_sn`) where od.`order_sn`=\''.$order_sn.'\'';
 
     $order['order_detail'] = $db->fetchAll($get_order_detail);

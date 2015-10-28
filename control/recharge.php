@@ -104,7 +104,7 @@ if( 'view' == $act ) {
     if( $recharge_list ) {
         foreach( $recharge_list as $key => $recharge ) {
             $recharge_list[$key]['add_time_str'] = date('Y-m-d H:i:s', $recharge['add_time']);
-            $recharge_list[$key]['solve_time_str'] = intval($recharge['solve_time']) ? date('Y-m-d H:i:s', $recharge['solve_time']) : '未到帐';
+            $recharge_list[$key]['solve_time_str'] = intval($recharge['solve_time']) ? date('Y-m-d H:i:s', $recharge['solve_time']) : '';
             $recharge_list[$key]['status_str'] = $status_str[$recharge['status']];
         }
     }

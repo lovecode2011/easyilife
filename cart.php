@@ -123,7 +123,8 @@ if('add_to_cart' == $opera)
                     //更新数量
                     $cart_data = array(
                         'number' => $buy_number,
-                        'price' => $product['price'] - $discount
+                        'price' => $product['price'] - $discount,
+                        'integral' => $product['integral']
                     );
 
                     if($product['promote_end'] > $now && $product['promote_begin'] <= $now)

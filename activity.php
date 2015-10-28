@@ -25,7 +25,8 @@ if('sort' == $opera)
     $filter = getPOST('filter');
     $mode = getPOST('mode');
 
-    $get_product_list = 'select `id`,`name`,`integral`,`img` from '.$db->table('product').' where  `status`=4 ';
+    $now = time();
+    $get_product_list = 'select `id`,`name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img` from '.$db->table('product').' where  `status`=4 ';
 
     $response['filter'] = $filter;
 
@@ -34,8 +35,11 @@ if('sort' == $opera)
     if(isset($filter['id']) && $filter['id'] > 0)
     {
         $id = intval($filter['id']);
+        $get_product_sn = 'select `product_sn` from '.$db->table('activity_mapper').' where `activity_id`='.$id;
+        $product_sn_arr = $db->fetchAll($get_product_sn);
+        $product_sn_str = '';
 
-        $get_product_list .= ' and `integral`>0 and `status`=4';
+        $get_product_list .= ' and `category_id` in ('.$product_sn_str.') and `status`=4';
     }
 
     switch($mode)
@@ -67,7 +71,7 @@ if('sort' == $opera)
     exit;
 }
 
-if($id < 0)
+if($id <= 0)
 {
     redirect('index.php');
 }
@@ -86,8 +90,23 @@ $filter = array();
 
 $filter['id'] = $id;
 
+$get_activity_name = 'select `name` from '.$db->table('activity').' where `id`='.$id;
+$activity_name = $db->fetchOne($get_activity_name);
+assign('activity_name', $activity_name);
+
+$get_product_sn = 'select `product_sn` from '.$db->table('activity_mapper').' where `activity_id`='.$id;
+$product_sn_arr = $db->fetchAll($get_product_sn);
+$product_sn_str = '';
+
+foreach($product_sn_arr as $p)
+{
+    $product_sn_str .= '\''.$p['product_sn'].'\',';
+}
+
+$product_sn_str = substr($product_sn_str, 0, strlen($product_sn_str)-1);
+
 $now = time();
-$get_product_list = 'select `product_sn`,`name`,`id`,`integral`,`img` from '.$db->table('product').' where `status`=4 and `integral`>0';
+$get_product_list = 'select `product_sn`,`name`,`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img` from '.$db->table('product').' where `status`=4 and `product_sn` in ('.$product_sn_str.')';
 
 switch($state)
 {
@@ -103,4 +122,4 @@ assign('product_list', $product_list);
 assign('id', $id);
 
 assign('filter', json_encode($filter));
-$smarty->display('integral-product-list.phtml');
+$smarty->display('activity.phtml');
