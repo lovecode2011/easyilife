@@ -5,7 +5,11 @@
         <img class="lazy" src="{$template_dir}images/bg_pic.png" data-original="{$product.img}" alt="{$product.name}">
         <dl class="arrow">
             <dt> {$product.name} </dt>
+            {if !isset($product.integral)}
             <dd>￥{$product.price}</dd>
+            {else}
+            <dd>{$product.integral}积分</dd>
+            {/if}
         </dl>
     </a>
 </li>

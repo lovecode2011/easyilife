@@ -60,23 +60,6 @@ if('sort' == $opera)
         $get_product_list .= ' and `category_id` in ('.$category_ids_str.') and `status`=4';
     }
 
-    //
-    if(isset($filter['module']) && $filter['module'] != '')
-    {
-        switch($filter['module'])
-        {
-        case 'promote':
-            $get_product_list .= ' and `is_promote`=1';
-            break;
-        case 'exchange':
-            $get_product_list .= ' and `is_exchange`=1';
-            break;
-        case 'recommend':
-            $get_product_list .= ' and `is_recommend`=1';
-            break;
-        }
-    }
-
     switch($mode)
     {
         case 'sale':
@@ -125,10 +108,6 @@ $filter = array();
 
 $filter['id'] = $id;
 
-$module = getGET('module');
-$module_list = 'promote|recommend|exchange';
-$module = check_action($module_list, $module);
-
 $get_category_path = 'select `path` from '.$db->table('category').' where `id`='.$id;
 $path = $db->fetchOne($get_category_path);
 
@@ -154,23 +133,6 @@ if($category_ids_str == '')
 
 $now = time();
 $get_product_list = 'select `product_sn`,`name`,`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img` from '.$db->table('product').' where `status`=4 and `category_id` in ('.$category_ids_str.')';
-
-if($module != '')
-{
-    switch($module)
-    {
-    case 'promote':
-        $get_product_list .= ' and `is_promote`=1';
-        break;
-    case 'exchange':
-        $get_product_list .= ' and `is_exchange`=1';
-        break;
-    case 'recommend':
-        $get_product_list .= ' and `is_recommend`=1';
-        break;
-    }
-    $filter['module'] = $module;
-}
 
 switch($state)
 {

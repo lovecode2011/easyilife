@@ -407,6 +407,11 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
 
     $amount = $product_amount + $delivery_fee - $balance_paid - $reward_paid/$config['reward_rate'] - $integral_paid/$config['integral_rate'];
 
+    if($integral_amount > 0)
+    {
+        $amount += $integral_amount/$config['integral_rate'];
+    }
+
     $order_data = array(
         'integral_amount' => $integral_amount,
         'product_amount' => $product_amount,

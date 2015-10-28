@@ -761,6 +761,23 @@ $sql[] = 'create table if not exists '.$db->table('nav').' (
     `order_view` int not null default \'50\'
 ) default charset=utf8;';
 
+$table[] = '促销活动';
+$sql[] = 'create table if not exists '.$db->table('activity').' (
+    `id` bigint not null auto_increment primary key,
+    `name` varchar(255) not null
+) default charset=utf8;';
+
+$table[] = '初始化促销活动';
+$sql[] = 'insert into '.$db->table('activity').' values (1,\'优选产品\'), (2, \'促销专区\'), (3, \'积分兑换\');';
+
+$table[] = '活动产品';
+$sql[] = 'create table if not exists '.$db->table('activity_mapper').' (
+    `id` bigint not null auto_increment unique,
+    `activity_id` bigint not null,
+    `product_sn` varchar(255) not null,
+    primary key(`activity_id`,`product_sn`)
+) default charset=utf8;';
+
 //微信模块
 $table[] = '微信菜单';
 $sql[] = 'create table if not exists '.$db->table('wx_menu').' (

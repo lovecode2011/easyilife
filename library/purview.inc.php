@@ -183,7 +183,13 @@ $purview = array(
         'pur_wechat_rule_view',
         'pur_wechat_rule_edit',
         'pur_wechat_rule_del',
-    )
+    ),
+    'pur_activity' => array(
+        'pur_activity_add',
+        'pur_activity_view',
+        'pur_activity_edit',
+        'pur_activity_del',
+    ),
 );
 
 global $L_purview;
@@ -337,6 +343,12 @@ $L_purview = array(
     'pur_wechat_rule_view' => '查看微信规则',
     'pur_wechat_rule_edit' => '编辑微信规则',
     'pur_wechat_rule_del' => '删除微信规则',
+
+    'pur_activity' => '活动管理',
+    'pur_activity_view' => '活动查看',
+    'pur_activity_add' => '活动添加',
+    'pur_activity_edit' => '活动编辑',
+    'pur_activity_del' => '活动删除',
 );
 
 global $menus;
@@ -368,6 +380,7 @@ $menus = array(
     'pur_wechat_menu' => array('url' => 'wechat_menu.php', 'title' => '微信菜单管理', 'parent' => 'menu_wechat'),
     'pur_wechat_kf' => array('url' => 'wechat_kf.php', 'title' => '客服管理', 'parent' => 'menu_wechat'),
     'pur_wechat_rule' => array('url' => 'wechat_rule.php', 'title' => '回复规则管理', 'parent' => 'menu_wechat'),
+    'pur_activity' => array('url' => 'activity.php', 'title' => '活动管理', 'parent' => 'menu_site'),
 );
 
 global $topMenus;
