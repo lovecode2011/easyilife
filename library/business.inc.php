@@ -26,6 +26,26 @@ $purview = array(
         'pur_product_add',
         'pur_product_edit',
         'pur_product_del',
+        'pur_virtual_product_view',
+        'pur_virtual_product_add',
+        'pur_virtual_product_edit',
+        'pur_virtual_product_del',
+    ),
+
+    'pur_order' => array(
+        'pur_order_view',
+        'pur_order_edit',
+        'pur_order_del',
+    ),
+
+//    'pur_virtual_product' => array(
+//
+//    ),
+
+    'pur_finance' => array(
+        'pur_finance_view',
+//        'pur_finance_trade',
+        'pur_finance_withdraw',
     ),
 
     'pur_express' => array(
@@ -35,25 +55,6 @@ $purview = array(
         'pur_express_del',
     ),
 
-    'pur_virtual_product' => array(
-        'pur_virtual_product_view',
-        'pur_virtual_product_add',
-        'pur_virtual_product_edit',
-        'pur_virtual_product_del',
-    ),
-
-    'pur_finance' => array(
-        'pur_finance_view',
-//        'pur_finance_trade',
-        'pur_finance_withdraw',
-    ),
-
-
-    'pur_order' => array(
-        'pur_order_view',
-        'pur_order_edit',
-        'pur_order_del',
-    ),
 
     'pur_virtual_order' => array(
         'pur_virtual_order_view',
@@ -105,6 +106,10 @@ $L_purview = array(
     'pur_product_add' => '增加产品',
     'pur_product_edit' => '编辑产品',
     'pur_product_del' => '删除产品',
+    'pur_virtual_product_view' => '虚拟产品列表',
+    'pur_virtual_product_add' => '增加虚拟产品',
+    'pur_virtual_product_edit' => '编辑虚拟产品',
+    'pur_virtual_product_del' => '删除虚拟产品',
 
     'pur_express' => '物流方式设置',
     'pur_express_view' => '物流列表',
@@ -140,10 +145,6 @@ $L_purview = array(
     'pur_role_del' => '删除角色',
 
     'pur_virtual_product' => '虚拟产品',
-    'pur_virtual_product_view' => '虚拟产品列表',
-    'pur_virtual_product_add' => '增加虚拟产品',
-    'pur_virtual_product_edit' => '编辑虚拟产品',
-    'pur_virtual_product_del' => '删除虚拟产品',
 
     'pur_virtual_order' => '消费券',
     'pur_virtual_order_view' => '消费券列表',
@@ -185,29 +186,29 @@ $menus = array(
             'pur_product_view' => array('url' => 'product.php', 'title' => '产品列表'),
             'pur_product_add' => array('url' => 'product.php?act=add', 'title' => '增加产品'),
             'pur_product_delete' => array('url' => 'product.php?act=cycle', 'title' => '回收站'),
-        ),
-    ),
-
-    'pur_virtual_product' => array(
-        'title' => '虚拟产品管理',
-        'icon' => '&#xe608;',
-        'url' => 'virtual_product.php',
-        'children' => array(
             'pur_virtual_product_view' => array('url' => 'virtual_product.php', 'title' => '虚拟产品列表'),
             'pur_virtual_product_add' => array('url' => 'virtual_product.php?act=add', 'title' => '增加虚拟产品'),
             'pur_virtual_product_delete' => array('url' => 'virtual_product.php?act=cycle', 'title' => '虚拟产品回收站'),
         ),
     ),
 
-    'pur_express' => array(
-        'title' => '物流方式管理',
-        'icon' => '&#xe605;',
-        'url' => 'express.php',
-        'children' => array(
-            'pur_express_view' => array('url' => 'express.php', 'title' => '物流方式列表'),
-//            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
-        ),
+//    'pur_virtual_product' => array(
+//        'title' => '虚拟产品管理',
+//        'icon' => '&#xe608;',
+//        'url' => 'virtual_product.php',
+//        'children' => array(
+//            'pur_virtual_product_view' => array('url' => 'virtual_product.php', 'title' => '虚拟产品列表'),
+//            'pur_virtual_product_add' => array('url' => 'virtual_product.php?act=add', 'title' => '增加虚拟产品'),
+//            'pur_virtual_product_delete' => array('url' => 'virtual_product.php?act=cycle', 'title' => '虚拟产品回收站'),
+//        ),
+//    ),
+
+    'pur_order' => array(
+        'title' => '订单管理',
+        'icon' => '&#xe604;',
+        'url' => 'order.php',
     ),
+
 
     'pur_finance' => array(
         'title' => '财务管理',
@@ -219,16 +220,21 @@ $menus = array(
             'pur_finance_withdraw' => array('url' => 'finance.php?act=record', 'title' => '提现'),
         ),
     ),
-    'pur_order' => array(
-        'title' => '订单管理',
-        'icon' => '&#xe604;',
-        'url' => 'order.php',
-    ),
 
     'pur_virtual_order' => array(
         'title' => '消费券管理',
         'icon' => '&#xe604;',
         'url' => 'virtual_order.php',
+    ),
+
+    'pur_express' => array(
+        'title' => '物流方式管理',
+        'icon' => '&#xe605;',
+        'url' => 'express.php',
+        'children' => array(
+            'pur_express_view' => array('url' => 'express.php', 'title' => '物流方式列表'),
+//            'pur_express_add' => array('url' => 'express.php?act=add', 'title' => '新增物流方式'),
+        ),
     ),
 
     'pur_eval' => array(
@@ -269,7 +275,7 @@ $menus = array(
 /**
  * 生成商户后台菜单
  * @author 王仁欢
- * @version 1.0.0
+ * @version 1.0.0n
  */
 function create_business_menu() {
     global $menus, $purview;
@@ -330,6 +336,9 @@ function business_base_init()
     $active_nav = explode('.', $active_nav);
     $active_nav = $active_nav[0];
     assign('active_nav', $active_nav);
+    if( $active_nav == 'virtual_product' ) {
+        $active_nav = 'product';
+    }
     assign('menu_mark', 'menu_' . $active_nav);
 
     //未读消息数量
