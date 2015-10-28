@@ -13,7 +13,7 @@ include 'library/init.inc.php';
 business_base_init();
 $template = 'order/';
 
-$action = 'view|deliver|prepare|agree|refund|delete|detail|export|pay';
+$action = 'view|deliver|prepare|agree|refund|delete|detail|export|pay|preview';
 $operation = 'deliver';
 
 $act = check_action($action, getGET('act'));
@@ -611,128 +611,149 @@ if( 'export' == $act ) {
         ->setCategory("订单");
 
 
-    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('A')->setWidth(10);
-    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('B')->setAutoSize(true);
-    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('C')->setWidth(10);
-    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('D')->setAutoSize(true);
-    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('E')->setWidth(10);
-    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('F')->setAutoSize(true);
-    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('G')->setWidth(10);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('A')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('B')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('C')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('D')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('E')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('F')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('G')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('H')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('I')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('J')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('K')->setWidth(15);
+    $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('L')->setWidth(15);
+
+    $objPHPExcel->setActiveSheetIndex(0)->getStyle()->getFont()->setSize(15);
+    $objPHPExcel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(30);
+
 
     // add data
-    $i = 1;
-    //设置填充的样式和背景色
-    $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':H'.$i)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-    $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':H'.$i)->getFill()->getStartColor()->setRGB('ff0000');
-    $i++;
+    $i = 0;
     foreach( $order_list as $key => $order ) {
+
+        $i++;
+        //设置填充的样式和背景色
+        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':L'.$i)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':L'.$i)->getFill()->getStartColor()->setARGB('FF808080');
+
+        $i++;
         $temp = $order['province_name'].$order['city_name'].$order['district_name'].$order['group_name'].'    ';
         $temp .= $order['address'].'    ';
         $order['self_delivery_str'] = $order['self_delivery'] == 0 ? '否' : '是';
-        $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A'.$i, '订单编号')
-            ->setCellValue('B'.$i, $order['order_sn'])
-            ->setCellValue('C'.$i, '下单时间')
-            ->setCellValue('D'.$i, $order['add_time_str'])
-            ->setCellValue('E'.$i, '订单状态')
-            ->setCellValue('F'.$i, $order['status_str'])
-            ->setCellValue('G'.$i, '自提')
-            ->setCellValue('H'.$i, $order['self_delivery_str']);
-        if( 0 == $order['self_delivery'] ) {
-            $i++;
-            $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A' . $i, '收货人')
-                ->setCellValue('B' . $i, $order['consignee'])
-                ->setCellValue('C' . $i, '联系电话')
-                ->setCellValue('D' . $i, $order['mobile'])
-                ->setCellValue('E' . $i, '邮编')
-                ->setCellValue('F' . $i, $order['zipcode']);
-            $i++;
-            $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A' . $i, '收货地址');
-            $objPHPExcel->getActiveSheet()->mergeCells('B' . $i . ':F' . $i);
-            $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('B' . $i, $temp);
-        }
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '订单编号');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B'.$i.':C'.$i);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$i, $order['order_sn']);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$i, '订单状态');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E'.$i.':F'.$i);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$i, $order['status_str']);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '下单时间');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H'.$i.':I'.$i);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['add_time_str']);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J'.$i, '发货时间');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('K'.$i.':L'.$i);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K'.$i, $order['delivery_time_str']);
+
         $i++;
-        $objPHPExcel->getActiveSheet()->mergeCells( 'A'.$i.':G'.$i);
-        $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A'.$i, '订单详情');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$i.':L'.$i);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '订单详情');
+
         $i++;
-        //设置填充的样式和背景色
-        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':G'.$i)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':G'.$i)->getFill()->getStartColor()->setARGB('FF808080');
-        $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A'.$i, '产品编号')
-            ->setCellValue('B'.$i, '产品名称')
-            ->setCellValue('C'.$i, '返利')
-            ->setCellValue('D'.$i, '产品积分')
-            ->setCellValue('E'.$i, '赠送积分')
-            ->setCellValue('F'.$i, '产品价格')
-            ->setCellValue('G'.$i, '购买数量');
-        $get_order_detail = 'select * from '.$db->table('order_detail');
-        $get_order_detail .= ' where order_sn = \''.$order['order_sn'].'\' order by id asc';
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '产品编号');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B'.$i.':D'.$i);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$i, '产品名称及规格');
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F'.$i, '产品数量');
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '单价');
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, '产品总额');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I'.$i.':L'.$i);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$i, '备注');
+
+        $get_order_detail = 'select * from '.$db->table('order_detail').' where order_sn = \''.$order_sn.'\'';
         $order_detail = $db->fetchAll($get_order_detail);
-        $i++;
+
         if( $order_detail ) {
             foreach ($order_detail as $detail) {
-                $objPHPExcel->setActiveSheetIndex(0)
-                    ->setCellValue('A' . $i, $detail['product_sn'])
-                    ->setCellValue('B' . $i, $detail['product_name'])
-                    ->setCellValue('C' . $i, $detail['reward'])
-                    ->setCellValue('D' . $i, $detail['integral'])
-                    ->setCellValue('E' . $i, $detail['integral_given'])
-                    ->setCellValue('F' . $i, $detail['product_price'])
-                    ->setCellValue('G' . $i, $detail['count']);
+                $product_amount = $detail['count'] * $detail['product_price'];
                 $i++;
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A' . $i, $detail['product_sn']);
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B' . $i . ':D' . $i);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $i, $detail['product_name']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $i, $detail['count']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $i, $detail['product_price']);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $i, $product_amount);
+                $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I' . $i . ':L' . $i);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $i, $order['remark']);
             }
         }
-
-        $objPHPExcel->getActiveSheet()->mergeCells( 'A'.$i.':B'.$i);
-        $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A'.$i, '合计')
-            ->setCellValue('C'.$i, $order['reward_amount'])
-            ->setCellValue('D'.$i, $order['integral_amount'])
-            ->setCellValue('E'.$i, $order['integral_given_amount'])
-            ->setCellValue('F'.$i, $order['amount']);
+        $i++;
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$i.':F'.$i);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '订单运费');
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['delivery_fee']);
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I'.$i.':L'.$i);
 
         $i++;
-        //设置填充的样式和背景色
-        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':G'.$i)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':G'.$i)->getFill()->getStartColor()->setARGB('FF808080');
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$i.':F'.$i);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '订单总额');
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['order_amount']);
+        $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I'.$i.':L'.$i);
 
-        if( $order['express_sn'] ) {
+        if( 0 == $order['self_delivery'] ) {
             $i++;
-            $objPHPExcel->getActiveSheet()->mergeCells('A' . $i . ':F' . $i);
-            $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A' . $i, '物流信息');
-            $i++;
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$i.':L'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '物流信息');
 
-            $get_express_name = 'select `name` from '.$db->table('express').' where `id`='.$order['express_id'];
-            $delivery_name = $db->fetchOne($get_express_name);
-            $objPHPExcel->setActiveSheetIndex(0)
-                ->setCellValue('A' . $i, '物流公司')
-                ->setCellValue('B' . $i, $delivery_name)
-                ->setCellValue('C' . $i, '发货单号')
-                ->setCellValue('D' . $i, $order['express_sn'])
-                ->setCellValue('E' . $i, '发货时间')
-                ->setCellValue('F' . $i, $order['delivery_time_str']);
+            $i++;
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '配送方式');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B'.$i.':C'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$i, $order['delivery_name']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$i, '物流公司');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E'.$i.':F'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$i, $order['express_name']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '快递编号');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H'.$i.':I'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['express_sn']);
+
+            $i++;
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$i.':F'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '寄件人信息');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('G'.$i.':L'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '收件人信息');
+
+            $i++;
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '单位名称');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B'.$i.':C'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$i, '联系人');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E'.$i.':F'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '单位名称');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H'.$i.':I'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('J'.$i, '联系人');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('K'.$i.':L'.$i);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('K'.$i, $order['consignee']);
+
+            $i++;
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$i.':A'.($i+1));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '地址');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B'.$i.':F'.($i+1));
+
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('G'.$i.':G'.($i+1));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '地址');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H'.$i.':L'.($i+1));
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['address']);
+
+            $i += 2;
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '区号');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('C'.$i, '联系号码');
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('D'.$i.':F'.$i);
+
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '区号');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, $order['zipcode']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$i, '联系号码');
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, $order['mobile']);
+            $objPHPExcel->setActiveSheetIndex(0)->mergeCells('J'.$i.':L'.$i);
         }
-        $i++;
-        $objPHPExcel->getActiveSheet()->mergeCells('B' . $i . ':F' . $i);
-        $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A' . $i, '备注')
-            ->setCellValue('B'.$i, $order['remark']);
-
-        $i++;
         //设置填充的样式和背景色
-        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':H'.$i)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-        $objPHPExcel->getActiveSheet()->getStyle( 'A'.$i.':H'.$i)->getFill()->getStartColor()->setRGB('ff0000');
-        $i++;
-
     }
     $objPHPExcel->getActiveSheet()->setTitle('订单');
-//    $objPHPExcel->getActiveSheet()->getDefaultRowDimension()->setRowHeight(40);
 
 
 // Set active sheet index to the first sheet, so Excel opens this as the first sheet
@@ -811,6 +832,75 @@ if( 'pay' == $act ) {
     }
 }
 
+//预览
+if( 'preview' == $act ) {
+    if( !check_purview('pur_order_view', $_SESSION['business_purview']) ) {
+        echo '权限不足';
+        exit;
+    }
+    $status_str = array(
+        1 => '待支付',
+        2 => '支付中',
+        3 => '支付完成',
+        4 => '待发货',
+        5 => '配货中',
+        6 => '已发货',
+        7 => '已收货',
+        8 => '申请退单',
+        9 => '退单中',
+        10 => '已退单',
+        11 => '无效订单',
+        12 => '已完成',
+    );
 
+
+    $order_sn = trim(getGET('sn'));
+
+    if( '' == $order_sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    $order_sn = $db->escape($order_sn);
+
+    $get_order = 'select a.*, p.province_name, city.city_name, d.district_name, g.group_name, e.name as express_name from '.$db->table('order').' as a';
+    $get_order .= ' left join '.$db->table('province').' as p on a.province = p.id';
+    $get_order .= ' left join '.$db->table('city').' as city on a.city = city.id';
+    $get_order .= ' left join '.$db->table('district').' as d on a.district = d.id';
+    $get_order .= ' left join '.$db->table('group').' as g on a.group = g.id';
+    $get_order .= ' left join '.$db->table('express').' as e on a.express_id = e.id';
+
+    $get_order .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
+    $get_order .= ' and a.is_virtual = 0';    //实体订单
+    $get_order .= ' and order_sn = \''.$order_sn.'\'';
+    $get_order .= ' limit 1';
+
+    $order = $db->fetchRow($get_order);
+    if( empty($order) ) {
+        echo '订单不存在';
+        exit;
+    }
+
+    $order['add_time_str'] = $order['add_time'] ? date('Y-m-d H:i:s', $order['add_time']) : '';
+    $order['delivery_time_str'] = $order['delivery_time'] ? date('Y-m-d H:i:s', $order['delivery_time']) : '未发货';
+    $order['receive_time_str'] = $order['receive_time'] ? date('Y-m-d H:i:s', $order['receive_time']) : '未收货';
+    $order['pay_time_str'] = $order['pay_time'] ? date('Y-m-d H:i:s', $order['pay_time']) : '未支付';
+    $order['status_str'] = $status_str[$order['status']];
+
+    $get_order_detail = 'select o.*, p.img from '. $db->table('order_detail').' as o';
+    $get_order_detail .= ' left join '.$db->table('product').' as p on o.product_sn = p.product_sn';
+    $get_order_detail .= ' where o.business_account = \''.$_SESSION['business_account'].'\'';
+    $get_order_detail .= ' and o.order_sn = \''.$order_sn.'\'';
+
+    $order_detail = $db->fetchAll($get_order_detail);
+    if( $order_detail ) {
+        foreach( $order_detail as $key => $detail ) {
+            $order_detail[$key]['product_amount'] = $detail['product_price'] * $detail['count'];
+        }
+    }
+
+    assign('order', $order);
+    assign('order_detail', $order_detail);
+    assign('product_count', count($order_detail));
+}
 $template .= $act.'.phtml';
 $smarty->display($template);

@@ -7,6 +7,7 @@
     <div class="content-title">
         <h5 class="pull-left">订单详情</h5>
         <div class="pull-right">
+            <button class="btn btn-primary" onclick="preview('{$order.order_sn}')">预览</button>&nbsp;
             <a class="btn btn-primary" href="javascript:history.go(-1);">返回</a>&nbsp;
         </div>
         <div class="clear"></div>
@@ -125,6 +126,12 @@
 
     function get_express_info_handler(response) {
         $("#experss_info").html(response.msg);
+    }
+
+    function preview(order_sn) {
+        var top = (window.screen.height - 400) / 2;
+        var left = (window.screen.width - 1000) / 2;
+        window.open ('order.php?act=preview&sn=' + order_sn,'newwindow','height=400,width=1000,top='+top+',left='+left+',toolbar=no,menubar=no,scrollbars=no, resizable=no,location=yes, status=no');
     }
 </script>
 
