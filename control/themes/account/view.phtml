@@ -28,6 +28,8 @@
                 项结果
             </div>
             <div class="pull-right">
+                <label>帐号：</label>
+                <input class="text-input w150" type="text" id="" name="search" value="{$search}">&nbsp;
                 <label>起始日期：</label>
                 <input class="text-input w150" type="text" id="" name="st" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD'})"{/literal} value="{$st}">&nbsp;
                 <label>结束日期：</label>
@@ -91,7 +93,7 @@
             {/if}
             {/foreach}
             {else}
-            {if $st eq '' && $et eq ''}
+            {if $search eq '' && $st eq '' && $et eq ''}
             <tr>
                 <td style="padding: 50px 0" colspan="7" align="center">未有交易产生！</td>
             </tr>
@@ -110,10 +112,10 @@
                         <div class="pages">
                             <span>共有{$total}条，{$totalPage}页，每页显示：{$count}条</span>
                             {if $go_first}
-                            <a href="?page=1&st={$st}&count={$count}&et={$et}&type={$type}">首页</a>
+                            <a href="?page=1&st={$st}&count={$count}&et={$et}&type={$type}&search={$search}">首页</a>
                             {/if}
                             {if $has_prev}
-                            <a href="?page={$page - 1}&st={$st}&count={$count}&et={$et}&type={$type}">上一页</a>
+                            <a href="?page={$page - 1}&st={$st}&count={$count}&et={$et}&type={$type}&search={$search}">上一页</a>
                             {/if}
                             {if $has_many_prev}
                             ...
@@ -122,17 +124,17 @@
                             {if $pageNum eq $page}
                             <b>{$page}</b>
                             {else}
-                            <a href="?page={$pageNum}&st={$st}&count={$count}&et={$et}&type={$type}">{$pageNum}</a>
+                            <a href="?page={$pageNum}&st={$st}&count={$count}&et={$et}&type={$type}&search={$search}">{$pageNum}</a>
                             {/if}
                             {/foreach}
                             {if $has_many_next}
                             ...
                             {/if}
                             {if $go_last}
-                            <a href="?page={$totalPage}&st={$st}&count={$count}&et={$et}&type={$type}">末页</a>
+                            <a href="?page={$totalPage}&st={$st}&count={$count}&et={$et}&type={$type}&search={$search}">末页</a>
                             {/if}
                             {if $has_next}
-                            <a href="?page={$page + 1}&st={$st}&count={$count}&et={$et}&type={$type}">下一页</a>
+                            <a href="?page={$page + 1}&st={$st}&count={$count}&et={$et}&type={$type}&search={$search}">下一页</a>
                             {/if}
                         </div>
                     </div>
@@ -161,6 +163,7 @@
         $('select[name=count]').change(function () {
             var st = $('input[name=st]').val();
             var et = $('input[name=et]').val();
+            var search = $('input[name=search]').val();
 
             var count = $(this).val();
             var url = 'account.php?type={$type}&count=' + count;
@@ -169,6 +172,9 @@
             }
             if( et ) {
                 url += '&et=' + et;
+            }
+            if( search ) {
+                url += '&search=' + search;
             }
             window.location.href = url;
         });
