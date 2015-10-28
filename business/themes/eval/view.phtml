@@ -95,6 +95,7 @@
                 <td>{$comment.account}</td>
                 <td class="text-right">
                     <a href="?act=response&id={$comment.id}">回复</a>
+                    | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&id={$comment.id}">删除</a></td>
                 </td>
             </tr>
             <tr style="">
