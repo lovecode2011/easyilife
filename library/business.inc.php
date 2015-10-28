@@ -64,6 +64,7 @@ $purview = array(
     'pur_eval' => array(
         'pur_eval_view',
         'pur_eval_response',
+        'pur_eval_del',
     ),
 
     'pur_ad' => array(
@@ -131,6 +132,7 @@ $L_purview = array(
     'pur_eval' => '评价管理',
     'pur_eval_view' => '评价列表',
     'pur_eval_response' => '回复',
+    'pur_eval_del' => '删除评论',
 
     'pur_admin' => '管理员',
     'pur_admin_view' => '管理员列表',

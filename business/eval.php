@@ -13,7 +13,7 @@ include 'library/init.inc.php';
 business_base_init();
 $template = 'eval/';
 
-$action = 'view|response';
+$action = 'view|response|delete';
 $operation = 'response';
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
@@ -189,6 +189,35 @@ if( 'response' == $act ) {
     }
 
     assign('comment', $comment);
+}
+
+if( 'delete' == $act ) {
+    if( !check_purview('pur_eval_del', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $id = intval(getGET('id'));
+    if( 0 >= $id ) {
+        show_system_message('参数错误');
+    }
+
+    $get_comment = 'select * from '.$db->table('comment').' as a';
+    $get_comment .= ' left join '.$db->table('product').' as b on a.product_sn = b.product_sn';
+    $get_comment .= ' where a.id = \''.$id.'\' and b.business_account = \''.$_SESSION['business_account'].'\' limit 1';
+
+    $comment = $db->fetchRow($get_comment);
+    if( empty($comment) ) {
+        show_system_message('评论不存在');
+    }
+
+    $delete_comment = 'delete from '.$db->table('comment').' where id = \''.$id.'\' limit 1';
+    if( $db->delete($delete_comment) ) {
+        $delete_response = 'delete from '.$db->table('comment').' where parent_id = \''.$id.'\'';
+        $db->delete($delete_response);
+        show_system_message('评论已删除');
+    } else {
+        show_system_message('系统繁忙，请稍后重试');
+    }
 }
 
 $template .= $act.'.phtml';

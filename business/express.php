@@ -328,13 +328,14 @@ if('delivery_area_edit' == $act)
     assign('area_mapper', $area_mapper);
 
     $area_mapper_json = array();
-    foreach($area_mapper as $a)
-    {
-        unset($a['province_name']);
-        unset($a['city_name']);
-        unset($a['district_name']);
-        $a['checked'] = 1;
-        $area_mapper_json[] = $a;
+    if( $area_mapper ) {
+        foreach ($area_mapper as $a) {
+            unset($a['province_name']);
+            unset($a['city_name']);
+            unset($a['district_name']);
+            $a['checked'] = 1;
+            $area_mapper_json[] = $a;
+        }
     }
 
     assign('area_mapper_json', json_encode($area_mapper_json));
