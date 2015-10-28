@@ -43,7 +43,7 @@
                     <select name="ad_pos_id" id="ad_pos_id" class="w150" onchange="select_ad(this.value);">
                         <option value="0">--请选择--</option>
                         {foreach from=$adpos_list item=adpos}
-                        <option value="{$adpos.id}" {if $ad.ad_pos_id eq $adpos.id}selected="selected"{/if}>{$adpos.pos_name}</option>
+                        <option value="{$adpos.id}" {if $ad.ad_position_id eq $adpos.id}selected="selected"{/if}>{$adpos.name}</option>
                         {/foreach}
                     </select>
                     <span class="error-input" id="ad_pos_id-error">{if isset($error.ad_pos_id)}{$error.ad_pos_id}{/if}</span>
@@ -56,7 +56,8 @@
                 </p>
                 <p id="img-show">
                     <label class="l-title"></label>
-                    <img id="show-image" alt="" src="../{$ad.img}" width="480px"/>
+                    <img id="show-image" alt="" src="../{$ad.img}"/>
+                    <span class="error-input" id="img-notice"></span>
                 </p>
                 <p>
                     <label class="l-title"></label>
@@ -86,10 +87,17 @@ var adpos_json = {$adpos_json};
 function select_ad(id) {
     if(adpos_json[id] != undefined) {
         $("#show-image").attr({ "width":adpos_json[id].width, "height":adpos_json[id].height });
+        $('#img-notice').text(adpos_json[id].width + '*' + adpos_json[id].height + ',大小不要超过100k');
+        if( $('#img-error').text() == '请先选择广告位' ) {
+            $('#img-error').text('');
+        }
     }
 }
 
 $(function() {
+    var id = $('#ad_pos_id').val();
+    $("#show-image").attr({ "width":adpos_json[id].width, "height":adpos_json[id].height });
+    $('#img-notice').text(adpos_json[id].width + '*' + adpos_json[id].height + ',大小不要超过100k');
     $("#submit-btn").click(do_submit);
 });
 var start = {

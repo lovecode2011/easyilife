@@ -43,7 +43,7 @@
                         <td>
                             <input class="text-input" style="cursor: pointer;" type="button" id="select-image-{$conf.key}" value="请选择图片"/>
                             <input type="hidden" name="value" id="{$conf.key}" value="{$conf.value}" />
-                            <br /><img {if $conf.value eq ''}style="display: none"{/if} id="show-image-{$conf.key}" src="{$conf.value}" alt="{$conf.name}" />
+                            <br /><img {if $conf.value eq ''}style="display: none"{/if} width="120" height="120" id="show-image-{$conf.key}" src="{$conf.value}" alt="{$conf.name}" />
                             <script type="text/javascript">
                                 KindEditor.ready(function(K)
                                 {
@@ -58,10 +58,10 @@
                                                 imageUrl : '',
                                                 clickFn : function(url, title, width, height, border, align) {
                                                     if( !width ) {
-                                                        width = 187 + 'px';
+                                                        width = 120 + 'px';
                                                     }
                                                     if( !height ) {
-                                                        height = 140 + 'px';
+                                                        height = 120 + 'px';
                                                     }
 
                                                     K('#{$conf.key}').val(url);

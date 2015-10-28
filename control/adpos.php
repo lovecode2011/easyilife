@@ -32,7 +32,7 @@ if('edit' == $opera)
     }
 
     $id = intval(getPOST('eid'));
-    $name = getPOST('name');
+    $name = getPOST('pos_name');
     $height = getPOST('height');
     $width = getPOST('width');
     $code = getPOST('code');
@@ -106,7 +106,7 @@ if('add' == $opera)
         exit;
     }
 
-    $name = getPOST('name');
+    $name = getPOST('pos_name');
     $height = getPOST('height');
     $width = getPOST('width');
     $code = getPOST('code');

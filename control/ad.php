@@ -20,7 +20,7 @@ $act = ( $act == '' ) ? 'view' : $act;
 
 $opera = check_action($operation, getPOST('opera'));
 
-$get_adpos_list = 'select `id`,`pos_name`,`width`,`height` from '.$db->table('ad_position');
+$get_adpos_list = 'select `id`,`name`,`width`,`height` from '.$db->table('ad_position').' where id <> 1';
 $adpos_json = array();
 $adpos_list = $db->fetchAll($get_adpos_list);
 if( $adpos_list ) {
@@ -113,11 +113,11 @@ if('edit' == $opera)
         $ad_data = array(
             'url' => $url,
             'img' => $img,
-            'begin_time' => $begin_time,
+            'start_time' => $begin_time,
             'end_time' => $end_time,
             'alt' => $alt,
             'order_view' => $order_view,
-            'ad_pos_id' => $ad_pos_id,
+            'ad_position_id' => $ad_pos_id,
             'forever' => $forever
         );
 
@@ -211,11 +211,11 @@ if('add' == $opera)
             'url' => $url,
             'img' => $img,
             'add_time' => time(),
-            'begin_time' => $begin_time,
+            'start_time' => $begin_time,
             'end_time' => $end_time,
             'alt' => $alt,
             'order_view' => $order_view,
-            'ad_pos_id' => $ad_pos_id,
+            'ad_position_id' => $ad_pos_id,
             'forever' => $forever
         );
 
@@ -233,21 +233,17 @@ if('add' == $opera)
 }
 
 
-if('view' == $act)
-{
-    if(!check_purview('pur_ad_view', $_SESSION['purview']))
-    {
+if('view' == $act) {
+    if (!check_purview('pur_ad_view', $_SESSION['purview'])) {
         show_system_message('权限不足', array());
         exit;
     }
 
-    $get_ad_list  = 'select * from '.$db->table('ad').' where business_account = \'\'';
+    $get_ad_list = 'select * from ' . $db->table('ad') . ' where business_account = \'\'';
     $ad_list = $db->fetchAll($get_ad_list);
-    if($ad_list)
-    {
-        foreach($ad_list as $key=>$ad)
-        {
-            $ad_list[$key]['pos_name'] = $adpos_json[$ad['ad_pos_id']]['pos_name'];
+    if ($ad_list) {
+        foreach ($ad_list as $key => $ad) {
+            $ad_list[$key]['pos_name'] = $adpos_json[$ad['ad_position_id']]['name'];
         }
     }
 

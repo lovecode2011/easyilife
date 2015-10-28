@@ -43,7 +43,7 @@
                     <select name="ad_pos_id" id="ad_pos_id" class="w150" onchange="select_ad(this.value);">
                         <option value="0">--请选择--</option>
                         {foreach from=$adpos_list item=adpos}
-                        <option value="{$adpos.id}">{$adpos.pos_name}</option>
+                        <option value="{$adpos.id}">{$adpos.name}</option>
                         {/foreach}
                     </select>
                     <span class="error-input" id="ad_pos_id-error">{if isset($error.ad_pos_id)}{$error.ad_pos_id}{/if}</span>
@@ -52,11 +52,12 @@
                     <label class="l-title">广告图片：</label>
                     <input type="button" class="text-input" id="select-image" value="请选择广告图片" style="cursor:pointer">
                     <input type="hidden" class="" name="img" id="img" value=""/>
-                    <span class="error-input" id="img-error">{if isset($error.img)}{$error.img}{/if}</span>
+                    <span class="error-input" id="img-error">{if isset($error.img)}{$error.img}{else}请先选择广告位{/if}</span>
                 </p>
                 <p id="img-show">
                     <label class="l-title"></label>
                     <img id="show-image" alt="" src="../upload/image/no-image.png" width="480px">
+                    <span class="error-input" id="img-notice"></span>
                 </p>
                 <p>
                     <label class="l-title"></label>
@@ -85,6 +86,10 @@ var adpos_json = {$adpos_json};
 function select_ad(id) {
     if(adpos_json[id] != undefined) {
         $("#show-image").attr({ "width":adpos_json[id].width, "height":adpos_json[id].height });
+        $('#img-notice').text(adpos_json[id].width + '*' + adpos_json[id].height + ',大小不要超过100k');
+        if( $('#img-error').text() == '请先选择广告位' ) {
+            $('#img-error').text('');
+        }
     }
 }
 
