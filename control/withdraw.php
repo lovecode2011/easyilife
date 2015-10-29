@@ -13,17 +13,227 @@ back_base_init();
 $template = 'withdraw/';
 assign('subTitle', '提现管理');
 
-$action = 'view|edit|delete|log';
-$operation = '';
+$action = 'view|edit|delete|log|reject';
+$operation = 'delete';
 
 $act = check_action($action, getGET('act'));
 $act = ( $act == '' ) ? 'view' : $act;
 
 $opera = check_action($operation, getPOST('opera'));
 //===========================================================================
+if( 'delete' == $opera ) {
+    if( !check_purview('pur_withdraw_del', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
 
+    $content = trim(getPOST('content'));
+    if($content == '')
+    {
+        show_system_message('驳回理由不能为空');
+        exit;
+    }
 
+    $type = intval(getPOST('type'));
+    if( $type == 0 ) {
+        $table = 'withdraw';
+        $exchange_table = 'member_exchange_log';
+    } else {
+        $table = 'business_withdraw';
+        $exchange_table = 'business_exchange_log';
+    }
+
+    $sn = trim(getPOST('sn'));
+    if( '' == $sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+
+    $sn = $db->escape($sn);
+
+    $get_withdraw = 'select * from '.$db->table($table).' where withdraw_sn = \''.$sn.'\' limit 1';
+    $withdraw = $db->fetchRow($get_withdraw);
+    if( empty($withdraw) ) {
+        show_system_message('提现记录不存在', array());
+        exit;
+    }
+
+    if( $withdraw['status'] == 1 ) {
+        show_system_message('提现已到帐，无法驳回', array());
+        exit;
+    }
+
+    $db->begin();
+    $transaction = true;
+
+    $delete_withdraw = 'update '.$db->table($table).' set `status`=2 where withdraw_sn = \''.$sn.'\' limit 1';
+    if( !$db->update($delete_withdraw) ) {
+        $transaction = false;
+    }
+
+    if( $withdraw['status'] == 0 ) {
+        if( $type == 0 ) {
+            $update_member = 'update ' . $db->table('member') . ' set';
+            $update_member .= ' `balance` = `balance` + ' . ($withdraw['amount'] + $withdraw['fee']);
+            $update_member .= ' where account = \'' . $withdraw['account'] . '\'';
+            $update_member .= ' limit 1';
+            if (!$db->update($update_member)) {
+                $transaction = false;
+            }
+        } else {
+            $update_business = 'update ' . $db->table('business') . ' set';
+            $update_business .= ' `balance` = `balance` + ' . ($withdraw['amount'] + $withdraw['fee']);
+            $update_business .= ' where business_account = \'' . $withdraw['business_account'] . '\'';
+            $update_business .= ' limit 1';
+            if (!$db->update($update_business)) {
+                $transaction = false;
+            }
+        }
+    }
+
+    if( $transaction ) {
+        $db->commit();
+        $data = array(
+            'add_time' => time(),
+            'operator' => $_SESSION['account'],
+            'withdraw_sn' => $sn,
+            'status' => $withdraw['status'],
+            'remark' => '驳回提现申请记录，金额：'.$withdraw['amount'],
+        );
+        $db->autoInsert($table.'_log', array($data));
+        //添加账户明细记录
+        $get_newest_log = 'select * from '.$db->table($exchange_table);
+        $get_newest_log .= $type == 0 ? ' where account = \''.$withdraw['account'].'\'' : ' where business_account = \''.$withdraw['business_account'].'\'';
+        $get_newest_log .= ' order by add_time desc limit 1';
+        $newest_log = $db->fetchRow($get_newest_log);
+
+        unset($newest_log['id']);
+        $newest_log['add_time'] = time();
+        $newest_log['balance'] = $withdraw['amount'] + $withdraw['fee'];
+        $newest_log['remark'] = '取消提现，返还金额：'.$withdraw['amount'] + $withdraw['fee'];
+        $newest_log['operator'] = $_SESSION['account'];
+
+        $db->autoInsert($exchange_table, array($newest_log));
+        //添加系统信息
+        $message_data = array(
+            'account' => $withdraw['business_account'],
+            'business_account' => $withdraw['business_account'],
+            'title' => '提现驳回',
+            'content' => $content,
+            'status' => 0,
+            'add_time' => time()
+        );
+
+        $db->autoInsert('message', array($message_data));
+
+        show_system_message('操作成功', array(array('link'=>'withdraw.php', 'alt'=>'提现管理')));
+        exit;
+    } else {
+        $db->rollback();
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
+}
 //===========================================================================
+if( 'delete' == $act ) {
+    if( !check_purview('pur_withdraw_del', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+
+    $type = intval(getGET('type'));
+    if( $type == 0 ) {
+        $table = 'withdraw';
+        $exchange_table = 'member_exchange_log';
+    } else {
+        $table = 'business_withdraw';
+        $exchange_table = 'business_exchange_log';
+    }
+
+    $sn = trim(getGET('sn'));
+    if( '' == $sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+
+    $sn = $db->escape($sn);
+
+    $get_withdraw = 'select * from '.$db->table($table).' where withdraw_sn = \''.$sn.'\' limit 1';
+    $withdraw = $db->fetchRow($get_withdraw);
+    if( empty($withdraw) ) {
+        show_system_message('提现记录不存在', array());
+        exit;
+    }
+
+    if( $withdraw['status'] == 1 ) {
+        show_system_message('提现已到帐，无法删除', array());
+        exit;
+    }
+
+    $db->begin();
+    $transaction = true;
+
+    $delete_withdraw = 'delete from '.$db->table($table).' where withdraw_sn = \''.$sn.'\' limit 1';
+    if( !$db->delete($delete_withdraw) ) {
+        $transaction = false;
+    }
+
+    if( $transaction ) {
+        $db->commit();
+        //添加系统信息
+        $message_data = array(
+            'account' => $withdraw['business_account'],
+            'business_account' => $withdraw['business_account'],
+            'title' => '提现删除',
+            'content' => $content,
+            'status' => 0,
+            'add_time' => time()
+        );
+
+        $db->autoInsert('message', array($message_data));
+
+        show_system_message('操作成功', array());
+        exit;
+    } else {
+        $db->rollback();
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
+}
+
+if('reject' == $act)
+{
+    if( !check_purview('pur_withdraw_del', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+
+    $type = intval(getGET('type'));
+    if( $type == 0 ) {
+        $table = 'withdraw';
+        $exchange_table = 'member_exchange_log';
+    } else {
+        $table = 'business_withdraw';
+        $exchange_table = 'business_exchange_log';
+    }
+    assign('type', $type);
+
+    $sn = trim(getGET('sn'));
+    if( '' == $sn ) {
+        show_system_message('参数错误', array());
+        exit;
+    }
+    assign('sn', $sn);
+
+    $sn = $db->escape($sn);
+
+    $get_withdraw = 'select * from '.$db->table($table).' where withdraw_sn = \''.$sn.'\' limit 1';
+    $withdraw = $db->fetchRow($get_withdraw);
+    if( empty($withdraw) ) {
+        show_system_message('提现记录不存在', array());
+        exit;
+    }
+}
 
 if( 'view' == $act ) {
     if( !check_purview('pur_withdraw_view', $_SESSION['purview']) ) {
@@ -85,7 +295,11 @@ if( 'view' == $act ) {
         foreach( $withdraw_list as $key => $value ) {
             $withdraw_list[$key]['add_time_str'] = date('Y-m-d H:i:s', $value['add_time']);
             $withdraw_list[$key]['solve_time_str'] = date('Y-m-d H:i:s', $value['solve_time']);
-            $withdraw_list[$key]['status_str'] = ( $value['status'] == 0 ) ? '否' : '是';
+            if($value['status'] <= 1) {
+                $withdraw_list[$key]['status_str'] = ($value['status'] == 0) ? '否' : '是';
+            } else {
+                $withdraw_list[$key]['status_str'] = '申请驳回';
+            }
         }
     }
     assign('withdraw_list', $withdraw_list);
@@ -154,104 +368,6 @@ if( 'edit' == $act ) {
         show_system_message('系统繁忙，请稍后重试', array());
         exit;
     }
-
-}
-
-if( 'delete' == $act ) {
-    if( !check_purview('pur_withdraw_del', $_SESSION['purview']) ) {
-        show_system_message('权限不足', array());
-        exit;
-    }
-
-    $type = intval(getGET('type'));
-    if( $type == 0 ) {
-        $table = 'withdraw';
-        $exchange_table = 'member_exchange_log';
-    } else {
-        $table = 'business_withdraw';
-        $exchange_table = 'business_exchange_log';
-    }
-    assign('type', $type);
-
-
-    $sn = trim(getGET('sn'));
-    if( '' == $sn ) {
-        show_system_message('参数错误', array());
-        exit;
-    }
-    $sn = $db->escape($sn);
-
-    $get_withdraw = 'select * from '.$db->table($table).' where withdraw_sn = \''.$sn.'\' limit 1';
-    $withdraw = $db->fetchRow($get_withdraw);
-    if( empty($withdraw) ) {
-        show_system_message('提现记录不存在', array());
-        exit;
-    }
-    $db->begin();
-    $transaction = true;
-
-    $delete_withdraw = 'delete from '.$db->table($table).' where withdraw_sn = \''.$sn.'\' limit 1';
-    if( !$db->delete($delete_withdraw) ) {
-        $transaction = false;
-    }
-
-    if( $withdraw['status'] == 1 ) {
-        show_system_message('提现已到帐，无法删除', array());
-        exit;
-    }
-
-    if( $withdraw['status'] == 0 ) {
-        if( $type == 0 ) {
-            $update_member = 'update ' . $db->table('member') . ' set';
-            $update_member .= ' `balance` = `balance` + ' . $withdraw['amount'];
-            $update_member .= ' where account = \'' . $withdraw['account'] . '\'';
-            $update_member .= ' limit 1';
-            if (!$db->update($update_member)) {
-                $transaction = false;
-            }
-        } else {
-            $update_business = 'update ' . $db->table('business') . ' set';
-            $update_business .= ' `balance` = `balance` + ' . $withdraw['amount'];
-            $update_business .= ' where business_account = \'' . $withdraw['business_account'] . '\'';
-            $update_business .= ' limit 1';
-            if (!$db->update($update_business)) {
-                $transaction = false;
-            }
-        }
-    }
-
-    if( $transaction ) {
-        $db->commit();
-        $data = array(
-            'add_time' => time(),
-            'operator' => $_SESSION['account'],
-            'withdraw_sn' => $sn,
-            'status' => $withdraw['status'],
-            'remark' => '删除提现申请记录，金额：'.$withdraw['amount'],
-        );
-        $db->autoInsert($table.'_log', array($data));
-        //添加账户明细记录
-        $get_newest_log = 'select * from '.$db->table($exchange_table);
-        $get_newest_log .= $type == 0 ? ' where account = \''.$withdraw['account'].'\'' : ' where business_account = \''.$withdraw['business_account'].'\'';
-        $get_newest_log .= ' order by add_time desc limit 1';
-        $newest_log = $db->fetchRow($get_newest_log);
-
-        unset($newest_log['id']);
-        $newest_log['add_time'] = time();
-        $newest_log['balance'] += $withdraw['amount'];
-        $newest_log['remark'] = '取消提现，返还金额：'.$withdraw['amount'];
-        $newest_log['operator'] = $_SESSION['account'];
-
-        $db->autoInsert($exchange_table, array($newest_log));
-
-        show_system_message('操作成功', array());
-        exit;
-    } else {
-        $db->rollback();
-        show_system_message('系统繁忙，请稍后重试', array());
-        exit;
-    }
-
 
 }
 

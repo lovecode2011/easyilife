@@ -70,10 +70,10 @@
                                     <p class="product_name">{$product.name}</p>
                                     <p class="product_name">{$product.attributes}</p>
                                     <p>
-                                        {if !isset($product.integral)}
-                                        <span class="red_money">￥{sprintf("%.2f", $product.price)}</span>
-                                        {else}
+                                        {if $product.integral gt 0}
                                         <span class="red_money">{sprintf("%.2f", $product.integral)}积分</span>
+                                        {else}
+                                        <span class="red_money">￥{sprintf("%.2f", $product.price)}</span>
                                         {/if}
                                         <span>&nbsp;×{$product.number}</span>
                                     </p>

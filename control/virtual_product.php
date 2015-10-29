@@ -263,6 +263,20 @@ if( 'view' == $act ) {
             }
             $product_list[$key]['status_str'] = $status_array[$product['status']];
             $product_list[$key]['exam_str'] = ( $product['status'] == 2 ) ? '审核' : '';
+
+            //获取参与活动的情况
+            $get_activity_name = 'select a.`name` from '.$db->table('activity_mapper').' as am join '.$db->table('activity').
+                ' as a on am.activity_id=a.id where am.product_sn=\''.$product['product_sn'].'\'';
+            $activity_name = $db->fetchAll($get_activity_name);
+            $activity_list = '';
+            if($activity_name)
+            {
+                foreach($activity_name as $n)
+                {
+                    $activity_list .= $n['name'].'<br/>';
+                }
+            }
+            $product_list[$key]['activity_list'] = $activity_list;
         }
     }
     assign('product_list', $product_list);

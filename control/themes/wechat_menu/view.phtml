@@ -57,6 +57,7 @@
                 <fieldset>
                     <p>
                         <label class="l-title"></label>
+                        <a href="javascript:void(0);" id="get-url-btn" class="btn btn-primary">生成授权链接</a>
                         <a href="javascript:void(0);" id="save-btn" class="btn btn-primary">保存</a>
                     </p>
                 </fieldset>
@@ -79,6 +80,35 @@
 <script type="text/javascript">
     var menu_temp = [{$wechat_menus}];
 
+    function get_oauthor_url() {
+        var key = $("#key").val();
+        var type = $("#type").val();
+
+        if(type == "click") {
+            alert("只有链接型菜单才能使用该功能");
+            return false;
+        }
+
+        {literal}
+        var pattern = /((http|ftp|https):\/\/)(([a-zA-Z0-9\._-]+\.[a-zA-Z]{2,6})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,4})*(\/[a-zA-Z0-9\&%_\./-~-]*)?/;
+        {/literal}
+        if(pattern.test(key)) {
+            $.ajax({
+                "dataType": "json",
+                "type": "post",
+                "url" : "wechat_menu.php",
+                "data": { "opera":"get_oa_url", "url": key },
+                "success" : function(response) {
+                    if(response.error == 0) {
+                        $("#key").val(response.msg);
+                    }
+                }
+            });
+        } else {
+            alert("链接必须以http://或https://开头");
+        }
+    }
+
     {literal}
     window.onload = function() {
         if(menu_temp != "") {
@@ -88,6 +118,9 @@
             menu_temp = new Array();
         }
 
+        $("#get-url-btn").click(function (){
+            get_oauthor_url();
+        });
         var save = $("#save-btn");
         save.bind("click", function() {
             var eid = $("#eid").val();

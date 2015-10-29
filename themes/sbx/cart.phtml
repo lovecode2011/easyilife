@@ -42,10 +42,10 @@
                     <img src="{$product.img}" class="fl pro_pic">
                 </a>
                 <div class="detail">
-                    {if !isset($product.integral)}
-                    <p class="fr prd_price">￥{sprintf("%.2f", $product.price)}</p>
-                    {else}
+                    {if $product.integral gt 1}
                     <p class="fr prd_price">{sprintf("%.2f", $product.integral)}积分</p>
+                    {else}
+                    <p class="fr prd_price">￥{sprintf("%.2f", $product.price)}</p>
                     {/if}
                     <p class="fl prd_tit"><a href="#">{$product.name}</a></p>
                     <p class="fl prd_tit">{$product.attributes}</p>

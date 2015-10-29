@@ -66,6 +66,7 @@ if( 'withdraw' == $opera ) {
 
     $remark = $db->escape($remark);
 
+    $fee = $amount*$config['fee_rate'];
     //余额是否足够提现
     $get_business = 'select * from '.$db->table('business');
     $get_business .= ' where business_account = \''.$_SESSION['business_account'].'\' limit 1';
@@ -96,7 +97,7 @@ if( 'withdraw' == $opera ) {
     }
 
     $update_business = 'update '.$db->table('business').' set';
-    $update_business .= ' `balance` = `balance` - '.$amount;
+    $update_business .= ' `balance` = `balance` - '.$amount + $fee;
     $update_business .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $update_business .= ' limit 1';
     if( !$db->update($update_business) ) {
@@ -120,10 +121,10 @@ if( 'withdraw' == $opera ) {
 
         $data = array(
             'business_account' => $_SESSION['business_account'],
-            'balance' => -1*$amount,
+            'balance' => -1*($amount + $fee),
             'trade' => 0,
             'add_time' => time(),
-            'remark' => '冻结提现资金:'.$amount,
+            'remark' => '冻结提现资金:'.($amount + $fee),
             'operator' => $_SESSION['business_admin'],
         );
         $table= 'business_exchange_log';

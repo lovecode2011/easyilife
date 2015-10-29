@@ -5,7 +5,7 @@
     <title>订单{$order.order_sn}</title>
 </head>
 <body>
-    <table width="100%" border="1">
+    <table width="100%" border="1" cellspacing="0" cellpadding="0">
         <tr>
             <td>订单编号</td>
             <td>{$order.order_sn}</td>
@@ -21,7 +21,7 @@
         </tr>
         <tr>
             <td>产品编号</td>
-            <td>产品规格</td>
+            <td>产品名称</td>
             <td>产品数量</td>
             <td>单价</td>
             <td>总额</td>
@@ -30,7 +30,7 @@
         {foreach from=$order_detail item=detail}
         <tr>
             <td>{$detail.product_sn}</td>
-            <td>{$detail.prdouct_name}</td>
+            <td>{$detail.product_name}<br/>{$detail.product_attributes}</td>
             <td>{$detail.count}</td>
             <td>{$detail.product_price}</td>
             <td>{$detail.product_amount}</td>
@@ -56,9 +56,9 @@
             <td>配送方式</td>
             <td>{$order.delivery_name}</td>
             <td>物流公司</td>
-            <td>{$order.express_name}</td>
+            <td colspan="2">{$order.express_name}</td>
             <td>快递单号</td>
-            <td>{$order.express_sn}</td>
+            <td colspan="2">{$order.express_sn}</td>
         </tr>
         <tr>
             <td colspan="4">寄件人信息</td>
@@ -94,7 +94,7 @@
             <td>联系号码</td>
             <td></td>
             <td>区号</td>
-            <td>{$order.zipCode}</td>
+            <td>{$order.zipcode}</td>
             <td>联系号码</td>
             <td>{$order.mobile}</td>
         </tr>
