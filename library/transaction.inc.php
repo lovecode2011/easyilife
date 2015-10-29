@@ -234,7 +234,7 @@ function modify_inventory($product_sn, $attributes, $number)
  * @param string $path
  * @return bool
  */
-function distribution_settle($reward, $path, $order_sn = '')
+function distribution_settle($reward, $integral, $path, $order_sn = '')
 {
     global $db;
     global $config;

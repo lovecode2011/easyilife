@@ -75,7 +75,7 @@ if('edit' == $opera)
     if(count($response['errmsg']) == 0 && $response['msg'] == '')
     {
         $adpos_data = array(
-            'name' => $name,
+            'pos_name' => $name,
             'height' => $height,
             'width' => $width,
             'code' => $code,
@@ -144,7 +144,7 @@ if('add' == $opera)
     if(count($response['errmsg']) == 0)
     {
         $adpos_data = array(
-            'name' => $name,
+            'pos_name' => $name,
             'height' => $height,
             'width' => $width,
             'code' => $code,
@@ -188,7 +188,7 @@ if('edit' == $act)
 
     $id = intval(getGET('id'));
 
-    $get_adpos = 'select `id`,`name`,`width`,`height`,`number`,`code` from '.$db->table('ad_position').' where `id`='.$id;
+    $get_adpos = 'select `id`,`pos_name`,`width`,`height`,`number`,`code` from '.$db->table('ad_position').' where `id`='.$id;
 
     assign('adpos', $db->fetchRow($get_adpos));
 }

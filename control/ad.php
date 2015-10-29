@@ -20,7 +20,7 @@ $act = ( $act == '' ) ? 'view' : $act;
 
 $opera = check_action($operation, getPOST('opera'));
 
-$get_adpos_list = 'select `id`,`name`,`width`,`height` from '.$db->table('ad_position').' where id <> 1';
+$get_adpos_list = 'select `id`,`pos_name` as `name`,`width`,`height` from '.$db->table('ad_position');
 $adpos_json = array();
 $adpos_list = $db->fetchAll($get_adpos_list);
 if( $adpos_list ) {
@@ -113,11 +113,11 @@ if('edit' == $opera)
         $ad_data = array(
             'url' => $url,
             'img' => $img,
-            'start_time' => $begin_time,
+            'begin_time' => $begin_time,
             'end_time' => $end_time,
             'alt' => $alt,
             'order_view' => $order_view,
-            'ad_position_id' => $ad_pos_id,
+            'ad_pos_id' => $ad_pos_id,
             'forever' => $forever
         );
 
@@ -211,12 +211,13 @@ if('add' == $opera)
             'url' => $url,
             'img' => $img,
             'add_time' => time(),
-            'start_time' => $begin_time,
+            'begin_time' => $begin_time,
             'end_time' => $end_time,
             'alt' => $alt,
             'order_view' => $order_view,
-            'ad_position_id' => $ad_pos_id,
-            'forever' => $forever
+            'ad_pos_id' => $ad_pos_id,
+            'forever' => $forever,
+            'business_account' => ''
         );
 
         if($db->autoInsert('ad', array($ad_data)))
@@ -243,7 +244,7 @@ if('view' == $act) {
     $ad_list = $db->fetchAll($get_ad_list);
     if ($ad_list) {
         foreach ($ad_list as $key => $ad) {
-            $ad_list[$key]['pos_name'] = $adpos_json[$ad['ad_position_id']]['name'];
+            $ad_list[$key]['pos_name'] = $adpos_json[$ad['ad_pos_id']]['name'];
         }
     }
 
