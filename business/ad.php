@@ -127,7 +127,7 @@ if( 'edit' == $opera ) {
         $response['msg'] = '参数错误';
     }
 
-    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \'\' limit 1';
+    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
     $ad = $db->fetchRow($get_ad);
     if( empty($ad) ) {
         show_system_message('广告不存在');
@@ -241,7 +241,7 @@ if('edit' == $act) {
 
     $id = intval(getGET('id'));
 
-    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \'\' limit 1';
+    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
 
     $ad = $db->fetchRow($get_ad);
     if( empty($ad) ) {
@@ -265,7 +265,7 @@ if( 'delete' == $act ) {
         exit;
     }
 
-    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \'\' limit 1';
+    $get_ad = 'select * from '.$db->table('ad').' where `id`='.$id.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
     $ad = $db->fetchRow($get_ad);
     if( empty($ad) ) {
         show_system_message('广告不存在');
