@@ -12,6 +12,7 @@
         <div class="pull-right">
             <a class="btn btn-primary" href="order.php">全部</a>&nbsp;
             <a class="btn btn-primary" href="order.php?status=1">待支付</a>&nbsp;
+            <a class="btn btn-primary" href="order.php?status=3">已支付</a>&nbsp;
             <a class="btn btn-primary" href="order.php?status=4">待发货</a>&nbsp;
             <a class="btn btn-primary" href="order.php?status=5">配货中</a>&nbsp;
             <a class="btn btn-primary" href="order.php?status=6">已发货</a>&nbsp;
@@ -175,6 +176,90 @@
             {if $st eq '' && $et eq ''}
             <tr>
                 <td style="padding: 50px 0" colspan="7" align="center">尚未有客户下单！</td>
+            </tr>
+            {else}
+            <tr>
+                <td style="padding: 50px 0" colspan="7" align="center">
+                    <span class="text-size-24 blue icon-info-1" style="vertical-align: middle"></span>
+                    <div class="text-size-18 tip-text inline-block">没有查询到符合条件的记录</div>
+                </td>
+            </tr>
+            {/if}
+            {/if}
+            <tr>
+                <td colspan="7">
+                    <div class="pull-right">
+                        <div class="pages">
+                            <span>共有{$total}条，{$totalPage}页，每页显示：{$count}条</span>
+                            {if $go_first}
+                            <a href="?page=1&st={$st}&count={$count}&et={$et}&status={$status}">首页</a>
+                            {/if}
+                            {if $has_prev}
+                            <a href="?page={$page - 1}&st={$st}&count={$count}&et={$et}&status={$status}">上一页</a>
+                            {/if}
+                            {if $has_many_prev}
+                            ...
+                            {/if}
+                            {foreach from=$show_page item=pageNum}
+                            {if $pageNum eq $page}
+                            <b>{$page}</b>
+                            {else}
+                            <a href="?page={$pageNum}&st={$st}&count={$count}&et={$et}&status={$status}">{$pageNum}</a>
+                            {/if}
+                            {/foreach}
+                            {if $has_many_next}
+                            ...
+                            {/if}
+                            {if $go_last}
+                            <a href="?page={$totalPage}&st={$st}&count={$count}&et={$et}&status={$status}">末页</a>
+                            {/if}
+                            {if $has_next}
+                            <a href="?page={$page + 1}&st={$st}&count={$count}&et={$et}&status={$status}">下一页</a>
+                            {/if}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        {/if}
+
+        {if $status eq 3}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>订单编号</th>
+                <th>下单时间</th>
+                <th>产品总额</th>
+                <th>联系方式</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {if $total neq 0}
+            {foreach from=$order_list item=order}
+            <tr>
+                <td>{$order.order_sn}</td>
+                <td>{$order.add_time_str}</td>
+                <td>{$order.product_amount}</td>
+                <td>
+                    {$order.mobile}
+                </td>
+                <td>{$order.remark}</td>
+                <td>
+                    <!--                    <a href="javascript:void(0);" class="order-detail" data-value="{$order.order_sn}">订单详情</a>-->
+                    <a href="?act=detail&sn={$order.order_sn}">订单详情</a>
+                    {if $order.status eq 1}
+                    |&nbsp;<a href="order.php?act=pay&sn={$order.order_sn}" onclick="javascript:if(confirm('确认已付款？')) return true; else return false;">已付款</a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            {else}
+            {if $st eq '' && $et eq ''}
+            <tr>
+                <td style="padding: 50px 0" colspan="7" align="center">尚未有客户下单！（产品是全虚拟产品）</td>
             </tr>
             {else}
             <tr>

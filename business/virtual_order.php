@@ -88,10 +88,14 @@ if( 'consume' == $opera ) {
     $get_detail_list = 'select * from '.$db->table('order_detail').' where order_sn = \''.$content['order_sn'].'\'';
     $detail_list = $db->fetchAll($get_detail_list);
 
+    $product = '';
     if( $detail_list ) {
         foreach( $detail_list as $key => $detail ) {
             if( $detail['is_virtual'] == 0 ) {
                 $need_change_order_status = false;
+            }
+            if( $detail['product_sn'] == $content['product_sn'] ) {
+                $product = $detail;
             }
         }
     }
@@ -133,6 +137,22 @@ if( 'consume' == $opera ) {
             $transaction = false;
         }
     }
+
+    //将当前产品的消费额打到商家余额，扣除担保交易
+    $update_business = 'update '.$db->table('business').' set';
+    $update_business .= ' trade = trade - '.$product['product_price'] * $product['count'];
+    $update_business .= ', balance = balance + '.$product['product_price'] * $product['count'];
+    $update_business .= ' where business_account = \''.$_SESSION['business_account'].'\' limit 1';
+
+    $log_data = array(
+        'business_account' => $_SESSION['business_account'],
+        'trade' => -$product['product_price'] * $product['count'],
+        'balance' => $product['product_price'] * $product['count'],
+        'operator' => $_SESSION['business_admin'],
+        'remark' => '虚拟产品消费',
+        'add_time' => time()
+    );
+    $db->autoInsert('business_exchange_log', $log_data);
 
     if( $transaction ) {
         $db->commit();

@@ -144,7 +144,7 @@ if( 'view' == $act ) {
     $status_str = array(
         1 => '待支付',
         2 => '支付中',
-        3 => '支付完成',
+        3 => '已支付',
         4 => '待发货',
         5 => '配货中',
         6 => '已发货',
@@ -157,7 +157,7 @@ if( 'view' == $act ) {
     );
 
     $status = intval(getGET('status'));
-    if( 0 >= $status || 12 < $status || 3 == $status || 2 == $status ) {
+    if( 0 >= $status || 12 < $status || 2 == $status ) {
         assign('status', 0);
         assign('order_status', '');
         $and_where = '';
@@ -204,7 +204,12 @@ if( 'view' == $act ) {
     $offset = ( $page - 1 ) * $count;
     $total_page = ceil( $total / $count );
 
-    $get_order_list = 'select a.*, p.province_name, city.city_name, d.district_name, g.group_name from '.$db->table('order').' as a';
+    //判断是否有实体产品
+    $check_contain_real = ' (select count(detail.id) from '.$db->table('order_detail').' as detail where detail.order_sn = a.order_sn and is_virtual = 0)';
+
+    $get_order_list = 'select a.*, p.province_name, city.city_name, d.district_name, g.group_name,';
+    $get_order_list .= $check_contain_real.' as `real`';
+    $get_order_list .= ' from '.$db->table('order').' as a';
     $get_order_list .= ' left join '.$db->table('province').' as p on a.province = p.id';
     $get_order_list .= ' left join '.$db->table('city').' as city on a.city = city.id';
     $get_order_list .= ' left join '.$db->table('district').' as d on a.district = d.id';
@@ -215,9 +220,10 @@ if( 'view' == $act ) {
 //    $get_order_list .= ' and a.is_virtual = 0';
     $get_order_list .= ' order by add_time desc';
     $get_order_list .= ' limit '.$offset.','.$count;
-    $order_list = $db->fetchAll($get_order_list);
 
-//echo $get_order_list;exit;
+    $order_list = $db->fetchAll($get_order_list);
+//    echo $get_order_list;exit;
+
     if( $order_list ) {
         foreach ($order_list as $key => $order) {
             $order_list[$key]['add_time_str'] = $order['add_time'] ? date('Y-m-d H:i:s', $order['add_time']) : '';
@@ -352,27 +358,50 @@ if( 'agree' == $act ) {
         exit;
     }
 
+
+    $db->begin();
+    $transaction = true;
+
+    //将所有未消费的消费券置为无效
+    $update_order_content = 'update '.$db->table('order_content').' set';
+    $update_order_content .= ' status = 3';
+    $update_order_content .= ' where order_sn = \''.$order_sn.'\'';
+    $update_order_content .= ' and status = \'0\'';
+
+    if( !$db->update($update_order_content) ) {
+        $transaction = false;
+    }
+
     $update_order = 'update '.$db->table('order').' set';
     $update_order .= ' status = 9';
     $update_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $update_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
 
-    if( $db->update($update_order) ) {
-        $log_data = array(
-            'order_sn' => $order_sn,
-            'operator' => $_SESSION['business_admin'],
-            'status' => 9,
-            'add_time' => time(),
-            'remark' => '同意申请退单'
-        );
-        $db->autoInsert('order_log', array($log_data));
+    if( !$db->update($update_order) ) {
+        $transaction = false;
+    }
 
+
+    $log_data = array(
+        'order_sn' => $order_sn,
+        'operator' => $_SESSION['business_admin'],
+        'status' => 9,
+        'add_time' => time(),
+        'remark' => '同意申请退单'
+    );
+
+    if( !$db->autoInsert('order_log', array($log_data)) ) {
+        $transaction = false;
+    }
+    if( $transaction ) {
+        $db->commit();
         $links = array(
             array('alt' => '退单中订单列表', 'link' => 'order.php?status=9'),
         );
         show_system_message('您已同意退单', $links);
         exit;
     } else {
+        $db->rollback();
         show_system_message('系统繁忙，请稍后重试', array());
         exit;
     }
@@ -406,12 +435,43 @@ if( 'refund' == $act ) {
         show_system_message('参数错误', array());
         exit;
     }
+
+    //订单中已消费的虚拟产品金额
+    $consumed_amount = 0;   //已消费的金额
+    $consumed_integral = 0; //已消费购买积分
+    $consumed_integral_given = 0;   //已消费赠送积分
+
+    $get_virtual_product_list = 'select a.product_sn, d.product_price, d.integral, d.integral_given, d.reward, d.count from '.$db->table('order_content').' as a';
+    $get_virtual_product_list .= ' left join '.$db->table('product').' as p on a.product_sn = p.product_sn';
+    $get_virtual_product_list .= ' left join '.$db->table('order_detail').' as d on a.product_sn = d.product_sn and a.order_sn = d.order_sn';
+    $get_virtual_product_list .= ' where a.order_sn = \''.$order_sn.'\'';
+    $get_virtual_product_list .= ' and a.status <> 0';
+    $get_virtual_product_list .= ' and a.business_account = \''.$_SESSION['business_account'].'\'';
+    $virtual_product_list = $db->fetchAll($get_virtual_product_list);
+    if( $virtual_product_list ) {
+        foreach( $virtual_product_list as $virtual_product ) {
+            $consumed_amount += $virtual_product['product_price'] * $virtual_product['count'];
+            $consumed_integral += $virtual_product['integral'];
+            $consumed_integral_given += $virtual_product['integral_given'];
+        }
+    }
+    //会员推荐路径
+    $get_path = 'select path from '.$db->table('member').' where account = \''.$order['account'].'\' limit 1';
+    $path = $db->fetchOne($get_path);
+
+    //事务开始
+    $db->begin();
+    $transaction = true;
+
+    //更新订单状态
     $update_order = 'update '.$db->table('order').' set';
     $update_order .= ' status = 10 ';
     $update_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $update_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
 
-    if( $db->update($update_order) ) {
+    if( !$db->update($update_order) ) {
+        $transaction = false;
+    } else {
         $log_data = array(
             'order_sn' => $order_sn,
             'operator' => $_SESSION['business_admin'],
@@ -420,13 +480,235 @@ if( 'refund' == $act ) {
             'remark' => '退单成功'
         );
         $db->autoInsert('order_log', array($log_data));
+    }
 
+    //是否支付过
+    $check_paid = 'select * from '.$db->table('order_log').' where order_sn = \''.$order_sn.'\' and status = 3';
+    $paid = $db->fetchRow($check_paid);
+
+    if( empty($paid) ) {    //未支付
+
+        //返还会员
+        $update_member = 'update '.$db->table('member').' set';
+        $update_member .= ' balance = balance + \''.$order['balance_paid'].'\'';
+        $update_member .= ', integral = integral + \''.$order['integral_paid'].'\'';
+        $update_member .= ', reward = reward + \''.$order['reward_paid'].'\'';
+//        $update_member .= ', integral_given = integral_given - \''.$order['integral_given_amount'].'\'';
+        $update_member .= ' where account = \''.$order['account'].'\' limit 1';
+        if( !$db->update($update_member) ) {
+            $transaction = false;
+        } else {
+            $log_data = array(
+                'account' => $order['account'],
+                'balance' => $order['balance_paid'],
+                'integral' => $order['integral_paid'],
+                'integral_await' => -$order['integral_given_amount'],
+                'reward_await' => 0,
+                'reward' => 0,
+                'operator' => $_SESSION['business_admin'],
+                'remark' => '退单',
+                'add_time' => time()
+            );
+            $db->autoInsert('member_exchange_log', $log_data);
+        }
+        //扣除商家
+        $update_business = 'update '.$db->table('business').' set';
+        $update_business .= ' trade = trade - \''.( $order['balance_paid'] + $order['reward_paid']).'\'';
+        $update_business .= ' where business_account = \''.$order['business_account'].'\' limit 1';
+        if( !$db->update($update_business) ) {
+            $transaction = false;
+        } else {
+            $log_data = array(
+                'business_account' => $order['business_account'],
+                'trade' => -($order['balance_paid'] + $order['reward_paid']),
+                'balance' => 0,
+                'operator' => $_SESSION['business_admin'],
+                'remark' => '退单',
+                'add_time' => time()
+            );
+            $db->autoInsert('business_exchange_log', $log_data);
+        }
+
+    } else {    //已支付
+
+        //判断是否有实体产品
+        $check_contain_real = 'select d.id from '.$db->table('order_detail').' as d';
+        $check_contain_real .= ' left join '.$db->table('product').' as p on d.product_sn = p.product_sn';
+        $check_contain_real .= ' where order_sn = \''.$order_sn.'\' and p.is_virtual = 0 limit 1';
+        if( $db->fetchRow($check_contain_real) ) {
+            $contain_real = true;
+        } else {
+            $contain_real = false;
+        }
+
+        //订单中已消费的虚拟产品金额
+        $consumed_amount = 0;   //已消费的金额
+        $consumed_integral = 0; //已消费购买积分
+        $consumed_integral_given = 0;   //已消费赠送积分
+
+        $get_virtual_product_list = 'select a.product_sn, d.product_price, d.integral, d.integral_given, d.reward, d.count from '.$db->table('order_content').' as a';
+        $get_virtual_product_list .= ' left join '.$db->table('product').' as p on a.product_sn = p.product_sn';
+        $get_virtual_product_list .= ' left join '.$db->table('order_detail').' as d on a.product_sn = d.product_sn and a.order_sn = d.order_sn';
+        $get_virtual_product_list .= ' where a.order_sn = \''.$order_sn.'\'';
+        $get_virtual_product_list .= ' and a.status <> 0';
+        $get_virtual_product_list .= ' and a.business_account = \''.$_SESSION['business_account'].'\'';
+        $virtual_product_list = $db->fetchAll($get_virtual_product_list);
+        if( $virtual_product_list ) {
+            foreach( $virtual_product_list as $virtual_product ) {
+                $consumed_amount += $virtual_product['product_price'] * $virtual_product['count'];
+                $consumed_integral += $virtual_product['integral'];
+            }
+        }
+
+        $balance = $order['product_amount'] - $consumed_amount; //可返还的金额
+        $reward = $order['reward_paid'] - $balance; //可返还的奖金
+        if( $reward < 0 ) {
+            $balance = -$reward;
+            $reward = $order['reward_paid'];
+        }
+        $integral = $order['integral_amount'] - $consumed_integral; //可返还的积分
+        $integral_given = $order['integral_given_amount'] - $consumed_integral_given;   //需要扣除的赠送积分
+
+
+        //会员推荐路径
+        $get_path = 'select path from '.$db->table('member').' where account = \''.$order['account'].'\' limit 1';
+        $path = $db->fetchOne($get_path);
+
+        //包括实体产品
+        if( $contain_real ) {
+            $check_received = 'select * from '.$db->table('order_log').' where order_sn = \''.$order_sn.'\' and status = 7';
+            $received = $db->fetchRow($check_received);
+            if( $received ) {   //已收货
+                $update_member = 'update '.$db->table('member').' set';
+                $update_member .= ' balance = balance + '.$balance;
+                $update_member .= ', reward = reward + '.$reward;
+                $update_member .= ', integral = integral + '.( $integral );
+                $update_member .= ' where account = \''.$order['account'].'\' limit 1';
+                if( !$db->update($update_member) ) {
+                    $transaction = false;
+                } else {
+                    $log_data = array(
+                        'account' => $order['account'],
+                        'balance' => $balance,
+                        'integral' =>  $integral ,
+                        'integral_await' => 0,
+                        'reward_await' => 0,
+                        'reward' => $reward,
+                        'operator' => $_SESSION['business_admin'],
+                        'remark' => '退单',
+                        'add_time' => time()
+                    );
+                    $db->autoInsert('member_exchange_log', $log_data);
+                }
+
+                $update_business .= 'update '.$db->table('business').' set';
+                $update_business .= ' balance = balance - '.$balance;
+                $update_business .= ' where business_account = \''.$order['business_account'].'\' limit 1';
+                if( !$db->update($update_business) ) {
+                    $transaction = false;
+                } else {
+                    $log_data = array(
+                        'business_account' => $order['business_account'],
+                        'trade' => 0,
+                        'balance' => -$balance,
+                        'operator' => $_SESSION['business_admin'],
+                        'remark' => '退单',
+                        'add_time' => time()
+                    );
+                    $db->autoInsert('business_exchange_log', $log_data);
+                }
+            } else {    //未收货
+                $update_member = 'update '.$db->table('member').' set';
+                $update_member .= ' balance = balance + '.$balance;
+                $update_member .= ', reward = reward + '.$reward;
+                $update_member .= ', integral = integral + '.( $integral );
+                $update_member .= ' where account = \''.$order['account'].'\' limit 1';
+                if( !$db->update($update_member) ) {
+                    $transaction = false;
+                } else {
+                    $log_data = array(
+                        'account' => $order['account'],
+                        'balance' => $balance,
+                        'integral' => ( $integral ),
+                        'integral_await' => 0,
+                        'reward_await' => 0,
+                        'reward' => $reward,
+                        'operator' => $_SESSION['business_admin'],
+                        'remark' => '退单',
+                        'add_time' => time()
+                    );
+                    $db->autoInsert('member_exchange_log', $log_data);
+                }
+
+                $update_business .= 'update '.$db->table('business').' set';
+                $update_business .= ' trade = trade - '.$balance;
+                $update_business .= ' where business_account = \''.$order['business_account'].'\' limit 1';
+                if( !$db->update($update_business) ) {
+                    $transaction = false;
+                } else {
+                    $log_data = array(
+                        'business_account' => $order['business_account'],
+                        'trade' => -$balance,
+                        'balance' => 0,
+                        'operator' => $_SESSION['business_admin'],
+                        'remark' => '退单',
+                        'add_time' => time()
+                    );
+                    $db->autoInsert('business_exchange_log', $log_data);
+                }
+            }
+        } else {    //只有虚拟产品
+            $update_member = 'update '.$db->table('member').' set';
+            $update_member .= ' balance = balance + '.$balance;
+            $update_member .= ', reward = reward + '.$reward;
+            $update_member .= ', integral = integral + '.( $integral );
+            $update_member .= ' where account = \''.$order['account'].'\' limit 1';
+            if( !$db->update($update_member) ) {
+                $transaction = false;
+            } else {
+                $log_data = array(
+                    'account' => $order['account'],
+                    'balance' => $balance,
+                    'integral' => ( $integral ),
+                    'integral_await' => 0,
+                    'reward_await' => 0,
+                    'reward' => $reward,
+                    'operator' => $_SESSION['business_admin'],
+                    'remark' => '退单',
+                    'add_time' => time()
+                );
+                $db->autoInsert('member_exchange_log', $log_data);
+            }
+
+            $update_business .= 'update '.$db->table('business').' set';
+            $update_business .= ' trade = trade - '.$balance;
+            $update_business .= ' where business_account = \''.$order['business_account'].'\' limit 1';
+            if( !$db->update($update_business) ) {
+                $transaction = false;
+            } else {
+                $log_data = array(
+                    'business_account' => $order['business_account'],
+                    'trade' => -$balance,
+                    'balance' => 0,
+                    'operator' => $_SESSION['business_admin'],
+                    'remark' => '退单',
+                    'add_time' => time()
+                );
+                $db->autoInsert('business_exchange_log', $log_data);
+            }
+        }
+    }
+    distribution_settle(-($order['product_amount'] - $consumed_amount), -($order['integral_given_amount'] ), $path, $order_sn);
+
+    if( $transaction ) {
+        $db->commit();
         $links = array(
             array('alt' => '已退单订单列表', 'link' => 'order.php?status=10'),
         );
         show_system_message('退单已完成', $links);
         exit;
     } else {
+        $db->rollback();
         show_system_message('系统繁忙，请稍后重试', array());
         exit;
     }
