@@ -88,7 +88,7 @@
                     {if $order.status eq 1}
                     |&nbsp;<a href="order.php?act=pay&sn={$order.order_sn}" onclick="javascript:if(confirm('确认已付款？')) return true; else return false;">已付款</a>
                     {/if}
-                    {if $order.status eq 4 && !isset($order.real)}
+                    {if $order.status eq 4 && $order.real gt 0}
                     |&nbsp;<a href="order.php?act=prepare&sn={$order.order_sn}" onclick="javascript:if(confirm('确认要配货？')) return true; else return false;">配货</a>
                     {/if}
                     {if $order.status eq 5}
@@ -357,7 +357,9 @@
                 <td>
 <!--                    <a href="javascript:void(0);" class="order-detail" data-value="{$order.order_sn}">订单详情</a>-->
                     <a href="?act=detail&sn={$order.order_sn}">订单详情</a>
+                    {if $order.status eq 4 && $order.real gt 0}
                     |&nbsp;<a href="order.php?act=prepare&sn={$order.order_sn}" onclick="javascript:if(confirm('确认要配货？')) return true; else return false;">配货</a>
+                    {/if}
                 </td>
             </tr>
             {/foreach}
