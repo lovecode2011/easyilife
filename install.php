@@ -316,7 +316,7 @@ $sql[] = 'create table if not exists '.$db->table('order').' (
     `integral_paid` decimal(18,2) not null default \'0\',
     `reward_paid` decimal(18,2) not null default \'0\',
     `balance_paid` decimal(18,2) not null default \'0\',
-    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品订单，1:虚拟产品订单\'
+    `is_virtual` tinyint not null default \'0\' comment \'0:实体产品订单，1:虚拟产品订单\',
     index (`business_account`)
 ) default charset=utf8;';
 
