@@ -46,6 +46,8 @@ if( 'add' == $opera ) {
     $single_inventory = getPOST('single_inventory');
     $single_inventory = intval($single_inventory);
 
+    $integral = intval(getPOST('integral'));
+
     do {
         $sn = rand(100000, 999999);
         $product_sn = 'EIF'.$sn;
@@ -139,6 +141,15 @@ if( 'add' == $opera ) {
         exit;
     }
 
+    if( 0 >= $integral ) {
+        $integral = 0;
+    } else {
+        $price = 0;
+        $shop_price = 0;
+        $lowest_price = 0;
+        $promote_price = 0;
+    }
+
     $data = array(
         'product_sn' => $product_sn,
         'name' => $name,
@@ -146,7 +157,7 @@ if( 'add' == $opera ) {
         'price' => $price,
         'lowest_price' => $lowest_price,
         'reward' => 0,
-        'integral' => 0,
+        'integral' => $integral,
         'integral_given' => 0,
         'img' => $img,
         'desc' => $desc,
@@ -249,6 +260,8 @@ if( 'edit' == $opera ) {
     $promote_end = trim(getPOST('promote_end'));
     $order_view = intval(getPOST('order_view'));
 
+    $integral = intval(getPOST('integral'));
+
     $inventory = getPOST('single_inventory');
     $inventory = intval($inventory);
     if( 0 > $inventory ) {
@@ -325,6 +338,15 @@ if( 'edit' == $opera ) {
 
     $order_view = ( 0 >= $order_view ) ? 50 : $order_view;
 
+    if( 0 >= $integral ) {
+        $integral = 0;
+    } else {
+        $price = 0;
+        $shop_price = 0;
+        $lowest_price = 0;
+        $promote_price = 0;
+    }
+
     $data = array(
         'name' => $name,
         'shop_price' => $shop_price,
@@ -340,6 +362,7 @@ if( 'edit' == $opera ) {
         'order_view' => $order_view,
         'status' => ( $product['status'] == 1 ) ? 1 : 2,
         'prev_status' => $product['status'],
+        'integral' => $integral,
     );
     $table = 'product';
     $where = 'business_account = \''.$_SESSION['business_account'].'\' and id = \''.$id.'\' and is_virtual = 1';

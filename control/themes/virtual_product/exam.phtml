@@ -42,7 +42,13 @@
                         {/foreach}
                     </select>
                 </p>
-                <p class="clear">
+                <p>
+                    <label class="l-title">购买积分：</label>
+                    <input class="text-input w150" disabled="disabled" type="text" name="integral" placeholder="购买积分" value="{$product.integral}">
+                    <span class="error-input">-若购买积分不为0，发布的将是积分产品</span>
+                </p>
+                {if $product.integral eq 0}
+                <p>
                     <label class="l-title">售价：</label>
                     <input disabled="disabled" class="text-input w150" type="text" id="price" name="price" placeholder="请输入售价" value="{$product.price}">
                 </p>
@@ -54,6 +60,7 @@
                     <label class="l-title">最低售价：</label>
                     <input disabled="disabled" class="text-input w150" type="text" name="lowest_price" placeholder="请输入最低销售价" value="{$product.lowest_price}">
                 </p>
+                {/if}
                 <p>
                     <label class="l-title">产品图片：</label>
                     <input type="hidden" name="img" id="img" placeholder="" value="{$product.img}">
@@ -76,6 +83,7 @@
                     <label class="l-title">产品详情：</label>
                     <textarea disabled="disabled" name="detail">{$product.detail}</textarea>
                 </p>
+                {if $product.integral eq 0}
                 <p>
                     <label class="l-title">促销价：</label>
                     <input disabled="disabled" class="text-input w150" type="text" name="promote_price" placeholder="促销价" value="{$product.promote_price}">
@@ -88,6 +96,7 @@
                     <label class="l-title">促销结束时间：</label>
                     <input disabled="disabled" class="text-input w300" type="text" name="promote_end" placeholder="促销结束时间" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"{/literal}  value="{$product.promote_end}">
                 </p>
+                {/if}
                 <p>
                     <label class="l-title">产品排序：</label>
                     <input disabled="disabled" class="text-input w150" type="text" name="order_view" placeholder="" value="{$product.order_view}">
@@ -95,14 +104,12 @@
                 <p>
                     <label class="l-title">返利：</label>
                     <input class="text-input w150" type="text" name="reward" placeholder="返利" value="{$product.reward}">
-                </p>
-                <p>
-                    <label class="l-title">购买积分：</label>
-                    <input class="text-input w150" type="text" name="integral" placeholder="购买积分" value="{$product.integral}">
+                    <span class="error-input">-请填写购买产品获得的返利，默认为0</span>
                 </p>
                 <p>
                     <label class="l-title">赠送积分：</label>
                     <input class="text-input w150" type="text" name="integral_given" placeholder="赠送积分" value="{$product.integral_given}">
+                    <span class="error-input">-请填写购买产品获得的赠送积分，默认为0</span>
                 </p>
                 <p>
                     <label class="l-title"></label>

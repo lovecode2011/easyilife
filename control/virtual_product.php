@@ -92,13 +92,9 @@ if( 'exam' == $opera ) {
     $product['account'] = $db->fetchOne($get_account);
 
     $reward = floatval(getPOST('reward'));
-    $integral = intval(getPOST('integral'));
     $integral_given = intval(getPOST('integral_given'));
     if( 0 >= $reward ) {
         $reward = 0;
-    }
-    if( 0 > $integral ) {
-        $integral = 0;
     }
     if( 0 > $integral_given ) {
         $integral_given = 0;
@@ -108,7 +104,6 @@ if( 'exam' == $opera ) {
     $update_product .= ' status = 4';
     $update_product .= ', prev_status = 2';
     $update_product .= ', reward = \''.$reward.'\'';
-    $update_product .= ', integral = \''.$integral.'\'';
     $update_product .= ', integral_given = \''.$integral_given.'\'';
     $update_product .= ' where id = \''.$id.'\' limit 1';
 
