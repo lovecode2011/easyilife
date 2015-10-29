@@ -26,7 +26,7 @@
                 </p>
                 <p>
                     <label class="l-title">金额：</label>
-                    <input class="text-input w300" type="text" maxlength="64" id="amount" name="amount" value="" placeholder="请填写提现金额">
+                    <input class="text-input w300" type="text" maxlength="64" id="amount" name="amount" value="" placeholder="请填写提现金额" onblur="caculate_fee(this.value);">
                 </p>
                 <p>
                     <label class="l-title">手续费：</label>
@@ -49,5 +49,19 @@
 <!-- END content -->
 {include file="library/footer.lbi"}
 <script type="text/javascript" src="js/finance/yhk.js"></script>
+<script type="text/javascript">
+    var fee_rate = {$config.fee_rate};
+    function caculate_fee(amount) {
+        amount = parseFloat(amount);
+
+        if(isNaN(amount) || amount <= 0) {
+            $("#amount").val(0);
+            alert("请填写正确的提现金额");
+            return false;
+        }
+
+        $("#fee").val((fee_rate*amount).toFixed(2));
+    }
+</script>
 </body>
 </html>

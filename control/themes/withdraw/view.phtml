@@ -75,6 +75,9 @@
                 <td>
                     {if $withdraw.status eq 0}
                     <a href="?act=edit&sn={$withdraw.withdraw_sn}&type={$type}" onclick="javascript:if(confirm('确认已到帐？')) return true; else return false;">到帐</a> |
+                    <a href="?act=reject&sn={$withdraw.withdraw_sn}&type={$type}"  onclick="javascript:if(confirm('确认要驳回？')) return true; else return false;">驳回</a>
+                    {/if}
+                    {if $withdraw.status eq 2}
                     <a href="?act=delete&sn={$withdraw.withdraw_sn}&type={$type}"  onclick="javascript:if(confirm('确认要删除？')) return true; else return false;">删除</a>
                     {/if}
                 </td>
