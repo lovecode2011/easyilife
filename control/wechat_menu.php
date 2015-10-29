@@ -12,12 +12,28 @@ $template = 'wechat_menu/';
 assign('subTitle', '微信菜单管理');
 
 $action = 'view';
-$operation = 'post|save|remove';
+$operation = 'post|save|remove|get_oa_url';
 
 $act = check_action($action, getGET('act'));
 $act = ( $act == '' ) ? 'view' : $act;
 
 $opera = check_action($operation, getPOST('opera'));
+
+if('get_oa_url' == $opera)
+{
+    $response = array('msg' => '', 'error' => 1);
+
+    $url = getPOST('url');
+
+    $oathor_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=2048#wechat_redirect';
+    $url = sprintf($oathor_url, $config['appid'], urlencode($url));
+
+    $response['msg'] = $url;
+    $response['error'] = 0;
+
+    echo json_encode($response);
+    exit;
+}
 
 if('save' == $opera)
 {
