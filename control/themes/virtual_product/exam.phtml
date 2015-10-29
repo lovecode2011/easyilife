@@ -43,35 +43,6 @@
                     </select>
                 </p>
                 <p class="clear">
-                    <label class="l-title">消费内容：</label>
-                </p>
-                <p class="clear" id="show-content">
-<!--                    <div style="width: 400px; margin: 0 auto">-->
-                        <table class="table"   style="width: 1000px; margin: 0 auto">
-                            <thead>
-                            <tr>
-                                <th>消费内容</th>
-                                <th>数量/规格</th>
-                                <th>小计</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {foreach from=$content_list item=content}
-                            <tr>
-                                <td>
-                                    {$content.content}
-                                </td>
-                                <td>
-                                    <em>{$content.count}</em>
-                                </td>
-                                <td>{$content.total}</td>
-                            </tr>
-                            {/foreach}
-                            </tbody>
-                        <table>
-<!--                    </div>-->
-                </p>
-                <p class="clear">
                     <label class="l-title">售价：</label>
                     <input disabled="disabled" class="text-input w150" type="text" id="price" name="price" placeholder="请输入售价" value="{$product.price}">
                 </p>

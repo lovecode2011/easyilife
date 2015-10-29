@@ -38,11 +38,18 @@ if( 'view' == $act ) {
     }
     assign('type', $type);
 
+    $search = trim(getGET('search'));
+    $search = $db->escape(htmlspecialchars($search));
+    $and_where = '';
+    if( '' != $search ) {
+        $and_where .= ($type == 0) ? ' and account like \'%'.$search.'%\'' : ' and business_account like \'%'.$search.'%\'';
+    }
+    assign('search', $search);
+
     $st = trim(getGET('st'));
     $et = trim(getGET('et'));
     $start_time = strtotime($st);
     $end_time = strtotime($et);
-    $and_where = '';
     $pattern = '#[0-9]{4}\-[0-9]{1,2}\-[0-9]{1,2}#';
     if ($st) {
         if (preg_match($pattern, $st)) {
@@ -65,6 +72,7 @@ if( 'view' == $act ) {
     //获取总数
     $get_total = 'select count(*) from ' . $db->table($table);
     $get_total .= ' where 1';
+    $get_total .= $and_where;
     $total = $db->fetchOne($get_total);
 
     $page = ($page > $total) ? $total : $page;
@@ -79,7 +87,7 @@ if( 'view' == $act ) {
     $get_exchange_list .= ' order by add_time desc';
     $get_exchange_list .= ' limit '.$offset.','.$count;
     $exchange_list = $db->fetchAll($get_exchange_list);
-
+//    echo $get_exchange_list;exit;
     if( $exchange_list ) {
         foreach( $exchange_list as $key => $value ) {
             $exchange_list[$key]['add_time_str'] = date('Y-m-d H:i:s', $value['add_time']);

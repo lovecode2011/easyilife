@@ -1,6 +1,6 @@
 <?php
 /**
- * 虚拟虚拟虚拟产品管理
+ * 虚拟虚拟产品管理
  * @author 王仁欢
  * @email wrh4285@163.com
  * @date 2015-10-15
@@ -11,7 +11,7 @@ include 'library/init.inc.php';
 back_base_init();
 
 $template = 'virtual_product/';
-assign('subTitle', '虚拟虚拟虚拟产品管理');
+assign('subTitle', '虚拟虚拟产品管理');
 
 $action = 'view|exam|reject|activity';
 $operation = 'exam|reject|activity';
@@ -79,12 +79,12 @@ if( 'exam' == $opera ) {
     $get_product = 'select * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 limit 1';
     $product = $db->fetchRow($get_product);
     if( empty($product) ) {
-        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
+        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
 
     if( $product['status'] == 5 ) {
-        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
+        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
 
@@ -126,10 +126,10 @@ if( 'exam' == $opera ) {
         $db->autoInsert('message', array($data));
 
         //=============
-        show_system_message('产品通过审核', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
+        show_system_message('产品通过审核', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     } else {
-        show_system_message('系统繁忙，请稍后重试', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
+        show_system_message('系统繁忙，请稍后重试', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
 }
@@ -374,11 +374,11 @@ if( 'exam' == $act ) {
     $get_product .= ' where a.product_sn = \''.$product_sn.'\' and status = 2 and is_virtual = 1 limit 1';
     $product = $db->fetchRow($get_product);
     if( !$product ) {
-        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
+        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
     if( $product['status'] == 5 ) {
-        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
+        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
 
@@ -433,12 +433,12 @@ if( 'reject' == $act ) {
     $get_product = 'selecvt * from '.$db->table('product').' where id = \''.$id.'\' and status = 2 and is_virtual = 1 limit 1';
     $product = $db->fetchRow($get_product);
     if( empty($product) ) {
-        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
+        show_system_message('产品不存在', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
 
     if( $product['status'] == 5 ) {
-        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟虚拟产品管理')));
+        show_system_message('产品已被删除', array(array('link' => 'virtual_product.php', 'alt' => '虚拟产品管理')));
         exit;
     }
     assign('id', $id);
