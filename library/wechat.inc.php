@@ -95,7 +95,7 @@ function get_qrcode($openid, $access_token)
     global $db;
     global $log;
 
-    $get_ticket = 'select `ticket` from '.$db->table('user').' where `openid`=\''.$openid.'\' and `expired`>'.time();
+    $get_ticket = 'select `ticket` from '.$db->table('member').' where `openid`=\''.$openid.'\' and `expired`>'.time();
     $ticket = $db->fetchOne($get_ticket);
 
     if($ticket)
@@ -105,12 +105,16 @@ function get_qrcode($openid, $access_token)
         return $qrcode;
     }
 
+    $update_user = 'update '.$db->table('member').' set `scene_id`=0 where `expired`>'.time();
+    $db->update($update_user);
+
     $scene_arr = range(1, 100000);
 
     $scene_id = 0;
     foreach($scene_arr as $id)
     {
-        $check_scene_id = 'select count(*) from '.$db->table('user').' where `scene_id`='.$id.' and `expired`<'.time();
+        $check_scene_id = 'select count(*) from '.$db->table('member').' where `scene_id`='.$id.' and `expired`<'.time();
+        $log->record($check_scene_id);
 
         if(!$db->fetchOne($check_scene_id))
         {
@@ -135,6 +139,7 @@ function get_qrcode($openid, $access_token)
         return false;
     } else {
         $data = array(
+            'scene_id' => $scene_id,
             'ticket' => $response->ticket,
             'expired' => time()+1800
         );

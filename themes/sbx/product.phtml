@@ -39,10 +39,10 @@
 <section class="product-detail">
     <article>{$product.name}</article>
     <div class="left">
-        {if !isset($product.integral)}
-        <b>￥<span id="main_price">{sprintf("%.2f", $product.price)}</span></b>
-        {else}
+        {if $product.integral gt 0}
         <b><span id="main_price">{sprintf("%.2f", $product.integral)}积分</span></b>
+        {else}
+        <b>￥<span id="main_price">{sprintf("%.2f", $product.price)}</span></b>
         {/if}
         <aside>
             <span class="blue"><em class="icon">&#xe614;</em>返利{ceil($product.reward/2.5)}元</span>
