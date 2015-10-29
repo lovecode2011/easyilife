@@ -53,17 +53,22 @@
                     <label class="l-title">库存：</label>
                     <input class="text-input w150" type="text" id="inventory" name="single_inventory" placeholder="请输入产品库存" value="{$inventory}"/>
                 </p>
-                <p class="clear">
+                <p>
+                    <label class="l-title">购买积分：</label>
+                    <input class="text-input w150" type="number" name="integral" placeholder="购买积分" value="0">
+                    <span class="error-input">-若购买积分不为0，发布的将是积分产品</span>
+                </p>
+                <p class="price">
                     <label class="l-title">售价：</label>
-                    <input class="text-input w150" type="text" id="price" name="price" placeholder="请输入售价" value="{$product.price}">
+                    <input class="text-input w150 price-input" type="text" id="price" name="price" placeholder="请输入售价" value="{$product.price}">
                 </p>
-                <p>
+                <p class="price">
                     <label class="l-title">市场价：</label>
-                    <input class="text-input w150" type="text" id="shop_price" name="shop_price" placeholder="请输入市场价" value="{$product.shop_price}">
+                    <input class="text-input w150 price-input" type="text" id="shop_price" name="shop_price" placeholder="请输入市场价" value="{$product.shop_price}">
                 </p>
-                <p>
+                <p class="price">
                     <label class="l-title">最低售价：</label>
-                    <input class="text-input w150" type="text" name="lowest_price" placeholder="请输入最低销售价" value="{$product.lowest_price}">
+                    <input class="text-input w150 price-input" type="text" name="lowest_price" placeholder="请输入最低销售价" value="{$product.lowest_price}">
                 </p>
                 <p>
                     <label class="l-title">产品图片：</label>
@@ -85,17 +90,17 @@
                     <label class="l-title">产品详情：</label>
                     <textarea name="detail">{$product.detail}</textarea>
                 </p>
-                <p>
+                <p class="price">
                     <label class="l-title">促销价：</label>
-                    <input class="text-input w150" type="text" name="promote_price" placeholder="促销价" value="{$product.promote_price}">
+                    <input class="text-input w150 price-input" type="text" name="promote_price" placeholder="促销价" value="{$product.promote_price}">
                 </p>
-                <p>
+                <p class="price">
                     <label class="l-title">促销开始时间：</label>
-                    <input class="text-input w300" type="text" name="promote_begin" placeholder="促销开始时间" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"{/literal}  value="{$product.promote_begin}"/>
+                    <input class="text-input w300 price-input" type="text" name="promote_begin" placeholder="促销开始时间" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"{/literal}  value="{$product.promote_begin}"/>
                 </p>
-                <p>
+                <p class="price">
                     <label class="l-title">促销结束时间：</label>
-                    <input class="text-input w300" type="text" name="promote_end" placeholder="促销结束时间" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"{/literal}  value="{$product.promote_end}">
+                    <input class="text-input w300 price-input" type="text" name="promote_end" placeholder="促销结束时间" {literal}onClick="laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})"{/literal}  value="{$product.promote_end}">
                 </p>
                 <p>
                     <label class="l-title">产品排序：</label>
@@ -172,6 +177,54 @@
                     }
                 });
             });
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function() {
+        $('input[name=integral]').change(function() {
+
+            if( $(this).val() == '' ) {
+                $(this).val(0);
+                return;
+            }
+
+            if( parseInt($(this).val()) < 0 ) {
+                $(this).val(0);
+                return;
+            }
+            if( parseInt($(this).val()) > 0 ) {
+                $('.price').slideUp();
+                $('.price-input').attr('disabled', 'disabled');
+            }
+            if( parseInt($(this).val()) == 0 ) {
+                $('.price').slideDown();
+                $('.price-input').removeAttr('disabled');
+                return;
+            }
+        });
+
+        $('input[name=integral]').blur(function() {
+            if( $(this).val() == '' ) {
+                $(this).val(0);
+                return;
+            }
+
+            if( parseInt($(this).val()) < 0 ) {
+                $(this).val(0);
+                return;
+            }
+            if( parseInt($(this).val()) > 0 ) {
+                $('.price').slideUp();
+                $('.price-input').attr('disabled', 'disabled');
+                return;
+            }
+            if( parseInt($(this).val()) == 0 ) {
+                $('.price').slideDown();
+                $('.price-input').removeAttr('disabled');
+                return;
+            }
+
         });
     });
 </script>

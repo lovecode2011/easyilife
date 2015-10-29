@@ -32,6 +32,7 @@ if( 'add' == $opera ) {
     $product_type = intval(getPOST('type'));
     $brand = intval(getPOST('brand'));
     $price = floatval(getPOST('price'));
+    $integral = intval(getPOST('integral'));
     $shop_price = floatval(getPOST('shop_price'));
     $lowest_price = floatval(getPOST('lowest_price'));
 
@@ -176,6 +177,15 @@ if( 'add' == $opera ) {
         exit;
     }
 
+    if( 0 >= $integral ) {
+        $integral = 0;
+    } else {
+        $price = 0;
+        $shop_price = 0;
+        $lowest_price = 0;
+        $promote_price = 0;
+    }
+
     $data = array(
         'product_sn' => $product_sn,
         'name' => $name,
@@ -183,7 +193,7 @@ if( 'add' == $opera ) {
         'price' => $price,
         'lowest_price' => $lowest_price,
         'reward' => 0,
-        'integral' => 0,
+        'integral' => $integral,
         'integral_given' => 0,
         'img' => $img,
         'desc' => $desc,
@@ -295,8 +305,7 @@ if( 'edit' == $opera ) {
     $lowest_price = floatval(getPOST('lowest_price'));
     $reward = floatval(getPOST('reward'));
 
-    $integral = 0;
-    $given_integral = 0;
+    $integral = intval(getPOST('integral'));
 
     $img = trim(getPOST('img'));
     $desc = trim(getPOST('desc'));
@@ -332,12 +341,12 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    if( 0 >= $price ) {
+    if( 0 > $price ) {
         show_system_message('售价不能为负数', array());
         exit;
     }
 
-    if( 0 >= $shop_price ) {
+    if( 0 > $shop_price ) {
         show_system_message('市场价不能为负数', array());
         exit;
     }
@@ -420,6 +429,15 @@ if( 'edit' == $opera ) {
         exit;
     }
 
+    if( 0 >= $integral ) {
+        $integral = 0;
+    } else {
+        $price = 0;
+        $shop_price = 0;
+        $lowest_price = 0;
+        $promote_price = 0;
+    }
+
     $data = array(
         'name' => $name,
         'shop_price' => $shop_price,
@@ -439,6 +457,7 @@ if( 'edit' == $opera ) {
         'free_delivery' => $free_delivering,
         'status' => ( $product['status'] == 1 ) ? 1 : 2,
         'prev_status' => $product['status'],
+        'integral' => $integral,
     );
     $table = 'product';
     $where = 'business_account = \''.$_SESSION['business_account'].'\' and id = \''.$id.'\'';

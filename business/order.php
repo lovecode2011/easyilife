@@ -82,7 +82,7 @@ if( 'deliver' == $opera ) {
 
     $get_order = 'select * from '.$db->table('order');
     $get_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_order .= ' and is_virtual = 0';    //实体订单
+//    $get_order .= ' and is_virtual = 0';    //实体订单
     $get_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
 
     $order = $db->fetchRow($get_order);
@@ -195,7 +195,7 @@ if( 'view' == $act ) {
     $get_total = 'select count(*) from '.$db->table('order');
     $get_total .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_total .= $and_where;
-    $get_total .= ' and is_virtual = 0';    //实体产品
+//    $get_total .= ' and is_virtual = 0';    //实体产品
     $total = $db->fetchOne($get_total);
 
     $page = ( $page > $total ) ? $total : $page;
@@ -212,7 +212,7 @@ if( 'view' == $act ) {
 
     $get_order_list .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
     $get_order_list .= $and_where;
-    $get_order_list .= ' and a.is_virtual = 0';
+//    $get_order_list .= ' and a.is_virtual = 0';
     $get_order_list .= ' order by add_time desc';
     $get_order_list .= ' limit '.$offset.','.$count;
     $order_list = $db->fetchAll($get_order_list);
@@ -251,7 +251,7 @@ if( 'prepare' == $act ) {
 
     $get_order = 'select * from '.$db->table('order');
     $get_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_order .= ' and is_virtual = 0';    //实体订单
+//    $get_order .= ' and is_virtual = 0';    //实体订单
     $get_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
 
     $order = $db->fetchRow($get_order);
@@ -306,7 +306,7 @@ if( 'deliver' == $act ) {
 
     $get_order = 'select * from '.$db->table('order');
     $get_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_order .= ' and is_virtual = 0';    //实体订单
+//    $get_order .= ' and is_virtual = 0';    //实体订单
     $get_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
 
     $order = $db->fetchRow($get_order);
@@ -342,7 +342,7 @@ if( 'agree' == $act ) {
 
     $get_order = 'select * from '.$db->table('order');
     $get_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_order .= ' and is_virtual = 0';    //实体订单
+//    $get_order .= ' and is_virtual = 0';    //实体订单
     $get_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
 
     $order = $db->fetchRow($get_order);
@@ -393,7 +393,7 @@ if( 'refund' == $act ) {
 
     $get_order = 'select * from '.$db->table('order');
     $get_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_order .= ' and is_virtual = 0';    //实体订单
+//    $get_order .= ' and is_virtual = 0';    //实体订单
     $get_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
 
     $order = $db->fetchRow($get_order);
@@ -471,7 +471,7 @@ if( 'detail' == $act ) {
     $get_order .= ' left join '.$db->table('express').' as e on a.express_id = e.id';
 
     $get_order .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
-    $get_order .= ' and a.is_virtual = 0';    //实体订单
+//    $get_order .= ' and a.is_virtual = 0';    //实体订单
     $get_order .= ' and order_sn = \''.$order_sn.'\'';
     $get_order .= ' limit 1';
 
@@ -559,7 +559,7 @@ if( 'export' == $act ) {
     $get_total = 'select count(*) from '.$db->table('order');
     $get_total .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_total .= $and_where;
-    $get_total .= ' and is_virtual = 0';    //实体产品
+//    $get_total .= ' and is_virtual = 0';    //实体产品
     $total = $db->fetchOne($get_total);
 
     $page = ( $page > $total ) ? $total : $page;
@@ -576,7 +576,7 @@ if( 'export' == $act ) {
 
     $get_order_list .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
     $get_order_list .= $and_where;
-    $get_order_list .= ' and a.is_virtual = 0';
+//    $get_order_list .= ' and a.is_virtual = 0';
     $get_order_list .= ' order by add_time desc';
     $order_list = $db->fetchAll($get_order_list);
 
@@ -793,7 +793,7 @@ if( 'pay' == $act ) {
 
     $get_order = 'select * from '.$db->table('order');
     $get_order .= ' where business_account = \''.$_SESSION['business_account'].'\'';
-    $get_order .= ' and is_virtual = 0';    //实体订单
+//    $get_order .= ' and is_virtual = 0';    //实体订单
     $get_order .= ' and order_sn = \''.$order_sn.'\' limit 1';
 
     $order = $db->fetchRow($get_order);
@@ -870,7 +870,7 @@ if( 'preview' == $act ) {
     $get_order .= ' left join '.$db->table('express').' as e on a.express_id = e.id';
 
     $get_order .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
-    $get_order .= ' and a.is_virtual = 0';    //实体订单
+//    $get_order .= ' and a.is_virtual = 0';    //实体订单
     $get_order .= ' and order_sn = \''.$order_sn.'\'';
     $get_order .= ' limit 1';
 
