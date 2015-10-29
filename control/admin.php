@@ -47,7 +47,7 @@ if( 'edit' == $opera ) {
         $account = $db->escape(htmlspecialchars($account));
     }
 
-    $get_admin = 'select * from `'.DB_PREFIX.'admin` where account = \''.$account.'\' limit 1';
+    $get_admin = 'select * from `'.DB_PREFIX.'platform_admin` where account = \''.$account.'\' limit 1';
     $admin = $db->fetchRow($get_admin);
     if( empty($admin) ) {
         show_system_message('管理员不存在', array());
@@ -90,7 +90,7 @@ if( 'edit' == $opera ) {
         exit;
     } else {
         $email = $db->escape(htmlspecialchars($email));
-        $check_email = 'select `account` from `'.DB_PREFIX.'admin` where `email`=\''.$email.'\' and `account`<>\''.$account.'\'';
+        $check_email = 'select `account` from `'.DB_PREFIX.'platform_admin` where `email`=\''.$email.'\' and `account`<>\''.$account.'\'';
         if( $db->fetchRow($check_email )) {
             show_system_message('电子邮箱已被占用，请使用其他邮箱', array());
             exit;
@@ -145,7 +145,7 @@ if( 'add' == $opera ) {
         exit;
     } else {
         $account = $db->escape(htmlspecialchars($account));
-        $check_account = 'select `account` from `'.DB_PREFIX.'admin` where `account`=\''.$account.'\'';
+        $check_account = 'select `account` from `'.DB_PREFIX.'platform_admin` where `account`=\''.$account.'\'';
         if( $db->fetchRow($check_account) ) {
             show_system_message('该账号已被注册，请使用其他账号进行注册', array());
             exit;
@@ -185,7 +185,7 @@ if( 'add' == $opera ) {
         exit;
     } else {
         $email = $db->escape(htmlspecialchars($email));
-        $checkEmail = 'select `account` from `'.DB_PREFIX.'admin` where `email`=\''.$email.'\'';
+        $checkEmail = 'select `account` from `'.DB_PREFIX.'platform_admin` where `email`=\''.$email.'\'';
         if($db->fetchRow($checkEmail)) {
             show_system_message('电子邮箱已被占用，请使用其他邮箱', array());
             exit;
@@ -197,7 +197,7 @@ if( 'add' == $opera ) {
 //        exit;
 //    } else {
 //        $mobile = $db->escape(htmlspecialchars($mobile));
-//        $checkMobile = 'select `account` from `'.DB_PREFIX.'admin` where `mobile`=\''.$mobile.'\'';
+//        $checkMobile = 'select `account` from `'.DB_PREFIX.'platform_admin` where `mobile`=\''.$mobile.'\'';
 //        if($db->fetchRow($checkMobile)) {
 //            show_system_message('手机号码已被占用，请使用其他号码', array());
 //            exit;
@@ -228,7 +228,7 @@ if( 'add' == $opera ) {
     );
 
     if($db->autoInsert('platform_admin', array($data))) {
-        show_system_message('新增管理员成功', array(array('alt'=>'查看管理员列表', 'link'=>'adminUser.php')));
+        show_system_message('新增管理员成功', array(array('alt'=>'查看管理员列表', 'link'=>'admin.php')));
         exit;
     } else {
         show_system_message('系统繁忙，请稍后再试', array());
@@ -281,8 +281,9 @@ if( 'edit' == $act ) {
         show_system_message('参数错误', array());
         exit;
     }
+    $account = $db->escape($account);
 
-    $get_admin = 'select * from `'.DB_PREFIX.'admin` where account = \''.$account.'\' limit 1';
+    $get_admin = 'select * from `'.DB_PREFIX.'platform_admin` where account = \''.$account.'\' limit 1';
     $admin = $db->fetchRow($get_admin);
     if( empty($admin) ) {
         show_system_message('管理员不存在', array());
@@ -319,7 +320,7 @@ if( 'delete' == $act ) {
         exit;
     }
 
-    $get_admin = 'select * from `'.DB_PREFIX.'admin` where `account` = \''.$account.'\' limit 1';
+    $get_admin = 'select * from `'.DB_PREFIX.'platform_admin` where `account` = \''.$account.'\' limit 1';
     $admin = $db->fetchRow($get_admin);
     if( empty($admin) ) {
         show_system_message('管理员不存在', array());
@@ -331,7 +332,7 @@ if( 'delete' == $act ) {
         exit;
     }
 
-    $delete_admin = 'delete from `'.DB_PREFIX.'admin` where `account` = \''.$account.'\' limit 1';
+    $delete_admin = 'delete from `'.DB_PREFIX.'platform_admin` where `account` = \''.$account.'\' limit 1';
     if( $db->delete($delete_admin) ) {
         show_system_message('成功删除管理员', array());
         exit;
