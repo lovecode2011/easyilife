@@ -3,6 +3,22 @@
 {include file="library/navbar.lbi"}
 {include file="library/sidebar.lbi"}
 <!-- content -->
+<style>
+    {literal}
+    div.preview-news {
+        width: 360px;
+        border: solid 1px #000000;
+        border-radius:25px;
+        padding: 20px;
+    }
+    .preview-news-title {
+        font-size: 16px;
+    }
+    .preview-news-description {
+        font-size: 12px;
+    }
+    {/literal}
+</style>
 <div id="content">
     <div class="content-title">
         <h5 class="pull-left">{$subTitle}</h5>
@@ -15,6 +31,16 @@
                     <label class="l-title">规则名称:</label>
                     <input class="text-input w300" type="text" id="name" name="name" placeholder="请输入规则名称" value="{$rule.name}"/>
                     <span class="error-input" id="name-error"></span>
+                </p>
+                <p class="clear">
+                    <label class="l-title">回复类型：</label>
+                    <select name="msgType" id="msgType" class="w150">
+                        <option value="">请选择回复类型</option>
+                        {foreach from=$msgType item=type key=key}
+                        <option value="{$key}" {if $key eq $rule.msgType}selected="selected"{/if}>{$type}</option>
+                        {/foreach}
+                    </select>
+                    <span class="error-input" id="msgType-error"></span>
                 </p>
                 <p class="clear">
                     <label class="l-title">匹配模式:</label>
@@ -38,12 +64,34 @@
                     <input class="text-input w300" type="text" id="order_view" name="order_view" placeholder="请输入优先级" value="{$rule.order_view}"/>
                     <span class="error-input" id="order_view-error"></span>
                 </p>
-                <p>
+                <p class="msg-type-text msg-type" {if $rule.msgType neq 'text'} style="display: none"{/if}>
                     <label class="l-title">回复内容:</label>
-                    <textarea class="valid" rows="10" cols="41" name="response_content" id="response_content">{$rule.content}</textarea>
+                    <textarea class="valid" rows="10" cols="41" name="response_content" id="response_content">{if $rule.msgType eq 'text'}{$rule.content}{/if}</textarea>
                     <span class="error-input" id="response_content-error"></span>
                 </p>
-                <p>
+                <p class="msg-type-news msg-type" {if $rule.msgType neq 'news'}style="display: none"{/if}>
+                    <label class="l-title">资讯标题：</label>
+                    <select name="content_id" id="content_id" class="w300">
+                        <option value="0">请选择资讯</option>
+                        {foreach from=$content_list item=content}
+                        <option value="{$content.id}">{$content.title}</option>
+                        {/foreach}
+                    </select>
+                    <span class="error-input" id="content_id-error">{if empty($content_list)}-<a href="content.php?act=add">添加资讯</a>{/if}</span>
+                </p>
+                <p class="clear preview-news-wrapper" {if $rule.msgType neq 'news'}style="display: none"{/if}>
+                    <label class="l-title">预览：</label>
+                    <div class="preview-news pull-left" {if $rule.msgType neq 'news'}style="display: none"{/if}>
+                        <p class="preview-news-title">{if $rule.msgType eq 'news'}{$rule.title}{/if}</p>
+                        <p class="preview-news-time">{if $rule.msgType eq 'news'}xxxx年xx月{/if}</p>
+                        <p class="preview-news-img">
+                            <img src="{if $rule.msgType eq 'news'}{$rule.picUrl}{/if}" width="360px" height="200px"/>
+                        </p>
+                        <p class="preview-news-description">{if $rule.msgType eq 'news'}{$rule.description}{/if}</p>
+                        <a class="preview-news-more" {if $rule.msgType eq 'news'}herf="{$rule.url}"{/if}>查看全文</a>
+                    </div>
+                </p>
+                <p class="clear">
                     <label class="l-title"></label>
                     <a class="btn btn-primary" id="submit-btn" href="javascript:;">
                         修改<img src="images/btn_loading.gif" class="btn-loading-img"/>
@@ -77,34 +125,38 @@
         var response_content = $("#response_content").val().trim();
         var match_mode = document.forms[0].match_mode.value;
         var enabled = document.forms[0].enabled.value;
-        var eid = $("#eid").val();
+        var msgType = $('#msgType').val().trim();
+        var content_id = parseInt($('#content_id').val());
+        var eid = parseInt($('#eid').val());
 
-        eid = parseInt(eid);
-        if(eid <= 0) {
-            flag = false;
-        }
-
-        if(name == "") {
+        if (name == "") {
             $("#name-error").text("-请输入规则名称");
             flag = false;
         } else {
             $("#name-error").text("");
         }
 
-        if(rule == "") {
+        if (msgType == '') {
+            $("#msgType-error").text("-请选择回复类型");
+            flag = false;
+        } else {
+            $("#msgType-error").text("");
+        }
+
+        if (rule == "") {
             $("#rule-error").text("-请输入关键词");
             flag = false;
         } else {
             $("#rule-error").text("");
         }
-
-        if(response_content == "") {
-            $("#response_content-error").text("-请输入回复内容");
-            flag = false;
-        } else {
-            $("#response_content-error").text("");
+        if (msgType == 'text') {
+            if (response_content == "") {
+                $("#response_content-error").text("-请输入回复内容");
+                flag = false;
+            } else {
+                $("#response_content-error").text("");
+            }
         }
-
         match_mode = parseInt(match_mode);
         enabled = parseInt(enabled);
         order_view = parseInt(order_view);
@@ -115,9 +167,8 @@
             $(".btn-loading-img").show();
             $("#submit-btn").addClass("btn-disabled");
             $("#mask").show();
-
             var params = { "opera":"edit", "name":name, "match_mode":match_mode, "enabled":enabled, "order_view":order_view,
-                "response_content": response_content, "rule":rule, "eid":eid};
+                "response_content": response_content, "rule":rule, "eid":eid, "msgType": msgType, "content_id": content_id};
             var url = "wechat_rule.php";
             $.post(url, params, do_response, "json");
         }
@@ -148,6 +199,78 @@
         }
     }
     /*----------------  Ajax end ---------------------*/
+</script>
+<script type="text/javascript">
+    {literal}
+    $(function() {
+        $('#msgType').change(select_msg_type);
+        $('#content_id').change(select_content_title);
+    });
+
+    function select_content_title() {
+        //启用过渡效果
+        $(".btn-loading-img").show();
+        $("#submit-btn").addClass("btn-disabled");
+        $("#mask").show();
+        var id = $('#content_id').val();
+        id = parseInt(id);
+        var url = 'wechat_rule.php';
+        var params = {'opera': 'get_content', 'id': id};
+        $.post(url, params, preview_news, 'json');
+    }
+
+    function preview_news(result) {
+        //关闭过渡效果
+        $(".btn-loading-img").hide();
+        $("#submit-btn").removeClass("btn-disabled");
+        $("#mask").hide();
+        if( result.error == 0 ) {
+            show_preview(result.content);
+        } else {
+            alert(result.msg);
+        }
+    }
+
+    function show_preview(content) {
+        $('.preview-news-title').text(content.title);
+        $('.preview-news-time').text(content.time);
+        $('.preview-news-img img').attr('src', '../' + content.thumb);
+        $('.preview-news-description').text(content.description);
+        $('.preview-news-more').attr('href', content.url);
+        $('.preview-news-wrapper').css('display', 'block');
+        $('.preview-news').slideDown();
+    }
+
+    function select_msg_type() {
+        var selected = $('#msgType').val().trim();
+        switch( selected ) {
+            case 'text':
+                $('.msg-type-news').slideUp();
+                $('.preview-news').slideUp(function() {
+                    $('.preview-news-wrapper').css('display', 'none');
+                });
+                if( $('.msg-type-text').first().is(':hidden') ) {
+                    $('.msg-type-text').slideDown();
+                }
+                break;
+            case 'news':
+                $('.msg-type-text').slideUp();
+                if( $('.msg-type-news').first().is(':hidden') ) {
+                    $('.msg-type-news').slideDown();
+                    if( $('.preview-news-title').text().trim() != '' ) {
+                        $('.preview-news-wrapper').css('display', 'block');
+                        $('.preview-news').slideDown();
+                    }
+                }
+                break;
+            default:
+                $('.msg-type').each(function() {
+                    $(this).slideUp();
+                });
+                break;
+        }
+    }
+    {/literal}
 </script>
 <!-- END content -->
 {include file="library/footer.lbi"}
