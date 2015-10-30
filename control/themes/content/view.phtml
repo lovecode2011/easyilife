@@ -39,7 +39,7 @@
             <tr>
                 <th>ID</th>
                 <th>标题</th>
-                <th>封面</th>
+                <th>链接</th>
                 <th>分类</th>
                 <th>作者</th>
                 <th>发布时间</th>
@@ -52,6 +52,7 @@
             <tr>
                 <td>{$content.id}</td>
                 <td>{$content.title}</td>
+<!--
                 <td>
                     {if $content.original neq ''}
                     <img width="80" height="60" src="../{$content.original}" alt=""/>
@@ -59,6 +60,8 @@
                     <img width="80" height="60" src="../upload/image/no-image.png" alt=""/>
                     {/if}
                 </td>
+-->
+                <td>http://sbx.kwanson.com/article.php?id={$content.id}</td>
                 <td>{$content.section_name}</td>
                 <td>{$content.author}</td>
                 <td>{$content.add_time}</td>
