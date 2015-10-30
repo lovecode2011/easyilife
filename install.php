@@ -385,8 +385,11 @@ $sql[] = 'create table if not exists '.$db->table('ad_position').' (
 ) default charset=utf8;';
 
 $table[] = '初始化广告位数据';
-$sql[] = 'insert into '.$db->table('ad_position').' (`pos_name`, `width`, `height`, `number`, `code`)
- values (\'商家轮播\', \'600px\', \'400px\', \'3\', \'\');';
+$sql[] = 'insert into '.$db->table('ad_position').' (`id`, `pos_name`, `width`, `height`, `number`, `code`) values
+ (\'1\', \'首页轮播广告\', \'320\', \'140\', \'5\', \'\'),
+ (\'2\', \'首页展示广告\', \'320\', \'128\', \'3\', \'\'),
+ (\'3\', \'商家轮播\', \'320\', \'140\', \'3\', \'\'),
+ (\'4\', \'PC端网站首页大广告\', \'788\', \'328\', \'5\', \'\');';
 
 $table[] = '广告';
 $sql[] = 'create table if not exists '.$db->table('ad').' (

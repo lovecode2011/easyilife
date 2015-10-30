@@ -32,7 +32,7 @@ if('edit' == $opera)
     }
 
     $id = intval(getPOST('eid'));
-    $name = getPOST('pos_name');
+    $pos_name = getPOST('pos_name');
     $height = getPOST('height');
     $width = getPOST('width');
     $code = getPOST('code');
@@ -43,11 +43,11 @@ if('edit' == $opera)
         $response['msg'] = '参数错误';
     }
 
-    if($name == '')
+    if($pos_name == '')
     {
-        $response['errmsg']['name'] = '-请输入广告位置名称';
+        $response['errmsg']['pos_name'] = '-请输入广告位置名称';
     } else {
-        $name = $db->escape($name);
+        $pos_name = $db->escape($pos_name);
     }
 
     $code = $db->escape($code);
@@ -75,7 +75,7 @@ if('edit' == $opera)
     if(count($response['errmsg']) == 0 && $response['msg'] == '')
     {
         $adpos_data = array(
-            'pos_name' => $name,
+            'pos_name' => $pos_name,
             'height' => $height,
             'width' => $width,
             'code' => $code,
@@ -106,17 +106,17 @@ if('add' == $opera)
         exit;
     }
 
-    $name = getPOST('pos_name');
+    $pos_name = getPOST('pos_name');
     $height = getPOST('height');
     $width = getPOST('width');
     $code = getPOST('code');
     $number = intval(getPOST('number'));
 
-    if($name == '')
+    if($pos_name == '')
     {
-        $response['errmsg']['name'] = '-请输入广告位置名称';
+        $response['errmsg']['pos_name'] = '-请输入广告位置名称';
     } else {
-        $name = $db->escape($name);
+        $pos_name = $db->escape($pos_name);
     }
 
     $code = $db->escape($code);
@@ -144,7 +144,7 @@ if('add' == $opera)
     if(count($response['errmsg']) == 0)
     {
         $adpos_data = array(
-            'pos_name' => $name,
+            'pos_name' => $pos_name,
             'height' => $height,
             'width' => $width,
             'code' => $code,
@@ -208,7 +208,7 @@ if('delete' == $act)
         exit;
     }
 
-    if( $id == 1 ) {
+    if( 1 <= $id && $id <= 4 ) {
         show_system_message('请勿删除固定广告位', array(array('alt' => '广告位列表', 'link' => 'adpos.php')));
         exit;
     }

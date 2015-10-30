@@ -86,6 +86,10 @@ function menu1(dx, dx1, dx3) {
             }
         })
     }
+    if( $('#sidebar').height() < 700 ) {
+        $('#sidebar').css('height', '720px');
+    }
+
 
 }
 /* END 侧栏导航条 */
