@@ -385,15 +385,15 @@ $menus = array(
 
 global $topMenus;
 $topMenus = array(
-    'menu_site' => array('title' => '系统设置', 'icon' => '&#xe607;'),
-    'menu_member' => array('title' => '会员管理', 'icon' => '&#xe603;'),
-    'menu_business' => array('title' => '商户管理', 'icon' => '&#xe603;'),
-    'menu_account' => array('title' => '财务管理', 'icon' => '&#xe603;'),
-    'menu_product' => array('title' => '产品管理', 'icon' => '&#xe603;'),
-    'menu_order' => array('title' => '订单管理', 'icon' => '&#xe603;'),
-    'menu_admin' => array('title' => '权限管理', 'icon' => '&#xe601;'),
+    'menu_site' => array('title' => '系统设置', 'icon' => '&#xe605;'),
+    'menu_member' => array('title' => '会员管理', 'icon' => '&#xe604;'),
+    'menu_business' => array('title' => '商户管理', 'icon' => '&#xe608;'),
+    'menu_account' => array('title' => '财务管理', 'icon' => '&#xe60a;'),
+    'menu_product' => array('title' => '产品管理', 'icon' => '&#xe609;'),
+    'menu_order' => array('title' => '订单管理', 'icon' => '&#xe607;'),
+    'menu_admin' => array('title' => '权限管理', 'icon' => '&#xe603;'),
     'menu_self' => array('title' => '个人信息', 'icon' => '&#xe602;'),
     'menu_stastics' => array('title' => '站点统计', 'icon' => '&#xe603;'),
     'menu_cms' => array('title' => '资讯管理', 'icon' => '&#xe603;'),
-    'menu_wechat' => array('title' => '微信管理', 'icon' => '&#xe603;'),
+    'menu_wechat' => array('title' => '微信管理', 'icon' => '&#xe601;'),
 );

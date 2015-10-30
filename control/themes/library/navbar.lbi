@@ -3,7 +3,7 @@
     <div class="navbar-inner">
         <div class="navbar-left"><a href="#"><img class="png" src="images/logo.png" alt="logo"/></a></div>
         <div class="navbar-right">
-            <a href="#" class="navbar-member"><em>{$currentAdmin}</em><span class="icon">&#xe609;</span></a>
+            <a href="#" class="navbar-member"><em>{$currentAdmin}</em><span class="icon">&#xe60b;</span></a>
             <ul id="dropdown-menu" style="display:none;">
                 <li class="topbar-info-btn"><a href="index.php?act=logout">注销</a></li>
             </ul>

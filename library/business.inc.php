@@ -74,18 +74,20 @@ $purview = array(
         'pur_ad_del'
     ),
 
-    'pur_admin' => array(
-        'pur_admin_view',
-        'pur_admin_add',
-        'pur_admin_edit',
-        'pur_admin_del',
-    ),
     'pur_role' => array(
         'pur_role_view',
         'pur_role_add',
         'pur_role_edit',
         'pur_role_del',
     ),
+
+    'pur_admin' => array(
+        'pur_admin_view',
+        'pur_admin_add',
+        'pur_admin_edit',
+        'pur_admin_del',
+    ),
+
 
 );
 
@@ -163,7 +165,7 @@ global $menus;
 $menus = array(
     'pur_business' => array(
         'title' => '商户信息管理',
-        'icon' => '&#xe609;',
+        'icon' => '&#xe607;',
         'url' => 'business.php',
         'children' => array(
             'pur_business_base' => array('url' => 'business.php', 'title' => '基本信息'),
@@ -172,7 +174,7 @@ $menus = array(
     ),
     'pur_category' => array(
         'title' => '产品分类管理',
-        'icon' => '&#xe603;',
+        'icon' => '&#xe60c;',
         'url' => 'category.php',
         'children' => array(
             'pur_category_view' => array('url' => 'category.php', 'title' => '分类列表'),
@@ -182,7 +184,7 @@ $menus = array(
 
     'pur_product' => array(
         'title' => '产品管理',
-        'icon' => '&#xe608;',
+        'icon' => '&#xe60d;',
         'url' => 'product.php',
         'children' => array(
             'pur_product_view' => array('url' => 'product.php', 'title' => '产品列表'),
@@ -207,14 +209,14 @@ $menus = array(
 
     'pur_order' => array(
         'title' => '订单管理',
-        'icon' => '&#xe604;',
+        'icon' => '&#xe609;',
         'url' => 'order.php',
     ),
 
 
     'pur_finance' => array(
         'title' => '财务管理',
-        'icon' => '&#xe601;',
+        'icon' => '&#xe60e;',
         'url' => 'finance.php',
         'children' => array(
             'pur_finance_view' => array('url' => 'finance.php', 'title' => '账户明细'),
@@ -225,13 +227,13 @@ $menus = array(
 
     'pur_virtual_order' => array(
         'title' => '消费券管理',
-        'icon' => '&#xe604;',
+        'icon' => '&#xe608;',
         'url' => 'virtual_order.php',
     ),
 
     'pur_express' => array(
         'title' => '物流方式管理',
-        'icon' => '&#xe605;',
+        'icon' => '&#xe606;',
         'url' => 'express.php',
         'children' => array(
             'pur_express_view' => array('url' => 'express.php', 'title' => '物流方式列表'),
@@ -241,34 +243,36 @@ $menus = array(
 
     'pur_eval' => array(
         'title' => '评价管理',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe60b;',
         'url' => 'eval.php',
     ),
 
     'pur_ad' => array(
         'title' => '广告管理',
-        'icon' => '&#xe607;',
+        'icon' => '&#xe600;',
         'url' => 'ad.php',
     ),
 
-    'pur_admin' => array(
-        'title' => '管理员',
-        'icon' => '&#xe602;',
-        'url' => 'admin.php',
-        'children' => array(
-            'pur_admin_view' => array('url' => 'admin.php', 'title' => '管理员列表'),
-            'pur_admin_add' => array('url' => 'admin.php?act=add', 'title' => '增加管理员'),
-        ),
-    ),
     'pur_role' => array(
         'title' => '角色管理',
-        'icon' => '&#xe600;',
+        'icon' => '&#xe604;',
         'url' => 'role.php',
         'children' => array(
             'pur_role_view' => array('url' => 'role.php', 'title' => '角色列表'),
             'pur_role_add' => array('url' => 'role.php?act=add', 'title' => '增加角色'),
         ),
     ),
+
+    'pur_admin' => array(
+        'title' => '管理员',
+        'icon' => '&#xe605;',
+        'url' => 'admin.php',
+        'children' => array(
+            'pur_admin_view' => array('url' => 'admin.php', 'title' => '管理员列表'),
+            'pur_admin_add' => array('url' => 'admin.php?act=add', 'title' => '增加管理员'),
+        ),
+    ),
+
 
 );
 
