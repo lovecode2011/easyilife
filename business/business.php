@@ -14,7 +14,7 @@ business_base_init();
 $template = 'business/';
 
 $action = 'base|auth';
-$operation = 'base|auth';
+$operation = 'base|auth|partner';
 
 $opera = check_action($operation, getPOST('opera'));
 $act = check_action($action, getGET('act'));
@@ -241,6 +241,107 @@ if( 'auth' == $opera ) {
     }
 
 
+}
+
+if( 'partner' == $opera ) {
+    if( !check_purview('pur_business_auth', $_SESSION['business_purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+
+    $industry_id = trim(getPOST('industry'));
+    $category_id = trim(getPOST('classification'));
+    $contact = trim(getPOST('contact'));
+    $mobile = trim(getPOST('mobile'));
+    $email = trim(getPOST('email'));
+    $license = trim(getPOST('license'));
+    $identity = trim(getPOST('identity'));
+
+    $industry_id = intval($industry_id);
+    if( 0 >= $industry_id ) {
+        show_system_message('主营行业参数错误', array());
+        exit;
+    }
+
+    $category_id = intval($category_id);
+    if( 0 >= $category_id ) {
+        show_system_message('主营分类参数错误', array());
+        exit;
+    }
+
+    if( '' == $contact ) {
+        show_system_message('负责人不能为空', array());
+        exit;
+    }
+    $contact = $db->escape($contact);
+
+    if( '' == $mobile ) {
+        show_system_message('联系电话不能为空', array());
+        exit;
+    }
+    $mobile = $db->escape($mobile);
+
+    if( '' == $email ) {
+        show_system_message('电子邮箱不能为空', array());
+        exit;
+    }
+    $email = $db->escape($email);
+
+    if( '' == $license ) {
+        show_system_message('请选择身份证正面', array());
+        exit;
+    }
+    $license = $db->escape($license);
+
+    if( '' == $identity ) {
+        show_system_message('请选择身份证反面', array());
+        exit;
+    }
+    $identity = $db->escape($identity);
+
+    $check_email = 'select * from '.$db->table('business');
+    $check_email .= ' where email = \''.$email.'\'';
+    $check_email .= ' and business_account <> \''.$_SESSION['business_account'].'\'';
+    $check_email .= ' limit 1';
+    $email_exists = $db->fetchRow($check_email);
+    if( $email_exists ) {
+        show_system_message('邮箱已被使用', array());
+        exit;
+    }
+
+    $check_mobile = 'select * from '.$db->table('business');
+    $check_mobile .= ' where mobile = \''.$mobile.'\'';
+    $check_mobile .= ' and business_account <> \''.$_SESSION['business_account'].'\'';
+    $check_mobile .= ' limit 1';
+    $mobile_exists = $db->fetchRow($check_mobile);
+    if( $mobile_exists ) {
+        show_system_message('号码已被使用', array());
+        exit;
+    }
+
+
+    $data = array(
+        'company' => '',
+        'desc' => '',
+        'industry_id' => $industry_id,
+        'category_id' => $category_id,
+        'contact' => $contact,
+        'mobile' => $mobile,
+        'email' => $email,
+        'license' => $license,
+        'identity' => $identity,
+        'add_time' => time(),
+        'business_account' => $_SESSION['business_account'],
+        'status' => 0,
+    );
+
+    if( $db->autoInsert('auth', array($data)) ) {
+        show_system_message('您的申请已提交，请静候佳音。', array());
+        exit;
+    } else {
+        show_system_message('系统繁忙，请稍后重试', array());
+        exit;
+    }
 }
 //======================================================================
 

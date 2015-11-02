@@ -15,6 +15,7 @@
         {if $edit_disable eq false}
         <form id="profileAuthForm" method="post" action="" onsubmit="javascript:if(confirm('确认修改认证信息？')) return true; else return false;">
             <fieldset>
+                {if $business.company}
                 <p>
                     <label class="l-title">公司名称：</label>
                     <input disabled="disabled" class="text-input w300" type="text" maxlength="64" id="company" name="company" value="{$business.company}" placeholder="请输入公司名称">
@@ -23,6 +24,7 @@
                     <label class="l-title">公司简介：</label>
                     <textarea disabled="disabled" rows="5" cols="80" id="desc" name="desc">{$business.desc}</textarea>
                 </p>
+                {/if}
                 <p>
                     <label class="l-title">主营行业：</label>
                     <select disabled="disabled" id="industry" name="industry" class="w300">
@@ -54,8 +56,8 @@
                     <input disabled="disabled" class="text-input w300" type="text" maxlength="64" id="email" name="email" value="{$business.email}" placeholder="请输入电子邮箱">
                 </p>
                 <p>
-                    <label class="l-title">营业执照：</label>
-                    <input disabled="disabled" type="button" class="text-input" id="select-image-license" value="请选择营业执照" style="cursor:pointer">
+                    <label class="l-title">{if $company}营业执照{else}身份证正面{/if}：</label>
+                    <input disabled="disabled" type="button" class="text-input" id="select-image-license" value="请选择身份证正面" style="cursor:pointer">
                     <input type="hidden" class="" name="license" id="license" value="{$business.license}"/>
                 </p>
                 <p>
@@ -67,8 +69,8 @@
                     {/if}
                 </p>
                 <p>
-                    <label class="l-title">法人身份证：</label>
-                    <input disabled="disabled" type="button" class="text-input" id="select-image-identity" value="请选择法人身份证" style="cursor:pointer">
+                    <label class="l-title">{if $company}法人身份证{else}身份证反面{/if}：</label>
+                    <input disabled="disabled" type="button" class="text-input" id="select-image-identity" value="请选择身份证反面" style="cursor:pointer">
                     <input type="hidden" class="" name="identity" id="identity" value="{$business.identity}"/>
                 </p>
                 <p>
@@ -76,14 +78,14 @@
                     {if $business.identity eq ''}
                     <img id="show-image-identity" style="height:180px;"  alt="未选择图片" src="/upload/image/no-image.png">
                     {else}
-                    <img id="show-image-identity"  style="height:180px;" alt="" src="{$business.license_src}" />
+                    <img id="show-image-identity"  style="height:180px;" alt="" src="{$business.identity_src}" />
                     {/if}
                 </p>
                 <p>
                     <label class="l-title"></label>
                     <button class="btn btn-primary save" type="submit" style="display: none">提交审核</button>
                     <button class="btn btn-primary cancel" type="button" style="display: none">取消</button>
-                    <input type="hidden" name="opera" value="auth" />
+                    <input type="hidden" name="opera" value="{if $business.company}auth{else}partner{/if}" />
                 </p>
             </fieldset>
         </form>

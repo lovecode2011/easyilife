@@ -11,6 +11,7 @@
     <div class="basicInfo-main">
         <form id="authDetailForm" method="post" action="">
             <fieldset>
+                {if $business.company}
                 <p>
                     <label class="l-title">公司名称：</label>
                     <input class="text-input w300" type="text" maxlength="64" name="old-company" value="{$business.company}" disabled="disabled"/>
@@ -23,6 +24,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <textarea disabled="disabled" rows="6" cols="41" name="desc">{$auth.desc}</textarea>
                 </p>
+                {/if}
                 <p>
                     <label class="l-title">主营行业：</label>
                     <input class="text-input w300" type="text" maxlength="64" name="old-industry" value="{$business.industry_name}" disabled="disabled"/>
@@ -54,14 +56,14 @@
                     <input class="text-input w300" type="text" maxlength="64" name="email" value="{$auth.email}" disabled="disabled"/>
                 </p>
                 <p>
-                    <label class="l-title">营业执照：</label>
+                    <label class="l-title">{if $company}营业执照{else}身份证正面{/if}：</label>
                     <input type="hidden" name="license" id="license" placeholder="">
-                    <img class="select-image" alt="" src="{$auth.license}" width="400px">&nbsp;
+                    <img class="select-image" alt="" src="../{$auth.license}" width="400px">&nbsp;
                 </p>
                 <p>
-                    <label class="l-title">法人身份证：</label>
+                    <label class="l-title">{if $company}法人身份证{else}身份证反面{/if}：</label>
                     <input type="hidden" name="identity" id="identity" placeholder="">
-                    <img class="select-image" alt="" src="{$auth.identity}" width="400px">&nbsp;
+                    <img class="select-image" alt="" src="../{$auth.identity}" width="400px">&nbsp;
                 </p>
                 <p>
                     <label class="l-title"></label>

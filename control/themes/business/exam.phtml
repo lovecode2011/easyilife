@@ -5,7 +5,7 @@
 <!-- content -->
 <div id="content">
     <div class="content-title">
-        <h5 class="pull-left">商户入驻审核</h5>
+        <h5 class="pull-left">商户入驻审核-{if $company}商家入驻{else}合伙人{/if}</h5>
         <div class="clear"></div>
     </div>
     <div class="basicInfo-main">
@@ -18,7 +18,11 @@
                 <p>
                     <label class="l-title">LOGO：</label>
                     <input type="hidden" name="logo" id="logo" placeholder="">
+                    {if $business.shop_logo}
                     <img class="select-image" alt="" src="{$business.shop_logo}" width="95px" height="95px">&nbsp;
+                    {else}
+                    <img class="select-image" alt="" src="../upload/image/no-image.png" width="95px" height="95px">&nbsp;
+                    {/if}
                 </p>
                 <p>
                     <label class="l-title">店招：</label>
@@ -26,7 +30,7 @@
                     {if $business.shop_sign}
                     <img id="show-sign" alt="" width="370" height="95" src="../{$business.shop_sign}" />
                     {else}
-                    <img id="show-sign" alt="" width="370" height="95" src="../upload/image/no-image.png}" />
+                    <img id="show-sign" alt="" width="370" height="95" src="../upload/image/no-image.png" />
                     {/if}
                 </p>
                 <p>
@@ -37,6 +41,7 @@
                     <label class="l-title">主营分类：</label>
                     <input class="text-input w300" type="text" maxlength="64" name="category" value="{$business.cate_name}" disabled="disabled"/>
                 </p>
+                {if $business.company}
                 <p>
                     <label class="l-title">公司名称：</label>
                     <input class="text-input w300" type="text" maxlength="64" name="company" value="{$business.company}" disabled="disabled"/>
@@ -45,6 +50,7 @@
                     <label class="l-title">公司简介：</label>
                     <textarea rows="5" cols="80" name="desc" disabled="disabled">{$business.desc}</textarea>
                 </p>
+                {/if}
                 <p>
                     <label class="l-title">地址：</label>
                     <textarea rows="5" cols="80" name="address" disabled="disabled">{$business.address}</textarea>
@@ -61,6 +67,7 @@
                     <label class="l-title">电子邮箱：</label>
                     <input class="text-input w300" type="text" maxlength="64" name="email" value="{$business.email}" disabled="disabled"/>
                 </p>
+                {if $company}
                 <p>
                     <label class="l-title">营业执照：</label>
                     <input type="hidden" name="license" id="license" placeholder="">
@@ -71,6 +78,18 @@
                     <input type="hidden" name="identity" id="identity" placeholder="">
                     <img class="select-image" alt="" src="{$business.identity}" width="400px"/>&nbsp;
                 </p>
+                {else}
+                <p>
+                    <label class="l-title">身份证正面：</label>
+                    <input type="hidden" name="license" id="license" placeholder="">
+                    <img class="select-image" alt="" src="..{$business.license}" width="400px"/>&nbsp;
+                </p>
+                <p>
+                    <label class="l-title">身份证反面：</label>
+                    <input type="hidden" name="identity" id="identity" placeholder="">
+                    <img class="select-image" alt="" src="..{$business.identity}" width="400px"/>&nbsp;
+                </p>
+                {/if}
                 <p>
                     <label class="l-title"></label>
                     <input type="hidden" name="opera" value="exam" />
