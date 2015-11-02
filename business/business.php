@@ -356,13 +356,13 @@ if( 'base' == $act ) {
     $get_business .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
     $get_business .= ' limit 1';
     $business = $db->fetchRow($get_business);
-    if( file_exists(realpath('..'.$business['shop_logo'])) ) {
-        $business['shop_logo_src'] = '..'.$business['shop_logo'];
+    if( file_exists(realpath('../'.$business['shop_logo'])) ) {
+        $business['shop_logo_src'] = '../'.$business['shop_logo'];
     } else {
         $business['shop_logo_src'] = $business['shop_logo'];
     }
-    if( file_exists(realpath('..'.$business['shop_sign'])) ) {
-        $business['shop_sign_src'] = '..'.$business['shop_sign'];
+    if( file_exists(realpath('../'.$business['shop_sign'])) ) {
+        $business['shop_sign_src'] = '../'.$business['shop_sign'];
     } else {
         $business['shop_sign_src'] = $business['shop_sign'];
     }
@@ -456,13 +456,13 @@ if( 'auth' == $act ) {
     $get_business .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_business .= ' limit 1';
     $business = $db->fetchRow($get_business);
-    if( file_exists(realpath('..'.$business['license'])) ) {
-        $business['license_src'] = '..'.$business['license'];
+    if( file_exists(realpath('../'.$business['license'])) ) {
+        $business['license_src'] = '../'.$business['license'];
     } else {
         $business['license_src'] = $business['license'];
     }
-    if( file_exists(realpath('..'.$business['identity'])) ) {
-        $business['identity_src'] = '..'.$business['identity'];
+    if( file_exists(realpath('../'.$business['identity'])) ) {
+        $business['identity_src'] = '../'.$business['identity'];
     } else {
         $business['identity_src'] = $business['identity'];
     }
