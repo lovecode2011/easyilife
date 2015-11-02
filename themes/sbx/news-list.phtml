@@ -28,9 +28,11 @@
     {if $section_list}
     <nav class="newslist-nav">
         <ul>
-            <li id="index_all" class="on"><a href="javascript:sort('all');">全部</a></li>
+            {if $all eq 'all'}
+            <li id="index_all" class="on" style="width: {$width}%"><a href="javascript:sort('{$all}');">全部</a></li>
+            {/if}
             {foreach from=$section_list item=section}
-            <li id="index_{$section.id}"><a href="javascript:sort('{$section.id}');">{$section.section_name}</a></li>
+            <li id="index_{$section.id}" style="width: {$width}%"><a href="javascript:sort('{$section.id}');">{$section.section_name}</a></li>
             {/foreach}
         </ul>
     </nav>

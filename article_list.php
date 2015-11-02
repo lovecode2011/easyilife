@@ -57,13 +57,26 @@ if($id <= 4)
 
     assign('article_list', $article_list);
     assign('title', '消息中心');
+    assign('width', '25');
+    assign('all', 'all');
 } else {
-    $get_article_list = 'select `title`,`id`,`add_time`,`description` from ' . $db->table('content') . ' where `section_id`='.$id.' order by `add_time` DESC';
-    $article_list = $db->fetchAll($get_article_list);
 
+    $get_section_list = 'select `section_name`, `id` from '.$db->table('section').' where `parent_id` = '.$id.' order by `id` asc';
+    $section_list = $db->fetchAll($get_section_list);
+    if( $section_list ) {
+        $get_article_list = 'select `title`,`id`,`add_time`,`description` from ' . $db->table('content') . ' where `section_id`='.$section_list[0]['id'].' order by `add_time` DESC';
+        $article_list = $db->fetchAll($get_article_list);
+
+        assign('width', (100 / count($section_list)));
+    } else {
+        $get_article_list = 'select `title`,`id`,`add_time`,`description` from ' . $db->table('content') . ' where `section_id`='.$id.' order by `add_time` DESC';
+        $article_list = $db->fetchAll($get_article_list);
+
+        assign('width', '25');
+    }
     assign('article_list', $article_list);
-
-    assign('section_list', '');
+    assign('all', $id);
+    assign('section_list', $section_list);
 
     $get_section = 'select `section_name` from '.$db->table('section').' where `id`='.$id;
     $section = $db->fetchRow($get_section);
