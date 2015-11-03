@@ -15,7 +15,7 @@
         {if $edit_disable eq false}
         <form id="profileAuthForm" method="post" action="" onsubmit="javascript:if(confirm('确认修改认证信息？')) return true; else return false;">
             <fieldset>
-                {if $business.company}
+                {if !empty($business.company)}
                 <p>
                     <label class="l-title">公司名称：</label>
                     <input disabled="disabled" class="text-input w300" type="text" maxlength="64" id="company" name="company" value="{$business.company}" placeholder="请输入公司名称">
@@ -56,8 +56,8 @@
                     <input disabled="disabled" class="text-input w300" type="text" maxlength="64" id="email" name="email" value="{$business.email}" placeholder="请输入电子邮箱">
                 </p>
                 <p>
-                    <label class="l-title">{if $company}营业执照{else}身份证正面{/if}：</label>
-                    <input disabled="disabled" type="button" class="text-input" id="select-image-license" value="请选择身份证正面" style="cursor:pointer">
+                    <label class="l-title">{if $business.company}营业执照{else}身份证正面{/if}：</label>
+                    <input disabled="disabled" type="button" class="text-input" id="select-image-license" value="请选择{if $business.company}营业执照{else}身份证正面{/if}" style="cursor:pointer">
                     <input type="hidden" class="" name="license" id="license" value="{$business.license}"/>
                 </p>
                 <p>
@@ -69,8 +69,8 @@
                     {/if}
                 </p>
                 <p>
-                    <label class="l-title">{if $company}法人身份证{else}身份证反面{/if}：</label>
-                    <input disabled="disabled" type="button" class="text-input" id="select-image-identity" value="请选择身份证反面" style="cursor:pointer">
+                    <label class="l-title">{if $business.company}法人身份证{else}身份证反面{/if}：</label>
+                    <input disabled="disabled" type="button" class="text-input" id="select-image-identity" value="请选择{if $business.company}法人身份证{else}身份证反面{/if}" style="cursor:pointer">
                     <input type="hidden" class="" name="identity" id="identity" value="../{$business.identity}"/>
                 </p>
                 <p>

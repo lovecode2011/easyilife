@@ -21,4 +21,38 @@ assign('article', $article);
 $get_section_name = 'select `section_name` from '.$db->table('section').' where `id`='.$article['section_id'];
 assign('section_name', $db->fetchOne($get_section_name));
 
+//生成资讯推广链接
+$param = array('url'=>'article.php?id='.$article['id'], 'opera'=>'get_url', 'account'=>$_SESSION['account']);
+$get_url_response = post('http://'.$_SERVER['HTTP_HOST'].'/'.BASE_DIR.'d/index.php', $param);
+
+$get_url_response = json_decode($get_url_response);
+if($get_url_response->error == 0)
+{
+    assign('recommend_url', $get_url_response->url);
+} else {
+    assign('recommend_url', '');
+}
+
+//若是推广，生成关注二维码
+$member_id = intval(getGET('ukey'));
+
+if( $member_id > 0 )
+{
+    $get_user_info = 'select * from '.$db->table('member').' where `id`=\''.$member_id.'\'';
+    $user_info = $db->fetchRow($get_user_info);
+
+    assign('user_info', $user_info);
+
+    $access_token = get_access_token($config['appid'], $config['appsecret']);
+    $qrcode = get_qrcode($user_info['openid'], $access_token);
+
+    if($qrcode) {
+        assign('qrcode', $qrcode);
+    } else {
+        assign('qrcode', '');
+    }
+} else {
+    assign('qrcode', '');
+}
+
 $smarty->display('news-detail.phtml');
