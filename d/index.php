@@ -8,12 +8,15 @@
 include 'library/init.inc.php';
 
 $code = getGET('code');
+$log->record_array($_GET);
 if($code != '')
 {
     $code = $db->escape($code);
     $url = $db->fetchOne('select `url` from '.$db->table('short_link').' where `hash`=\''.$code.'\'');
-    $url = 'http://'.$_SERVER['HTTP_HOST'].preg_replace('/d\/[a-zA-Z]*$/', $url, $_SERVER['REQUEST_URI']);
+    $log->record($url.','.$_SERVER['REQUEST_URI']);
+    $url = 'http://'.$_SERVER['HTTP_HOST'].preg_replace('/d\/[a-zA-Z].*$/', $url, $_SERVER['REQUEST_URI']);
 
+    $log->record('target url:'.$url);
     if(is_weixin() && $_SESSION['openid'] == '')
     {
         $oathor_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=2048#wechat_redirect';

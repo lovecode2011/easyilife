@@ -13,7 +13,7 @@ if($id <= 0)
     redirect('index.php');
 }
 
-$get_article = 'select `id`, `wap_content`,`title`,`add_time`,`author`,`section_id` from '.$db->table('content').' where `id`='.$id;
+$get_article = 'select `id`,`description`,`original`, `wap_content`,`title`,`add_time`,`author`,`section_id` from '.$db->table('content').' where `id`='.$id;
 $article = $db->fetchRow($get_article);
 
 assign('article', $article);
@@ -30,18 +30,16 @@ if($get_url_response->error == 0)
 {
     assign('recommend_url', $get_url_response->url);
 } else {
-    assign('recommend_url', '');
+    assign('recommend_url', 'article.php?id='.$id);
 }
 
 //若是推广，生成关注二维码
-$member_id = intval(getGET('ukey'));
+$member_id = isset($_SESSION['parent_id']) ? $_SESSION['parent_id'] : 0;
 
 if( $member_id > 0 )
 {
     $get_user_info = 'select * from '.$db->table('member').' where `id`=\''.$member_id.'\'';
     $user_info = $db->fetchRow($get_user_info);
-
-    assign('user_info', $user_info);
 
     $access_token = get_access_token($config['appid'], $config['appsecret']);
     $qrcode = get_qrcode($user_info['openid'], $access_token);
