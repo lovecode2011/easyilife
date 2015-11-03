@@ -13,7 +13,7 @@ if($id <= 0)
     redirect('index.php');
 }
 
-$get_article = 'select `wap_content`,`title`,`add_time`,`author`,`section_id` from '.$db->table('content').' where `id`='.$id;
+$get_article = 'select `id`, `wap_content`,`title`,`add_time`,`author`,`section_id` from '.$db->table('content').' where `id`='.$id;
 $article = $db->fetchRow($get_article);
 
 assign('article', $article);
