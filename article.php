@@ -40,6 +40,7 @@ if( $member_id > 0 )
 {
     $get_user_info = 'select * from '.$db->table('member').' where `id`=\''.$member_id.'\'';
     $user_info = $db->fetchRow($get_user_info);
+    assign('user_info', $user_info);
 
     $access_token = get_access_token($config['appid'], $config['appsecret']);
     $qrcode = get_qrcode($user_info['openid'], $access_token);

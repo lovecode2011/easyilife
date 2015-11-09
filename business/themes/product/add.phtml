@@ -124,8 +124,9 @@
                 <p>
                     <label class="l-title"></label>
                     <input type="hidden" name="opera" value="add" />
-                    <button class="btn btn-primary" type="submit" name="publish" value="1">保存不发布</button> &nbsp;
-                    <button type="submit" class="btn btn-primary" name="publish" value="2">审核发布</button>
+                    <input type="hidden" name="status" value="0" />
+                    <button class="btn btn-primary" type="button" onclick="do_submit();">保存不发布</button> &nbsp;
+                    <button type="button" class="btn btn-primary" onclick="do_publish();">审核发布</button>
                 </p>
 
             </fieldset>
@@ -267,6 +268,14 @@ $(function() {
 
     });
 });
+function do_submit() {
+    document.getElementById('productAddForm').submit();
+}
+
+function do_publish() {
+    $('input[name=status]').val('1');
+    do_submit();
+}
 </script>
 <script type="text/javascript" src="js/product/add.js"></script>
 {include file="library/footer.lbi"}

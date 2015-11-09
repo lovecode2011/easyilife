@@ -9,4 +9,3 @@
     <!--[if IE 6]><script src="js/DDbelatedPNG.js"></script><script>DD_belatedPNG.fix('.png');</script><![endif]-->
     <script type="text/javascript" src="js/jquery.js"></script>
 </head>
-<body>

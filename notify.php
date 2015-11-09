@@ -31,29 +31,45 @@ if($data)
         $pattern = '/R.*/';
         $data->sign = strtolower($data->sign);
 
-        if(preg_match($pattern, $sn))
-        {
+        if(preg_match($pattern, $sn)) {
             //充值订单
-            $get_recharge_info = 'select `account`,`amount` from '.$db->table('recharge').' where `recharge_sn`=\''.$sn.'\'';
+            $get_recharge_info = 'select `account`,`amount` from ' . $db->table('recharge') . ' where `recharge_sn`=\'' . $sn . '\'';
             $recharge = $db->fetchRow($get_recharge_info);
 
-            if($recharge && $recharge['amount']*100 == $data->total_fee && $data->sign == tenpay_sign($data, $mch_key))
-            {
-                $log->record($sn.'支付成功');
+            if ($recharge && $recharge['amount'] * 100 == $data->total_fee && $data->sign == tenpay_sign($data, $mch_key)) {
+                $log->record($sn . '支付成功');
                 //验证充值金额正确
                 $recharge_data = array(
                     'status' => 1
                 );
-                $flag = $db->autoUpdate('recharge', $recharge_data, '`recharge_sn`=\''.$sn.'\'');
-                if($flag && $db->get_affect_rows())
-                {
-                    add_memeber_exchange_log($recharge['account'], $recharge['amount'], 0, 0, 0, 0, $recharge['account'], $recharge['account'].'在线充值');
+                $flag = $db->autoUpdate('recharge', $recharge_data, '`recharge_sn`=\'' . $sn . '\'');
+                if ($flag && $db->get_affect_rows()) {
+                    add_memeber_exchange_log($recharge['account'], $recharge['amount'], 0, 0, 0, 0, $recharge['account'], $recharge['account'] . '在线充值');
 
                     add_recharge_log($sn, $recharge['account'], $recharge['account'], 0, 1, '在线充值');
                     $log->record('充值成功,成功更新充值记录');
                 }
             } else {
                 //充值金额不正确或返回不正确
+            }
+
+        } elseif( strpos($data->detail, '合伙人费用') ) {
+            $account = explode('-', $data->detail);
+            $account = $account[0];
+            //支付成功
+            if( $config['partner_fee'] * 100 == $data->total_fee  && $data->sign == tenpay_sign($data, $mch_key) ) {
+                //是否已是合伙人
+                $get_level_id = 'select `level_id` from '.$db->table('member').' where account = \''.$account.'\' limit 1';
+                $level_id = $db->fetchOne($get_level_id);
+
+                if( $level_id == 0 ) {
+                    $update_member = 'update '.$db->table('member').' set level_id = 1';
+                    $update_member .= ' where account = \''.$account.'\' limit 1';
+                    $db->update($update_member);
+                }
+                distribution_settle($config['partner_fee'] ,0, 0);
+            } else {
+
             }
         } else {
             //支付成功

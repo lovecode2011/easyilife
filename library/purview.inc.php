@@ -394,6 +394,6 @@ $topMenus = array(
     'menu_admin' => array('title' => '权限管理', 'icon' => '&#xe603;'),
     'menu_self' => array('title' => '个人信息', 'icon' => '&#xe602;'),
     'menu_stastics' => array('title' => '站点统计', 'icon' => '&#xe603;'),
-    'menu_cms' => array('title' => '资讯管理', 'icon' => '&#xe603;'),
+    'menu_cms' => array('title' => '资讯管理', 'icon' => '&#xe600;'),
     'menu_wechat' => array('title' => '微信管理', 'icon' => '&#xe601;'),
 );
