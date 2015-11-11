@@ -288,7 +288,7 @@ if('submit_order' == $opera)
                     $order_data = array('pay_time'=>time());
 
                     $db->autoUpdate('order', $order_data, '`order_sn`=\''.$order_sn.'\'');
-                    add_order_log($order_sn, $_SESSION['account'], $status, "使用余额/佣金/积分支付");
+                    add_order_log($order_sn, $_SESSION['account'], 3, "使用余额/佣金/积分支付");
                 }
 
                 if($cart['balance_paid'] || $cart['reward_paid'] || $cart['integral_paid'])
@@ -335,9 +335,9 @@ if('submit_order' == $opera)
                     //订单结算
                     if($status == 4)
                     {
-                        $cart['total_reward'] = $total_reward/2.5;
                         //计算三级分销
-                        distribution_settle($cart['total_product_amount'], $user_info['path'], $order_sn);
+                        $log->record('计算分销奖金:'.$cart['total_reward']);
+                        distribution_settle($cart['total_reward'], $user_info['path'], $order_sn);
                         //计算赠送积分
                         if($total_integral_given)
                         {
@@ -345,9 +345,10 @@ if('submit_order' == $opera)
                             add_member_reward($_SESSION['account'], 0, $cart['total_integral_given'], '订单'.$order_sn.'赠送积分');
                         }
                         //计入商家收入
-                        if(add_business_exchange($cart['business_account'], 0, $cart['total_product_amount']+$cart['total_delivery_fee'], $_SESSION['account'], $order_sn.'支付成功'))
+                        $business_income = $cart['total_product_amount'] + $cart['total_delivery_fee'] - $cart['total_reward'];
+                        if(add_business_exchange($cart['business_account'], 0, $business_income, $_SESSION['account'], $order_sn.'支付成功'))
                         {
-                            add_business_trade($cart['business_account'], $cart['total_product_amount']+$cart['total_delivery_fee'], $order_sn);
+                            add_business_trade($cart['business_account'], $business_income, $order_sn);
                         } else {
                             //增加商家收入失败
                             $log->record($order_sn.'计入商家收入失败');
@@ -742,7 +743,7 @@ $total_amount = $total_product_amount + $total_delivery_fee;
 $_SESSION['total_amount'] = $total_amount;
 
 //读取用户信息
-$get_user_info = 'select `integral`,`reward`,`balance` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
+$get_user_info = 'select `integral`,`reward`,`balance`,`level_id` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
 $user_info = $db->fetchRow($get_user_info);
 
 assign('user_info', $user_info);

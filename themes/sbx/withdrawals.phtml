@@ -176,9 +176,19 @@
             $("#dialog_close").click(function() {
                 window.location.href = "bank.php?act=add";
             });
-            {/if}
+        {/if}
 
+        {if $no_privicy}
+            show_message_dialog("请先升级为合伙人");
+            $("#dialog_close_btn").attr("href", "javascript:void(0);");
+            $("#dialog_close_btn").click(function() {
+                window.location.href = "copartner.php";
             });
+            $("#dialog_close").click(function() {
+                window.location.href = "copartner.php";
+            });
+        {/if}
+    });
 
             function show_message_dialog(message) {
                 $(".cd-popup").addClass("is-visible");

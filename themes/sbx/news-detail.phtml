@@ -72,6 +72,10 @@
         <img src="{$template_dir}images/loading.gif"/>
     </div>
 </div>
+{if is_weixin()}
+{include file="float_icon.phtml"}
+{/if}
+<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
     function show_message_dialog(message) {
         $(".cd-popup").addClass("is-visible");
@@ -84,8 +88,14 @@
         $(".cd-popup").removeClass("is-visible");
         $("#message_dialog").hide();
     }
+
+    $(function(){
+        var ele = document.getElementsByClassName("article-con")[0].getElementsByTagName("img");
+        for(var i = 0; i < ele.length; i++) {
+            ele[i].style.width = "100%";
+        }
+    });
 </script>
-<script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
 {if is_weixin()}
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
 <script type="text/javascript">
@@ -110,6 +120,7 @@
         var share_link = '{$recommend_url}';
         var share_img = '{$config.domain}{$article.original}';
         var share_desc = '{$article.description}';
+
         //分享到朋友圈
         wx.onMenuShareTimeline({
             title: share_title, // 分享标题
@@ -192,6 +203,12 @@
                 // 用户取消分享后执行的回调函数
                 show_message_dialog("人家想去QQ空间看看啦~");
             }
+        });
+
+        $("#float-icon").click(function(){
+            wx.ready(function(){
+                wx.closeWindow();
+            });
         });
     });
     wx.error(function(res){

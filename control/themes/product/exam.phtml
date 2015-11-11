@@ -130,7 +130,7 @@
                     <input type="radio" name="free_delivering" value="0" {if $product.free_delivery eq 0}checked="checked"{/if}> <em>否</em>&nbsp;
                     <input type="radio" name="free_delivering" value="1" {if $product.free_delivery eq 1}checked="checked"{/if}> <em>是</em>
                 </p>
-                <p style="display: none;">
+                <p>
                     <label class="l-title">返利：</label>
                     <input class="text-input w150" type="text" name="reward" placeholder="返利" value="{$product.reward}">
                     <span class="error-input">-请填写购买产品获得的返利，默认为0</span>

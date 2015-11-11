@@ -14,7 +14,7 @@ $opera = check_action($operation, getPOST('opera'));
 
 $template = 'withdrawals.phtml';
 
-$get_user_info = 'select `balance`,`reward`,`password` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
+$get_user_info = 'select `balance`,`reward`,`password`,`level_id` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
 
 $user_info = $db->fetchRow($get_user_info);
 
@@ -137,6 +137,14 @@ if('opera' == $act)
         redirect('bind_mobile.php');
     }
     assign('withdraw_await', $withdraw_await);
+
+    //检查是否是合伙人身份
+    if($user_info['level_id'] < 1)
+    {
+        assign('no_privicy', true);
+    } else {
+        assign('no_privicy', false);
+    }
 
     //获取用户银行卡
     $get_bank_list = 'select `id`,`bank`,`bank_account`,`bank_card` from '.$db->table('bank_card').' where `account`=\''.$_SESSION['account'].'\'';

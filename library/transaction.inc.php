@@ -234,7 +234,7 @@ function modify_inventory($product_sn, $attributes, $number)
  * @param string $path
  * @return bool
  */
-function distribution_settle($reward, $integral, $path, $order_sn = '')
+function distribution_settle($reward, $path, $order_sn = '')
 {
     global $db;
     global $config;
@@ -286,6 +286,8 @@ function distribution_settle($reward, $integral, $path, $order_sn = '')
             add_memeber_exchange_log($account, 0, 0, 0, 0, $reward_tmp, 'settle', $order_sn.'推广奖');
             add_member_reward($account, $reward_tmp, 0, $order_sn);
         }
+
+        $level++;
     }
 
     //这种计算方法仅适用于子节点的id大于父节点
@@ -329,7 +331,8 @@ function add_order_log($order_sn, $operator, $status, $remark = '')
         'order_sn' => $order_sn,
         'operator' => $operator,
         'status' => $status,
-        'remark' => $remark
+        'remark' => $remark,
+        'add_time' => time()
     );
 
     return $db->autoInsert('order_log', array($log_data));

@@ -102,7 +102,7 @@
     {if ($user_info.integral gt 0 or $user_info.reward gt 0 or $user_info.balance gt 0) and $total_amount gt 0}
     <section class="preferential border_bottom">
         <ul class="preferential-list">
-            {if $user_info.reward gt 0}
+            {if $user_info.reward gt 0 and $user_info.level_id gt 0}
             <li>
                 可用佣金
                 {if $user_info.reward/$config.reward_rate>$total_amount}

@@ -19,7 +19,6 @@ $success_response =<<<XML
 </xml>
 XML;
 
-
 if($data)
 {
     if($data->return_code == 'SUCCESS')
@@ -75,10 +74,13 @@ if($data)
             //支付成功
             $sn = $data->out_trade_no;
             $sn = $db->escape($sn);
+
             //产品订单
             $get_order_info = 'select `amount`,`account`,`business_account`,`product_amount`,`mobile`,`delivery_fee` from '.$db->table('order').' where `order_sn`=\''.$sn.'\'';
 
             $order = $db->fetchRow($get_order_info);
+
+            add_order_log($sn, $order['account'], 3, "在线支付");
 
             if($order && $order['amount']*100 == $data->total_fee && $data->sign == tenpay_sign($data, $mch_key))
             {
@@ -96,11 +98,12 @@ if($data)
                     //2. 订单结算
                     $get_path = 'select `path` from '.$db->table('member').' where `account`=\''.$order['account'].'\'';
                     $path = $db->fetchOne($get_path);
-                    distribution_settle($order['product_amount'], $path, $sn);
+                    distribution_settle($order['reward_amount'], $path, $sn);
                     //3. 新增商家收入
-                    if(add_business_exchange($order['business_account'], 0, $order['product_amount']+$order['delivery_fee'], $order['account'], '用户在线支付'))
+                    $business_income = $order['product_amount']+$order['delivery_fee'] - $order['reward_amount'];
+                    if(add_business_exchange($order['business_account'], 0, $business_income, $order['account'], '用户在线支付'))
                     {
-                        add_business_trade($order['business_account'], $order['product_amount']+$order['delivery_fee'], $sn);
+                        add_business_trade($order['business_account'], $business_income, $sn);
                     } else {
                         //增加商家收入失败
                     }
