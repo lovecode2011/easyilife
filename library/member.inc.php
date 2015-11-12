@@ -58,7 +58,8 @@ function  add_member_reward($account, $reward, $integral = 0.0, $remark = '')
         'reward' => $reward,
         'integral' => $integral,
         'remark' => $remark,
-        'settle_time' => time()
+        'settle_time' => time(),
+        'status' => 0
     );
 
     return $db->autoInsert('member_reward', array($reward_data));
