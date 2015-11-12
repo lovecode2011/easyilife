@@ -40,15 +40,15 @@ $(function(){
     });
 
     /* 搜索结果价格排序 */
-    //$(".f-sort a").click(function(){
-    //    $(".f-sort a").removeClass("curr");
-    //    $(this).addClass("curr");
-    //    if($(this).children().hasClass("icon") && $(this).find(".up").is(":hidden")){
-    //       $(this).find(".up").show();$(this).find(".down").hide();
-    //    }else{
-    //        $(this).find(".up").hide();$(this).find(".down").show();
-    //    }
-    //});
+    $(".f-sort a").click(function(){
+        $(".f-sort a").removeClass("curr");
+        $(this).addClass("curr");
+        if($(this).children().hasClass("icon") && $(this).find(".up").is(":hidden")){
+           $(this).find(".up").show();$(this).find(".down").hide();
+        }else{
+            $(this).find(".up").hide();$(this).find(".down").show();
+        }
+    });
 
     /* 产品详情侧栏店铺分类 */
     $(".aside-box-c dt i").click(function(){

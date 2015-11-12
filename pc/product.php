@@ -7,10 +7,114 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'collection|distribution|delete_history';
-
+$operation = 'collection|distribution|delete_history|delivery_city|delivery_district|empty_history|get_comments';
 $opera = check_action($operation, getPOST('opera'));
 
+$page_count = 1;    //一页评论的数量，调试多个页面
+//获取评论
+if( 'get_comments' == $opera ) {
+    $response = array(
+        'error' => 1,
+        'msg' => '',
+    );
+    $type_array = array('all', 'good', 'normal', 'bad');
+    if(!check_cross_domain()) {
+        $product_sn = trim(getPOST('product_sn'));
+        $type = trim(getPOST('type'));
+        $page = intval(getPOST('page'));
+
+        $product_sn = $db->escape($product_sn);
+
+        if( $product_sn == '' ) {
+            $response['msg'] = '参数错误';
+            echo json_encode($response);
+            exit;
+        }
+
+        $type = in_array($type, $type_array) ? $type : 'all';
+
+        $where = ' c.parent_id = 0';
+        switch($type) {
+            case 'all': $where .= '';break;
+            case 'good': $where .= ' and c.star = 5';break;
+            case 'normal': $where .= ' and c.star > 1 and c.star < 5';break;
+            case 'bad': $where .= ' and c.star = 1';break;
+            default: $where .= '';break;
+        }
+        $where .= ' and product_sn = \''.$product_sn.'\'';
+
+        $get_total = 'select count(*) from '.$db->table('comment').' as c where '.$where;
+        $total = $db->fetchOne($get_total);
+        $total_page = ceil($total / $page_count);
+
+        $offset = $page_count * ( $page - 1 );
+        $page = $page > $total_page ? $total_page : $page;
+        $page = $page < 1 ? 1 : $page;
+        $offset = $page_count * ( $page - 1 );
+
+        //读取评论信息
+        $get_comments = 'select c.`id`,c.`comment`,c.`star`,c.`add_time`,m.`headimg`,m.`nickname` from '.$db->table('comment').' as c'.
+            ' join '.$db->table('member').' as m using(`account`) where '.$where.' order by c.add_time desc limit '.$offset.','.$page_count;
+        $comments = $db->fetchAll($get_comments);
+        if( $comments ) {
+            foreach($comments as $key=>$c)
+            {
+                if( empty($c['headimg']) ) {
+                    $comments[$key]['headimg'] = 'images/default-user.png';
+                }
+                $comments[$key]['add_time'] = date('Y/m/d H:i:s', $c['add_time']);
+                $get_reply = 'select `comment`,`add_time` from '.$db->table('comment').' where `parent_id`='.$c['id'];
+
+                $reply = $db->fetchRow($get_reply);
+                if( $reply ) {
+                    $comments[$key]['reply'] = $reply;
+                    $comments[$key]['reply']['add_time'] = date('Y/m/d H:i:s', $comments[$key]['reply']['add_time']);
+                }
+            }
+
+            $response['error'] = 0;
+            $response['comments'] = $comments;
+            $response['total_page'] = $total_page;
+        } else {
+            $response['comments'] = $get_comments;
+            $response['msg'] = '参数错误';
+        }
+        $response['type'] = $type;
+        $response['page'] = $page;
+
+    } else {
+        $response['msg'] = '请从本站提交数据';
+    }
+    echo json_encode($response);
+    exit;
+}
+
+//清空我的足迹
+if( 'empty_history' == $opera ) {
+    $response = array(
+        'error' => 1,
+        'msg' => '',
+    );
+    if(!check_cross_domain() && !empty($_SESSION['account'])) {
+        $delete_history = 'delete from '.$db->table('history').' where `account`=\''.$_SESSION['account'].'\'';
+        if($db->delete($delete_history))
+        {
+            $response['error'] = 0;
+            $response['msg'] = '删除足迹成功';
+        } else {
+            $response['msg'] = '001:系统繁忙，请稍后再试';
+        }
+    } else {
+        if (empty($_SESSION['account'])) {
+            $response['msg'] = '请先登录';
+            $response['error'] = 2;
+        } else {
+            $response['msg'] = '404:参数错误';
+        }
+    }
+    echo json_encode($response);
+    exit;
+}
 //我的足迹
 if('delete_history' == $opera)
 {
@@ -156,6 +260,105 @@ if('collection' == $opera)
     echo json_encode($response);
     exit;
 }
+//获取配送地址-城市
+if( 'delivery_city' == $opera ) {
+    $response = array(
+        'error' => 1,
+        'msg' => '',
+    );
+
+    if( check_cross_domain() ) {
+        $response['msg'] = '请从本站提交';
+        echo json_encode($response);
+        exit;
+    }
+    $product_sn = trim(getPOST('product_sn'));
+    $id = intval(getPOST('id'));
+
+    $product_sn = $db->escape($product_sn);
+    $table = 'city';
+
+    $get_city_list = 'select m.city, t.id, t.city_name from '.$db->table('delivery_area_mapper').' as m';
+    $get_city_list .= ' left join '.$db->table($table).' as t on t.id = m.city';
+    $get_city_list .= ' left join '.$db->table('product').' as p on p.business_account = m.business_account';
+    $get_city_list .= ' where p.product_sn = \''.$product_sn.'\' and m.province = \''.$id.'\'';
+
+    $city_list = $db->fetchAll($get_city_list);
+    if( $city_list ) {
+        $useful = false;
+        foreach( $city_list as $key => $city ) {
+            if( $city['city'] != 0 ) {
+                $useful = true;
+            } else {
+                unset($city_list[$key]);
+            }
+        }
+        if( !$useful ) {
+            $get_city_list = 'select id, city_name from '.$db->table('city').' where province_id = \''.$id.'\'';
+            $city_list = $db->fetchAll($get_city_list);
+        }
+
+        $response['error'] = 0;
+        $response['data'] = $city_list;
+    } else {
+        $response['msg'] = '系统繁忙，请稍后重试';
+    }
+    echo json_encode($response);
+    exit;
+}
+//获取配送地址-区
+if( 'delivery_district' == $opera ) {
+    $response = array(
+        'error' => 1,
+        'msg' => '',
+    );
+
+    if( check_cross_domain() ) {
+        $response['msg'] = '请从本站提交';
+        echo json_encode($response);
+        exit;
+    }
+    $product_sn = trim(getPOST('product_sn'));
+    $id = intval(getPOST('id'));
+
+    $product_sn = $db->escape($product_sn);
+    $table = 'district';
+
+    $get_district_list = 'select m.district, t.id, t.district_name from '.$db->table('delivery_area_mapper').' as m';
+    $get_district_list .= ' left join '.$db->table($table).' as t on t.id = m.district';
+    $get_district_list .= ' left join '.$db->table('product').' as p on p.business_account = m.business_account';
+    $get_district_list .= ' where p.product_sn = \''.$product_sn.'\' and m.city = \''.$id.'\'';
+
+    $district_list = $db->fetchAll($get_district_list);
+    if( $district_list ) {
+        $useful = false;
+        foreach( $district_list as $key => $district ) {
+            if( $district['district'] != 0 ) {
+                $useful = true;
+            } else {
+                unset($district_list[$key]);
+            }
+        }
+        if( !$useful ) {
+            $get_district_list = 'select id, district_name from '.$db->table('district').' where city_id = \''.$id.'\'';
+            $district_list = $db->fetchAll($get_district_list);
+        }
+
+        $response['error'] = 0;
+        $response['data'] = $district_list;
+    } else {
+        $get_district_list = 'select id, district_name from '.$db->table('district').' where city_id = \''.$id.'\'';
+        $district_list = $db->fetchAll($get_district_list);
+        if( $district_list ) {
+            $response['error'] = 0;
+            $response['data'] = $district_list;
+        } else {
+            $response['msg'] = '系统繁忙，请稍后重试';
+        }
+    }
+    echo json_encode($response);
+    exit;
+}
 
 $id = intval(getGET('id'));
 
@@ -164,10 +367,11 @@ if($id <= 0)
     redirect('index.php');
 }
 
-$get_product = 'select * from '.$db->table('product').' where  `status`=4 and `id`='.$id;
+$get_product = 'select p.*,b.name as brand_name from '.$db->table('product').' as p ';
+$get_product .= ' left join '.$db->table('brand').' as b on p.brand_id = b.id';
+$get_product .= ' where  p.`status`=4 and p.`id`='.$id;
 
 $product = $db->fetchRow($get_product);
-
 if($product)
 {
     $product_sn = $product['product_sn'];
@@ -254,10 +458,10 @@ if($product)
         }
 
         assign('inventory_json', json_encode($inventory_json));
-
         foreach ($attributes_map as $aid => $value)
         {
             $attributes_map[$aid]['values'] = array_unique($value['values']);
+
         }
 
         if(count($attributes_map) == 1)
@@ -301,10 +505,43 @@ if($product)
         assign('attributes', array());
         assign('attributes_json', '""');
     }
+
+    //读取配送区域
+    if( $product['free_delivery'] == 1 ) {
+        $product['delivery_fee'] = '免运费';
+    } else {
+        $get_delivery_area = 'select * from '.$db->table('delivery_area');
+        $get_delivery_area .= ' where business_account = \''.$product['business_account'].'\'';
+        $delivery_area = $db->fetchAll($get_delivery_area);
+        $delivery_fee = 65535;
+        if( $delivery_area ) {
+            foreach( $delivery_area as $area ) {
+                $temp = caculate_delivery_fee($area['first_weight'], $area['next_weight'], $area['free'], $product['weight']);
+                $delivery_fee = $delivery_fee > $temp ? $temp : $delivery_fee;
+            }
+        }
+        $product['delivery_fee'] = '￥'.$delivery_fee;
+    }
+
+    //配送省
+    $get_delivery_province = 'select p.id, p.province_name from '.$db->table('delivery_area_mapper').' as m';
+    $get_delivery_province .= ' left join '.$db->table('province').' as p on p.id = m.province';
+    $get_delivery_province .= ' where m.business_account = \''.$product['business_account'].'\'';
+    $delivery_province = $db->fetchAll($get_delivery_province);
+    assign('delivery_province', $delivery_province);
+
+    $product['all_count'] = 0;
+    $product['good_count'] = 0;
+    $product['normal_count'] = 0;
+    $product['bad_count'] = 0;
+
     //读取评论信息
     $get_comments = 'select c.`id`,c.`comment`,c.`star`,c.`add_time`,m.`headimg`,m.`nickname` from '.$db->table('comment').' as c'.
-                    ' join '.$db->table('member').' as m using(`account`) where c.`parent_id`=0 and `product_sn`=\''.$product_sn.'\'';
+                    ' join '.$db->table('member').' as m using(`account`) where c.`parent_id`=0 and `product_sn`=\''.$product_sn.'\' order by c.add_time desc';
     $comments = $db->fetchAll($get_comments);
+    $good_comments = array();
+    $normal_comments = array();
+    $bad_comments = array();
     if($comments)
     {
         foreach($comments as $key=>$c)
@@ -312,13 +549,46 @@ if($product)
             $get_reply = 'select `comment`,`add_time` from '.$db->table('comment').' where `parent_id`='.$c['id'];
 
             $comments[$key]['reply'] = $db->fetchRow($get_reply);
+
+            $product['all_count']++;
+            if( $c['star'] == 5 ) {
+                $product['good_count'] +=   1;
+                $good_comments[] = $comments[$key];
+            }
+            if($c['star'] > 1 && $c['star'] < 5) {
+                $product['normal_count'] += 1;
+                $normal_comments[] = $comments[$key];
+            }
+            if($c['star'] == 1) {
+                $product['bad_count'] += 1;
+                $bad_comments[] = $comments[$key];
+            }
         }
     }
     $product['comments'] = $comments;
+    $product['good_comments'] = $good_comments;
+    $product['normal_comments'] = $normal_comments;
+    $product['bad_comments'] = $bad_comments;
+
+
+    $all_page = ceil( $product['all_count'] / $page_count );
+    $good_page = ceil( $product['good_count'] / $page_count );
+    $normal_page = ceil( $product['normal_count'] / $page_count );
+    $bad_page = ceil( $product['bad_count'] / $page_count );
+
+    assign('all_page', $all_page);
+    assign('good_page', $good_page);
+    assign('normal_page', $normal_page);
+    assign('bad_page', $bad_page);
+
+    assign('page_count', $page_count);
     assign('comment_count', count($comments));
 
     //获取商家信息
-    $get_business = 'select * from '.$db->table('business').' where `business_account`=\''.$product['business_account'].'\'';
+    $get_business = 'select b.*,p.province_name,city.city_name from '.$db->table('business').' as b';
+    $get_business .= ' left join '.$db->table('province').' as p on p.id = b.province';
+    $get_business .= ' left join '.$db->table('city').' as city on city.id = b.city';
+    $get_business .= ' where b.`business_account`=\''.$product['business_account'].'\' limit 1';
     $product['business'] = $db->fetchRow($get_business);
 
     //检查产品的分销状态
@@ -333,23 +603,51 @@ if($product)
     $collection_flag = $db->fetchOne($get_collection) ? true : false;
     assign('collection_flag', $collection_flag);
 
-    //获取产品的推广链接
-    $param = array('url'=>'product.php?id='.$product['id'], 'opera'=>'get_url', 'account'=>$_SESSION['account']);
-    $get_url_response = post('http://'.$_SERVER['HTTP_HOST'].'/'.BASE_DIR.'d/index.php', $param);
-
-    $get_url_response = json_decode($get_url_response);
-    if($get_url_response->error == 0)
+    //加入我的足迹
+    if(isset($_SESSION['account']) && $_SESSION['account'] != '')
     {
-        assign('recommend_url', $get_url_response->url);
-    } else {
-        assign('recommend_url', '');
+        add_history($_SESSION['account'], $product_sn);
     }
+
+    //猜你喜欢
+    $get_fav_products = 'select `name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 4';
+    $fav_products = $db->fetchAll($get_fav_products);
+    assign('product_list', $fav_products);
+
+    //获取商家分类
+    $get_category_path = 'select `path` from '.$db->table('category').' where id = \''.$product['business']['category_id'].'\' limit 1';
+    $category_path = $db->fetchOne($get_category_path);
+
+    $get_category_list = 'select `id`, `name`, `path`, `parent_id` from '.$db->table('category').' where business_account = \''.$product['business_account'].'\' order by path asc';
+    $category_list = $db->fetchAll($get_category_list);
+    $target = array();
+    $i = -1;
+    if( $category_list ) {
+        foreach ($category_list as $key => $category) {
+            $category['path'] = substr($category['path'], strlen($category_path) + 1);
+            $count = count(explode(',', $category['path']));
+            if( $count == 3 ) {
+                $target[$i]['children'][] = $category;
+            } elseif( $count == 2 ) {
+                $target[++$i] = $category;
+            }
+        }
+    }
+    assign('category_list', $target);
+
+    $get_history = 'select p.id,p.name,p.img,if(p.`promote_end`>'.$now.',p.`promote_price`,p.`price`) as price from '.$db->table('history').' as h';
+    $get_history .= ' left join '.$db->table('product').' as p on h.product_sn = p.product_sn';
+    $get_history .= ' where h.account = \''.$_SESSION['account'].'\'';
+    $get_history .= ' order by h.add_time desc limit 5';
+    $history = $db->fetchAll($get_history);
+    assign('history', $history);
 
     //加入我的足迹
     if(isset($_SESSION['account']) && $_SESSION['account'] != '')
     {
         add_history($_SESSION['account'], $product_sn);
     }
+
 } else {
     redirect('index.php');
 }

@@ -588,9 +588,6 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
 }
 
 /* 文章列表 */
-.article-list-inner{
-    border: 1px solid #ebebeb;
-}
 .article-list h5{
     height: 38px;
     line-height: 38px;
@@ -786,9 +783,8 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
 .pages .ellipsis {
     width: 17px;
     height: 32px;
-    line-height: 32px;
-    text-align: center;
     margin: 0 8px 0 3px;
+    background-repeat: no-repeat;
 }
 .pages div {
     margin-left: 22px;
@@ -1728,7 +1724,7 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
 .home-nav dt i.p{
     display: none;
 }
-.home-nav dt a{
+.home-nav dt a:link,.home-nav dt a:visited{
     color: #646464;
 }
 .home-nav dd {
@@ -1736,7 +1732,7 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     padding-left: 20px;
     font-size: 14px;
 }
-.home-nav dd a{
+.home-nav dd a:link,.home-nav dd a:visited{
     color: #969696;
 }
 .home-nav dt a.hover,.home-nav dd a.hover,.home-nav dl a:hover{
@@ -1893,310 +1889,5 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
 .might-like .p-list li{
     width: 154.5px;
 }
+
 /*个人中心猜你喜欢 结束*/
-
-/*我的订单 开始*/
-.order-tabs{
-    border-bottom: 2px solid #E8E8E8;
-}
-.order-tabs ul li {
-    float: left;
-    width: 100px;
-    height: 38px;
-    line-height: 38px;
-    border-left: 0;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: -2px;
-}
-.order-tabs ul .curr {
-    position: relative;
-    border-bottom: 2px solid #ffce28;
-    z-index: 2;
-}
-.order-tabs ul li a{
-    display: block;
-}
-.order-tabs ul .curr a,.order-tabs ul b{
-    color: #ffce28;
-}
-.order-tb {
-    margin-top:5px;
-    width: 100%;
-}
-.order-tb thead th {
-    height: 32px;
-    line-height: 32px;
-    text-align: center;
-    background: #f5f5f5;
-    color: #666;
-    font-weight: 400;
-}
-.order-tb .ordertime-cont {
-    position: relative;
-    float: left;
-    z-index: 10;
-    width: 138px;
-    cursor: pointer;
-}
-.order-tb .ordertime-cont .time-txt {
-    position: relative;
-    height: 30px;
-    line-height: 30px;
-    text-align: left;
-    padding-left: 20px;
-    padding-right: 12px;
-    border: 1px solid #f5f5f5;
-}
-.order-tb .ordertime-cont .time-list {
-    position: absolute;
-    left: 0;
-    top: 30px;
-    z-index: 2;
-    display: none;
-    width: 136px;
-    background: #fff;
-    border: 1px solid #f5f5f5;
-    border-top: 0;
-}
-.order-tb .ordertime-cont .time-list li {
-    height: 30px;
-    line-height: 30px;
-    text-align: left;
-}
-.order-tb .ordertime-cont .time-list li a {
-    display: block;
-    position: relative;
-    color: #666;
-    height: 30px;
-    line-height: 30px;
-    padding-left: 20px;
-}
-.order-tb .ordertime-cont .time-list li a b {
-    display: block;
-    position: absolute;
-    left: 5px;
-    top: 10px;
-    width: 10px;
-    height: 7px;
-    vertical-align: middle;
-    overflow: hidden;
-}
-.order-tb .order-detail-txt {
-    display: inline-block;
-    vertical-align: middle;
-    text-align: center;
-}
-.order-tb .deal-state-cont {
-    position: relative;
-    z-index: 10;
-    width: 98px;
-    cursor: pointer;
-}
-.order-tb .deal-state-cont .state-txt {
-    position: relative;
-    height: 30px;
-    line-height: 30px;
-    text-align: left;
-    padding-left: 20px;
-    padding-right: 12px;
-    border: 1px solid #f5f5f5;
-}
-.order-tb .deal-state-cont .state-txt b {
-    position: absolute;
-    width: 7px;
-    height: 4px;
-    right: 18px;
-    top: 13px;
-    overflow: hidden;
-    vertical-align: middle;
-    background: url(//misc.360buyimg.com/user/myjd-2015/css/i/order-icon20150916.png) -37px -207px no-repeat;
-}
-.order-tb .deal-state-cont .state-list {
-    position: absolute;
-    left: 0;
-    top: 30px;
-    z-index: 2;
-    display: none;
-    width: 96px;
-    background: #fff;
-    border: 1px solid #f5f5f5;
-    border-top: 0;
-}
-.order-tb .sep-row {
-    height: 15px;
-}
-.order-tb .tr-th {
-    background: #f5f5f5;
-    height: 31px;
-    line-height: 31px;
-    color: #aaa;
-    overflow: hidden;
-}
-.order-tb .sep-row td {
-    border: 0;
-}
-.order-tb .tr-th {
-    background: #f5f5f5;
-    height: 31px;
-    line-height: 31px;
-    color: #aaa;
-    overflow: hidden;
-}
-.order-tb .tr-th td {
-    border-bottom-color: #f5f5f5;
-}
-.order-tb tbody td {
-    border: 1px solid #e5e5e5;
-}
-.order-tb .tr-th span {
-    float: left;
-    height: 18px;
-    line-height: 18px;
-    padding: 2px 0 0;
-    _display: inline;
-}
-.order-tb .tr-th .gap {
-    width: 14px;
-}
-.order-tb .tr-th .dealtime {
-    margin-right: 30px;
-    _margin-right: 15px;
-    font-family: verdana;
-}
-.order-tb .tr-th .number {
-    width: 226px;
-    font-family: verdana;
-}
-.root61 .order-tb .tr-th .tr-operate {
-    width: 620px;
-}
-.tr-operate .order-shop .icon{
-    font-size: 18px;
-    padding-left: 3px;
-}
-.order-tb .tr-th .order-shop {
-    width: 178px;
-}
-.order-tb .tr-th .order-shop .shop-txt {
-    display: inline-block;
-    vertical-align: middle;
-    max-width: 153px;
-    overflow: hidden;
-    margin: 0;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-}
-.order-tb .tr-th span.shop-txt {
-    padding: 0;
-}
-.order-tb .tr-bd {
-    text-align: center;
-    vertical-align: top;
-}
-.order-tb .tr-bd td {
-    padding: 14px 0;
-}
-.order-tb tbody td {
-    border: 1px solid #e5e5e5;
-}
-.order-tb .goods-item {
-    display: inline-block;
-    display: block;
-    float: left;
-    width: 255px;
-    margin-right: 10px;
-}
-.order-tb .goods-item {
-    width: 330px;
-    margin-right: 64px;
-}
-.order-tb .goods-item .p-img {
-    float: left;
-    width: 60px;
-    height: 60px;
-    border: 1px solid #efefef;
-    margin: 0 14px;
-    _display: inline;
-}
-.order-tb .goods-item .p-msg {
-    float: left;
-    text-align: left;
-    width: 240px;
-}
-.goods-number {
-    float: left;
-    width: 70px;
-    text-align: left;
-    color: #aaa;
-    font-family: verdana;
-}
-.order-tb tbody td {
-    border: 1px solid #e5e5e5;
-}
-.order-tb .amount strong {
-    font-family: verdana;
-    color: #333;
-}
-.ftx-13 {
-    color: #aaa;
-}
-.order-tb .status {
-    position: relative;
-    z-index: 5;
-    color: #333;
-    line-height: 22px;
-}
-span.ftx-03, span.ftx03 {
-    color: #aaa;
-}
-.order-tb .operate {
-    line-height: 22px;
-}
-.operate a.btn {
-    display: inline-block;
-    padding: 2px 0 3px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    width: 80px;
-    text-align: center;
-}
-.operate a.btn-again{
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    color: #333;
-}
-.operate a.btn-pay{
-    background: #dc0000;
-    border: 1px solid #DD0000;
-    color: #fff;
-}
-.order-tb .operate a.a-link {
-    color: #333;
-}
-.order-tb .tr-th .order-del {
-    font-size: 20px;
-    overflow: hidden;
-    margin-left: 120px;
-    display: none;
-}
-/*我的订单 结束*/
-
-/* 我的订单，我的收藏，购物车等为空提示 开始*/
-.tips-empty{
-    text-align: center;
-    padding: 10px 20px 20px;
-}
-.tips-empty .tips-icon{
-    font-size: 70px;
-    padding:20px 0;
-    color: #dddddd;
-}
-/* 我的订单，购物车等为空提示 结束*/
-
-/* 我的收藏 开始 */
-.wish-list .p-list li{
-    width: 223px;
-}
-/*我的收藏 结束*/

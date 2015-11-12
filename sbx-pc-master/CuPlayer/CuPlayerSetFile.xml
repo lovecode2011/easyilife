@@ -1,0 +1,8 @@
+<content>
+  <CuPlayerWidth>480</CuPlayerWidth>
+  <CuPlayerHeight>260</CuPlayerHeight>
+  <CuPlayerAutoPlay>yes</CuPlayerAutoPlay>    
+  <CuPlayerImage>CuPlayer/images/start.jpg</CuPlayerImage>
+<CuPlayerLogo>CuPlayer/images/logo.png</CuPlayerLogo>
+<CuPlayerPosition>top-right</CuPlayerPosition>
+</content>

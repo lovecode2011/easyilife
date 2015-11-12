@@ -18,8 +18,8 @@
 <!-- 顶部面包屑导航开始 -->
 <div class="breadcrumb container">
     <span>当前位置：</span>
-    <a href="index.php" target="_blank">首页</a><span class="gt">&gt;</span>
-    <!--<a href="product-all.html" target="_blank">常备药物</a><span class="gt">&gt;</span>-->
+    <a href="index.php" >首页</a><span class="gt">&gt;</span>
+    <!--<a href="product-all.html" >常备药物</a><span class="gt">&gt;</span>-->
     <span>{$product.name}</span>
 </div>
 <!-- 顶部面包屑导航结束 -->
@@ -30,7 +30,8 @@
         <div class="pic-info">
             <!-- 商品图片展示 开始 -->
             <div class="pic-show">
-                <div id="preview" class="spec-preview"> <span class="jqzoom"><img jqimg="../{$product.img}" src="../{$product.img}" /></span> </div>
+                <div id="preview" class="spec-preview"> <span class="jqzoom"><img width="350" height="350" jqimg="../{$product.img}" src="../{$product.img}" /></span> </div>
+                {if $product.gallery}
                 <!--缩图开始-->
                 <div class="spec-scroll"> <a class="prev">&lt;</a> <a class="next">&gt;</a>
                     <div class="items">
@@ -43,6 +44,7 @@
                 </div>
                 <div style="clear: both;"></div>
                 <!--缩图结束-->
+                {/if}
             </div>
             <!-- 商品图片展示 结束 -->
             <!-- 商品信息 开始 -->
@@ -60,19 +62,711 @@
                         <div class="sale-box">
                             <div class="show-info-left">价格</div>
                             <div class="show-info-right">
-                                <b class="d_price">
-                                    <span>¥<span id="salePriceTag">{$product.price}</span></span>
+                                <b class="price">
+                                    <span>¥<span>{$product.price}</span></span>
                                 </b>
+                                {if $product.reward > 0}
+                                <span class="icon-bg">返利{$product.reward}元</span>
+                                {/if}
                             </div>
+                            <div style="clear: both;"></div>
                         </div>
+                        <div class="sale-box">
+                            <div class="show-info-left">配送</div>
+                            <div class="show-info-right">
+                                <span class="current-city"><em>{$product.business.city_name}</em>至</span>
+                                <div id="sncity" class="fl">
+                                    <div class="ui-city"><!-- 显示此处class添加active -->
+                                        <a href="javascript:toggle_delivery_area();" class="ui-city-toggle" hidefocus="true">
+                                            <em class="address-placement">
+                                                <span id="provinceName">&nbsp;&nbsp;&nbsp;</span>
+                                                <span id="cityName">&nbsp;&nbsp;&nbsp;</span>
+                                                <span id="districtName">&nbsp;&nbsp;&nbsp;</span>
+<!--                                                <span id="provinceName" class="pr" role="190,,,广东">广东</span>-->
+<!--                                                <span id="citybName" class="ct" role="1000041,9041,01,广州">广州</span>-->
+<!--                                                <span id="districtName" class="ds" role=",10274,01,荔湾区">荔湾区</span>-->
+                                            </em>
+                                            <b class="arr"></b>
+                                        </a>
+                                        <div class="ui-city-group">
+                                            <a class="ui-city-close" href="javascript:close_delivery_area();">
+                                                <i>&gt;</i>
+                                                <i>&lt;</i>
+                                            </a>
+                                            <div class="ui-city-group-content">
+                                                <ul class="nav-tabs">
+                                                    <li id="provinceShow" class="active current" role="">
+                                                        <p>
+                                                            <a href="javascript:change_province()">省</a><b class="arr"></b>
+                                                        </p>
+                                                    </li>
+                                                    <li id="cityShow" class="active" role="">
+                                                        <p>
+                                                            <a href="javascript:change_city();">市</a>
+                                                            <b class="arr"></b>
+                                                        </p>
+                                                    </li>
+                                                    <li id="districtShow" class="active" role="">
+                                                        <p>
+                                                            <a href="javascript:change_district();">区</a>
+                                                            <b class="arr"></b>
+                                                        </p>
+                                                    </li>
+                                                    <div style="clear: both"></div>
+                                                </ul>
+                                                <div style="clear: both"></div>
+                                                <div class="tab-content">
+                                                    <ul class="tab-panel pr-panel active" id="province-list">
+                                                        <li>
+                                                        {foreach from=$delivery_province item=province}
+                                                            <span>
+                                                                <a href="javascript:select_province({$province.id});" class="" id="province-{$province.id}">
+                                                                    {$province.province_name}
+                                                                </a>
+                                                            </span>
+                                                        {/foreach}
+                                                        </li>
+                                                        <div style="clear: both;"></div>
+                                                    </ul>
+                                                    <div style="clear: both;"></div>
+                                                    <ul class="tab-panel ct-panel" id="city-list">
+                                                        <li>
+
+                                                        </li>
+                                                    </ul>
+                                                    <ul class="tab-panel ds-panel" id="district-list">
+                                                        <li>
+
+                                                        </li>
+                                                    </ul>
+                                                    <div style="clear: both;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="proinfo-deliver-tip">
+                                    <strong>现货</strong>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div class="sale-box">
+                            <div class="show-info-left">运费</div>
+                            <div class="show-info-right">
+                                <span>{$product.delivery_fee}</span>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div class="sale-box">
+                            <div class="show-info-left">服务</div>
+                            <div class="show-info-right">
+                                <span>由"<span>
+                                    <a  href="#">{$product.business.shop_name}</a>
+                                </span>"销售和发货，并提供售后服务</span>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                    <div class="buy-area">
+                        {foreach from=$attributes item=a}
+                        <div class="buy-box">
+                            <div class="show-info-left">{$a.name}</div>
+                            <div class="show-info-right">
+                                <ul class="buytype">
+                                    {foreach from=$a.values item=val name=attr_val key=ak}
+                                    {if count($a.values) neq 1}
+                                    <li title="{$val}" id="attr_val_{$ak}_{$a.id}">
+                                        <a href="javascript:select_attr('{$ak}', {$a.id});">{$val}<i class="icon" style="display: none">&#xe609;</i></a>
+                                    </li>
+                                    {else}
+                                    <li title="{$val}" class="selected" id="attr_val_{$ak}_{$a.id}">
+                                        <a href="javascript:select_attr('{$ak}', {$a.id});" >{$val}<i class="icon">&#xe609;</i></a>
+                                    </li>
+                                    {/if}
+                                    {/foreach}
+                                </ul>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        {/foreach}
+                        <div class="buy-box">
+                            <div class="show-info-left">数量</div>
+                            <div class="show-info-right">
+                                <span class="product-num">
+                                    <a href="javascript:decrease_count()" class="disable" id="decrease_btn"><i class="icon">&#xe60c;</i></a>
+                                    <input id="buy_count" type="text" value="1" max="99" onblur="buy_count_blur();">
+                                    <a href="javascript:increase_count();" id="increase_btn"><i class="icon">&#xe60d;</i></a>
+                                    {if !$attributes || count($attributes) eq 1}
+                                    <span class="tip" id="inventory-tip">库存<em>{$inventory_logic}</em>件</span>
+                                    {else}
+
+                                    {/if}
+                                </span>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <!--购买按钮开始-->
+                        <div class="buy-box">
+                            <div class="show-info-left">&nbsp;</div>
+                            <div class="show-info-right">
+                                <div class="mainbtns" {if $collection_flag eq true}style="width: 360px;"{/if}>
+                                    <a href="javascript:;" class="btn-buynow">
+                                        <span>立即购买</span>
+                                    </a>
+                                    <a href="javascript:;" class="btn-addcart">
+                                        <span>加入购物车</span>
+                                    </a>
+                                    {if $collection_flag eq true}
+                                    <a style="width: 100px;" href="javascript:collection('{$product.product_sn}');" class="btn-collect">
+                                        <span>取消收藏</span>
+                                    </a>
+                                    {else}
+                                    <a href="javascript:collection('{$product.product_sn}');" class="btn-collect">
+                                        <span>收藏</span>
+                                    </a>
+                                    {/if}
+                                </div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <!--购买按钮结束-->
                     </div>
                 </div>
             </div>
             <!--商品信息 结束-->
+            <!--右侧商家信息 开始-->
+            <div class="show-merchant">
+                <div class="show-merchant-inner">
+                    <div class="shop-logo">
+                        <a href="#" >
+                            <img src="../{$product.business.shop_logo}" alt="商家logo" title="{$product.business.shop_name}"/>
+                        </a>
+                    </div>
+                    <dl class="shop-title">
+                        <dt>
+                            店铺名称：
+                        </dt>
+                        <dd>
+                            <a href="#"  title="{$product.business.shop_name}">
+                                {$product.business.shop_name}
+                            </a>
+                        </dd>
+                    </dl>
+                    <dl class="shop-info">
+                        <dt>
+                            综合评价：
+                        </dt>
+                        <dd>
+                            {$i = 5}
+                            {section name=loop loop=$product.business.comment}
+                            {$i = $i - 1}
+                            <i class="icon">&#xe60e;</i>
+                            {/section}
+                            {section name=loop loop=$i}
+                            <i class="icon" style="color:#ccc;">&#xe60e;</i>
+                            {/section}
+                        </dd>
+                    </dl>
+                    <dl class="shop-info">
+                        <dt>
+                            公司名称：
+                        </dt>
+                        <dd>
+                            {$product.business.company}
+                        </dd>
+                    </dl>
+                    <dl class="shop-info">
+                        <dt>
+                            所在地：
+                        </dt>
+                        <dd>
+                            {$product.business.province_name} {$product.business.city_name}
+                        </dd>
+                    </dl>
+                    <dl class="shop-info">
+                        <dt>
+                            客服热线：
+                        </dt>
+                        <dd>
+                            440-123-4567
+                        </dd>
+                    </dl>
+                    <div class="shop-btn">
+                        <a href="#"  rel="nofollow">进入店铺</a>
+<!--                        <a id="shop_collect_btn" href="javascript:;">收藏店铺</a>-->
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+            <!--右侧商家信息 结束-->
         </div>
     </div>
     <div style="clear: both"></div>
     <!-- 产品展示 结束 -->
+    <!--优选推荐 开始-->
+    <div class="p-recommendation container">
+        <div class="p-recommendation-inner">
+            <div class="recomm-title">
+                <h3>优选推荐</h3>
+            </div>
+            <div class="recomm-list">
+                <ul>
+                    {foreach from=$product_list item=fav}
+                    <li>
+                        <a href="product.php?id={$fav.id}" >
+                            <img src="{$fav.img}" title="{$fav.name}" alt="{$fav.name}" />
+                            <p class="title">
+                                {$fav.name}
+                            </p>
+                            <p class="price">
+                                <i>¥</i>
+                                {$fav.price}
+                            </p>
+                        </a>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div style="clear: both;"></div>
+    <!--优选推荐 结束-->
+<div class="container">
+    <!--产品展示区域 开始-->
+    <div class="main">
+        <div class="tab-area">
+            <div class="tab">
+                <a href="javascript:;" id="detail_tab" class="on">商品详情</a>
+                <a href="javascript:;" id="comment_tab">商品评论<font id="commnum">({$product.all_count}条)</font></a>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <!--产品展示 开始-->
+        <div class="pro-connent">
+            <div class="pro-parameter">
+                <div class="parameter-inner">
+                    品牌：{$product.brand_name}
+                </div>
+                <div class="parameter-inner">
+                    型号：{$product.product_sn}
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="pro-detail-pics">
+                {$product.detail}
+            </div>
+        </div>
+        <!--产品展示 结束-->
+        <!--产品评论 开始-->
+        <div class="pro-comment">
+            <div class="pro-comment-head">
+                <ul class="pro-comment-tabs">
+                    <li class="fl on" id="all">
+                        <a href="javascript:show_comments('all');">
+                            <p>全部<span>({$product.all_count})</span></p>
+                        </a>
+                    </li>
+                    <li class="fl" id="good">
+                        <a href="javascript:show_comments('good');">
+                            <p>好评<span>({$product.good_count})</span></p>
+                        </a>
+                    </li>
+                    <li class="fl" id="normal">
+                        <a href="javascript:show_comments('normal');">
+                            <p>中评<span>({$product.normal_count})</span></p>
+                        </a>
+                    </li>
+                    <li class="fl" id="bad">
+                        <a href="javascript:show_comments('bad');">
+                            <p>差评<span>({$product.bad_count})</span></p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div style="clear: both;"></div>
+            <div class="pro-comment-body" id="all-comments-body">
+                {if $product.all_count gt 0}
+                {$i = 0}
+                {foreach from=$product.comments item=comment}
+                <div class="pro-comment-items" style="border-top:none;">
+                    <div class="items-l fl">
+                        <div class="fl-pic">
+                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">
+                        </div>
+                        <p class="username">{$comment.nickname}</p>
+                    </div>
+                    <div class="items-r fl">
+                        <div class="items-star">
+                            {for $index=1 to $comment.star}
+                            <i class="icon">&#xe60e;</i>
+                            {/for}
+                            {for $index=1 to (5-$comment.star)}
+                            <i class="icon" style="color:#ccc">&#xe60e;</i>
+                            {/for}
+                        </div>
+                        <div class="items-detail">
+                            {$comment.comment}
+                        </div>
+                        <div class="items-line">
+                            <span class="items-date fr">
+                                {date('Y/m/d H:i:s', $comment.add_time)}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                {if isset($comment.reply)}
+                <div class="pro-comment-items" style="border-top:none;">
+                    <div class="items-l fl">
+<!--                        <div class="fl-pic">-->
+<!--                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
+<!--                        </div>-->
+                        <p class="username">{$product.business.shop_name}客服：</p>
+                    </div>
+                    <div class="items-r fl">
+                        <div class="items-detail">
+                            {$comment.reply.comment}
+                        </div>
+                        <div class="items-line">
+                            <span class="items-date fr">
+                                {date('Y/m/d H:i:s', $comment.reply.add_time)}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                {/if}
+                {$i = $i + 1}
+                {if $i eq $page_count}
+                {break}
+                {/if}
+                {/foreach}
+                <div style="clear: both;"></div>
+                <div class="pages fr">
+                    <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+                    {for $index=1 to $all_page-1}
+                    <a rel="nofollow" class="{if $index eq 1}cur{/if} fl" href="javascript:get_comments({$index}, 'all');">{$index}</a>
+                    {if $index eq 5}
+                    {break}
+                    {/if}
+                    {/for}
+                    {if $all_page gt 6}
+                    <span class="icon ellipsis fl">&#xe61e;</span>
+                    {/if}
+                    <a rel="nofollow" class="fl {if $all_page eq 1}cur{/if}" href="javascript:{if $all_page eq 1}void(0);{else}get_comments({$all_page}, 'all'){/if}" id="pageLast">{$all_page}</a>
+                    <a rel="nofollow" class="prev {if $all_page eq 1}disabled{/if} fl" id="nextPage" href="javascript:{if $all_page eq 1}void(0);{else}get_comments(2, 'all'){/if}">下一页<i class="sign right">&gt;</i></a>
+                    <div class="fl">
+                        <span class="fl">向第</span>
+                        <input class="fl" type="text" id="all-bottomPage">
+                        <span class="fl">页</span>
+                        <a rel="nofollow" class="pageGo fl" href="javascript:get_comments_by_input('all')" id="all-pagesubmit">跳转</a>
+                    </div>
+                </div>
+                {else}
+                <div class="ac comments-item" style="text-align: center; padding: 20px 0px 40px 0px; ">「暂无评价」</div>
+                {/if}
+            </div>
+            <div class="pro-comment-body" id="good-comments-body" style="display: none;">
+                {if $product.good_count gt 0}
+                {$i = 0}
+                {foreach from=$product.good_comments item=comment}
+                <div class="pro-comment-items" style="border-top:none;">
+                    <div class="items-l fl">
+                        <div class="fl-pic">
+                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">
+                        </div>
+                        <p class="username">{$comment.nickname}</p>
+                    </div>
+                    <div class="items-r fl">
+                        <div class="items-star">
+                            {for $index=1 to $comment.star}
+                            <i class="icon">&#xe60e;</i>
+                            {/for}
+                        </div>
+                        <div class="items-detail">
+                            {$comment.comment}
+                        </div>
+                        <div class="items-line">
+                            <span class="items-date fr">
+                                {date('Y/m/d H:i:s', $comment.add_time)}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                {if isset($comment.reply)}
+                <div class="pro-comment-items" style="border-top:none;">
+                    <div class="items-l fl">
+                        <!--                        <div class="fl-pic">-->
+                        <!--                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
+                        <!--                        </div>-->
+                        <p class="username">{$product.business.shop_name}客服：</p>
+                    </div>
+                    <div class="items-r fl">
+                        <div class="items-detail">
+                            {$comment.reply.comment}
+                        </div>
+                        <div class="items-line">
+                            <span class="items-date fr">
+                                {date('Y/m/d H:i:s', $comment.reply.add_time)}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                {/if}
+                {$i = $i + 1}
+                {if $i eq $page_count}
+                {break}
+                {/if}
+                {/foreach}
+                <div style="clear: both;"></div>
+                <div class="pages fr">
+                    <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+                    {for $index=1 to $good_page-1}
+                    <a rel="nofollow" class="{if $index eq 1}cur{/if} fl" href="javascript:get_comments({$index}, 'good');">{$index}</a>
+                    {if $index eq 5}
+                    {break}
+                    {/if}
+                    {/for}
+                    {if $good_page gt 6}
+                    <span class="icon ellipsis fl">&#xe61e;</span>
+                    {/if}
+                    <a rel="nofollow" class="fl {if $good_page eq 1}cur{/if}" href="javascript:{if $good_page eq 1}void(0);{else}get_comments({$good_page}, 'good'){/if}" id="pageLast">{$good_page}</a>
+                    <a rel="nofollow" class="prev {if $good_page eq 1}disabled{/if} fl" id="nextPage" href="javascript:{if $good_page eq 1}void(0);{else}get_comments(2, 'good'){/if}">下一页<i class="sign right">&gt;</i></a>
+                    <div class="fl">
+                        <span class="fl">向第</span>
+                        <input class="fl" type="text" id="good-bottomPage">
+                        <span class="fl">页</span>
+                        <a rel="nofollow" class="pageGo fl" href="javascript:get_comments_by_input('normal')" id="normal-pagesubmit">跳转</a>
+                    </div>
+                </div>
+                {else}
+                <div class="ac comments-item" style="text-align: center; padding: 20px 0px 40px 0px; ">「暂无评价」</div>
+                {/if}
+            </div>
+            <div class="pro-comment-body" id="normal-comments-body" style="display: none;">
+                {if $product.normal_count gt 0}
+                {$i = 0}
+                {foreach from=$product.normal_comments item=comment}
+                <div class="pro-comment-items" style="border-top:none;">
+                    <div class="items-l fl">
+                        <div class="fl-pic">
+                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">
+                        </div>
+                        <p class="username">{$comment.nickname}</p>
+                    </div>
+                    <div class="items-r fl">
+                        <div class="items-star">
+                            {for $index=1 to $comment.star}
+                            <i class="icon">&#xe60e;</i>
+                            {/for}
+                            {for $index=1 to (5-$comment.star)}
+                            <i class="icon" style="color:#ccc">&#xe60e;</i>
+                            {/for}
+                        </div>
+                        <div class="items-detail">
+                            {$comment.comment}
+                        </div>
+                        <div class="items-line">
+                            <span class="items-date fr">
+                                {date('Y/m/d H:i:s', $comment.add_time)}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                {if isset($comment.reply)}
+                <div class="pro-comment-items" style="border-top:none;">
+                    <div class="items-l fl">
+                        <!--                        <div class="fl-pic">-->
+                        <!--                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
+                        <!--                        </div>-->
+                        <p class="username">{$product.business.shop_name}客服：</p>
+                    </div>
+                    <div class="items-r fl">
+                        <div class="items-detail">
+                            {$comment.reply.comment}
+                        </div>
+                        <div class="items-line">
+                            <span class="items-date fr">
+                                {date('Y/m/d H:i:s', $comment.reply.add_time)}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                {/if}
+                {$i = $i + 1}
+                {if $i eq $page_count}
+                {break}
+                {/if}
+                {/foreach}
+                <div style="clear: both;"></div>
+                <div class="pages fr">
+                    <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+                    {for $index=1 to $normal_page-1}
+                    <a rel="nofollow" class="{if $index eq 1}cur{/if} fl" href="javascript:get_comments({$index}, 'normal');">{$index}</a>
+                    {if $index eq 5}
+                    {break}
+                    {/if}
+                    {/for}
+                    {if $normal_page gt 6}
+                    <span class="icon ellipsis fl">&#xe61e;</span>
+                    {/if}
+                    <a rel="nofollow" class="fl {if $normal_page eq 1}cur{/if}" href="javascript:{if $normal_page eq 1}void(0);{else}get_comments({$normal_page}, 'normal'){/if}" id="pageLast">{$normal_page}</a>
+                    <a rel="nofollow" class="prev {if $normal_page eq 1}disabled{/if} fl" id="nextPage" href="javascript:{if $normal_page eq 1}void(0);{else}get_comments(2, 'normal'){/if}">下一页<i class="sign right">&gt;</i></a>
+                    <div class="fl">
+                        <span class="fl">向第</span>
+                        <input class="fl" type="text" id="normal-bottomPage">
+                        <span class="fl">页</span>
+                        <a rel="nofollow" class="pageGo fl" href="javascript:get_comments_by_input('normal')" id="normal-pagesubmit">跳转</a>
+                    </div>
+                </div>
+                {else}
+                <div class="ac comments-item" style="text-align: center; padding: 20px 0px 40px 0px; ">「暂无评价」</div>
+                {/if}
+            </div>
+            <div class="pro-comment-body" id="bad-comments-body" style="display: none;">
+                {if $product.bad_count gt 0}
+                {$i = 0}
+                {foreach from=$product.bad_comments item=comment}
+                <div class="pro-comment-items" style="border-top:none;">
+                    <div class="items-l fl">
+                        <div class="fl-pic">
+                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">
+                        </div>
+                        <p class="username">{$comment.nickname}</p>
+                    </div>
+                    <div class="items-r fl">
+                        <div class="items-star">
+                            {for $index=1 to $comment.star}
+                            <i class="icon">&#xe60e;</i>
+                            {/for}
+                            {for $index=1 to (5-$comment.star)}
+                            <i class="icon" style="color:#ccc">&#xe60e;</i>
+                            {/for}
+                        </div>
+                        <div class="items-detail">
+                            {$comment.comment}
+                        </div>
+                        <div class="items-line">
+                            <span class="items-date fr">
+                                {date('Y/m/d H:i:s', $comment.add_time)}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                {if isset($comment.reply)}
+                <div class="pro-comment-items" style="border-top:none;">
+                    <div class="items-l fl">
+                        <!--                        <div class="fl-pic">-->
+                        <!--                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
+                        <!--                        </div>-->
+                        <p class="username">{$product.business.shop_name}客服：</p>
+                    </div>
+                    <div class="items-r fl">
+                        <div class="items-detail">
+                            {$comment.reply.comment}
+                        </div>
+                        <div class="items-line">
+                            <span class="items-date fr">
+                                {date('Y/m/d H:i:s', $comment.reply.add_time)}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                {/if}
+                {$i = $i + 1}
+                {if $i eq $page_count}
+                {break}
+                {/if}
+                {/foreach}
+                <div style="clear: both;"></div>
+                <div class="pages fr">
+                    <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+                    {for $index=1 to $bad_page-1}
+                    <a rel="nofollow" class="{if $index eq 1}cur{/if} fl" href="javascript:get_comments({$index}, 'bad');">{$index}</a>
+                    {if $index eq 5}
+                    {break}
+                    {/if}
+                    {/for}
+                    {if $bad_page gt 6}
+                    <span class="icon ellipsis fl">&#xe61e;</span>
+                    {/if}
+                    <a rel="nofollow" class="fl {if $bad_page eq 1}cur{/if}" href="javascript:{if $bad_page eq 1}void(0);{else}get_comments({$bad_page}, 'bad'){/if}" id="pageLast">{$bad_page}</a>
+                    <a rel="nofollow" class="prev {if $bad_page eq 1}disabled{/if} fl" id="nextPage" href="javascript:{if $bad_page eq 1}void(0);{else}get_comments(2, 'bad'){/if}">下一页<i class="sign right">&gt;</i></a>
+                    <div class="fl">
+                        <span class="fl">向第</span>
+                        <input class="fl" type="text" id="bad-bottomPage">
+                        <span class="fl">页</span>
+                        <a rel="nofollow" class="pageGo fl" href="javascript:get_comments_by_input('bad')" id="bad-pagesubmit">跳转</a>
+                    </div>
+                </div>
+                {else}
+                <div class="ac comments-item" style="text-align: center; padding: 20px 0px 40px 0px; ">「暂无评价」</div>
+                {/if}
+            </div>
+        </div>
+        <!--产品评论 结束-->
+    </div>
+    <div class="aside">
+        <div class="aside-box">
+            <div class="aside-box-t">
+                <h3>店铺分类</h3>
+            </div>
+            <div class="aside-box-c">
+                <div class="view-all-products">
+                    <a href="#" >查看所有宝贝</a>
+                </div>
+                {foreach from=$category_list item=category}
+                <dl>
+                    <dt><i class="icon">&#xe612;</i><i class="icon hide">&#xe611;</i><a href="#" >{$category.name}</a></dt>
+                    {if isset($category.children)}
+                    {foreach from=$category.children item=child}
+                    <dd><a href="#">{$child.name}</a></dd>
+                    {/foreach}
+                    {/if}
+                </dl>
+                {/foreach}
+            </div>
+        </div>
+        <div class="aside-box">
+            <div class="aside-box-t">
+                <h3>浏览过的宝贝<span>[<a href="javascript:empty_history();">清空</a>]</span></h3>
+            </div>
+            <div class="aside-box-c">
+                <ul id="history-list">
+                    {foreach from=$history item=h}
+                    <li>
+                        <div class="p-img">
+                            <a href="product.php?id={$h.id}"  title="{$h.name}">
+                                <img src="{$h.img}" alt="{$h.name}"/>
+                            </a>
+                        </div>
+                        <div class="p-name">
+                            <a href="product.php?id={$h.id}" title="{$h.name}">
+                                {$h.name}
+                            </a>
+                        </div>
+                        <div class="p-price">
+                            <strong class="price">￥{$h.price}</strong>
+                        </div>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+    <!--产品展示区域 结束-->
 </div>
 <!-- 产品详情结束 -->
 <!-- 底部开始 -->
@@ -97,5 +791,531 @@
 <script src="{$template_dir}js/jquery.jqzoom.js" type="text/javascript"></script>
 <script src="{$template_dir}js/jqzoom-base.js" type="text/javascript"></script>
 <script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript">
+
+    var product_sn = '{$product.product_sn}';
+    var inventory = {$inventory_json};
+    var attributes = {$attributes_json};
+    var attributes_mode = {$attributes_mode};//筛选条件表达式
+    var pattern = {$attributes_mode};//泛解析表达式
+    var collection_flag = {if $collection_flag}true{else}false{/if};
+    var distribution_flag = {if $distribution_flag}true{else}false{/if};
+    var operation = 0;
+
+    {literal}
+    //属性、库存start============================================================
+    function buy_count_blur() {
+        var buy_num = $('#buy_count').val();
+
+        buy_num = parseInt(buy_num);
+
+        if(isNaN(buy_num) || buy_num <= 0)
+        {
+            buy_num = 1;
+        }
+
+        $(this).val(buy_num);
+
+        if(select_attributes_complete()) {
+            check_inventory();
+        }
+    }
+
+
+    function increase_count() {
+        if( $('#increase_btn').attr('class') == 'disable' ) {
+            return;
+        }
+        var val = $('#buy_count').val();
+        if( val >= 99 ) {
+            return;
+        }
+        val++;
+        if( val > 1 ) {
+            $('#decrease_btn').removeClass('disable');
+        }
+        if( val >= 99 ) {
+            $('#increase_btn').addClass('disable');
+        }
+        $('#buy_count').val(val);
+        if(select_attributes_complete()) {
+            check_inventory();
+        }
+    }
+
+    function decrease_count() {
+        if( $('#decrease_btn').attr('class') == 'disable' ) {
+            return;
+        }
+        var val = $('#buy_count').val();
+        if( 1 >= val ) {
+            return;
+        }
+        val--;
+        if( 1 >= val ) {
+            $('#decrease_btn').addClass('disable');
+        }
+        if( 99 > val ) {
+            $('#inrease_btn').removeClass('disable');
+        }
+        $('#buy_count').val(val);
+        if(select_attributes_complete()) {
+            check_inventory();
+        }
+    }
+
+    function select_attr(ak, id) {
+        $('#attr_val_'+ak+'_'+id).siblings().removeClass('selected');
+        $('#attr_val_'+ak+'_'+id).siblings().find('i').css('display', 'none');
+        $('#attr_val_'+ak+'_'+id).addClass('selected');
+        $('#attr_val_'+ak+'_'+id).find('i').show();
+
+        index = ak;
+        aid = id;
+
+        pattern[aid] = attributes[aid]['values'][index];
+        attributes_mode[aid] = attributes[aid]['values'][index];
+
+        for (var i in pattern) {
+            if (i != aid) {
+                pattern[i] = ".*";
+            }
+        }
+
+        toggle_options();
+    }
+
+    //根据条件开启/关闭可筛选条件
+    function toggle_options() {
+        var check_inventory_flag = select_attributes_complete();
+
+
+        if(check_inventory_flag) {
+            check_inventory();
+        } else {
+            var buy_num = $("#buy_count").val();
+            if( 1 >= buy_num ) {
+                minus_disable();
+            } else {
+                minus_enable();
+            }
+
+            plus_enable();
+        }
+    }
+
+    //判断是否已经完成产品规格选择
+    function select_attributes_complete() {
+        var check_inventory_flag = true;
+
+        //无产品属性时用
+        if(attributes_mode == "") {
+            return check_inventory_flag;
+        }
+
+        for(var i in attributes_mode) {
+            if(attributes_mode[i] == ".*") {
+                check_inventory_flag = false;
+            }
+        }
+
+        return check_inventory_flag;
+    }
+
+    function check_inventory() {
+        var index = attributes_mode != "" ? JSON.stringify(attributes_mode) : "";
+        var current_inventory = inventory[index];
+        if(current_inventory == undefined) {
+            current_inventory = 0;
+        }
+
+        var buy_num = $("#buy_count").val();
+        buy_num = parseInt(buy_num);
+        current_inventory = parseInt(current_inventory);
+
+        if(buy_num > current_inventory) {
+            //如果购买数量超过当前库存,则将购买数量设置为库存
+            $("#buy_count").val(current_inventory);
+            plus_disable();
+        }
+
+        if(buy_num == current_inventory) {
+            plus_disable();
+        } else if( buy_num < current_inventory ) {
+//            plus_disable();
+            plus_enable();
+        }
+
+        if(buy_num > 1) {
+            minus_disable();
+            minus_enable();
+        } else {
+            minus_disable();
+        }
+
+        var temp = '<span class="tip" id="inventory-tip">库存<em>'+current_inventory+'</em>件</span>';
+        $('#inventory-tip').remove();
+        $(".product-num").append(temp);
+        return true;
+    }
+
+    function minus_enable() {
+        $("#decrease_btn").removeClass("disable");
+    }
+
+    function minus_disable() {
+        $("#decrease_btn").addClass("disable");
+    }
+
+    function plus_enable() {
+        $("#increase_btn").removeClass("disable");
+    }
+
+    function plus_disable() {
+        $("#increase_btn").addClass("disable");
+    }
+    //属性、库存end============================================================
+
+    //收藏 start==============================================================
+    function collection(product_sn) {
+        var url = "product.php";
+        var data = { "opera":"collection", "product_sn":product_sn };
+
+//        show_mask();
+        $.post(url, data, collection_handler, "json");
+    }
+
+    function collection_handler(response) {
+//        hide_mask();
+//        show_message_dialog(response.msg);
+        alert(response.msg);
+        if(response.error == 0) {
+            if(response.status) {
+                $(".btn-collect span").text("取消收藏");
+                $('.btn-collect').css('width', '100px');
+                $('.mainbtns').css('width', '360px');
+            } else {
+                $(".btn-collect span").text("收藏");
+                $('.btn-collect').css('width', '70px');
+                $('.mainbtns').css('width', '330px');
+            }
+        } else {
+            if(response.error == 2) {
+                window.location.href = "login.php";
+            }
+        }
+    }
+    //收藏 end ========================================================================
+
+    //配送地址 start===================================================================
+    function toggle_delivery_area() {
+        $('.ui-city').toggleClass('active');
+        if( $('.ui-city-group').is(':visible') ) {
+//            $('#provinceShow').addClass('current');
+        }
+    }
+
+    function select_province(id) {
+        $('#province-list li span .on').removeClass('on');
+        $('#province-' + id).addClass('on');
+        $('#provinceShow p a').text($('#province-' + id).text());
+        $('#province-list').removeClass('active');
+        $('#city-list').addClass('active');
+        $('.current').removeClass('current');
+        $('#cityShow').addClass('current');
+        $('#cityShow a').text('市');
+        $('#districtShow a').text('区');
+        $('#city-list li').empty();
+        $('#district-list li').empty();
+        //ajax获取城市
+        var url = 'product.php';
+        var param = {'opera':'delivery_city', 'product_sn': product_sn, 'id': id};
+        $.post(url, param, do_get_city_response, 'json');
+    }
+
+    function do_get_city_response(result) {
+        if( result.error == 0 ) {
+            $('#city-list li').empty();
+            for( var id in result.data ) {
+                var temp = '<span>';
+                temp += '<a href="javascript:select_city('+result.data[id].id+')" id="city-'+result.data[id].id+'">' + result.data[id].city_name + '</a>';
+                temp += '</span>';
+                $('#city-list li').append(temp);
+            }
+        } else {
+            if( result.msg != '' ) {
+                alert(result.msg);
+            }
+        }
+    }
+
+    function select_city(id) {
+        $('#city-list li span .on').removeClass('on');
+        $('#city-' + id).addClass('on');
+        $('#cityShow p a').text($('#city-' + id).text());
+        $('#city-list').removeClass('active');
+        $('#district-list').addClass('active');
+        $('.current').removeClass('current');
+        $('#districtShow').addClass('current');
+        $('#districtShow a').text('区');
+        //ajax获取城市
+        var url = 'product.php';
+        var param = {'opera':'delivery_district', 'product_sn': product_sn, 'id': id};
+        $.post(url, param, do_get_district_response, 'json');
+    }
+
+    function do_get_district_response(result) {
+        if( result.error == 0 ) {
+            $('#district-list li').empty();
+            for( var id in result.data ) {
+                var temp = '<span>';
+                temp += '<a href="javascript:select_district('+result.data[id].id+')" id="district-'+result.data[id].id+'">' + result.data[id].district_name + '</a>';
+                temp += '</span>';
+                $('#district-list li').append(temp);
+            }
+        } else {
+            if( result.msg != '' ) {
+                alert(result.msg);
+            }
+        }
+    }
+
+    function select_district(id) {
+        $('#district-list li span .on').removeClass('on');
+        $('#district-' + id).addClass('on');
+        $('#districtShow p a').text($('#district-' + id).text());
+
+        $('#provinceName').empty();
+        $('#provinceName').text($('#province-list li span .on').text());
+        $('#cityName').empty();
+        $('#cityName').text($('#city-list li span .on').text());
+        $('#districtName').empty();
+        $('#districtName').text($('#district-list li span .on').text());
+        close_delivery_area();
+
+    }
+
+    function close_delivery_area() {
+        $('.ui-city').removeClass('active');
+    }
+
+    function change_province() {
+        $('.current').removeClass('current');
+        $('#provinceShow').addClass('current');
+        $('#city-list.active').removeClass('active');
+        $('#district-list.active').removeClass('active');
+        $('#province-list').addClass('active');
+    }
+
+    function change_city() {
+        $('.current').removeClass('current');
+        $('#cityShow').addClass('current');
+        $('#province-list.active').removeClass('active');
+        $('#district-list.active').removeClass('active');
+        $('#city-list').addClass('active');
+    }
+
+    function change_district() {
+        $('.current').removeClass('current');
+        $('#districtShow').addClass('current');
+        $('#province-list.active').removeClass('active');
+        $('#city-list.active').removeClass('active');
+        $('#district-list').addClass('active');
+    }
+    //配送地址 end=========================================================================
+
+    //评论 start ======================================================================
+    function sprintf() {
+        var arg = arguments,
+            str = arg[0] || '',
+            i, n;
+        for (i = 1, n = arg.length; i < n; i++) {
+            str = str.replace(/%s/, arg[i]);
+        }
+        return str;
+    }
+
+    function show_comments(type) {
+        $('#' + type).siblings('li.on').removeClass('on');
+        $('#' + type).addClass('on');
+        $('#' + type + '-comments-body').siblings('div.pro-comment-body').hide();
+        $('#' + type + '-comments-body').show();
+    }
+
+    function get_comments(page, type) {
+        var url = 'product.php';
+        var param = {'opera': 'get_comments', 'page': page, 'type': type, 'product_sn': product_sn};
+        $.post(url, param, do_get_comments_response, 'json');
+    }
+
+    function do_get_comments_response(result) {
+//        console.log(result);
+        var comments_str = '' +
+            '<div class="pro-comment-items" style="border-top:none;">' +
+            '<div class="items-l fl">' +
+            '   <div class="fl-pic">' +
+            '       <img class="avatar" src="%s" alt="">' +
+            '   </div>' +
+            '   <p class="username">%s</p>' +
+            '</div>' +
+            '<div class="items-r fl">' +
+            '   <div class="items-star">' +
+            '       %s' +
+            '</div>' +
+            '<div class="items-detail">' +
+            '%s' +
+            '</div>' +
+            '<div class="items-line">' +
+            '<span class="items-date fr">' +
+            ' %s' +
+            '</span>' +
+            '</div>' +
+            '</div>' +
+            '<div style="clear: both;"></div>' +
+            '</div>';
+        var reply_str = '' +
+            '<div class="pro-comment-items" style="border-top:none;">' +
+            '<div class="items-l fl">' +
+            '<p class="username">%s：</p>' +
+            '</div>' +
+            '<div class="items-r fl">' +
+            '<div class="items-detail">' +
+            '%s' +
+            '</div>' +
+            '<div class="items-line">' +
+            '<span class="items-date fr">' +
+            '%s' +
+            '</span>' +
+            '</div>' +
+            '</div>' +
+            '<div style="clear: both;"></div>' +
+            '</div>';
+
+        if( result.error == 0 ) {
+            var shop_title = $('.shop-title').find('a').val();
+
+            //清空原有
+            $('#'+result.type+'-comments-body').empty();
+            //更新评论
+            var temp = '';
+            for( var id in result.comments ) {
+                var star = '';
+                for( var i = 0; i < result.comments[id].star; i++ ) {
+                    star += '<i class="icon">&#xe60e;</i>';
+                }
+                for( var i = 0; i < (5 - result.comments[id].star); i++ ) {
+                    star += '<i class="icon" style="color:#ccc">&#xe60e;</i>';
+                }
+                temp += sprintf(comments_str, result.comments[id].headimg, result.comments[id].nickname, star, result.comments[id].comment, result.comments[id].add_time);
+                if( result.comments[id].reply ) {
+                    //console.log(result.comments[id].reply);
+                    temp += sprintf(reply_str, shop_title+'客服', result.comments[id].reply.comment, result.comments[id].reply.add_time);
+                }
+            }
+            $('#'+result.type+'-comments-body').append(temp);
+            //更新分页
+            update_page(result.page, result.type, result.total_page);
+
+        }
+    }
+
+    function update_page(page, type, total_page) {
+        console.log(total_page);
+        var temp = '<div style="clear: both;"></div><div class="pages fr">';
+        if( page == 1 ) {
+            temp += '<a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>';
+            temp += '<a rel="nofollow" class="cur fl" id="pageFirst" href="javascript:void(0);">1</a>';
+            if( total_page == 1 ) {
+                temp += '<a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>'
+            }
+        } else {
+            temp += '<a rel="nofollow" class="prev fl" id="prePage" href="javascript:get_comments(' + (page - 1) + ', \'' + type + '\');"><i class="sign left">&lt;</i>上一页</a>';
+            temp += '<a rel="nofollow" class="fl" id="pageFirst" href="javascript:get_comments(1, \'' + type + '\');">1</a>';
+        }
+        if( page > 6 ) {
+            temp += '<span class="icon ellipsis fl">&#xe61e;</span>';
+            for( var i = (page - 3); i < (page + 2) && i < total_page; i++  ) {
+                if( i == page ) {
+                    temp += '<a rel="nofollow" class="fl cur" href="javascript:void(0);">' + i + '</a>';
+                } else {
+                    temp += '<a rel="nofollow" class="fl" href="javascript:get_comments(' + i + ', \'' + type + '\');">' + i + '</a>';
+                }
+            }
+            if( 2 < (total_page - page) ) {
+                temp += '<span class="icon ellipsis fl">&#xe61e;</span>';
+            }
+            if( page == total_page ) {
+                temp += '<a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">' + total_page + '</a>';
+                temp += '<a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>'
+            } else {
+                temp += '<a rel="nofollow" class="fl" href="javascript:get_comments(' + total_page + ', \'' + type + '\')" id="pageLast">' + total_page + '</a>';
+                temp += '<a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_comments('+(page + 1)+', \''+type+'\')">下一页<i class="sign right">&gt;</i></a>'
+            }
+        } else if( total_page > 1 ){
+            var i = (page - 2);
+            i = i < 2 ? 2 : i;
+            if( i > 2 ) {
+                temp += '<span class="icon ellipsis fl">&#xe61e;</span>';
+            }
+            var limit;
+            if( page == 1 ) {
+                limit = 5;
+            } else {
+                limit = 4;
+            }
+            for( ; i < (page + limit) && i < total_page; i++ ) {
+                if( i == page ) {
+                    temp += '<a rel="nofollow" class="fl cur" href="javascript:void(0);">' + i + '</a>';
+                } else {
+                    temp += '<a rel="nofollow" class="fl" href="javascript:get_comments(' + i + ', \'' + type + '\');">' + i + '</a>';
+                }
+            }
+            if( (total_page - page) > 4 ) {
+                temp += '<span class="icon ellipsis fl">&#xe61e;</span>';
+            }
+            if( page == total_page ) {
+                temp += '<a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">' + total_page + '</a>';
+                temp += '<a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>'
+            } else {
+                temp += '<a rel="nofollow" class="fl" href="javascript:get_comments(' + total_page + ', \'' + type + '\')" id="pageLast">' + total_page + '</a>';
+                temp += '<a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_comments('+(page + 1)+', \''+type+'\')">下一页<i class="sign right">&gt;</i></a>'
+            }
+        }
+
+        temp += '<div class="fl">';
+        temp += '<span class="fl">向第</span>';
+        temp += '<input class="fl" type="text" id="'+type+'-bottomPage">';
+        temp += '<span class="fl">页</span>';
+        temp += '<a rel="nofollow" class="pageGo fl" href="javascript:get_comments_by_input(\''+type+'\');" id="'+type+'-pagesubmit">跳转</a>'
+        temp += '</div>';
+        temp += '</div>';
+        $('#'+type+'-comments-body').append(temp);
+    }
+
+    function get_comments_by_input(type) {
+        var page = $('#'+type+'-bottomPage').val();
+        page = parseInt(page);
+        get_comments(page, type);
+    }
+
+    //评论 end ========================================================================
+
+    //足迹 start
+    function empty_history() {
+        var url = 'product.php';
+        var param = {'opera':'empty_history'};
+        $.post(url, param, do_empty_history_response, 'json');
+    }
+
+    function do_empty_history_response(result) {
+        alert(result.msg);
+        if( result.error == 0 ) {
+            $('#history-list').empty();
+        }
+    }
+
+    {/literal}
+
+</script>
 </body>
 </html>

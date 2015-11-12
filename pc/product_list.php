@@ -9,7 +9,7 @@ include 'library/init.inc.php';
 
 $id = intval(getGET('id'));
 
-$template = 'category.phtml';
+$template = 'product-list.phtml';
 $product_list = array();
 
 $flag = false;
@@ -134,21 +134,28 @@ if($category_ids_str == '')
     $category_ids_str .= ','.$id;
 }
 
+$count = 1;
+$offset = 0;
+assign('count', $count);
+
+$get_total = 'select count(*) from '.$db->table('product').' where `status`=4 and `category_id` in ('.$category_ids_str.')';
+$total = $db->fetchOne($get_total);
+$total_page = ceil( $total / $count );
+
+$page = intval(getGET('page'));
+$page = ( $page > $total_page ) ? $total_page : $page;
+$page = ( 0 >= $page ) ? 1 : $page;
+$offset = ($page - 1) * $count;
+create_pager($page, $total_page, $total);
+
 $now = time();
 $get_product_list = 'select `product_sn`,`name`,`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img` from '.$db->table('product').' where `status`=4 and `category_id` in ('.$category_ids_str.')';
-
-switch($state)
-{
-    case 'price': $get_product_list .= ' order by `price` ASC'; break;
-    case 'star': $get_product_list .= ' order by `star` DESC'; break;
-    default: $get_product_list .= ' order by `add_time` DESC'; break;
-}
-
+$get_product_list .= ' limit '.$offset.','.$count;
 $product_list = $db->fetchAll($get_product_list);
 
-assign('state', $state);
+//assign('state', $state);
 assign('product_list', $product_list);
 assign('id', $id);
 
-assign('filter', json_encode($filter));
-$smarty->display('product-list.phtml');
+//assign('filter', json_encode($filter));
+$smarty->display($template);

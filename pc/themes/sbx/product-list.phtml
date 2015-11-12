@@ -46,31 +46,61 @@
                 </div>
                 <div class="btns">
                     <a class="btn-buy" target="_blank" href="#">加入购物车</a>
+                    {if empty($p.collection)}
                     <a class="btn-coll" target="_blank" href="#">收藏</a>
+                    {else}
+                    <a style="margin-left: 20px" class="btn-coll" target="_blank" href="#">取消收藏</a>
+                    {/if}
                 </div>
             </li>
             {/foreach}
         </ul>
         <div style="clear: both;"></div>
-        {if count($product_list) gt 10}
+        {if $total gt $count}
         <div class="pages fr">
-            <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
-            <a rel="nofollow" class="cur fl" id="pageFirst" href="#">1</a>
-            <a rel="nofollow" class="fl" href="#">2</a>
-            <a rel="nofollow" class="fl" href="#">3</a>
-            <a rel="nofollow" class="fl" href="#">4</a>
-            <span class="searchBg ellipsis fl"></span>
-            <a rel="nofollow" class="fl" href="#" id="pageLast">100</a>
-            <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="#">下一页<i class="sign right">&gt;</i></a>
+            {if $has_prev eq false}
+            <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void();"><i class="sign left">&lt;</i>上一页</a>
+            {else}
+            <a rel="nofollow" class="prev fl" id="prePage" href="?id={$id}&page={$page-1}"><i class="sign left">&lt;</i>上一页</a>
+            {/if}
+            <a rel="nofollow" class="fl" id="pageFirst" href="?id={$id}&page=1">首页</a>
+            {if $has_many_prev}
+            <span class="icon ellipsis fl">&#xe61e;</span>
+            {/if}
+            {foreach from=$show_page item=pageNum}
+            {if $pageNum eq $page}
+            <a rel="nofollow" class="fl cur" href="?id={$id}&page={$pageNum}">{$pageNum}</a>
+            {else}
+            <a rel="nofollow" class="fl" href="?id={$id}&page={$pageNum}">{$pageNum}</a>
+            {/if}
+            {/foreach}
+            <!--            <a rel="nofollow" class="fl" href="#">2</a>-->
+            <!--            <a rel="nofollow" class="fl" href="#">3</a>-->
+            <!--            <a rel="nofollow" class="fl" href="#">4</a>-->
+            {if $has_many_next}
+            <span class="icon ellipsis fl">&#xe61e;</span>
+            {/if}
+            <a rel="nofollow" class="fl" href="?id={$id}&page={$totalPage}" id="pageLast">末页</a>
+            {if $has_next eq false}
+            <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void();">下一页<i class="sign right">&gt;</i></a>
+            {else}
+            <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="?id={$id}&page={$page+1}">下一页<i class="sign right">&gt;</i></a>
+            {/if}
             <div class="fl">
                 <span class="fl">向第</span>
                 <input class="fl" type="text" id="bottomPage">
                 <span class="fl">页</span>
-                <a rel="nofollow" class="pageGo fl" href="#" id="pagesubmit">跳转</a>
+                <a rel="nofollow" class="pageGo fl" href="javascript:page_go()" id="pagesubmit">跳转</a>
             </div>
+            <script type="text/javascript">
+                function page_go() {
+                    var page = $('#bottomPage').val();
+                    window.location.href="?id={$id}&page=" + page;
+                }
+            </script>
         </div>
-        <div style="clear: both;"></div>
         {/if}
+        <div style="clear: both;"></div>
     </div>
 </div>
 <!-- 全部产品结束 -->

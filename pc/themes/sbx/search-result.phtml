@@ -18,8 +18,8 @@
 <!-- 顶部面包屑导航开始 -->
 <div class="breadcrumb container">
     <span>当前位置：</span>
-    <a href="search-result-product.html" target="_blank">全部结果</a><span class="gt">&gt;</span>
-    <span>圣宝先自营</span>
+    <a href="" target="_blank">全部结果</a><span class="gt">&gt;</span>
+    <span>{$keyword}</span>
 </div>
 <!-- 顶部面包屑导航结束 -->
 <!-- 全部产品开始 -->
@@ -27,9 +27,21 @@
     <div class="con">
         <div class="filter">
             <div class="f-line top">
-                <div class="f-sort"><a href="javascript:;" class="curr">综合排序</a><a href="javascript:;">销量</a><a href="javascript:;">价格<i class="icon"></i></a><a href="javascript:;">评论数</a></div>
-                <div class="f-pager"><span class="fp-text"><b>1</b><em>/</em><i>18</i></span><a class="fp-prev disabled" href="javascript:;">&lt;</a><a class="fp-next"  href="javascript:;">&gt;</a></div>
-                <div class="f-result-sum">共<span id="J_resCount" class="num">1062</span>件商品</div>
+                <div class="f-sort">
+                    <a href="?keyword={$keyword}" {if $filter eq ''}class="curr"{/if}>综合排序</a>
+                    <a href="?keyword={$keyword}&filter=sale" {if $filter eq 'sale'}class="curr"{/if}>销量</a>
+                    <a href="?keyword={$keyword}&filter={if $filter eq 'price1'}price2{else}price1{/if}" {if $filter eq 'price1' || $filter eq 'price2'}class="curr"{/if}>价格
+                        <i class="icon down" {if $filter eq 'price1'}style="display: inline"{/if}>&#xe607;</i>
+                        <i class="icon up" {if $filter eq 'price2'}style="display: inline"{/if}>&#xe608;</i>
+                    </a>
+                    <a href="?keyword={$keyword}&filter=comment" {if $filter eq 'comment'}class="curr"{/if}>评论数</a>
+                </div>
+                <div class="f-pager">
+                    <span class="fp-text"><b>{$page}</b><em>/</em><i>{$totalPage}</i></span>
+                    <a class="fp-prev {if $has_prev eq false}disabled{/if}" href="{if $has_prev eq false}javascript:;{else}?keyword={$keyword}&page={$page-1}{/if}">&lt;</a>
+                    <a class="fp-next {if $has_next eq false}disabled{/if}" href="{if $has_next eq false}javascript:;{else}?keyword={$keyword}&page={$page+1}{/if}">&gt;</a>
+                </div>
+                <div class="f-result-sum">共<span id="J_resCount" class="num">{$total}</span>件商品</div>
                 <span class="clr"></span>
             </div>
         </div>
@@ -49,33 +61,63 @@
                 <div class="p-price"><strong>￥{$p.price}</strong></div>
                 <div class="extra">
                     <span class="evaluate">
-							<a href="#" target="_blank">已有<span>0</span>人评论</a>
+							<a href="#" target="_blank">已有<span>{$p.comment}</span>人评论</a>
                     </span>
                 </div>
                 <div class="btns">
                     <a class="btn-buy" target="_blank" href="#">加入购物车</a>
+                    {if empty($p.collection)}
                     <a class="btn-coll" target="_blank" href="#">收藏</a>
+                    {else}
+                    <a style="margin-left: 20px" class="btn-coll" target="_blank" href="#">取消收藏</a>
+                    {/if}
                 </div>
             </li>
             {/foreach}
         </ul>
         <div style="clear: both;"></div>
-        {if count($product_list) gt 10}
+        {if $total gt $count}
         <div class="pages fr">
-            <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
-            <a rel="nofollow" class="cur fl" id="pageFirst" href="#">1</a>
-            <a rel="nofollow" class="fl" href="#">2</a>
-            <a rel="nofollow" class="fl" href="#">3</a>
-            <a rel="nofollow" class="fl" href="#">4</a>
-            <span class="searchBg ellipsis fl"></span>
-            <a rel="nofollow" class="fl" href="#" id="pageLast">100</a>
-            <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="#">下一页<i class="sign right">&gt;</i></a>
+            {if $has_prev eq false}
+            <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void();"><i class="sign left">&lt;</i>上一页</a>
+            {else}
+            <a rel="nofollow" class="prev fl" id="prePage" href="?keyword={$keyword}&filter={$filter}&page={$page-1}"><i class="sign left">&lt;</i>上一页</a>
+            {/if}
+            <a rel="nofollow" class="fl" id="pageFirst" href="?keyword={$keyword}&filter={$filter}&page=1">首页</a>
+            {if $has_many_prev}
+            <span class="icon ellipsis fl">&#xe61e;</span>
+            {/if}
+            {foreach from=$show_page item=pageNum}
+            {if $pageNum eq $page}
+            <a rel="nofollow" class="fl cur" href="?keyword={$keyword}&filter={$filter}&page={$pageNum}">{$pageNum}</a>
+            {else}
+            <a rel="nofollow" class="fl" href="?keyword={$keyword}&filter={$filter}&page={$pageNum}">{$pageNum}</a>
+            {/if}
+            {/foreach}
+<!--            <a rel="nofollow" class="fl" href="#">2</a>-->
+<!--            <a rel="nofollow" class="fl" href="#">3</a>-->
+<!--            <a rel="nofollow" class="fl" href="#">4</a>-->
+            {if $has_many_next}
+            <span class="icon ellipsis fl">&#xe61e;</span>
+            {/if}
+            <a rel="nofollow" class="fl" href="?keyword={$keyword}&filter={$filter}&page={$totalPage}" id="pageLast">末页</a>
+            {if $has_next eq false}
+            <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void();">下一页<i class="sign right">&gt;</i></a>
+            {else}
+            <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="?keyword={$keyword}&filter={$filter}&page={$page+1}">下一页<i class="sign right">&gt;</i></a>
+            {/if}
             <div class="fl">
                 <span class="fl">向第</span>
                 <input class="fl" type="text" id="bottomPage">
                 <span class="fl">页</span>
-                <a rel="nofollow" class="pageGo fl" href="#" id="pagesubmit">跳转</a>
+                <a rel="nofollow" class="pageGo fl" href="javascript:page_go()" id="pagesubmit">跳转</a>
             </div>
+            <script type="text/javascript">
+                function page_go() {
+                    var page = $('#bottomPage').val();
+                    window.location.href="?keyword={$keyword}&filter={$filter}&page=" + page;
+                }
+            </script>
         </div>
         {/if}
         <div style="clear: both;"></div>
