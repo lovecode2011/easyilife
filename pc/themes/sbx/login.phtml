@@ -1,0 +1,49 @@
+手机：<input name="account" type="text" id="account"/>
+密码：<input name="password" type="password" id="password"/>
+<button type="button" ></button>
+<script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    function verify_memeber_info() {
+        var code = $("#pic_code").val();
+        var account = $("#account").val();
+        var password = $("#password").val();
+        var msg = "";
+
+        if(account == "") {
+            msg += "-请输入手机号码/会员卡号<br/>";
+        }
+
+        if(password == "") {
+            msg += "-请输入密码<br/>";
+        }
+
+        if(code == "") {
+            msg += "-请输入图形验证码<br/>";
+        }
+
+        if(msg != "") {
+            alert(msg);
+            return false;
+        }
+
+        var url = "data_center.php";
+        var data = { "opera":"login", "code":code, "account":account, "password":password, "ref": document.referrer };
+
+        $.post(url, data, verify_member_info_handler, "json");
+    }
+
+    function verify_member_info_handler(response) {
+//        hide_mask();
+        if(response.error == 0) {
+            $("#dialog_close").click(function(){
+                window.location.href = response.referer;
+            });
+
+            $("#dialog_close_btn").click(function(){
+                window.location.href = response.referer;
+            });
+        }
+        alert(response.msg);
+    }
+</script>

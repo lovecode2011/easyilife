@@ -218,7 +218,7 @@
                                     <a href="javascript:;" class="btn-buynow">
                                         <span>立即购买</span>
                                     </a>
-                                    <a href="javascript:;" class="btn-addcart">
+                                    <a href="javascript:add_to_cart('{$product.product_sn}');" class="btn-addcart">
                                         <span>加入购物车</span>
                                     </a>
                                     {if $collection_flag eq true}
@@ -1311,6 +1311,43 @@
         alert(result.msg);
         if( result.error == 0 ) {
             $('#history-list').empty();
+        }
+    }
+    // 足迹 end===========================================================================
+
+    // 购物车 start ======================================================================
+    function add_to_cart(product_sn) {
+        var url = "cart.php";
+        var buy_num = parseInt($("#buy_count").val());
+
+        if(isNaN(buy_num) || buy_num <= 0) {
+            alert("请输入购买数量");
+            return false;
+        }
+
+        if(!select_attributes_complete()) {
+            alert("请选择产品规格 包装");
+            return false;
+        }
+
+        var data = { "opera":"add_to_cart", "product_sn": product_sn, "number": buy_num, "attributes": attributes_mode };
+        $.post(url, data, add_to_cart_handler, "json");
+    }
+
+    function add_to_cart_handler(response) {
+        if(response.error == 0) {
+            alert('已加入购物车');
+        } else {
+            alert(response.msg);
+            if(response.error == 2) {
+                $("#dialog_close_btn").click(function(){
+                    window.location.href = "login.php";
+                });
+
+                $("#dialog_close").click(function(){
+                    window.location.href = "login.php";
+                });
+            }
         }
     }
 

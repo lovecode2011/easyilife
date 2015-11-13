@@ -1,0 +1,496 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>圣宝先官方商城</title>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.phtml"}
+<!-- 顶部面包屑导航开始 -->
+<div class="breadcrumb container">
+    <span>当前位置：</span>
+    <a href="index.php">首页</a><span class="gt">&gt;</span>
+    <a href="home.php">用户中心</a><span class="gt">&gt;</span>
+    <span>购物车</span>
+</div>
+<!-- 顶部面包屑导航结束 -->
+<!-- 购物车 开始 -->
+<div class="cart container">
+    {if empty($cart_list)}
+    <div class="tips-empty">
+        <div class="tips-icon">
+            <span class="icon">&#xe601;</span>
+        </div>
+        <div class="tips-detail">
+            对不起，你当前购物车还是空的！
+        </div>
+    </div>
+    {else}
+    <!-- 购物车产品列表 开始 -->
+    <div class="cart-inner">
+        <div class="cart-title">
+            <h3><i class="icon">&#xe601;</i>购物车</h3>
+        </div>
+        <div class="cart-tips">
+            <div class="cart-tip-box">运费说明：商家商品运费按商家规则计算</div>
+            <a class="return-btn" href="javascript:window.history.go(-1);" title="继续购物">&lt; 返回继续购物</a>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="cart-con">
+            <!--购物清单 表头 开始-->
+            <ul class="cart-box-title">
+                <li class="cart-cell a-c-1">
+                    <input {if $check_all}checked="checked"{/if} type="checkbox" class="check-all" onclick="return check_all();"/>
+                    <label>全选</label>
+                </li>
+                <li class="cart-cell a-c-2">商品信息</li>
+                <li class="cart-cell a-c-3">单价</li>
+                <li class="cart-cell a-c-4">数量</li>
+                <li class="cart-cell a-c-5">小计(元)</li>
+                <li class="cart-cell a-c-6">操作</li>
+                <div style="clear: both;"></div>
+            </ul>
+            <!--购物清单 表头 结束-->
+            <div class="cart-list">
+                <div class="cart-list-item">
+                    {foreach from=$cart_list item=cart}
+                    <!-- 店铺 开始 -->
+                    <div class="seller">
+                        <label>
+                            <input {if $cart.checked}checked="checked"{/if} type="checkbox" hidefocus="true" class="check-shop-{$cart.b_id}" onclick="return check_shop({$cart.b_id});">
+                        </label>
+                        <a target="" href="#">{$cart.shop_name}</a>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="attice">
+                        {foreach from=$cart.products item=product}
+                        <!-- 同店产品 开始 -->
+                        <div class="cart-list-cell">
+                            <div class="cart-list-choice">
+                                <label>
+                                    <input type="checkbox" {if $product.checked}checked="true"{/if} data-cid="{$product.c_id}" class="check-product check-product-{$cart.b_id}" id="check-product-{$product.p_id}" onclick="return check_product({$product.p_id}, {$cart.b_id})"/>
+                                </label>
+                            </div>
+                            <div class="cart-list-goods">
+                                <a class="pro-img" target="_blank" href="product.php?id={$product.p_id}" title="{$product.name} {$product.attributes}">
+                                    <img src="{$product.img}" alt="{$product.name} {$product.attributes}">
+                                </a>
+                            <span class="cart-list-goods-txt">
+                                <a target="_blank" href="product.php?id={$product.p_id}" title="{$product.name} {$product.attributes}">{$product.name} {$product.attributes}</a><br>
+                            </span>
+                            </div>
+                            <div class="cart-list-snprice">
+                                {if $product.integral gt 0}
+                                <q class="snPrice c3"><i></i><em>{sprintf("%.2f", $product.integral)}积分</em></q>
+                                {else}
+                                <q class="snPrice c3"><i>¥</i><em>{sprintf("%.2f", $product.price)}</em></q>
+                                {/if}
+                            </div>
+                            <div class="cart-list-amount">
+                                <div class="cart-goods-cout">
+                                    <div class="cout">
+                                        <a href="javascript:plus({$product.c_id});" class="ui-cout-btn" title="加一件" id="plus_{$product.c_id}"><i class="icon">&#xe60d;</i></a>
+                                        <input type="text" value="{$product.number}" maxlength="3" name="number" id="product_{$product.c_id}" onblur="blur_calculate({$product.c_id}, this.value);">
+                                        <a href="javascript:minus({$product.c_id});" class="ui-cout-btn" title="减一件" id="minus_{$product.c_id}"><i class="icon {if $product.number eq 1}disabled{/if}">&#xe60c;</i></a>
+                                        <div style="clear: both;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cart-list-price">
+                                {if $product.integral gt 0}
+                                <span class="snPrice" id="product-price-{$product.p_id}"><em>{sprintf("%.2f", ($product.integral * $product.number))}积分</em></span>
+                                {else}
+                                <span class="snPrice" id="product-price-{$product.p_id}"><i>¥</i><em>{sprintf("%.2f", ($product.price * $product.number))}</em></span>
+                                {/if}
+                            </div>
+                            <div class="cart-list-behavior">
+                                <p>
+                                    <a href="javascript:;">移入收藏夹</a>
+                                </p>
+                                <div>
+                                    <a href="javascript:delete_cart_item({$product.c_id});">删除</a>
+                                </div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <!-- 同店产品 结束 -->
+                        {/foreach}
+                    </div>
+                    <!--运费 开始-->
+                    <div class="ship-price-box fr">
+                        <span class="ship-price">
+                            <b>运费：</b>
+                            <span class="snPrice" id="delivery-fee-{$cart.b_id}"><i>¥</i><em>{sprintf("%.2f", $cart.delivery_fee)}</em></span>
+                        </span>
+                    </div>
+                    <!--运费 结束-->
+                    <div style="clear: both;"></div>
+                    <!-- 店铺 结束 -->
+                    {/foreach}
+                </div>
+
+                    <!--商品总金额结算 开始-->
+                    <div style="height: 102px; display: none;"></div>
+                    <div class="shoppayarea" style="left: 194px;">
+                        <div class="row row-1">
+                            <span class="settle-item">
+                                <input {if $check_all}checked="checked"{/if} type="checkbox" class="check-all" />
+                                <label>全选</label>
+                                <a href="javascript:multi_delete_cart_item();">删除选中商品</a>
+                                <a href="javascript:empty_cart();">清空购物车</a>
+                            </span>
+                            <div class="price-items">
+                                <div class="price-items">
+                                    <p class="pro-amount price" id="product-amount"><label>商品总金额：</label><span><i>¥</i><em>{sprintf("%.2f", $total_amount)}</em></span></p>
+                                    <p class="favour-amount price">
+                                    <p class="trans-amount price" id="total-delivery-fee"><label>运费：</label><span><i>¥</i><em>{sprintf("%.2f", $total_delivery_fee)}</em></span></p>
+                                </div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div class="row row-2">
+                            <div class="shopSubmit submit00">
+                                <a class="btn-orange fr" title="结算" href="javascript:;" ><em>结算</em></a>
+                            </div>
+                            <div class="pro-desc">
+                                <p>
+                                    <span class="selected" id="selected-number">已选商品<em>{$total_number}</em>件</span>
+                                    <span class="price" id="pay-amount"><b>商品应付金额：</b><i>¥</i><em>{sprintf("%.2f", $total_amount + $total_delivery_fee)}</em></span>
+                                </p>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <!--商品总金额结算 结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="clear: both"></div>
+    <!-- 购物车产品列表 结束 -->
+    {/if}
+</div>
+<!-- 购物车 结束 -->
+{include file="footer.phtml"}
+<script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jquery.jqzoom.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jqzoom-base.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript">
+    var total_amount = {$total_amount};
+    var total_integral = {$total_integral};
+    var cart = {$cart_json}
+    var cart_weight = {$cart_weight_json};
+
+    //删除购物车
+    function delete_cart_item(cid) {
+//        $("#delete_confirm_btn").bind("click", function() { remove_from_cart(cid); });
+//        show_operation_dialog();
+        if( confirm('确定从购物车删除该商品?') ) {
+            remove_from_cart(cid);
+        } else {
+            return false;
+        }
+    }
+
+    function multi_delete_cart_item() {
+        if( confirm('确定从购物车删除选中的商品?') ) {
+            var cid_list = new Array();
+            $('.check-product').each(function () {
+                if ($(this).is(':checked')) {
+                    var cid = $(this).attr('data-cid');
+                    cid = parseInt(cid);
+                    cid_list.push(cid);
+                }
+            });
+            if (cid_list.length == 0) {
+                alert('请选择要删除的商品');
+            } else {
+                multi_remove_from_cart(cid_list);
+            }
+        } else {
+            return false;
+        }
+    }
+
+    function multi_remove_from_cart(cid_list) {
+        var url = "cart.php";
+        var list = '[';
+        for( var id in cid_list ) {
+            if( id == 0 ) {
+                list += cid_list[id];
+            } else {
+                list += cid_list[id] + ',';
+            }
+
+        }
+        list += ']';
+
+        var data = { "opera":"multi_delete", "cid_list":list };
+        $.post(url, data, remove_from_cart_handler, "json");
+    }
+
+    function remove_from_cart(cid) {
+        cid = parseInt(cid);
+
+        if(isNaN(cid) || cid <= 0) {
+            alert("无效的id");
+            return false;
+        }
+        console.info(cid);
+        var url = "cart.php";
+        data = { "opera":"delete", "cid":cid };
+
+//        show_mask();
+        $.post(url, data, remove_from_cart_handler, "json");
+    }
+
+    function empty_cart() {
+        if( confirm('确定清空购物车?') ) {
+            var url = 'cart.php';
+            var data = { "opera":"empty_cart" };
+            $.post(url, data, remove_from_cart_handler, 'json');
+        } else {
+            return false;
+        }
+    }
+
+
+    function remove_from_cart_handler(response) {
+        if(response.error == 0) {
+            window.location.reload();
+        } else {
+            alert(response.msg);
+        }
+    }
+    //更改复选框状态
+    function check_all() {
+        var flag = true;
+        if( $('.check-all:eq(0)').is(':checked') ) {
+            flag = true;
+        } else {
+            flag = false;
+        }
+        $("input[type='checkbox']").prop('checked', flag);
+        for(var id in cart) {
+            if( flag ) {
+                cart[id].checked = 1;
+            } else {
+                cart[id].checked = 0;
+            }
+        }
+        calculate_fee();
+        return true;
+    }
+
+    function check_shop(id) {
+        var flag = true;
+        if( $('.check-shop-'+id).is(':checked') ) {
+            flag = true;
+        } else {
+            flag = false;
+            $('.check-all').prop('checked', false);
+        }
+        $('.check-product-'+id).prop('checked', flag);
+        for(var key in cart) {
+            if( cart[key].b_id == id) {
+                cart[key].checked =  flag ? 1 : 0;
+            }
+        }
+        calculate_fee();
+        return true;
+    }
+
+    function check_product(pid, bid) {
+        if( !$('#check-product-'+pid).is(':checked') ) {
+            $('.check-all').prop('checked', false);
+            var flag = false;
+            $('.check-product-'+bid).each(function() {
+                if( $(this).is(':checked') ) {
+                    flag = true;
+                }
+            });
+            $('.check-shop-'+bid).prop('checked', flag);
+        } else {
+            $('.check-shop-'+bid).prop('checked', true);
+        }
+        for( var id in cart ) {
+            if( cart[id].p_id == pid ) {
+                cart[id].checked = $('#check-product-'+pid).is(':checked') ? 1 : 0;
+            }
+        }
+        calculate_fee();
+    }
+
+    // 加减操作
+    function enable_operation(mode, cid, flag) {
+        if(flag) {
+            $("#" + mode + "_" + cid + ' i').removeClass("disabled");
+        } else {
+            $("#" + mode + "_" + cid + ' i').addClass("disabled");
+        }
+    }
+
+    function blur_calculate(cid, number) {
+        number = parseInt(number);
+
+        if(isNaN(number) || number <= 0) {
+            number = 1;
+        }
+
+        $("#product_"+cid).val(number);
+
+        check_inventory(cid, number);
+        calculate_fee();
+    }
+
+    function plus(cid) {
+        var buy_num = $("#product_"+cid).val();
+        buy_num = parseInt(buy_num);
+
+        if(isNaN(buy_num) || buy_num <= 0) {
+            buy_num = 0;
+        }
+
+        buy_num++;
+
+        $("#product_"+cid).val(buy_num);
+
+        check_inventory(cid, buy_num);
+        calculate_fee();
+    }
+
+    function minus(cid) {
+        var buy_num = $("#product_"+cid).val();
+        buy_num = parseInt(buy_num);
+
+        if(isNaN(buy_num) || buy_num <= 1) {
+            buy_num = 2;
+        }
+
+        buy_num--;
+
+        $("#product_"+cid).val(buy_num);
+
+        check_inventory(cid, buy_num);
+        calculate_fee();
+    }
+
+    function check_inventory(cid, buy_num) {
+        if(cart[cid].inventory < buy_num) {
+            buy_num = cart[cid].inventory;
+            $("#product_"+cid).val(cart[cid].inventory);
+            enable_operation("plus", cid, false);
+        } else {
+            enable_operation("plus", cid, true);
+        }
+
+        if(buy_num == 1) {
+            enable_operation("minus", cid, false);
+        } else {
+            enable_operation("minus", cid, true);
+        }
+
+        cart[cid].number = buy_num;
+    }
+
+    //计算购物车费用
+    function calculate_fee() {
+        var price_amount = 0;
+        var integral_amount = 0;
+        var total_delivery_fee = 0;
+        ;
+        var buy_num = 0;
+
+        for (var i in cart_weight) {
+            cart_weight[i].weight = 0;
+            cart_weight[i].free_delivery = 1;
+        }
+
+        for (var i in cart) {
+            if (cart[i].checked) {
+                check_flag = true;
+                var temp_price = cart[i].price * cart[i].number;
+                var temp_integral = cart[i].integral * cart[i].number;
+                temp_integral = Number(temp_integral);
+                if (temp_integral == 0) {
+                    $('#product-price-' + cart[i].p_id + ' em').text(temp_price);
+                } else {
+                    $('#product-price-' + cart[i].p_id + ' em').text(temp_integral + '积分');
+                }
+                if( !cart[i].free_delivery ) {
+                    cart_weight[cart[i].b_id].weight += (cart[i].weight * cart[i].number);
+                }
+                cart_weight[cart[i].b_id].free_delivery &= cart[i].free_delivery;
+
+                price_amount += temp_price;
+                integral_amount += temp_integral;
+                buy_num += cart[i].number;
+            }
+        }
+
+        if (check_flag) {
+            for (var i in cart_weight) {
+                var cart_delivery_fee = 0.00;
+                if( !cart_weight[i].free_delivery ) {
+                    cart_delivery_fee = calculate_delivery_fee(cart_weight[i].first_weight, cart_weight[i].next_weight, cart_weight[i].free, cart_weight[i].weight);
+                }
+                $('#delivery-fee-' + i + ' em').text(cart_delivery_fee);
+                total_delivery_fee += cart_delivery_fee;
+            }
+        } else {
+            $('#delivery-fee-' + i + ' em').text('0.00');
+        }
+
+        $('#product-amount').find('em').text(price_amount);
+        $("#selected-number em").text(buy_num);
+        $('#total-delivery-fee em').text(total_delivery_fee);
+        $('#pay-amount em').text(price_amount + total_delivery_fee);
+    }
+
+    function calculate_delivery_fee(first_weight, next_weight, free, total_weight) {
+        var delivery_fee = 0;
+        first_weight = Number(first_weight);
+        next_weight = Number(next_weight);
+        free = Number(free);
+
+        if(total_weight >= 1000)
+        {
+            delivery_fee += first_weight;
+            total_weight -= 1000;
+        } else {
+            delivery_fee += first_weight;
+            total_weight = 0;
+        }
+
+        var weight_count = (total_weight/1000);
+
+        if(total_weight%1000)
+        {
+            weight_count++;
+        }
+
+        delivery_fee += (weight_count*next_weight);
+        if(delivery_fee > free) {
+            return delivery_fee - free;
+        } else {
+            return 0;
+        }
+    }
+
+
+
+</script>
+</body>
+</html>

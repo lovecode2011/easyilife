@@ -29,7 +29,7 @@
             {foreach from=$product_list item=p}
             <li>
                 <div class="p-img">
-                    <a href="product.php?id={$p.id}" target="_blank">
+                    <a href="product.php?id={$p.id}">
                         <img width="160" height="160" alt="{$p.name}" src="../{$p.img}">
                     </a>
                 </div>
@@ -41,15 +41,15 @@
                 <div class="p-price"><strong>￥{$p.price}</strong></div>
                 <div class="extra">
                     <span class="evaluate">
-							<a href="#" target="_blank">已有<span>0</span>人评论</a>
+							<a href="product.php?id={$p.id}">已有<span>0</span>人评论</a>
                     </span>
                 </div>
                 <div class="btns">
-                    <a class="btn-buy" target="_blank" href="#">加入购物车</a>
+                    <a class="btn-buy" href="#">加入购物车</a>
                     {if empty($p.collection)}
-                    <a class="btn-coll" target="_blank" href="#">收藏</a>
+                    <a class="btn-coll" href="#">收藏</a>
                     {else}
-                    <a style="margin-left: 20px" class="btn-coll" target="_blank" href="#">取消收藏</a>
+                    <a style="margin-left: 20px" class="btn-coll" href="#">取消收藏</a>
                     {/if}
                 </div>
             </li>
@@ -104,24 +104,8 @@
     </div>
 </div>
 <!-- 全部产品结束 -->
-<!-- 底部开始 -->
-<div class="footer container">
-    <div class="footer-inner">
-        <div class="fl">
-            <h3>联系我们</h3>
-            <span> CONTACT US</span>
-            <span>&nbsp;</span>
-            <span class="copy">copyright&copy;圣宝先国际商务服务有限公司</span>
-        </div>
-        <div class="fr">
-            <span>圣宝先国际商务服务有限公司</span>
-            <span>电话：440-123-4567</span>
-            <span>邮箱：sbx@qq.com</span>
-            <span>地址：成都市青羊区堂东路66号锦绣工场古玩城55314</span>
-        </div>
-    </div>
-</div>
-<!-- 底部结束 -->
+{include file="footer.phtml"}
+
 <script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
 
