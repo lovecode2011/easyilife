@@ -43,7 +43,7 @@
                     <select name="ad_pos_id" id="ad_pos_id" class="w150" onchange="select_ad(this.value);">
                         <option value="0">--请选择--</option>
                         {foreach from=$adpos_list item=adpos}
-                        <option value="{$adpos.id}" {if $ad.ad_position_id eq $adpos.id}selected="selected"{/if}>{$adpos.name}</option>
+                        <option value="{$adpos.id}" {if $ad.ad_pos_id eq $adpos.id}selected="selected"{/if}>{$adpos.name}</option>
                         {/foreach}
                     </select>
                     <span class="error-input" id="ad_pos_id-error">{if isset($error.ad_pos_id)}{$error.ad_pos_id}{/if}</span>

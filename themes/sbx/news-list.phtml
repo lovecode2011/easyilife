@@ -38,6 +38,8 @@
     </nav>
     {/if}
     <ul class="newslist-con" id="news-list">
+        {include file="news-list-item.phtml"}
+        <!--
         {foreach from=$article_list item=article}
         <li>
             <a href="article.php?id={$article.id}">
@@ -48,6 +50,7 @@
             </a>
         </li>
         {/foreach}
+        -->
     </ul>
 </section>
 <div class="cd-popup" role="alert">

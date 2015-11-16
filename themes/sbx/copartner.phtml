@@ -40,6 +40,7 @@
                     {foreach from=$payment_list item=payment}
                     <option value="{$payment.plugins}">{$payment.name}</option>
                     {/foreach}
+                    <option value="0">微信代付</option>
                 </select>
             </label>
             <label for="agree"><span><a href="article.php?id=3">《用户协议》:</a></span>

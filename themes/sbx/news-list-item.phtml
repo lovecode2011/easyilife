@@ -1,5 +1,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 {foreach from=$article_list item=article}
+<div class="article-list-item">
+    <a href="article.php?id={$article.id}">
+        <img src="{if $article.original}./{$article.original}{else}{$template_dir}image/bg_pic.png{/if}"/>
+        <p class="clearfix">{$article.title|truncate:8:'...'}</p>
+    </a>
+</div>
+{/foreach}
+<!--
 <li>
     <a href="article.php?id={$article.id}">
         <dl class="arrow">
@@ -8,4 +16,4 @@
         </dl>
     </a>
 </li>
-{/foreach}
+-->
