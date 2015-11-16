@@ -3298,3 +3298,26 @@ li.search-shop-li div{
 .apply-status-gray {
     background-color: #ddd;
 }
+
+/* 资讯列表样式修改 */
+.article-list-item {
+    display: inline-block;
+    width: 31%;
+    padding: 0;
+    margin-top: .5rem;
+    margin-left: .1rem;
+    text-align: center;
+}
+
+.article-list-item img {
+    width: 80px;
+    height: 80px;
+    background-image: url(../images/bg_pic.png);
+    background-size: 80px 80px;
+}
+
+.article-list-item p {
+    font-size: .6rem;
+    text-align: center;
+    line-height: 1.6rem;
+}

@@ -21,7 +21,7 @@ if('sort' == $opera)
         $mode = intval($mode);
     }
 
-    $get_article_list = 'select `title`,`id`,`add_time`,`description` from '.$db->table('content');
+    $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from '.$db->table('content');
 
     switch($mode)
     {
@@ -52,7 +52,7 @@ if($id <= 4)
     $section_list = $db->fetchAll($get_section_list);
     assign('section_list', $section_list);
 
-    $get_article_list = 'select `title`,`id`,`add_time`,`description` from ' . $db->table('content') . ' order by `add_time` DESC';
+    $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' order by `add_time` DESC';
     $article_list = $db->fetchAll($get_article_list);
 
     assign('article_list', $article_list);
@@ -60,16 +60,15 @@ if($id <= 4)
     assign('width', '25');
     assign('all', 'all');
 } else {
-
     $get_section_list = 'select `section_name`, `id` from '.$db->table('section').' where `parent_id` = '.$id.' order by `id` asc';
     $section_list = $db->fetchAll($get_section_list);
     if( $section_list ) {
-        $get_article_list = 'select `title`,`id`,`add_time`,`description` from ' . $db->table('content') . ' where `section_id`='.$section_list[0]['id'].' order by `add_time` DESC';
+        $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' where `section_id`='.$section_list[0]['id'].' order by `add_time` DESC';
         $article_list = $db->fetchAll($get_article_list);
 
         assign('width', (100 / count($section_list)));
     } else {
-        $get_article_list = 'select `title`,`id`,`add_time`,`description` from ' . $db->table('content') . ' where `section_id`='.$id.' order by `add_time` DESC';
+        $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' where `section_id`='.$id.' order by `add_time` DESC';
         $article_list = $db->fetchAll($get_article_list);
 
         assign('width', '25');
