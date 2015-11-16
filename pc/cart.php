@@ -242,11 +242,13 @@ if( 'multi_delete' == $opera ) {
     echo json_encode($response);
     exit;
 }
+//子查询是否已收藏
+$sub_select = '(select `add_time` from '.$db->table('collection').' where `product_sn` = c.`product_sn` and `account` = \''.$_SESSION['account'].'\') as collection';
+
 //获取购物车产品
-$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`id` as p_id,c.`business_account`,p.`free_delivery`,p.`weight`,p.`is_virtual` from ('.
+$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`id` as p_id,c.`business_account`,p.`free_delivery`,p.`weight`,p.`is_virtual`,'.$sub_select.' from ('.
                  $db->table('cart').' as c join '.$db->table('product').' as p using(`product_sn`)) join '.$db->table('business').
                  ' as b on (c.`business_account`=b.`business_account`) where c.`account`=\''.$_SESSION['account'].'\' order by c.`business_account`';
-
 $cart_list_tmp = $db->fetchAll($get_cart_list);
 
 $total_amount = 0;
@@ -323,6 +325,7 @@ if($cart_list_tmp)
             'p_id' => $cart['p_id'],
             'free_delivery' => $cart['free_delivery'],
             'weight' => $cart['weight'],
+            'collection' => $cart['collection'],
         );
 
         $cart_json[$cart['id']] = array(

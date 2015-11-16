@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>圣宝先官方商城</title>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.phtml"}
+<!-- 顶部面包屑导航开始 -->
+<div class="breadcrumb container">
+    <span>当前位置：</span>
+    <a href="index.php">首页</a><span class="gt">&gt;</span>
+    <a href="home.php">用户中心</a><span class="gt">&gt;</span>
+    <span>我的订单</span>
+</div>
+<!-- 顶部面包屑导航结束 -->
+<!-- 个人中心开始 -->
+<div class="home container">
+    <div class="main">
+        <!--右侧我的订单 开始-->
+        <div class="order">
+            <div class="order-tabs">
+                <ul>
+                    <li {if $status eq 0}class="curr"{/if}>
+                        <a href="order.php">
+                            <span>全部订单</span>
+                        </a>
+                    </li>
+                    <li {if $status eq 1}class="curr"{/if}>
+                        <a href="order.php?status=1">
+                            <span>待付款</span>
+                            <b>{$pay_total}</b>
+                        </a>
+                    </li>
+                    <li {if $status eq 6}class="curr"{/if}>
+                        <a href="order.php?status=6">
+                            <span>待收货</span>
+                            <b>{$receive_total}</b>
+                        </a>
+                    </li>
+                    <li {if $status eq 7}class="curr"{/if}>
+                        <a href="order.php?status=7">
+                            <span>待评价</span>
+                            <b>{$comment_total}</b>
+                        </a>
+                    </li>
+                    <li {if $status eq 12}class="curr"{/if}>
+                        <a href="order.php?status=12">
+                            <span>已完成</span>
+                            <b>{$complete_total}</b>
+                        </a>
+                    </li>
+                    <li {if $status eq 8}class="curr"{/if}>
+                        <a href="order.php?status=8">
+                            <span>退换货</span>
+                            <b>{$refund_total}</b>
+                        </a>
+                    </li>
+
+                </ul>
+                <div style="clear: both;"></div>
+            </div>
+            <div class="order-list" id="all-order-list">
+                <table cellpadding="0" cellspacing="0" class="order-tb">
+                    <thead>
+                    <tr>
+                        <th>
+<!--                            <div class="ordertime-cont">-->
+<!--                                <div class="time-txt">今年内订单<b></b><span class="blank"></span></div>-->
+<!--                                <div class="time-list">-->
+<!--                                    <ul>-->
+<!--                                        <li><a href="#" class="curr"><b></b>近三个月订单</a></li>-->
+<!--                                        <li><a href="#"><b></b>今年内订单</a></li>-->
+<!--                                        <li><a href="#"><b></b>2014年订单</a></li>-->
+<!--                                        <li><a href="#"><b></b>2014年以前订单</a></li>-->
+<!--                                    </ul>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                            <div class="order-detail-txt">订单详情</div>
+                        </th>
+                        <th>总计</th>
+                        <th>
+                            <div class="deal-state-cont">
+                                <div class="state-txt">全部状态<b></b><span class="blank"></span></div>
+                                <div class="state-list">
+                                    <ul>
+                                        <li value="4096">
+                                            <a href="#" class="curr"><b></b>全部状态</a>
+                                        </li>
+                                        <li value="1">
+                                            <a href="#"><b></b>等待付款</a>
+                                        </li>
+                                        <li value="128">
+                                            <a href="#"><b></b>等待收货</a>
+                                        </li>
+                                        <li value="1024">
+                                            <a href="#"><b></b>已完成</a>
+                                        </li>
+                                        <li value="-1">
+                                            <a href="#"><b></b>已取消</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    {foreach from=$order_list item=order}
+                    <tbody>
+                    <tr class="sep-row"><td colspan="5"></td></tr>
+                    <tr class="tr-th">
+                        <td colspan="5">
+                            <span class="gap"></span>
+                            <span class="dealtime" title="{date('Y-m-d H:i:s', $order.add_time)}">{date('Y-m-d H:i:s', $order.add_time)}</span>
+                            <input type="hidden" value="2014-12-21 20:41:05">
+                                     <span class="number">订单号：
+                                         <a href="?act=detail&sn={$order.order_sn}">{$order.order_sn}</a>
+                                     </span>
+                            <div class="tr-operate">
+                                    <span class="order-shop">
+                                        <span class="shop-txt">{$order.shop_name}</span>
+                                        <a class="icon" href="shop.php?sn={$order.business_account}" title="进入店铺">&#xe61b;</a>
+                                    </span>
+                                <a href="#" class="order-del icon" title="删除">&#xe61c;</a>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </td>
+                    </tr>
+                    {foreach from=$order.order_detail item=product key=i}
+                    <tr class="tr-bd">
+                        <td>
+                            <div class="goods-item p-1073757">
+                                <div class="p-img">
+                                    <a href="#">
+                                        <img class="" src="{$product.img}" title="{$product.product_name} {$product.product_attributes}" width="60" height="60">
+                                    </a>
+                                </div>
+                                <div class="p-msg">
+                                    <div class="p-name"><a href="product.php?id={$product.id}" class="a-link" title="{$product.product_name} {$product.product_attributes}">{$product.product_name} {$product.product_attributes}</a></div>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <div class="goods-number">
+                                x{$product.count}
+                            </div>
+                            <div style="clear: both;"></div>
+                        </td>
+                        {if $i eq 0}
+                        <td rowspan="{count($order.order_detail)}">
+                            <div class="amount">
+                                <strong>¥{sprintf("%.2f", $order.amount)}</strong> <br>
+                                <span class="ftx-13">{$order.payment}</span><br>
+                            </div>
+                        </td>
+                        <td rowspan="{count($order.order_detail)}">
+                            <div class="status">
+                                <span class="order-status ftx-03">{$order.show_status}</span>
+                                <br>
+                                <a href="order.php?act=detail&sn={$order.order_sn}">订单详情</a>
+                            </div>
+                        </td>
+                        <td rowspan="{count($order.order_detail)}">
+                            <div class="operate">
+                                <a href="#" class="btn-again btn"><b></b>申请售后</a><br>
+                            </div>
+                        </td>
+                        {/if}
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                    {/foreach}
+                </table>
+            </div>
+
+            <div class="pages fr">
+                <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+                <a rel="nofollow" class="cur fl" id="pageFirst" href="#">1</a>
+                <a rel="nofollow" class="fl" href="#">2</a>
+                <a rel="nofollow" class="fl" href="#">3</a>
+                <a rel="nofollow" class="fl" href="#">4</a>
+                <span class="icon ellipsis fl">&#xe61e;</span>
+                <a rel="nofollow" class="fl" href="#" id="pageLast">100</a>
+                <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="#">下一页<i class="sign right">&gt;</i></a>
+                <div class="fl">
+                    <span class="fl">向第</span>
+                    <input class="fl" type="text" id="bottomPage">
+                    <span class="fl">页</span>
+                    <a rel="nofollow" class="pageGo fl" href="#" id="pagesubmit">跳转</a>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <!--右侧我的订单 结束-->
+        <div class="might-like">
+            <div class="might-like-inner">
+                <div class="inner-head">
+                    <h3 class="fl">根据浏览，猜你喜欢</h3>
+                    <span class="fr"><i class="icon">&#xe618;</i>换一组</span>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="inner-con">
+                    <ul class="p-list">
+                        <li>
+                            <div class="p-img">
+                                <a href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="aside">
+        <div class="home-nav">
+            <dl>
+                <dt><i class="icon p">&#xe611;</i><i class="icon m">&#xe612;</i><a href="#" target="_parent" title="订单信息">订单信息</a></dt>
+                <dd><a href="order.html" target="_parent" title="我的订单" class="hover">我的订单</a></dd>
+                <dd><a href="#" target="_parent" title="我的收藏">我的收藏</a></dd>
+                <dd><a href="#" target="_parent" title="我的足迹">我的足迹</a></dd>
+            </dl>
+            <dl>
+                <dt><i class="icon p">&#xe611;</i><i class="icon m">&#xe612;</i><a href="#" target="_parent" title="我的资产">我的资产</a></dt>
+                <dd><a href="#" target="_parent" title="余额">余额</a></dd>
+                <dd><a href="#" target="_parent" title="佣金">佣金</a></dd>
+                <dd><a href="#" target="_parent" title="积分">积分</a></dd>
+                <dd><a href="#" target="_parent" title="优惠券">优惠券</a></dd>
+            </dl>
+            <dl>
+                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的资料">我的资料</a></dt>
+            </dl>
+            <dl>
+                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="收货地址">收货地址</a></dt>
+            </dl>
+            <dl>
+                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的推广">我的推广</a></dt>
+            </dl>
+            <dl>
+                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的分销">我的分销</a></dt>
+            </dl>
+            <dl>
+                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的团队">我的团队</a></dt>
+            </dl>
+            <dl>
+                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我要开店">我要开店</a></dt>
+            </dl>
+            <dl>
+                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="投诉维权">投诉维权</a></dt>
+            </dl>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+</div>
+<!-- 个人中心结束 -->
+{include file="footer.phtml"}
+<script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jquery.jqzoom.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jqzoom-base.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+</body>
+</html>

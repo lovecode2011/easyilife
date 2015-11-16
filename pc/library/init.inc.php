@@ -90,3 +90,12 @@ foreach($category_list as $key=>$cat)
 }
 
 assign('category_list', $category_list);
+
+if( isset($_SESSION['account']) && $_SESSION['account'] ) {
+    assign('is_login', true);
+    assign('account', $_SESSION['account']);
+
+    $get_cart_count = 'select sum(number) from '.$db->table('cart').' where account = \''.$_SESSION['account'].'\' and checked = 1';
+    $cart_count = $db->fetchOne($get_cart_count);
+    assign('cart_count', $cart_count);
+}

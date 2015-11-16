@@ -49,7 +49,7 @@
             <!--购物清单 表头 开始-->
             <ul class="cart-box-title">
                 <li class="cart-cell a-c-1">
-                    <input {if $check_all}checked="checked"{/if} type="checkbox" class="check-all" onclick="return check_all();"/>
+                    <input {if $check_all}checked="checked"{/if} type="checkbox" class="check-all" onclick="return check_all(0);"/>
                     <label>全选</label>
                 </li>
                 <li class="cart-cell a-c-2">商品信息</li>
@@ -112,9 +112,13 @@
                                 <span class="snPrice" id="product-price-{$product.p_id}"><i>¥</i><em>{sprintf("%.2f", ($product.price * $product.number))}</em></span>
                                 {/if}
                             </div>
-                            <div class="cart-list-behavior">
+                            <div class="cart-list-behavior" id="collection-{$product.product_sn}">
                                 <p>
-                                    <a href="javascript:;">移入收藏夹</a>
+                                    {if empty($product.collection)}
+                                    <a href="javascript:collection('{$product.product_sn}');">移入收藏夹</a>
+                                    {else}
+                                    <a href="javascript:collection('{$product.product_sn}');">取消收藏</a>
+                                    {/if}
                                 </p>
                                 <div>
                                     <a href="javascript:delete_cart_item({$product.c_id});">删除</a>
@@ -143,7 +147,7 @@
                     <div class="shoppayarea" style="left: 194px;">
                         <div class="row row-1">
                             <span class="settle-item">
-                                <input {if $check_all}checked="checked"{/if} type="checkbox" class="check-all" />
+                                <input {if $check_all}checked="checked"{/if} type="checkbox" class="check-all" onclick="return check_all(1);"/>
                                 <label>全选</label>
                                 <a href="javascript:multi_delete_cart_item();">删除选中商品</a>
                                 <a href="javascript:empty_cart();">清空购物车</a>
@@ -275,12 +279,10 @@
         }
     }
     //更改复选框状态
-    function check_all() {
-        var flag = true;
-        if( $('.check-all:eq(0)').is(':checked') ) {
+    function check_all(index) {
+        var flag = false;
+        if( $('.check-all:eq('+index+')').is(':checked') ) {
             flag = true;
-        } else {
-            flag = false;
         }
         $("input[type='checkbox']").prop('checked', flag);
         for(var id in cart) {
@@ -410,7 +412,7 @@
         var price_amount = 0;
         var integral_amount = 0;
         var total_delivery_fee = 0;
-        ;
+        var check_flag = false;
         var buy_num = 0;
 
         for (var i in cart_weight) {
@@ -474,7 +476,7 @@
             total_weight = 0;
         }
 
-        var weight_count = (total_weight/1000);
+        var weight_count = parseInt(total_weight/1000);
 
         if(total_weight%1000)
         {
@@ -489,7 +491,32 @@
         }
     }
 
+    //收藏 start==============================================================
+    function collection(product_sn) {
+        var url = "product.php";
+        var data = { "opera":"collection", "product_sn":product_sn };
 
+//        show_mask();
+        $.post(url, data, collection_handler, "json");
+    }
+
+    function collection_handler(response) {
+//        hide_mask();
+//        show_message_dialog(response.msg);
+        alert(response.msg);
+        if(response.error == 0) {
+            if(response.status) {
+                $("#collection-"+response.product_sn+" p a").text("取消收藏");
+            } else {
+                $("#collection-"+response.product_sn+" p a").text("移入收藏夹");
+            }
+        } else {
+            if(response.error == 2) {
+                window.location.href = "login.php";
+            }
+        }
+    }
+    //收藏 end ========================================================================
 
 </script>
 </body>
