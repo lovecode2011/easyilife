@@ -134,7 +134,7 @@ if($category_ids_str == '')
     $category_ids_str .= ','.$id;
 }
 
-$count = 1;
+$count = 4;
 $offset = 0;
 assign('count', $count);
 
@@ -148,8 +148,12 @@ $page = ( 0 >= $page ) ? 1 : $page;
 $offset = ($page - 1) * $count;
 create_pager($page, $total_page, $total);
 
+
+//子查询是否已收藏
+$sub_select = '(select `add_time` from '.$db->table('collection').' where `product_sn` = p.`product_sn` and `account` = \''.$_SESSION['account'].'\') as collection';
+
 $now = time();
-$get_product_list = 'select `product_sn`,`name`,`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img` from '.$db->table('product').' where `status`=4 and `category_id` in ('.$category_ids_str.')';
+$get_product_list = 'select p.`product_sn`,p.`name`,p.`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,'.$sub_select.' from '.$db->table('product').'as p where `status`=4 and `category_id` in ('.$category_ids_str.')';
 $get_product_list .= ' limit '.$offset.','.$count;
 $product_list = $db->fetchAll($get_product_list);
 

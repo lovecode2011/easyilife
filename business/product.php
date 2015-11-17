@@ -231,7 +231,7 @@ if( 'add' == $opera ) {
             $attributes = json_encode($v);
             $attributes = decodeUnicode($attributes);
             $attributes = $db->escape($attributes);
-
+            $attributes = str_replace('\/', '/', $attributes);
             $data = array(
                 'product_sn' => $product_sn,
                 'attributes' => $attributes,

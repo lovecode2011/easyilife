@@ -1,49 +1,201 @@
-手机：<input name="account" type="text" id="account"/>
-密码：<input name="password" type="password" id="password"/>
-<button type="button" ></button>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>圣宝先官方商城</title>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div class="topbar">
+    <div class="container">
+        <div class="fl">
+            <span><i class="icon">&#xe600;</i>财富热线：<em>440-123-4567</em></span>
+        </div>
+        <div class="fr">
+            <div class="topbar-cart">
+                <a href="cart.php" class="cart-mini"><i class="icon">&#xe601;</i>购物车<span class="cart-num">（0）</span></a>
+                <div class="cart-menu">
+                    <div class="cart-menu-inner">
+                        购物车中还没有商品，赶紧选购吧！
+                    </div>
+                </div>
+            </div>
+            <div class="topbar-info">
+                <a href="#">登陆</a>
+                <span class="sep">|</span>
+                <a href="#">注册</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear: both;"></div>
+<div class="header">
+    <div class="container">
+        <div class="header-logo">
+            <a class="logo ir" href="index.php" title="圣宝先官网">圣宝先</a>
+        </div>
+    </div>
+</div>
+<!-- 登陆页面开始 -->
+<div class="login container">
+    <div class="aside">
+        <div class="pic">
+            <a href="#" target="_blank">
+                <img src="{$template_dir}images/login-bg.jpg" alt="登陆页面背景图" />
+            </a>
+        </div>
+    </div>
+    <form action="login.php" method="POST" id="signupForm">
+        <div class="main">
+            <!--登陆头部-->
+            <div class="login-head">
+                <h3>HI,欢迎登陆！</h3>
+                <span>还不是圣宝先会员？<a href="register.php" title="免费注册">免费注册</a></span>
+            </div>
+            <div style="clear: both;"></div>
+            <!--用户名-->
+            <div class="username">
+                <span class="icon">&#xe626;</span>
+                <input class="user" name="account" type="text" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码">
+            </div>
+            <p class="tips"></p>
+            <!--密码-->
+            <div class="password" id="password_div">
+                <span class="icon">&#xe625;</span>
+                <input class="pass" name="password" type="password" title="请输入密码" placeholder="密码" maxlength="20" autocomplete="off">
+            </div>
+            <p class="tips"></p>
+            <!--验证码-->
+            <div class="code_wrap" style="display: block;">
+                <div class="code">
+                    <span class="icon">&#xe627;</span>
+                    <input class="codes" name="verifyCode" type="text" title="请输入验证码" placeholder="验证码" maxlength="4" autocomplete="off">
+                </div>
+                <a class="code_pic" href="javascript:refresh_code();">
+                    <img src="code.php">
+                </a>
+                <a href="javascript:refresh_code();">换张图</a>
+            </div>
+            <p class="tips"></p>
+            <!--忘记密码-->
+            <p class="lost-password">
+                <a href="#">忘记密码？</a>
+            </p>
+            <div style="clear: both;"></div>
+            <!--登陆-->
+            <p class="btn">
+                <input type="hidden" name="ref" value="" />
+                <input type="hidden" name="opera" value="login" />
+                <input type="submit" value="登&nbsp;录">
+            </p>
+        </div>
+    </form>
+    <div style="clear: both;"></div>
+</div>
+<!-- 登陆页面结束 -->
+{include file="footer.phtml"}
 <script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jquery.validate.min.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jquery.form.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript">
+    $(function() {
+        // validate signup form on keyup and submit
+        $("#signupForm").validate({
+            errorPlacement:function(error,element) {
+                if( !element.hasClass('codes') ) {
+                    error.appendTo(element.parent().next(".tips:eq(0)"));
+                } else {
+                    error.appendTo(element.parent().parent().next(".tips:eq(0)"));
+                }
+            },
+            rules: {
+                account: {
+                    digits:true,
+                    required: true,
+                    minlength: 11
+                },
+                password: {
+                    required: true,
+                    minlength: 5
+                },
+                verifyCode: {
+                    required: true
+                }
+            },
+            messages: {
+                account: {
+                    digits:"请输入合法的手机号码",
+                    required: "请输入手机号码",
+                    minlength: "请输入合法的手机号码"
+                },
+                password: {
+                    required: "请输入长度为6-20个字符的密码",
+                    minlength: "密码不能小于6个字符"
+                },
+                verifyCode: {
+                    required: "请填写图片中的字符，不区分大小写"
+                }
+            },
+            submitHandler: function (form) {  //通过之后回调
+                //var url = '/admin.php/nav/do_add.html';
+                $('input[name=ref]').val(document.referrer);
+                var options = {
+                    dataType: 'json',
+                    url: 'data_center.php',
+                    type: 'post',
+                    success: function(result) {
+                        if( result.error == 0 ) {
+                            alert('登陆成功');
+                            window.location.href=result.referer;
+                        } else {
+                            alert(result.msg)
+                        }
+                    }
+                };
+                jQuery(form).ajaxSubmit(options);
+                return false;
+            }
+        });
+    });
+</script>
 
 <script type="text/javascript">
-    function verify_memeber_info() {
-        var code = $("#pic_code").val();
-        var account = $("#account").val();
-        var password = $("#password").val();
-        var msg = "";
 
-        if(account == "") {
-            msg += "-请输入手机号码/会员卡号<br/>";
-        }
 
-        if(password == "") {
-            msg += "-请输入密码<br/>";
-        }
-
-        if(code == "") {
-            msg += "-请输入图形验证码<br/>";
-        }
-
-        if(msg != "") {
-            alert(msg);
-            return false;
-        }
-
-        var url = "data_center.php";
-        var data = { "opera":"login", "code":code, "account":account, "password":password, "ref": document.referrer };
-
-        $.post(url, data, verify_member_info_handler, "json");
+    function refresh_code() {
+        $(".code_pic img").attr("src", "code.php");
     }
 
-    function verify_member_info_handler(response) {
-//        hide_mask();
-        if(response.error == 0) {
-            $("#dialog_close").click(function(){
-                window.location.href = response.referer;
-            });
+    function show_message_dialog(message) {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").hide();
+        $("#dialog-message").html(message);
+        $("#message_dialog").show();
+    }
 
-            $("#dialog_close_btn").click(function(){
-                window.location.href = response.referer;
-            });
-        }
-        alert(response.msg);
+    function close_message_dialog() {
+        $(".cd-popup").removeClass("is-visible");
+        $("#message_dialog").hide();
+    }
+
+    function show_mask() {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").show();
+    }
+
+    function hide_mask() {
+        $(".cd-popup").removeClass("is-visible");
+        $(".progressbar").hide();
     }
 </script>
+</body>
+</html>

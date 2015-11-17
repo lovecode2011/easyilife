@@ -2295,7 +2295,7 @@ span.ftx-03, span.ftx03 {
 /* 收货地址 结束 */
 
 /*购物车 开始*/
-.cart-inner .cart-title{
+.cart-inner .cart-title,.confirm-addr .confirm-addr-t,.select-pay-type .pay-type-t{
     height: 44px;
     margin-top: 4px;
     line-height: 44px;
@@ -2325,6 +2325,7 @@ span.ftx-03, span.ftx03 {
     font-family: simsun;
 }
  .cart-box-title {
+     width: 998px;
     cursor: default;
     padding: 12px 0 10px 0;
     border-top: 2px solid #ffce28;
@@ -2696,3 +2697,238 @@ q.snPrice i, q.snPrice em {
     font-style: normal;
 }
 /*购物车 结束*/
+
+/*确认订单 开始*/
+.confirm-addr .address-item{
+    background: url("../images/confirm-addr-bg.png") no-repeat;
+    background-position:0 -135px;
+    cursor: pointer;
+    width: 315px;
+    height: 132px;
+    z-index: 2;
+    position: relative;
+}
+.confirm-addr .addr-active,.confirm-addr .addr-hover{
+    background-position:0 0;
+}
+.confirm-addr .address-item ins{
+    z-index: 3;
+    position: absolute;
+    font-size: 36px;
+    color: #b00002;
+    top: 96px;
+    right: -0.5px;
+    _top: 97px;
+    _right: 3px;
+    visibility: visible;
+    text-decoration: none;
+    display: none;
+}
+.confirm-addr .addr-active ins{
+    display: block;
+}
+.addr-switch {
+    float: left;
+    height: 18px;
+    line-height: 18px;
+    padding: 5px 20px 5px 0;
+    cursor: pointer;
+}
+.select-new-addr{
+    float: right;
+    color: #333;
+    height: 25px;
+    width: 140px;
+    line-height: 25px;
+    _margin-top:5px;
+}
+.select-new-addr a{
+    background: #f7f0ea;
+    border-radius: 3px;
+    color: #c49172;
+    text-align: center;
+    padding: 6px 14px;
+}
+.select-pay-type li{
+    webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width:140px;
+    padding: 6px 10px;
+    border: 1px solid #e5e5e5;
+    text-align: center;
+    border-radius: 2px;
+    color: #4d525d;
+    line-height: 23px;
+    background-color: #f8f8f8;
+    float: left;
+    margin-right: 5px;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+}
+.select-pay-type li.hover{
+    padding: 5px 8px;
+    border: 2px solid #ffce28;
+}
+.select-pay-type li ins {
+    z-index: 3;
+    position: absolute;
+    font-size: 18px;
+    color: #ffce28;
+    top: 15px;
+    right: -1px;
+    _top: 16px;
+    _right: -1px;
+    visibility: visible;
+    text-decoration: none;
+    display: none;
+}
+.select-pay-type li.hover ins{
+    display: block;
+}
+.confirm-order .cart-list-amount{
+    text-align: center;
+    color: #666;
+}
+.confirm-order .cart-list-behavior span{
+    position: relative;
+    top: 10px;
+    right: -10px;
+}
+/*确认订单 结束*/
+
+/*登陆 开始*/
+.login{
+    padding: 15px 25px 15px 15px;
+    width: 856px;
+    color: #6e6e6e;
+    margin: 0 auto;
+    position: relative;
+    border: 1px solid #eef2f4;
+    box-shadow: 0px 1px 2px #eee;
+}
+.login .aside {
+    float: left;
+    width: 500px;
+}
+.login .main {
+    float: right;
+    width: 356px;
+    _overflow: hidden;
+}
+.login .aside .pic img{
+    width: 480px;
+    height: 384px;
+}
+.login .login-head{
+    padding: 15px 0 10px;
+}
+.login .login-head h3{
+    font-size: 18px;
+    float: left;
+}
+.login .login-head span{
+    float: right;
+}
+.login .login-head span a{
+    color: #DD0000;
+}
+.login .username, .login .password, .login .code {
+    height: 36px;
+    border: 1px solid #e6e6e6;
+    width: 310px;
+    border-radius: 2px;
+}
+.login .username.focus,.login .password.focus, .login .code.focus {
+    border-color: #969696;
+}
+.login .code {
+    width: 126px;
+    float: left;
+}
+.login .username span, .login .password span, .login .code span {
+    width: 30px;
+    margin-right: 10px;
+    height: 36px;
+    float: left;
+    font-size: 20px;
+    color: #dcdcdc;
+    line-height: 36px;
+    text-align: center;
+}
+.login .username input, .login .password input, .login .code input {
+    float: left;
+    height: 34px;
+    line-height: 34px;
+    border: 0;
+    color: #333;
+    padding: 0;
+}
+.login .username input, .login .password input {
+    width: 270px;
+}
+.login .code input {
+    width: 86px;
+    float: left;
+}
+.login .username {
+    margin-top: 32px;
+    position: relative;
+}
+.login .pwdReplace {
+    float: left;
+    font-size: 13px;
+    height: 21px;
+    line-height: 21px;
+    cursor: text;
+    margin-top: -26px;
+    color: #B0B0B0;
+}
+.login .tips {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 10px;
+}
+.login .code_pic {
+    width: 86px;
+    height: 38px;
+    float: left;
+    margin: 0 15px 0 5px;
+}
+.login .code_pic img {
+    width: 86px;
+    height: 38px;
+}
+.login .code_wrap {
+    height: 38px;
+}
+.login .code_wrap a {
+    line-height: 38px;
+}
+.login .code_wrap a, .login .code_wrap a:hover {
+    color: #1a66b3;
+}
+.login .lost-password {
+    width: 310px;
+    height: 27px;
+    line-height: 22px;
+    padding-top: 7px;
+    overflow: hidden;
+}
+.login .lost-password a {
+    float: right;
+    color: #6e6e6e;
+}
+.login .btn input {
+    width: 312px;
+    border-radius: 5px;
+    color: #fff;
+    display: inline-block;
+    height: 44px;
+    text-align: center;
+    font: normal 20px/44px "Microsoft Yahei";
+    background: #ff2832;
+    border: 0 none;
+    cursor: pointer;
+}
+/*登陆 结束*/
