@@ -69,19 +69,20 @@
                 </ul>
                 <div style="clear: both;"></div>
             </div>
+            {if $order_list}
             <div class="order-list" id="all-order-list">
                 <table cellpadding="0" cellspacing="0" class="order-tb">
                     <thead>
                     <tr>
                         <th>
 <!--                            <div class="ordertime-cont">-->
-<!--                                <div class="time-txt">今年内订单<b></b><span class="blank"></span></div>-->
+<!--                                <div class="time-txt">今年内订单<b class="icon">&#xe62a;</b><span class="blank"></span></div>-->
 <!--                                <div class="time-list">-->
 <!--                                    <ul>-->
-<!--                                        <li><a href="#" class="curr"><b></b>近三个月订单</a></li>-->
-<!--                                        <li><a href="#"><b></b>今年内订单</a></li>-->
-<!--                                        <li><a href="#"><b></b>2014年订单</a></li>-->
-<!--                                        <li><a href="#"><b></b>2014年以前订单</a></li>-->
+<!--                                        <li><a href="#">近三个月订单</a></li>-->
+<!--                                        <li><a href="#" class="curr">今年内订单</a></li>-->
+<!--                                        <li><a href="#">2014年订单</a></li>-->
+<!--                                        <li><a href="#">2014年以前订单</a></li>-->
 <!--                                    </ul>-->
 <!--                                </div>-->
 <!--                            </div>-->
@@ -90,26 +91,26 @@
                         <th>总计</th>
                         <th>
                             <div class="deal-state-cont">
-                                <div class="state-txt">全部状态<b></b><span class="blank"></span></div>
-                                <div class="state-list">
-                                    <ul>
-                                        <li value="4096">
-                                            <a href="#" class="curr"><b></b>全部状态</a>
-                                        </li>
-                                        <li value="1">
-                                            <a href="#"><b></b>等待付款</a>
-                                        </li>
-                                        <li value="128">
-                                            <a href="#"><b></b>等待收货</a>
-                                        </li>
-                                        <li value="1024">
-                                            <a href="#"><b></b>已完成</a>
-                                        </li>
-                                        <li value="-1">
-                                            <a href="#"><b></b>已取消</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <div class="state-txt">状态<b></b><span class="blank"></span></div>
+<!--                                <div class="state-list">-->
+<!--                                    <ul>-->
+<!--                                        <li value="4096">-->
+<!--                                            <a href="#" class="curr"><b></b>全部状态</a>-->
+<!--                                        </li>-->
+<!--                                        <li value="1">-->
+<!--                                            <a href="#"><b></b>等待付款</a>-->
+<!--                                        </li>-->
+<!--                                        <li value="128">-->
+<!--                                            <a href="#"><b></b>等待收货</a>-->
+<!--                                        </li>-->
+<!--                                        <li value="1024">-->
+<!--                                            <a href="#"><b></b>已完成</a>-->
+<!--                                        </li>-->
+<!--                                        <li value="-1">-->
+<!--                                            <a href="#"><b></b>已取消</a>-->
+<!--                                        </li>-->
+<!--                                    </ul>-->
+<!--                                </div>-->
                             </div>
                         </th>
                         <th>操作</th>
@@ -171,7 +172,20 @@
                         </td>
                         <td rowspan="{count($order.order_detail)}">
                             <div class="operate">
-                                <a href="#" class="btn-again btn"><b></b>申请售后</a><br>
+                                {if $order.status eq 1}
+                                <a href="javascript:pay_now('{$order.order_sn}');" class="btn-again btn"><b></b>立即支付</a><br>
+                                <a href="javascript:cancel_order('{$order.order_sn}');" class="btn-again btn"><b></b>取消订单</a><br>
+                                {elseif $order.status eq 4}
+                                <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
+                                {elseif $order.status eq 6}
+                                <a href="javascript:void(0);" class="btn-again btn"><b></b>查看物流</a><br>
+                                <a href="javascript:receive('{$order.order_sn}');" class="btn-again btn"><b></b>确认收货</a><br>
+                                {elseif $order.status eq 7}
+                                <a href="javascript:comment('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
+                                <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>晒单评论</a><br>
+                                {else}
+                                <a href="#" class="btn-again btn" style="background: #ffffff;border: 0px;"><b></b>&nbsp;</a><br>
+                                {/if}
                             </div>
                         </td>
                         {/if}
@@ -184,21 +198,37 @@
 
             <div class="pages fr">
                 <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
-                <a rel="nofollow" class="cur fl" id="pageFirst" href="#">1</a>
-                <a rel="nofollow" class="fl" href="#">2</a>
-                <a rel="nofollow" class="fl" href="#">3</a>
-                <a rel="nofollow" class="fl" href="#">4</a>
+                {for $index=1 to $total_page-1}
+                <a rel="nofollow" class="{if $index eq 1}cur{/if} fl" href="javascript:get_order({$index}, {$status});">{$index}</a>
+                {if $index eq 5}
+                {break}
+                {/if}
+                {/for}
+                {if $total_page gt 6}
                 <span class="icon ellipsis fl">&#xe61e;</span>
-                <a rel="nofollow" class="fl" href="#" id="pageLast">100</a>
-                <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="#">下一页<i class="sign right">&gt;</i></a>
+                {/if}
+                <a rel="nofollow" class="fl {if $total_page eq 1}cur{/if}" href="javascript:{if $total_page eq 1}void(0);{else}get_order({$total_page}, {$status}){/if}" id="pageLast">{$total_page}</a>
+                <a rel="nofollow" class="prev {if $total_page eq 1}disabled{/if} fl" id="nextPage" href="javascript:{if $total_page eq 1}void(0);{else}get_order(2, {$status}){/if}">下一页<i class="sign right">&gt;</i></a>
                 <div class="fl">
                     <span class="fl">向第</span>
                     <input class="fl" type="text" id="bottomPage">
                     <span class="fl">页</span>
-                    <a rel="nofollow" class="pageGo fl" href="#" id="pagesubmit">跳转</a>
+                    <a rel="nofollow" class="pageGo fl" href="javascript:get_order_by_input({$status})" id="bad-pagesubmit">跳转</a>
                 </div>
             </div>
             <div style="clear: both;"></div>
+            {else}
+            <div class="order-list">
+                <div class="tips-empty">
+                    <div class="tips-icon">
+                        <span class="icon">&#xe61a;</span>
+                    </div>
+                    <div class="tips-detail">
+                        对不起，你当前暂无订单！
+                    </div>
+                </div>
+            </div>
+            {/if}
         </div>
         <!--右侧我的订单 结束-->
         <div class="might-like">
@@ -281,45 +311,7 @@
             </div>
         </div>
     </div>
-    <div class="aside">
-        <div class="home-nav">
-            <dl>
-                <dt><i class="icon p">&#xe611;</i><i class="icon m">&#xe612;</i><a href="#" target="_parent" title="订单信息">订单信息</a></dt>
-                <dd><a href="order.html" target="_parent" title="我的订单" class="hover">我的订单</a></dd>
-                <dd><a href="#" target="_parent" title="我的收藏">我的收藏</a></dd>
-                <dd><a href="#" target="_parent" title="我的足迹">我的足迹</a></dd>
-            </dl>
-            <dl>
-                <dt><i class="icon p">&#xe611;</i><i class="icon m">&#xe612;</i><a href="#" target="_parent" title="我的资产">我的资产</a></dt>
-                <dd><a href="#" target="_parent" title="余额">余额</a></dd>
-                <dd><a href="#" target="_parent" title="佣金">佣金</a></dd>
-                <dd><a href="#" target="_parent" title="积分">积分</a></dd>
-                <dd><a href="#" target="_parent" title="优惠券">优惠券</a></dd>
-            </dl>
-            <dl>
-                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的资料">我的资料</a></dt>
-            </dl>
-            <dl>
-                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="收货地址">收货地址</a></dt>
-            </dl>
-            <dl>
-                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的推广">我的推广</a></dt>
-            </dl>
-            <dl>
-                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的分销">我的分销</a></dt>
-            </dl>
-            <dl>
-                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的团队">我的团队</a></dt>
-            </dl>
-            <dl>
-                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我要开店">我要开店</a></dt>
-            </dl>
-            <dl>
-                <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="投诉维权">投诉维权</a></dt>
-            </dl>
-        </div>
-    </div>
-    <div style="clear: both"></div>
+    {include file="aside.phtml"}
 </div>
 <!-- 个人中心结束 -->
 {include file="footer.phtml"}
@@ -327,5 +319,121 @@
 <script src="{$template_dir}js/jquery.jqzoom.js" type="text/javascript"></script>
 <script src="{$template_dir}js/jqzoom-base.js" type="text/javascript"></script>
 <script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript">
+
+    function comment(order_sn) {
+        if(order_sn != '') {
+            window.location.href = "order.php?act=comment&sn="+order_sn;
+        }
+    }
+
+    //立即支付 start===========================================
+    function pay_now(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"pay_now", "order_sn":order_sn };
+
+            $.post(url, data, pay_now_handler, "json");
+        }
+    }
+
+    function pay_now_handler(response) {
+        if(response.error == 0) {
+            window.location.href = "topay.php";
+        } else {
+            //hide_mask();
+            alert(response.msg);
+        }
+    }
+    //立即支付 end================================================
+
+    //取消订单 start==============================================
+    function cancel_order(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"cancel", "order_sn":order_sn };
+
+            //show_mask();
+            $.post(url, data, cancel_order_handler, "json");
+        }
+    }
+
+    function cancel_order_handler(response) {
+        //hide_mask();
+        if(response.error == 0) {
+//            $("#dialog_close_btn, #dialog_close").click(function () {
+                window.location.reload();
+//            });
+        }
+
+        alert(response.msg);
+    }
+    //取消订单 end===============================================
+    function receive(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"receive", "order_sn":order_sn };
+
+            //show_mask();
+            $.post(url, data, receive_handler, "json");
+        }
+    }
+
+    function receive_handler(response) {
+        //hide_mask();
+        if(response.error == 0) {
+//            $("#dialog_close_btn, #dialog_close").click(function () {
+                window.location.reload();
+//            });
+        }
+
+        alert(response.msg);
+    }
+
+    function rollback(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"rollback", "order_sn":order_sn };
+
+            //show_mask();
+            $.post(url, data, receive_handler, "json");
+        }
+    }
+
+    function rollback_handler(response) {
+        //hide_mask();
+        if(response.error == 0) {
+//            $("#dialog_close_btn, #dialog_close").click(function () {
+                window.location.reload();
+//            });
+        }
+
+        alert(response.msg);
+    }
+
+    function get_order_by_input(status) {
+        var page = $('#bottomPage').val();
+        if( page == '' ) {
+            return;
+        }
+        page = parseInt(page);
+        get_order(page, status);
+    }
+
+    function get_order(page, status) {
+        var url = 'order.php';
+        var param = { "opera":'paging', 'page':page, 'status': status };
+        $.post(url, param, get_order_handler, 'json');
+    }
+
+    function get_order_handler(response) {
+        if( response.error == 0 ) {
+            $('.order-list').remove();
+            $('div.pages').remove();
+            $('div.order').append(response.content);
+        }
+    }
+
+</script>
 </body>
 </html>

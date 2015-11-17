@@ -1,10 +1,10 @@
 <?php
 /**
- * 首页
- * Created by PhpStorm.
- * User: apple
- * Date: 15/8/14
- * Time: 下午10:11
+ *
+ * @author 王仁欢
+ * @email wrh4285@163.com
+ * @date 15-11-17
+ * @version 
  */
 include 'library/init.inc.php';
 

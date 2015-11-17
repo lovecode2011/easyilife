@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>圣宝先官方商城</title>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="topbar.phtml"}
+<div class="header">
+    <div class="container">
+        <div class="header-logo">
+            <a class="logo ir" href="index.php" title="圣宝先官网">圣宝先</a>
+        </div>
+    </div>
+</div>
+<!-- 注册页面开始 -->
+<div class="login container register">
+    <div class="aside">
+        <div class="pic">
+            <a href="#" >
+                <img src="{$template_dir}images/login-bg.jpg" alt="登陆页面背景图" />
+            </a>
+        </div>
+    </div>
+    <form action="register.php" method="POST" id="registerForm">
+        <div class="main">
+            <!--注册头部-->
+            <div class="login-head">
+                <h3>HI,欢迎注册！</h3>
+                <span>已经是圣宝先会员？<a href="login.php" target="_parent" title="立即登陆">立即登陆</a></span>
+            </div>
+            <div style="clear: both;"></div>
+            <!--用户名-->
+            <div class="username">
+                <span class="icon">&#xe626;</span>
+                <input class="user" name="mobile" id="mobile" type="text" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码" onblur="verify_mobile();">
+            </div>
+            <p class="tips"></p>
+            <!--密码-->
+            <div class="password" id="password_div">
+                <span class="icon">&#xe625;</span>
+                <input class="pass" name="password" id="password" type="password" title="请设置登陆密码" placeholder="设置密码" maxlength="20" autocomplete="off">
+            </div>
+            <p class="tips"></p>
+            <!--验证码-->
+            <div class="code_wrap" style="display: block;">
+                <div class="code">
+                    <span class="icon">&#xe628;</span>
+                    <input class="codes" name="verifyCode" id="verify" type="text" title="请输入验证码" placeholder="验证码" maxlength="6" autocomplete="off">
+                </div>
+                <a href="javascript:void(0);" class="get-code" style="background-color: #ddd;">获取验证码</a>
+<!--                <a href="javascript:void(0);" class="get-code" style="background-color: #ddd;">重新获取（60）</a>-->
+            </div>
+            <p class="tips"></p>
+            <!--忘记密码-->
+            <p class="lost-password">
+                <a href="">忘记密码？</a>
+            </p>
+            <div style="clear: both;"></div>            <!--登陆-->
+            <p class="btn">
+                <input type="hidden" name="opera" value="reg" />
+                <input type="submit" value="注&nbsp;册">
+            </p>
+        </div>
+    </form>
+    <div style="clear: both;"></div>
+</div>
+<!-- 注册页面结束 -->
+{include file="footer.phtml"}
+<script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jquery.validate.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript">
+    $().ready(function() {
+        $("#registerForm").validate({
+            errorPlacement:function(error,element) {
+                if(element.hasClass("codes")){
+                    error.appendTo(element.parent().parent().next(".tips:eq(0)"));
+                }
+                else{
+                    error.appendTo(element.parent().next(".tips:eq(0)"));
+                }
+            },
+            rules: {
+                mobile: {
+                    digits:true,
+                    required: true,
+                    minlength: 11
+                },
+                password: {
+                    required: true,
+                    minlength: 6
+                },
+                verifyCode: {
+                    required: true
+                }
+            },
+            messages: {
+                phone: {
+                    digits:"请输入合法的手机号码",
+                    required: "请输入手机号码",
+                    minlength: "请输入合法的手机号码"
+                },
+                password: {
+                    required: "请输入长度为6-20个字符的密码",
+                    minlength: "密码不能小于6个字 符"
+                },
+                verifyCode: {
+                    required: "请填写短信验证码"
+                }
+            },
+            submitHandler: function (form) {  //通过之后回调
+                verify_message_code();
+                return false;
+            }
+        });
+    });
+
+    var interval = null;
+    var timer = 0;
+    var mobile = "";
+
+    function verify_message_code() {
+        var code = $("#verify").val();
+
+        if(code == "") {
+            alert("请输入验证码");
+            return false;
+        }
+
+        var url = "data_center.php";
+        var data = { "opera":"verify_message_code", "code":code, "mobile": mobile };
+
+//        show_mask();
+        $.post(url, data, verify_message_code_handler, "json");
+    }
+
+    function verify_message_code_handler(response) {
+//        hide_mask();
+        if(response.error == 0) {
+            register();
+        } else {
+            alert(response.msg);
+        }
+    }
+
+    function register() {
+        var password = $("#password").val();
+
+        if(mobile == "") {
+            alert('请输入手机号码');
+            return false;
+        }
+
+        if(password == "") {
+            alert("请输入密码");
+            return false;
+        } else {
+            var url = "register.php";
+            var data = { "opera":"reg", "password":password, "mobile":mobile };
+
+//            show_mask();
+            $.post(url, data, register_handler, "json");
+        }
+    }
+
+    function register_handler(response) {
+        alert(response.msg);
+        if(response.error == 0) {
+            window.location.href='home.php';
+        }
+    }
+
+
+    function verify_mobile() {
+        var mobile = $("#mobile").val();
+
+        if(mobile == "") {
+            alert("请输入手机号码");
+            return false;
+        }
+
+        var url = "data_center.php";
+        var data = { "opera":"verify_mobile", "mobile":mobile, "mode":"unique" };
+
+//        show_mask();
+        $.post(url, data, verify_mobile_handler, "json");
+    }
+
+    function verify_mobile_handler(response) {
+//        hide_mask();
+        if(response.error == 0) {
+            $(".get-code").removeAttr('style');
+            $('.get-code').attr('href', 'javascript:get_message_code();');
+            mobile = response.mobile;
+        } else {
+//            show_message_dialog(response.msg);
+            alert(response.msg);
+            mobile = "";
+        }
+    }
+
+    function get_message_code() {
+        if(timer == 0) {
+            var url = "data_center.php";
+            var data = { "opera":"get_message_code", "mobile": mobile };
+
+//            show_mask();
+            $.post(url, data, get_message_code_handler, "json");
+        }
+    }
+
+    function get_message_code_handler(response) {
+        if(response.error == 0) {
+            timer = response.timer;
+            $(".get-code").css('background-color', '#bbb');
+            $('.get-code').attr('href', 'javascript:void(0);');
+            $(".get-code").html("<em>重新获取</em><i id='timer'>"+timer+"</i>");
+            interval = setInterval(trick, 1000);
+            alert("当前没有短信接口,请输入验证码："+response.code);
+        } else {
+            alert(response.msg);
+            if(response.timer != undefined) {
+                timer = response.timer;
+                $(".get-code").css('background-color', '#bbb');
+                $('.get-code').attr('href', 'javascript:void(0);');
+                $(".get-code").html("<em>重新获取</em><i id='timer'>"+timer+"</i>");
+                interval = setInterval(trick, 1000);
+            }
+        }
+    }
+
+    function trick() {
+        if(timer) {
+            timer--;
+            $("#timer").text(timer);
+        } else {
+            clearInterval(interval);
+            $(".get-code").removeAttr('style');
+            $(".get-code").html('获取验证码');
+            $('.get-code').attr('href', 'javascript:get_message_code();');
+        }
+    }
+
+</script>
+</body>
+</html>

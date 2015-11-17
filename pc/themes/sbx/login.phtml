@@ -14,29 +14,7 @@
     <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-<div class="topbar">
-    <div class="container">
-        <div class="fl">
-            <span><i class="icon">&#xe600;</i>财富热线：<em>440-123-4567</em></span>
-        </div>
-        <div class="fr">
-            <div class="topbar-cart">
-                <a href="cart.php" class="cart-mini"><i class="icon">&#xe601;</i>购物车<span class="cart-num">（0）</span></a>
-                <div class="cart-menu">
-                    <div class="cart-menu-inner">
-                        购物车中还没有商品，赶紧选购吧！
-                    </div>
-                </div>
-            </div>
-            <div class="topbar-info">
-                <a href="#">登陆</a>
-                <span class="sep">|</span>
-                <a href="#">注册</a>
-            </div>
-        </div>
-    </div>
-</div>
-<div style="clear: both;"></div>
+{include file="topbar.phtml"}
 <div class="header">
     <div class="container">
         <div class="header-logo">
@@ -107,6 +85,7 @@
 <script src="{$template_dir}js/jquery.form.js" type="text/javascript"></script>
 <script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
 <script type="text/javascript">
+    {literal}
     $(function() {
         // validate signup form on keyup and submit
         $("#signupForm").validate({
@@ -146,22 +125,28 @@
                 }
             },
             submitHandler: function (form) {  //通过之后回调
-                //var url = '/admin.php/nav/do_add.html';
-                $('input[name=ref]').val(document.referrer);
-                var options = {
-                    dataType: 'json',
-                    url: 'data_center.php',
-                    type: 'post',
-                    success: function(result) {
-                        if( result.error == 0 ) {
-                            alert('登陆成功');
-                            window.location.href=result.referer;
-                        } else {
-                            alert(result.msg)
-                        }
-                    }
-                };
-                jQuery(form).ajaxSubmit(options);
+//                $('input[name=ref]').val(document.referrer);
+//                var options = {
+//                    dataType: 'json',
+//                    url: 'data_center.php',
+//                    type: 'post',
+//                    success: function(result) {
+//                        if( result.error == 0 ) {
+//                            alert('登陆成功');
+//                            window.location.href=result.referer;
+//                        } else {
+//                            alert(result.msg)
+//                        }
+//                    }
+//                };
+//                jQuery(form).ajaxSubmit(options);
+                var url = 'data_center.php';
+                var account = $('input[name=account]').val();
+                var password = $('input[name=password]').val();
+                var code = $('input[name=verifyCode]').val();
+                var ref = document.referrer;
+                var param = { 'opera':'login','account':account,'password':password,'verifyCode':code,'ref':ref };
+                $.post(url, param, do_login_response, 'json');
                 return false;
             }
         });
@@ -170,6 +155,18 @@
 
 <script type="text/javascript">
 
+    function do_login_response(result) {
+        if( result.error == 0 ) {
+            alert('登陆成功');
+            if( result.referer ) {
+                window.location.href = result.referer;
+            } else {
+                window.location.href = 'home.php';
+            }
+        } else {
+            alert(result.msg)
+        }
+    }
 
     function refresh_code() {
         $(".code_pic img").attr("src", "code.php");
@@ -196,6 +193,7 @@
         $(".cd-popup").removeClass("is-visible");
         $(".progressbar").hide();
     }
+    {/literal}
 </script>
 </body>
 </html>

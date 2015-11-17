@@ -76,7 +76,7 @@ if( 'get_comments' == $opera ) {
             $response['comments'] = $comments;
             $response['total_page'] = $total_page;
         } else {
-            $response['comments'] = $get_comments;
+//            $response['comments'] = $get_comments;
             $response['msg'] = '参数错误';
         }
         $response['type'] = $type;

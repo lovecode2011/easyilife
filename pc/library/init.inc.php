@@ -90,12 +90,35 @@ foreach($category_list as $key=>$cat)
 }
 
 assign('category_list', $category_list);
-
+$is_login = false;
 if( isset($_SESSION['account']) && $_SESSION['account'] ) {
-    assign('is_login', true);
+    $is_login = true;
     assign('account', $_SESSION['account']);
 
     $get_cart_count = 'select sum(number) from '.$db->table('cart').' where account = \''.$_SESSION['account'].'\' and checked = 1';
     $cart_count = $db->fetchOne($get_cart_count);
-    assign('cart_count', $cart_count);
+    assign('cart_count', intval($cart_count));
+
+    $get_cart_list = 'select c.price, c.integral, c.number, c.attributes, p.id, p.img, p.name from '.$db->table('cart').' as c ';
+    $get_cart_list .= ' left join '.$db->table('product').' as p on c.product_sn = p.product_sn';
+    $get_cart_list .= ' where c.account = \''.$_SESSION['account'].'\' and c.checked = 1';
+
+    $cart_list = $db->fetchAll($get_cart_list);
+    $cart_price_amount = 0;
+    if( $cart_list ) {
+        foreach( $cart_list as $key => $cart ) {
+            if( empty($cart['attributes']) ) {
+                $cart_list[$key]['attributes_str'] = array();
+            } else {
+                $cart_list[$key]['attributes_str'] = json_decode($cart['attributes']);
+            }
+            $cart_price_amount += ($cart['price'] * $cart['number']);
+        }
+    }
+    assign('cart_price_amount', $cart_price_amount);
+    assign('mini_cart_list', $cart_list);
+    $aside_hover = $_SERVER['PHP_SELF'];
+    $aside_hover = substr($aside_hover, 1);
+    assign('aside_hover', $aside_hover);
 }
+assign('is_login', $is_login);

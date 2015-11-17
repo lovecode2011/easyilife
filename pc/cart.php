@@ -79,6 +79,12 @@ if('add_to_cart' == $opera)
             $attributes = '';
         }
 
+        $get_logic_inventory = 'select `logic_inventory` from '.$db->table('inventory').' where `product_sn` = \''.$product_sn.'\' and `attributes` = \''.$attributes.'\'';
+        $logic_inventory = $db->fetchOne($get_logic_inventory);
+        if( empty($logic_inventory) || $logic_inventory < $number) {
+            $response['msg'] = '库存不足';
+        }
+
         if($response['msg'] == '') {
             $check_cart = 'select `id`,`number` from ' . $db->table('cart') .
                           ' where `product_sn`=\'' . $product_sn . '\' and `account`=\'' . $_SESSION['account'] . '\' '.

@@ -1,0 +1,218 @@
+{if $order_list}
+<div class="order-list" id="all-order-list">
+    <table cellpadding="0" cellspacing="0" class="order-tb">
+        <thead>
+        <tr>
+            <th>
+                <!--                            <div class="ordertime-cont">-->
+                <!--                                <div class="time-txt">今年内订单<b class="icon">&#xe62a;</b><span class="blank"></span></div>-->
+                <!--                                <div class="time-list">-->
+                <!--                                    <ul>-->
+                <!--                                        <li><a href="#">近三个月订单</a></li>-->
+                <!--                                        <li><a href="#" class="curr">今年内订单</a></li>-->
+                <!--                                        <li><a href="#">2014年订单</a></li>-->
+                <!--                                        <li><a href="#">2014年以前订单</a></li>-->
+                <!--                                    </ul>-->
+                <!--                                </div>-->
+                <!--                            </div>-->
+                <div class="order-detail-txt">订单详情</div>
+            </th>
+            <th>总计</th>
+            <th>
+                <div class="deal-state-cont">
+                    <div class="state-txt">状态<b></b><span class="blank"></span></div>
+                    <!--                                <div class="state-list">-->
+                    <!--                                    <ul>-->
+                    <!--                                        <li value="4096">-->
+                    <!--                                            <a href="#" class="curr"><b></b>全部状态</a>-->
+                    <!--                                        </li>-->
+                    <!--                                        <li value="1">-->
+                    <!--                                            <a href="#"><b></b>等待付款</a>-->
+                    <!--                                        </li>-->
+                    <!--                                        <li value="128">-->
+                    <!--                                            <a href="#"><b></b>等待收货</a>-->
+                    <!--                                        </li>-->
+                    <!--                                        <li value="1024">-->
+                    <!--                                            <a href="#"><b></b>已完成</a>-->
+                    <!--                                        </li>-->
+                    <!--                                        <li value="-1">-->
+                    <!--                                            <a href="#"><b></b>已取消</a>-->
+                    <!--                                        </li>-->
+                    <!--                                    </ul>-->
+                    <!--                                </div>-->
+                </div>
+            </th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        {foreach from=$order_list item=order}
+        <tbody>
+        <tr class="sep-row"><td colspan="5"></td></tr>
+        <tr class="tr-th">
+            <td colspan="5">
+                <span class="gap"></span>
+                <span class="dealtime" title="{date('Y-m-d H:i:s', $order.add_time)}">{date('Y-m-d H:i:s', $order.add_time)}</span>
+                <input type="hidden" value="2014-12-21 20:41:05">
+                                     <span class="number">订单号：
+                                         <a href="?act=detail&sn={$order.order_sn}">{$order.order_sn}</a>
+                                     </span>
+                <div class="tr-operate">
+                                    <span class="order-shop">
+                                        <span class="shop-txt">{$order.shop_name}</span>
+                                        <a class="icon" href="shop.php?sn={$order.business_account}" title="进入店铺">&#xe61b;</a>
+                                    </span>
+                    <a href="#" class="order-del icon" title="删除">&#xe61c;</a>
+                </div>
+                <div style="clear: both;"></div>
+            </td>
+        </tr>
+        {foreach from=$order.order_detail item=product key=i}
+        <tr class="tr-bd">
+            <td>
+                <div class="goods-item p-1073757">
+                    <div class="p-img">
+                        <a href="#">
+                            <img class="" src="{$product.img}" title="{$product.product_name} {$product.product_attributes}" width="60" height="60">
+                        </a>
+                    </div>
+                    <div class="p-msg">
+                        <div class="p-name"><a href="product.php?id={$product.id}" class="a-link" title="{$product.product_name} {$product.product_attributes}">{$product.product_name} {$product.product_attributes}</a></div>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="goods-number">
+                    x{$product.count}
+                </div>
+                <div style="clear: both;"></div>
+            </td>
+            {if $i eq 0}
+            <td rowspan="{count($order.order_detail)}">
+                <div class="amount">
+                    <strong>¥{sprintf("%.2f", $order.amount)}</strong> <br>
+                    <span class="ftx-13">{$order.payment}</span><br>
+                </div>
+            </td>
+            <td rowspan="{count($order.order_detail)}">
+                <div class="status">
+                    <span class="order-status ftx-03">{$order.show_status}</span>
+                    <br>
+                    <a href="order.php?act=detail&sn={$order.order_sn}">订单详情</a>
+                </div>
+            </td>
+            <td rowspan="{count($order.order_detail)}">
+                <div class="operate">
+                    {if $order.status eq 1}
+                    <a href="javascript:pay_now('{$order.order_sn}');" class="btn-again btn"><b></b>立即支付</a><br>
+                    <a href="javascript:cancel_order('{$order.order_sn}');" class="btn-again btn"><b></b>取消订单</a><br>
+                    {elseif $order.status eq 4}
+                    <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
+                    {elseif $order.status eq 6}
+                    <a href="javascript:void(0);" class="btn-again btn"><b></b>查看物流</a><br>
+                    <a href="javascript:receive('{$order.order_sn}');" class="btn-again btn"><b></b>确认收货</a><br>
+                    {elseif $order.status eq 7}
+                    <a href="javascript:comment('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
+                    <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>晒单评论</a><br>
+                    {else}
+                    <a href="#" class="btn-again btn" style="background: #ffffff;border: 0px;"><b></b>&nbsp;</a><br>
+                    {/if}
+                </div>
+            </td>
+            {/if}
+        </tr>
+        {/foreach}
+        </tbody>
+        {/foreach}
+    </table>
+</div>
+
+<div class="pages fr">
+    {if $page eq 1}
+        <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+        <a rel="nofollow" class="cur fl" id="pageFirst" href="javascript:void(0);">1</a>
+        {if total_page eq 1}
+        <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+        {/if}
+    {else}
+        <a rel="nofollow" class="prev fl" id="prePage" href="javascript:get_order({$page - 1}, {$status});"><i class="sign left">&lt;</i>上一页</a>
+        <a rel="nofollow" class="fl" id="pageFirst" href="javascript:get_order(1, {$status});">1</a>
+    {/if}
+    {if $page gt 6}
+        <span class="icon ellipsis fl">&#xe61e;</span>
+        {if ($page + 2) gt $total_page}
+            {$temp = $total_page}
+        {else}
+            {$temp = $page + 2}
+        {/if}
+        {for $index=($page - 3) to $temp - 1}
+            {if $index eq $page}
+                <a rel="nofollow" class="fl cur" href="javascript:void(0);">{$index}</a>
+            {else}
+                <a rel="nofollow" class="fl" href="javascript:get_order({$index}, {$status});">{$index}</a>
+            {/if}
+        {/for}
+        {if ($total_page - $page) gt 2}
+            <span class="icon ellipsis fl">&#xe61e;</span>
+        {/if}
+        {if $page eq $total_page}
+            <a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">{$total_page}</a>
+            <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+        {else}
+            <a rel="nofollow" class="fl" href="javascript:get_order({$total_page}, {$status})" id="pageLast">{$total_page}</a>
+            <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_order({$page + 1}, {$status})">下一页<i class="sign right">&gt;</i></a>
+        {/if}
+    {elseif $total_page gt 1}
+    {$temp = $page - 2}
+    {if $temp lt 2}
+    {$temp = 2}
+    {/if}
+    {if $temp gt 2}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq 1}
+    {$limit = 5}
+    {else}
+    {$limit = 4}
+    {/if}
+    {if $total_page lt ($page + $limit)}
+    {$end_temp = $total_page}
+    {else}
+    {$end_temp = $page + $limit}
+    {/if}
+    {for $index = $temp to $end_temp - 1}
+    {if $index eq $page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);">{$index}</a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_order({$index}, {$status});">{$index}</a>
+    {/if}
+    {/for}
+    {if ($total_page - $page) gt 4}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq $total_page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_order({$total_page}, {$status})" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_order({$page + 1}, {$status})">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {/if}
+    <div class="fl">
+        <span class="fl">向第</span>
+        <input class="fl" type="text" id="bottomPage">
+        <span class="fl">页</span>
+        <a rel="nofollow" class="pageGo fl" href="#" id="pagesubmit">跳转</a>
+    </div>
+</div>
+<div style="clear: both;"></div>
+{else}
+<div class="order-list">
+    <div class="tips-empty">
+        <div class="tips-icon">
+            <span class="icon">&#xe61a;</span>
+        </div>
+        <div class="tips-detail">
+            对不起，你当前暂无订单！
+        </div>
+    </div>
+</div>
+{/if}
