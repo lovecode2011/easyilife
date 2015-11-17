@@ -26,6 +26,7 @@ if('sort' == $opera)
     switch($mode)
     {
         case 'all':
+            $get_article_list .= ' where `section_id` in (1,2,3)';
             break;
         default:
             $get_article_list .= ' where `section_id`='.$mode;
@@ -46,13 +47,14 @@ if('sort' == $opera)
 $id = getGET('id');
 $id = intval($id);
 
-if($id <= 4)
+if($id <= 3)
 {
     $get_section_list = 'select `section_name`,`id` from ' . $db->table('section') . ' limit 3';
     $section_list = $db->fetchAll($get_section_list);
     assign('section_list', $section_list);
 
-    $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' order by `add_time` DESC';
+    $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' where `section_id` in (1,2,3) order by `add_time` DESC';
+
     $article_list = $db->fetchAll($get_article_list);
 
     assign('article_list', $article_list);
