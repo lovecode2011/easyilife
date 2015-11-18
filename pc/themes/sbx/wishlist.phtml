@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>圣宝先官方商城</title>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.phtml"}
+<!-- 顶部面包屑导航开始 -->
+<div class="breadcrumb container">
+    <span>当前位置：</span>
+    <a href="index.php" target="_blank">首页</a><span class="gt">&gt;</span>
+    <a href="home.php" target="_blank">用户中心</a><span class="gt">&gt;</span>
+    <span>我的收藏</span>
+</div>
+<!-- 顶部面包屑导航结束 -->
+<!-- 个人中心开始 -->
+<div class="home container">
+    <div class="main">
+        <!--右侧我的收藏 开始-->
+        <div class="wish-list" id="wish-list">
+            <div class="order-tabs">
+                <ul>
+                    <li class="curr">
+                        <a href="javascript:;">
+                            <span>全部产品</span>
+                            <b>{count($product_list)}</b>
+                        </a>
+                    </li>
+                </ul>
+                <div style="clear: both;"></div>
+            </div>
+            <div style="clear: both;"></div>
+            {if empty($product_list)}
+            <div class="wish-list product-all">
+                <div class="tips-empty">
+                    <div class="tips-icon">
+                        <span class="icon">&#xe61d;</span>
+                    </div>
+                    <div class="tips-detail">
+                        对不起，你当前暂无收藏任何产品！
+                    </div>
+                </div>
+
+                <div style="clear: both;"></div>
+            </div>
+
+            {else}
+            <div class="wish-list product-all">
+                <ul class="p-list">
+                    {foreach from=$product_list item=p key=id}
+                    {if $id eq $page_count}
+                    {break}
+                    {/if}
+                    <li>
+                        <div class="p-img">
+                            <a href="product.php?id={$p.id}" target="_blank">
+                                <img width="160" height="160" alt="圣宝先自营酵素" src="{$p.img}">
+                            </a>
+                        </div>
+                        <div class="p-name">
+                            <a href="product.php?id={$p.id}" title="{$p.name}" target="_blank">{$p.name}
+                            </a>
+                        </div>
+                        <div class="p-price"><strong>￥{sprintf('%.2f', $p.price)}</strong></div>
+                        <div class="extra">
+                        <span class="evaluate">
+                            <a href="product.php?id={$p.id}" target="_blank">已有<span>{$p.comment_count}</span>人评论</a>
+                        </span>
+                        </div>
+                        <div class="btns">
+                            <a class="btn-buy" href="javascript:get_attributes({$p.id});">加入购物车</a>
+                            <a class="btn-coll" href="javascript:collection('{$p.product_sn}')">删除</a>
+                        </div>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+            <div style="clear: both;"></div>
+
+            <div class="pages fr">
+                <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+                {for $index=1 to $total_page-1}
+                <a rel="nofollow" class="{if $index eq 1}cur{/if} fl" href="javascript:get_collection({$index});">{$index}</a>
+                {if $index eq 5}
+                {break}
+                {/if}
+                {/for}
+                {if $total_page gt 6}
+                <span class="icon ellipsis fl">&#xe61e;</span>
+                {/if}
+                <a rel="nofollow" class="fl {if $total_page eq 1}cur{/if}" href="javascript:{if $total_page eq 1}void(0);{else}get_collection({$total_page}){/if}" id="pageLast">{$total_page}</a>
+                <a rel="nofollow" class="prev {if $total_page eq 1}disabled{/if} fl" id="nextPage" href="javascript:{if $total_page eq 1}void(0);{else}get_collection(2){/if}">下一页<i class="sign right">&gt;</i></a>
+                <div class="fl">
+                    <span class="fl">向第</span>
+                    <input class="fl" type="text" id="bottomPage">
+                    <span class="fl">页</span>
+                    <a rel="nofollow" class="pageGo fl" href="javascript:get_collection_by_input()" id="bad-pagesubmit">跳转</a>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+
+            {/if}
+        </div>
+        <!--右侧我的收藏 结束-->
+        <div class="might-like">
+            <div class="might-like-inner">
+                <div class="inner-head">
+                    <h3 class="fl">根据浏览，猜你喜欢</h3>
+                    <span class="fr"><i class="icon">&#xe618;</i>换一组</span>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="inner-con">
+                    <ul class="p-list">
+                        <li>
+                            <div class="p-img">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                        <li>
+                            <div class="p-img">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">
+                                    <img width="90" height="90" alt="圣宝先自营复合酵素" src="images/sbx-product.png">
+                                </a>
+                            </div>
+                            <div class="p-name">
+                                <a target="_blank" href="#" title="圣宝先自营复合酵素">圣宝先自营复合酵素</a>
+                            </div>
+                            <div class="p-price"><span>￥</span>5099.<span>00</span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {include file="aside.phtml"}
+</div>
+<!-- 个人中心结束 -->
+{include file="footer.phtml"}
+<script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jquery.jqzoom.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jqzoom-base.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript" src="{$template_dir}js/layer/layer.js"></script>
+<script type="text/javascript">
+    var index;
+    var loading;
+    function get_attributes(id) {
+//        var index = layer.load(0, { shade: false });
+        var url = 'product.php';
+        var param = { 'opera': 'add_to_cart', 'id': id };
+        $.post(url, param, get_attributes_handler, 'json');
+    }
+
+    function get_attributes_handler(result) {
+        if( result.error == 0 ) {
+
+            if( result.content != '' ) {
+                index = layer.open({
+                    type: 1,
+                    title: false,
+                    closeBtn: true,
+                    shadeClose: true,
+                    area: '500px',
+                    skin: 'yourclass',
+                    content: result.content
+                });
+            } else {
+                add_to_cart_directly(result.product_sn, result.attributes);
+            }
+        } else {
+            layer.msg(result.msg);
+        }
+    }
+
+    function add_to_cart_directly(product_sn, attributes) {
+        var url = "cart.php";
+        var buy_num = 1;
+        var data = { "opera":"add_to_cart", "product_sn": product_sn, "number": buy_num, "attributes": attributes };
+
+        loading = layer.load(0, { shade: 0.3 });
+        $.post(url, data, add_to_cart_directly_handler, "json");
+    }
+
+    function add_to_cart_directly_handler(response) {
+        layer.close(loading);
+        if(response.error == 0) {
+            layer.msg('已加入购物车');
+        } else {
+            layer.msg(response.msg, function(){
+                if(response.error == 2) {
+                    window.location.href='login.php';
+                }
+            });
+        }
+    }
+    //加入购物车 end===============================================
+
+    //收藏 start==============================================================
+    function collection(product_sn) {
+        var url = "product.php";
+        var data = { "opera":"collection", "product_sn":product_sn };
+
+        loading = layer.load(0, { shade: 0.3 });
+        $.post(url, data, collection_handler, "json");
+    }
+
+    function collection_handler(response) {
+        layer.close(loading);
+        if(response.error == 0) {
+            layer.msg(response.msg, function() {
+                window.location.reload();
+            });
+        } else {
+            layer.msg(response.msg, function(){
+                if(response.error == 2) {
+                    window.location.href='login.php';
+                }
+            });
+        }
+    }
+    //收藏 end ========================================================================
+
+    function get_collection_by_input() {
+        var page = $('#bottomPage').val();
+        if( page == '' ) {
+            return;
+        }
+        page = parseInt(page);
+        get_collection(page);
+    }
+
+    function get_collection(page) {
+        var url = 'wishlist.php';
+        var param = { "opera":'paging', 'page':page };
+        loading = layer.load(0, { shade: 0.3 });
+
+        $.post(url, param, get_collection_handler, 'json');
+    }
+
+    function get_collection_handler(response) {
+        layer.close(loading);
+        if( response.error == 0 ) {
+            $('div.product-all').remove();
+            $('div.pages').remove();
+            $('div#wish-list').append(response.content);
+        }
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+        <style>
+            {literal}
+            .buy-area { padding-top: 40px; }
+            .buy-box{ margin: 10px auto;}
+            .show-info-left {  float: left;  width: 100px; text-align: center; horiz-align: middle}
+            .show-info-right { float: left; }
+            {/literal}
+        </style>
+        <div class="buy-area">
+            {foreach from=$attributes item=a}
+            <div class="buy-box">
+                <div class="show-info-left">{$a.name}</div>
+                <div class="show-info-right">
+                    <ul class="buytype">
+                        {foreach from=$a.values item=val name=attr_val key=ak}
+                        {if count($a.values) neq 1}
+                        <li title="{$val}" id="attr_val_{$ak}_{$a.id}">
+                            <a href="javascript:select_attr('{$ak}', {$a.id});">{$val}<i class="icon" style="display: none">&#xe609;</i></a>
+                        </li>
+                        {else}
+                        <li title="{$val}" class="selected" id="attr_val_{$ak}_{$a.id}">
+                            <a href="javascript:select_attr('{$ak}', {$a.id});" >{$val}<i class="icon">&#xe609;</i></a>
+                        </li>
+                        {/if}
+                        {/foreach}
+                    </ul>
+                    <div style="clear: both;"></div>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            {/foreach}
+            <div class="buy-box">
+                <div class="show-info-left">数量</div>
+                <div class="show-info-right">
+                                <span class="product-num">
+                                    <a href="javascript:decrease_count()" class="disable" id="decrease_btn"><i class="icon">&#xe60c;</i></a>
+                                    <input id="buy_count" type="text" value="1" max="99" onblur="buy_count_blur();">
+                                    <a href="javascript:increase_count();" id="increase_btn"><i class="icon">&#xe60d;</i></a>
+                                    {if !$attributes || count($attributes) eq 1}
+                                    <span class="tip" id="inventory-tip">库存<em>{$inventory_logic}</em>件</span>
+                                    {else}
+
+                                    {/if}
+                                </span>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <div class="layui-layer-btn">
+                <a class="layui-layer-btn0">确定</a>
+                <a class="layui-layer-btn1">取消</a>
+            </div>
+        </div>
+        <!--购买按钮结束-->
+        <script type="text/javascript">
+
+            var product_sn = '{$product.product_sn}';
+            var inventory = {$inventory_json};
+            var attributes = {$attributes_json};
+            var attributes_mode = {$attributes_mode};//筛选条件表达式
+            var pattern = {$attributes_mode};//泛解析表达式
+            var collection_flag = {if $collection_flag}true{else}false{/if};
+            var distribution_flag = {if $distribution_flag}true{else}false{/if};
+            var operation = 0;
+
+            {literal}
+            //属性、库存start============================================================
+            function buy_count_blur() {
+                var buy_num = $('#buy_count').val();
+
+                buy_num = parseInt(buy_num);
+
+                if(isNaN(buy_num) || buy_num <= 0)
+                {
+                    buy_num = 1;
+                }
+
+                $(this).val(buy_num);
+
+                if(select_attributes_complete()) {
+                    check_inventory();
+                }
+            }
+
+
+            function increase_count() {
+                if( $('#increase_btn').attr('class') == 'disable' ) {
+                    return;
+                }
+                var val = $('#buy_count').val();
+                if( val >= 99 ) {
+                    return;
+                }
+                val++;
+                if( val > 1 ) {
+                    $('#decrease_btn').removeClass('disable');
+                }
+                if( val >= 99 ) {
+                    $('#increase_btn').addClass('disable');
+                }
+                $('#buy_count').val(val);
+                if(select_attributes_complete()) {
+                    check_inventory();
+                }
+            }
+
+            function decrease_count() {
+                if( $('#decrease_btn').attr('class') == 'disable' ) {
+                    return;
+                }
+                var val = $('#buy_count').val();
+                if( 1 >= val ) {
+                    return;
+                }
+                val--;
+                if( 1 >= val ) {
+                    $('#decrease_btn').addClass('disable');
+                }
+                if( 99 > val ) {
+                    $('#inrease_btn').removeClass('disable');
+                }
+                $('#buy_count').val(val);
+                if(select_attributes_complete()) {
+                    check_inventory();
+                }
+            }
+
+            function select_attr(ak, id) {
+                $('#attr_val_'+ak+'_'+id).siblings().removeClass('selected');
+                $('#attr_val_'+ak+'_'+id).siblings().find('i').css('display', 'none');
+                $('#attr_val_'+ak+'_'+id).addClass('selected');
+                $('#attr_val_'+ak+'_'+id).find('i').show();
+
+                index = ak;
+                aid = id;
+
+                pattern[aid] = attributes[aid]['values'][index];
+                attributes_mode[aid] = attributes[aid]['values'][index];
+
+                for (var i in pattern) {
+                    if (i != aid) {
+                        pattern[i] = ".*";
+                    }
+                }
+
+                toggle_options();
+            }
+
+            //根据条件开启/关闭可筛选条件
+            function toggle_options() {
+                var check_inventory_flag = select_attributes_complete();
+
+
+                if(check_inventory_flag) {
+                    check_inventory();
+                } else {
+                    var buy_num = $("#buy_count").val();
+                    if( 1 >= buy_num ) {
+                        minus_disable();
+                    } else {
+                        minus_enable();
+                    }
+
+                    plus_enable();
+                }
+            }
+
+            //判断是否已经完成产品规格选择
+            function select_attributes_complete() {
+                var check_inventory_flag = true;
+
+                //无产品属性时用
+                if(attributes_mode == "") {
+                    return check_inventory_flag;
+                }
+
+                for(var i in attributes_mode) {
+                    if(attributes_mode[i] == ".*") {
+                        check_inventory_flag = false;
+                    }
+                }
+
+                return check_inventory_flag;
+            }
+
+            function check_inventory() {
+                var index = attributes_mode != "" ? JSON.stringify(attributes_mode) : "";
+                var current_inventory = inventory[index];
+                if(current_inventory == undefined) {
+                    current_inventory = 0;
+                }
+
+                var buy_num = $("#buy_count").val();
+                buy_num = parseInt(buy_num);
+                current_inventory = parseInt(current_inventory);
+
+                if(buy_num > current_inventory) {
+                    //如果购买数量超过当前库存,则将购买数量设置为库存
+                    $("#buy_count").val(current_inventory);
+                    plus_disable();
+                }
+
+                if(buy_num == current_inventory) {
+                    plus_disable();
+                } else if( buy_num < current_inventory ) {
+//            plus_disable();
+                    plus_enable();
+                }
+
+                if(buy_num > 1) {
+                    minus_disable();
+                    minus_enable();
+                } else {
+                    minus_disable();
+                }
+
+                var temp = '<span class="tip" id="inventory-tip">库存<em>'+current_inventory+'</em>件</span>';
+                $('#inventory-tip').remove();
+                $(".product-num").append(temp);
+                return true;
+            }
+
+            function minus_enable() {
+                $("#decrease_btn").removeClass("disable");
+            }
+
+            function minus_disable() {
+                $("#decrease_btn").addClass("disable");
+            }
+
+            function plus_enable() {
+                $("#increase_btn").removeClass("disable");
+            }
+
+            function plus_disable() {
+                $("#increase_btn").addClass("disable");
+            }
+            //属性、库存end============================================================
+
+            // 购物车 start ======================================================================
+
+            $(function() {
+                $('.layui-layer-btn0').click(function() {
+                    add_to_cart(product_sn);
+                });
+            });
+            function add_to_cart(product_sn) {
+                var url = "cart.php";
+                var buy_num = parseInt($("#buy_count").val());
+                console.log($("#buy_count"));
+                if(isNaN(buy_num) || buy_num <= 0) {
+                    layer.msg("请输入购买数量");
+                    return false;
+                }
+
+                if(!select_attributes_complete()) {
+                    layer.msg("请选择产品规格 包装");
+                    return false;
+                }
+
+                var data = { "opera":"add_to_cart", "product_sn": product_sn, "number": buy_num, "attributes": attributes_mode };
+
+                loading = layer.load(0, { shade: 0.3 });
+                $.post(url, data, add_to_cart_handler, "json");
+            }
+
+            function add_to_cart_handler(response) {
+                layer.close(loading);
+                if(response.error == 0) {
+                    layer.msg('已加入购物车');
+
+                } else {
+                    layer.msg(response.msg);
+                    if(response.error == 2) {
+                        $("#dialog_close_btn").click(function(){
+                            window.location.href = "login.php";
+                        });
+
+                        $("#dialog_close").click(function(){
+                            window.location.href = "login.php";
+                        });
+                    }
+                }
+                layer.close(index);
+            }
+
+            {/literal}
+        </script>

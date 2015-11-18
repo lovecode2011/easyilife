@@ -1,0 +1,125 @@
+{if empty($product_list)}
+<div class="wish-list product-all">
+    <div class="tips-empty">
+        <div class="tips-icon">
+            <span class="icon">&#xe61d;</span>
+        </div>
+        <div class="tips-detail">
+            对不起，你当前暂无收藏任何产品！
+        </div>
+    </div>
+
+    <div style="clear: both;"></div>
+</div>
+
+{else}
+<div class="wish-list product-all">
+    <ul class="p-list">
+        {foreach from=$product_list item=p}
+        <li>
+            <div class="p-img">
+                <a href="product.php?id={$p.id}" target="_blank">
+                    <img width="160" height="160" alt="圣宝先自营酵素" src="{$p.img}">
+                </a>
+            </div>
+            <div class="p-name">
+                <a href="product.php?id={$p.id}" title="{$p.name}" target="_blank">{$p.name}
+                </a>
+            </div>
+            <div class="p-price"><strong>￥{sprintf('%.2f', $p.price)}</strong></div>
+            <div class="extra">
+                        <span class="evaluate">
+                            <a href="product.php?id={$p.id}" target="_blank">已有<span>{$p.comment_count}</span>人评论</a>
+                        </span>
+            </div>
+            <div class="btns">
+                <a class="btn-buy" href="javascript:get_attributes({$p.id});">加入购物车</a>
+                <a class="btn-coll" href="javascript:collection('{$p.product_sn}')">删除</a>
+            </div>
+        </li>
+        {/foreach}
+    </ul>
+</div>
+<div style="clear: both;"></div>
+
+<div class="pages fr">
+    {if $page eq 1}
+    <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+    <a rel="nofollow" class="cur fl" id="pageFirst" href="javascript:void(0);">1</a>
+    {if total_page eq 1}
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {else}
+    <a rel="nofollow" class="prev fl" id="prePage" href="javascript:get_collection({$page - 1});"><i class="sign left">&lt;</i>上一页</a>
+    <a rel="nofollow" class="fl" id="pageFirst" href="javascript:get_collection(1);">1</a>
+    {/if}
+    {if $page gt 6}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {if ($page + 2) gt $total_page}
+    {$temp = $total_page}
+    {else}
+    {$temp = $page + 2}
+    {/if}
+    {for $index=($page - 3) to $temp - 1}
+    {if $index eq $page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);">{$index}</a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_collection({$index});">{$index}</a>
+    {/if}
+    {/for}
+    {if ($total_page - $page) gt 2}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq $total_page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_collection({$total_page})" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_collection({$page + 1})">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {elseif $total_page gt 1}
+    {$temp = $page - 2}
+    {if $temp lt 2}
+    {$temp = 2}
+    {/if}
+    {if $temp gt 2}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq 1}
+    {$limit = 5}
+    {else}
+    {$limit = 4}
+    {/if}
+    {if $total_page lt ($page + $limit)}
+    {$end_temp = $total_page}
+    {else}
+    {$end_temp = $page + $limit}
+    {/if}
+    {for $index = $temp to $end_temp - 1}
+    {if $index eq $page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);">{$index}</a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_collection({$index});">{$index}</a>
+    {/if}
+    {/for}
+    {if ($total_page - $page) gt 4}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq $total_page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_collection({$total_page})" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_collection({$page + 1})">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {/if}
+    <div class="fl">
+        <span class="fl">向第</span>
+        <input class="fl" type="text" id="bottomPage">
+        <span class="fl">页</span>
+        <a rel="nofollow" class="pageGo fl" href="#" id="pagesubmit">跳转</a>
+    </div>
+</div>
+<div style="clear: both;"></div>
+
+{/if}

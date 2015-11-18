@@ -6,10 +6,13 @@
  * Time: 下午8:21
  */
 include 'library/init.inc.php';
+$template = 'product-list.phtml';
+
+$action = 'add_to_cart';
+$act = check_action($operation, getGET('act'));
 
 $id = intval(getGET('id'));
 
-$template = 'product-list.phtml';
 $product_list = array();
 
 $flag = false;
@@ -150,10 +153,13 @@ create_pager($page, $total_page, $total);
 
 
 //子查询是否已收藏
-$sub_select = '(select `add_time` from '.$db->table('collection').' where `product_sn` = p.`product_sn` and `account` = \''.$_SESSION['account'].'\') as collection';
+$sub_select_collection = '(select `add_time` from '.$db->table('collection').' where `product_sn` = p.`product_sn` and `account` = \''.$_SESSION['account'].'\') as collection';
+
+//子查询评论数量
+$sub_select_comment = '(select count(comment) from '.$db->table('comment').' where `parent_id` = 0 and `product_sn` = p.`product_sn`) as comment_count';
 
 $now = time();
-$get_product_list = 'select p.`product_sn`,p.`name`,p.`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,'.$sub_select.' from '.$db->table('product').'as p where `status`=4 and `category_id` in ('.$category_ids_str.')';
+$get_product_list = 'select p.`product_sn`,p.`name`,p.`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,'.$sub_select_collection.','.$sub_select_comment.' from '.$db->table('product').'as p where `status`=4 and `category_id` in ('.$category_ids_str.')';
 $get_product_list .= ' limit '.$offset.','.$count;
 $product_list = $db->fetchAll($get_product_list);
 

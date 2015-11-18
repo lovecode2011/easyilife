@@ -26,6 +26,9 @@ button, input, select, textarea {
     overflow: hidden;
     _zoom: 1;
 }
+.hide{
+    display: none;
+}
 .price {
     color: #D00;
     font-family: Tahoma;
@@ -2379,7 +2382,7 @@ span.ftx-03, span.ftx03 {
 /* 收货地址 结束 */
 
 /*购物车 开始*/
-.cart-inner .cart-title,.confirm-addr .confirm-addr-t,.select-pay-type .pay-type-t{
+.cart-inner .cart-title,.confirm-addr .confirm-addr-t,.select-pay-type .pay-type-t,.order-detail .order-title{
     height: 44px;
     margin-top: 4px;
     line-height: 44px;
@@ -2389,7 +2392,7 @@ span.ftx-03, span.ftx03 {
     _padding-bottom: 0;
     font-size: 20px;
 }
-.cart-inner .cart-title i{
+.cart-inner .cart-title i,.order-detail .order-title i{
     padding-right: 3px;
 }
 .cart-inner .cart-tips{
@@ -3031,3 +3034,162 @@ q.snPrice i, q.snPrice em {
     color: #fff;
 }
 /*注册 结束*/
+
+/* 新增收货地址 开始 */
+.addr-item {
+    margin-top: 10px;
+    width: 520px;
+}
+.addr-item dt {
+    float: left;
+    width: 115px;
+    height: 26px;
+    line-height: 26px;
+    font-size: 12px;
+    color: #666;
+    text-align: right;
+}
+.addr-item dt em {
+    font-family: "SimSun";
+    color: #f00;
+    vertical-align: middle;
+}
+.addr-item dd {
+    float: left;
+    width: 405px;
+}
+.addr-item .addr-input {
+    padding: 3px 5px;
+    height: 18px;
+    line-height: 18px;
+    width: 144px;
+    border: 1px solid #BBB;
+    color: #BBB;
+}
+.addr-item .sele{
+    line-height: 18px;
+    border: 1px solid #ccc;
+    padding: 3px 5px;
+    float: none;
+}
+.citySelect {
+    position: relative;
+    z-index: 99;
+    height: 30px;
+    line-height: 30px;
+}
+.addr-item .row{
+    width: 308px;
+    margin-top: 10px;
+}
+.addr-item label {
+    font: 400 12px/22px "SimSun";
+    color: #666;
+}
+.addr-item .check {
+    margin-right: 5px;
+    vertical-align: -2px;
+}
+.operation {
+    margin: 10px 0 0 115px;
+}
+.operation a {
+    display: block;
+    float: left;
+    margin-right: 10px;
+    width: 77px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    border-radius: 4px;
+}
+.operation .sure{
+    background-color: #ffce28;
+    color: #fff;
+}
+.operation .cancel{
+    height: 26px;
+    color: #333;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+}
+/* 新增收货地址 结束 */
+
+/* 物流跟踪 开始 */
+.order-track,.order-detail .order-order{
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.order-track-l{
+    float:left;
+}
+.order-track-r{
+    padding-top:10px;
+}
+.order-track-l img{
+    padding: 10px;
+    height: 80px;
+    width: auto;
+}
+.order-track-r span,.order-detail .order-order span {
+    display: block;
+    color: #6e6e6e;
+    line-height: 24px;
+}
+.order-track-r .track-status{
+    font-size: 16px;
+    color:#222;
+    padding-bottom: 6px;
+}
+.order-track-r .track-status em{
+    color: #009a44;
+}
+.track-detail{
+    background-color: #fff;
+    overflow: hidden;
+}
+.track-detail .track-detail-con{
+    margin:20px;
+    padding:10px 20px 25px;
+    border-left: 1px solid #e8e5e5;
+    position: relative;
+    overflow: initial;
+}
+.track-detail i.icon{
+    position: absolute;
+    left: -9px;
+    _left: -29px;
+    top: -10px;
+    font-size: 16px;
+    color: #e8e5e5;
+}
+.track-detail ul li{
+    font-size: 12px;
+    color:#6e6e6e;
+    padding: 5px 10px;
+    border-bottom: 1px dotted #e8e5e5;
+    position: relative;
+}
+.track-detail ul li p{
+    padding-top: 2px;
+    font-size: 10px;
+    color: #ddd;
+}
+.track-detail ul li .icon{
+    top:15px;
+    left: -27px;
+    _left: -38px;
+    font-size: 14px;
+    color: #e8e5e5;
+    position: absolute;
+}
+.track-detail ul .selected span,.track-detail ul .selected p{
+    color: #ffce28;
+}
+.track-detail ul .selected .icon{
+    font-size: 16px;
+    left: -28px;
+    _left: -38px;
+}
+
+/* 物流跟踪 结束 */

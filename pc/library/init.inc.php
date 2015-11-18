@@ -99,7 +99,7 @@ if( isset($_SESSION['account']) && $_SESSION['account'] ) {
     $cart_count = $db->fetchOne($get_cart_count);
     assign('cart_count', intval($cart_count));
 
-    $get_cart_list = 'select c.price, c.integral, c.number, c.attributes, p.id, p.img, p.name from '.$db->table('cart').' as c ';
+    $get_cart_list = 'select c.price, c.integral, c.number, c.attributes, p.id, p.img, p.name, c.id as cid from '.$db->table('cart').' as c ';
     $get_cart_list .= ' left join '.$db->table('product').' as p on c.product_sn = p.product_sn';
     $get_cart_list .= ' where c.account = \''.$_SESSION['account'].'\' and c.checked = 1';
 

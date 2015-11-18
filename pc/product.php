@@ -7,7 +7,7 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'collection|distribution|delete_history|delivery_city|delivery_district|empty_history|get_comments';
+$operation = 'collection|distribution|delete_history|delivery_city|delivery_district|empty_history|get_comments|add_to_cart';
 $opera = check_action($operation, getPOST('opera'));
 
 $page_count = 1;    //一页评论的数量，调试多个页面
@@ -88,7 +88,6 @@ if( 'get_comments' == $opera ) {
     echo json_encode($response);
     exit;
 }
-
 //清空我的足迹
 if( 'empty_history' == $opera ) {
     $response = array(
@@ -359,6 +358,152 @@ if( 'delivery_district' == $opera ) {
     echo json_encode($response);
     exit;
 }
+
+if( 'add_to_cart' == $opera ) {
+    $response = array(
+        'error' => 1,
+        'msg' => '',
+    );
+    $id = intval(getPOST('id'));
+    if( 0 >= $id ) {
+        $response['msg'] = '参数错误';
+    }
+    if( $response['msg'] != '' ) {
+        echo json_encode($response);
+        exit;
+    }
+    $template = 'add-to-cart.phtml';
+
+    $get_product = 'select p.*,b.name as brand_name from '.$db->table('product').' as p ';
+    $get_product .= ' left join '.$db->table('brand').' as b on p.brand_id = b.id';
+    $get_product .= ' where  p.`status`=4 and p.`id`='.$id;
+
+    $product = $db->fetchRow($get_product);
+    if($product) {
+        $response['product_sn'] = $product['product_sn'];
+        $product_sn = $product['product_sn'];
+        //如果产品正在促销时间，则将产品价格赋值为促销价格
+        //促销的产品不参与砍价
+        $now = time();
+        if ($product['promote_end'] > $now && $product['promote_begin'] <= $now) {
+            $product['price'] = $product['promote_price'];
+            $product['promote_left'] = $product['promote_end'] - $now;
+            $left_time = $product['promote_left'];
+            $product['hour'] = intval($left_time / 3600);
+            $left_time = $left_time % 3600;
+            $product['min'] = intval($left_time / 60);
+            $left_time = $left_time % 60;
+            $product['second'] = $left_time;
+        } else {
+            //获取产品砍价总额
+            $get_product_discount = 'select sum(`reduce`) from ' . $db->table('discount') .
+                ' where `product_sn`=\'' . $product_sn . '\' and `owner`=\'' . $_SESSION['account'] . '\'';
+
+            $discount = $db->fetchOne($get_product_discount);
+            $product['price'] -= $discount;
+        }
+
+
+        //读取产品属性表
+        if ($product['product_type_id']) {
+            $attributes_map = array();
+            $attributes_mode = array();
+            $get_product_attributes = 'select `id`,`name` from ' . $db->table('product_attributes') . ' where `product_type_id`=' . $product['product_type_id'];
+
+            $attributes = $db->fetchAll($get_product_attributes);
+
+            foreach ($attributes as $a) {
+                $attributes_map[$a['id']] = array('id' => $a['id'], 'name' => $a['name']);
+                $attributes_mode[$a['id']] = '.*';
+            }
+
+            assign('attributes_mode', json_encode($attributes_mode));
+
+            //读取产品库存表
+            $get_inventory = 'select `attributes`,`inventory`,`inventory_await`,`inventory_logic` from ' . $db->table('inventory') . ' where `product_sn`=\'' . $product_sn . '\'';
+            $inventory = $db->fetchAll($get_inventory);
+
+            $inventory_json = array();
+            foreach ($inventory as $inventory_tmp) {
+                $attribute_obj = json_decode($inventory_tmp['attributes']);
+                foreach ($attribute_obj as $aid => $aval) {
+                    if (!isset($attributes_map[$aid]['values'])) {
+                        $attributes_map[$aid]['values'] = array();
+                    }
+
+                    $attributes_map[$aid]['values'][] = mb_convert_encoding($aval, 'UTF-8');
+                }
+
+                $inventory_json[$inventory_tmp['attributes']] = $inventory_tmp['inventory_logic'];
+            }
+
+            //如果产品只有一组属性，则默认选中
+            if (count($inventory) == 1) {
+                assign('attributes_mode', $inventory[0]['attributes']);
+                $response['content'] = '';
+                $response['attributes'] = json_decode($inventory[0]['attributes']);
+            }
+
+            assign('inventory_json', json_encode($inventory_json));
+            foreach ($attributes_map as $aid => $value) {
+                $attributes_map[$aid]['values'] = array_unique($value['values']);
+
+            }
+
+            if (count($attributes_map) == 1) {
+                assign('inventory_logic', $inventory_tmp['inventory_logic']);
+            }
+            assign('attributes', $attributes_map);
+            assign('attributes_json', json_encode($attributes_map));
+            assign('product', $product);
+
+            if (count($inventory) == 1) {
+                $response['content'] = '';
+            } else {
+                $response['content'] = $smarty->fetch($template);
+            }
+
+        } else {
+            $response['content'] = '';
+            $response['attributes'] = '';
+            //产品没有属性表的情况
+            assign('attributes_mode', '""');
+            $get_inventory = 'select `attributes`,`inventory`,`inventory_await`,`inventory_logic` from ' . $db->table('inventory') . ' where `product_sn`=\'' . $product_sn . '\'';
+            $inventory = $db->fetchAll($get_inventory);
+
+            $inventory_json = array();
+            foreach ($inventory as $inventory_tmp) {
+                $attribute_obj = '';
+                if ($inventory_tmp['attributes'] != '') {
+                    $attribute_obj = json_decode($inventory_tmp['attributes']);
+
+                    foreach ($attribute_obj as $aid => $aval) {
+                        if (!isset($attributes_map[$aid]['values'])) {
+                            $attributes_map[$aid]['values'] = array();
+                        }
+
+                        $attributes_map[$aid]['values'][] = mb_convert_encoding($aval, 'UTF-8');
+                    }
+                } else {
+                    $attributes_map = '';
+                }
+
+                $inventory_json[$inventory_tmp['attributes']] = $inventory_tmp['inventory_logic'];
+                assign('inventory_logic', $inventory_tmp['inventory_logic']);
+            }
+
+            assign('inventory_json', json_encode($inventory_json));
+            assign('attributes', array());
+            assign('attributes_json', '""');
+        }
+        $response['error'] = 0;
+    } else {
+        $response['msg'] = '产品不存在';
+    }
+    echo json_encode($response);
+    exit;
+}
+
 
 $id = intval(getGET('id'));
 

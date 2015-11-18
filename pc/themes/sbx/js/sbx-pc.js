@@ -1,5 +1,5 @@
 /**
- * Created by asus on 2015/10/26.
+ * Created by arao on 2015/10/26.
  */
 $(function(){
     $(".topbar-cart").hover(
@@ -106,6 +106,58 @@ $(function(){
     /* 收货地址 */
     $(".address .address-item").hover(function(){
         $(this).find(".addr-con .addr-btn").toggle();
+    });
+
+    /*确认订单*/
+
+    //收货地址鼠标hover 效果
+    $(".confirm-addr .address-item").hover(function(){
+        $(this).addClass("addr-hover");
+    },function(){
+        $(this).removeClass("addr-hover");
+    });
+
+    //收货地址 选择确认效果
+    $(".confirm-addr .address-item").click(function(){
+        $(".confirm-addr .address-item").removeClass("addr-active");
+        $(this).addClass("addr-active");
+    });
+
+    //收货地址 收货地址多于三个显示更多
+    if($(".confirm-addr .address-item").siblings().length > 3){
+        $(".confirm-addr .address-item").eq(2).nextAll().hide();
+        $(".addr-confirm-btn .switch-on").show();
+        $(".addr-confirm-btn .switch-on").click(function(){
+            $(".confirm-addr .address-item").eq(2).nextAll().show();
+            $(".addr-confirm-btn .switch-on").hide();
+            $(".addr-confirm-btn .switch-off").show();
+        });
+        $(".addr-confirm-btn .switch-off").click(function(){
+            $(".confirm-addr .address-item").eq(2).nextAll().hide();
+            $(".addr-confirm-btn .switch-on").show();
+            $(".addr-confirm-btn .switch-off").hide();
+        });
+    };
+
+    //选择支付方式
+    $(".select-pay-type li").click(function(){
+        $(".select-pay-type li").removeClass("hover");
+        $(this).addClass("hover");
+    });
+
+    //登陆页
+    $('.login input').bind({
+        focus:function(){
+            $(this).parent().addClass("focus");
+        },
+        blur:function(){
+            $(this).parent().removeClass("focus");
+        }
+    });
+
+    /* 头部购物车删除商品 */
+    $(".topbar .cart-item ").hover(function(){
+        $(this).find(".btn-del").toggle();
     });
 
 });

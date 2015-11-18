@@ -9,10 +9,12 @@
 
 include 'library/init.inc.php';
 
-$action = 'list|detail|comment|express_info|product_comment';
+$action = 'list|detail|comment|product_comment';
 $act = check_action($action, getGET('act'));
-$operation = 'pay_now|cancel|rollback|receive|comment|product_comment|sort|paging';
+$operation = 'pay_now|cancel|rollback|receive|comment|product_comment|sort|paging|express_info';
 $opera = check_action($operation, getPOST('opera'));
+
+$template = 'order.phtml';
 
 $status_str = array(
     1 => '待支付',
@@ -336,8 +338,12 @@ if('product_comment' == $act)
     assign('product', $product);
 }
 
-if('express_info' == $act)
+if('express_info' == $opera)
 {
+    $response = array(
+        'error' => 1,
+        'msg' => '',
+    );
     $express_state = array(
         0 => '在途',
         1 => '揽件',
@@ -349,7 +355,7 @@ if('express_info' == $act)
     );
     assign('express_state', $express_state);
 
-    $order_sn = getGET('order_sn');
+    $order_sn = getPOST('order_sn');
 
     if($order_sn == '')
     {
@@ -361,22 +367,19 @@ if('express_info' == $act)
     $get_order_info = 'select * from '.$db->table('order').' where `order_sn`=\''.$order_sn.'\'';
     $order = $db->fetchRow($get_order_info);
 
-    if($order && $order['status'] == 6)
+    if($order && $order['express_sn'] )
     {
         $get_express_info = 'select `code`,`name` from '.$db->table('express').' where `id`='.$order['express_id'];
         $express_info = $db->fetchRow($get_express_info);
         $express_flow = query_express($express_info['code'], $order['express_sn']);
         $express_flow = json_decode($express_flow, true);
-        assign('express_flow', $express_flow);
-        assign('express_info', $express_info);
+        $response['error'] = 0;
+        $response['content'] = $express_flow;
     }
-    assign('order', $order);
+    echo json_encode($response);
+    exit;
 
-    $get_order_detail = 'select p.`img` from '.$db->table('order_detail').' as od join '.$db->table('product').
-        ' as p using(`product_sn`) where od.`order_sn`=\''.$order_sn.'\'';
-    assign('product_img', $db->fetchOne($get_order_detail));
 
-    $template = 'track.phtml';
 }
 
 if('comment' == $act)
@@ -445,10 +448,21 @@ if('detail' == $act)
     }
     $order_sn = $db->escape($order_sn);
 
-    $get_order = 'select o.`remark`,o.`product_amount`,o.`integral_paid`,o.`balance_paid`,o.`reward_paid`,o.`add_time`,o.`delivery_fee`,o.`pay_time`,o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`province`,o.`city`,o.`district`,o.`group`,o.`mobile`,o.`consignee`,o.`address`,o.`integral_amount` from '.$db->table('order').' as o join '.
+    $get_order = 'select o.`remark`,o.`product_amount`,o.`integral_paid`,o.`balance_paid`,o.`reward_paid`,o.`add_time`,o.`delivery_fee`,o.`pay_time`,o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`province`,o.`city`,o.`district`,o.`group`,o.`mobile`,o.`consignee`,o.`address`,o.`integral_amount`,o.`express_sn`,o.`express_id`,o.zipcode from '.$db->table('order').' as o join '.
         $db->table('business').' as b using(`business_account`) where o.`account`=\''.$_SESSION['account'].'\' and o.`order_sn`=\''.$order_sn.'\'';
 
     $order = $db->fetchRow($get_order);
+
+    if( !empty($order['express_sn']) ) {
+        $get_express_info = 'select `code`,`name` from ' . $db->table('express') . ' where `id`=' . $order['express_id'];
+        $express_info = $db->fetchRow($get_express_info);
+
+//        $express_flow = query_express($express_info['code'], $order['express_sn']);
+//        $express_flow = json_decode($express_flow, true);
+        assign('express_flow', $express_flow);
+        assign('express_info', $express_info);
+    }
+
 
     $get_order_detail = 'select `od`.`integral`,od.`product_attributes`,od.`product_price`,od.`product_name`,od.`product_sn`,p.`id`,p.`img`,od.`count` from '.$db->table('order_detail').' as od '.
         ' join '.$db->table('product').' as p using(`product_sn`) where od.`order_sn`=\''.$order_sn.'\'';
@@ -499,7 +513,6 @@ if( 'paging' == $opera ) {
         $total = $db->fetchOne($get_total);
         $total_page = ceil( $total / $page_count );
 
-        $offset = $page_count * ( $page - 1 );
         $page = $page > $total_page ? $total_page : $page;
         $page = $page < 1 ? 1 : $page;
         $offset = $page_count * ( $page - 1 );
@@ -621,5 +634,4 @@ if( $act == 'list' ) {
     assign('complete_total', $complete_total);
 }
 
-$template = 'order.phtml';
 $smarty->display($template);

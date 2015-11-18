@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>圣宝先官方商城</title>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.phtml"}
+
+<!-- 顶部面包屑导航开始 -->
+<div class="breadcrumb container">
+    <span>当前位置：</span>
+    <a href="index.php">首页</a><span class="gt">&gt;</span>
+    <a href="home.php">用户中心</a><span class="gt">&gt;</span>
+    <a href="order.php">我的订单</a><span class="gt">&gt;</span>
+    <span>订单详情</span>
+</div>
+<!-- 顶部面包屑导航结束 -->
+<!-- 个人中心开始 -->
+<div class="home container">
+    <div class="order-detail">
+        {if $order.express_sn}
+        <div class="order-track">
+            <div class="order-title">
+                <h3><i class="icon">&#xe62c;</i>物流信息</h3>
+            </div>
+            <!--物流详情 开始-->
+            <div class="track">
+                <div class="order-track border_bottom">
+                    <div class="order-track-r">
+                        <span>承运公司：{$express_info.name}</span>
+                        <span>运单编号：{$order.express_sn}</span>
+                        {if $order.express_sn}
+                        <span>物流跟踪：</span>
+                        {/if}
+                    </div>
+                    <div style="clear: both"></div>
+                </div>
+                {if $order.express_sn}
+                <div class="track-detail">
+                    <img src="{$template_dir}js/layer/skin/default/loading-0.gif"/>
+<!--                    <div class="track-detail-con">-->
+<!--                        <i class="icon">&#xe62c;</i>-->
+<!--                        <ul>-->
+<!--                            <li class="selected"><span class="icon">&#xe62b;</span><span>【广州市】广东省广州市科学城公司 已签收 签收人：本人签收，感谢使用圆通速递，期待再次为您服务</span><p>2015-09-10 12:56:17</p></li>-->
+<!--                            <li><span class="icon">&#xe62b;</span><span>【广州市】广东省广州市科学城派件员：廖宜军 13416178144正在为您派件</span><p>2015-09-10 09:12:41</p></li>-->
+<!--                            <li><span class="icon">&#xe62b;</span><span>广东省广州市科学城 已收入</span><p>2015-09-10 09:12:41</p></li>-->
+<!--                            <li><span class="icon">&#xe62b;</span><span>【广州市】广州转运中心 已发出</span><p>2015-09-09 18:07:34</p></li>-->
+<!--                            <li><span class="icon">&#xe62b;</span><span>广州转运中心公司 已收入</span><p>2015-09-09 15:20:18</p></li>-->
+<!--                            <li><span class="icon">&#xe62b;</span><span>浙江省金华市义乌市公司 已发出</span><p>2015-09-08 22:56:25</p></li>-->
+<!--                            <li><span class="icon">&#xe62b;</span><span>浙江省金华市义乌市市场三部公司 已发出</span><p>2015-09-08 20:17:33</p></li>-->
+<!--                            <li><span class="icon">&#xe62b;</span><span>【金华市】圆通速递 浙江省金华市义乌市市场三部收件员 已揽件</span><p>2015-09-08 19:26:23</p></li>-->
+<!--                            <li><span class="icon">&#xe62b;</span><span>商家正通知快递公司揽件</span><p>2015-09-08 12:59:39</p></li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+                {else}
+
+                {/if}
+            </div>
+            <!--物流详情 结束-->
+        </div>
+        {/if}
+        <div class="order-info">
+            <div class="order-title">
+                <h3><i class="icon">&#xe61a;</i>订单信息</h3>
+            </div>
+            <!--产品详情 开始-->
+            <div class="order-order">
+                <span>收货地址：{$order.consignee}，{$order.mobile}，{$order.province_name} {$order.city_name} {$order.district_name} {$order.group_name} {$order.address} ，{$order.zipcode}</span>
+                <span>买家留言：{$order.remark}</span>
+                <span>订单编号：{$order.order_sn}</span>
+                <span>创建时间：{date('Y-m-d H:i:s', $order.add_time)}</span>
+            </div>
+            <div class="order-list">
+                <table cellpadding="0" cellspacing="0" class="order-tb">
+                    <thead>
+                    <tr>
+                        <th><div class="ordertime-cont">
+
+                            </div>
+                            <div class="order-detail-txt">订单详情</div>
+                        </th>
+                        <th>总计</th>
+                        <th>
+                            <div class="deal-state-cont" style="width: 100%;">
+                                <div class="state-txt" style="text-align: center;padding-right: 20px;">订单状态</div>
+
+                            </div>
+                        </th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="sep-row"><td colspan="5"></td></tr>
+                    <tr class="tr-th">
+                        <td colspan="5">
+                            <span class="gap"></span>
+                            <span class="dealtime" title="{date('Y-m-d H:i:s', $order.add_time)}">{date('Y-m-d H:i:s', $order.add_time)}</span>
+                            <input type="hidden" value="{date('Y-m-d H:i:s', $order.add_time)}">
+                                     <span class="number">订单号：
+                                         <a href="javascript:void(0)">{$order.order_sn}</a>
+                                     </span>
+                            <div class="tr-operate">
+                                    <span class="order-shop">
+                                        <span class="shop-txt">圣宝先自营店</span>
+                                        <a class="icon" href="#" title="进入店铺">&#xe61b;</a>
+                                    </span>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </td>
+                    </tr>
+                    {foreach from=$order.order_detail item=product key=i}
+                    <tr class="tr-bd">
+                        <td>
+                            <div class="goods-item p-1073757">
+                                <div class="p-img">
+                                    <a href="#">
+                                        <img class="" src="{$product.img}" title="{$product.product_name} {$product.product_attributes}" width="60" height="60">
+                                    </a>
+                                </div>
+                                <div class="p-msg">
+                                    <div class="p-name"><a href="product.php?id={$product.id}" class="a-link" title="{$product.product_name} {$product.product_attributes}">{$product.product_name} {$product.product_attributes}</a></div>
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <div class="goods-number">
+                                x{$product.count}
+                            </div>
+                            <div style="clear: both;"></div>
+                        </td>
+                        {if $i eq 0}
+                        <td rowspan="{count($order.order_detail)}">
+                            <div class="amount">
+                                <strong>¥{sprintf("%.2f", $order.amount)}</strong> <br>
+                                <span class="ftx-13">{$order.payment}</span><br>
+                            </div>
+                        </td>
+                        <td rowspan="{count($order.order_detail)}">
+                            <div class="status">
+                                <span class="order-status ftx-03">{$order.show_status}</span>
+                                <br>
+                            </div>
+                        </td>
+                        <td rowspan="{count($order.order_detail)}">
+                            <div class="operate">
+                                {if $order.status eq 1}
+                                <a href="javascript:pay_now('{$order.order_sn}');" class="btn-again btn"><b></b>立即支付</a><br>
+                                <a href="javascript:cancel_order('{$order.order_sn}');" class="btn-again btn"><b></b>取消订单</a><br>
+                                {elseif $order.status eq 4}
+                                <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
+                                {elseif $order.status eq 6}
+                                <a href="javascript:void(0);" class="btn-again btn"><b></b>查看物流</a><br>
+                                <a href="javascript:receive('{$order.order_sn}');" class="btn-again btn"><b></b>确认收货</a><br>
+                                {elseif $order.status eq 7}
+                                <a href="javascript:comment('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
+                                <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>晒单评论</a><br>
+                                {else}
+                                <a href="#" class="btn-again btn" style="background: #ffffff;border: 0px;"><b></b>&nbsp;</a><br>
+                                {/if}
+                            </div>
+                        </td>
+                        {/if}
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+            <!-- 产品详情 结束 -->
+        </div>
+    </div>
+    <div style="clear: both"></div>
+</div>
+<!-- 个人中心结束 -->
+{include file="footer.phtml"}
+<script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jquery.jqzoom.js" type="text/javascript"></script>
+<script src="{$template_dir}js/jqzoom-base.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript" src="{$template_dir}js/layer/layer.js"></script>
+
+<script type="text/javascript">
+    $(function() {
+        get_express_flow();
+    });
+
+    function get_express_flow() {
+
+        var url = 'order.php';
+        var param = { 'opera': 'express_info', 'order_sn': '{$order.order_sn}' };
+        $.post(url, param, get_express_flow_handler, 'json');
+    }
+
+    function get_express_flow_handler(result) {
+        console.log(result);
+        if( result.error == 0 ) {
+            if( result.content.status == 200 ) {
+                var temp = '<div class="track-detail-con">';
+                temp += '<i class="icon">&#xe62c;</i>';
+                temp += '<ul>';
+                for( var id in result.content.data ) {
+                    if( id == 0 ) {
+                        temp += '<li class="selected"><span class="icon">&#xe62b;</span><span>' + result.content.data[id].context + '</span><p>' + result.content.data[id].time + '</p></li>';
+                    } else {
+                        temp += '<li><span class="icon">&#xe62b;</span><span>' + result.content.data[id].context + '</span><p>' + result.content.data[id].time + '</p></li>';
+                    }
+                }
+                temp += '</ul>';
+                temp += '</div>';
+                $('.track-detail').empty();
+                $('.track-detail').append(temp);
+            } else {
+                $('.track-detail').empty();
+                $('.track-detail').text('未获得物流信息');
+            }
+        } else {
+            $('.track-detail').empty();
+            $('.track-detail').text('未获得物流信息');
+        }
+    }
+
+    function comment(order_sn) {
+        if(order_sn != '') {
+            window.location.href = "order.php?act=comment&sn="+order_sn;
+        }
+    }
+
+    //立即支付 start===========================================
+    function pay_now(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"pay_now", "order_sn":order_sn };
+
+            $.post(url, data, pay_now_handler, "json");
+        }
+    }
+
+    function pay_now_handler(response) {
+        if(response.error == 0) {
+            window.location.href = "topay.php";
+        } else {
+            //hide_mask();
+            layer.msg(response.msg);
+        }
+    }
+    //立即支付 end================================================
+
+    //取消订单 start==============================================
+    function cancel_order(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"cancel", "order_sn":order_sn };
+
+            //show_mask();
+            $.post(url, data, cancel_order_handler, "json");
+        }
+    }
+
+    function cancel_order_handler(response) {
+        //hide_mask();
+        if(response.error == 0) {
+//            $("#dialog_close_btn, #dialog_close").click(function () {
+            window.location.reload();
+//            });
+        }
+
+        layer.msg(response.msg);
+    }
+    //取消订单 end===============================================
+    function receive(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"receive", "order_sn":order_sn };
+
+            //show_mask();
+            $.post(url, data, receive_handler, "json");
+        }
+    }
+
+    function receive_handler(response) {
+        //hide_mask();
+        if(response.error == 0) {
+//            $("#dialog_close_btn, #dialog_close").click(function () {
+            window.location.reload();
+//            });
+        }
+
+        layer.msg(response.msg);
+    }
+
+    function rollback(order_sn) {
+        if(order_sn != '') {
+            var url = "order.php";
+            var data = { "opera":"rollback", "order_sn":order_sn };
+
+            //show_mask();
+            $.post(url, data, receive_handler, "json");
+        }
+    }
+
+    function rollback_handler(response) {
+        //hide_mask();
+        if(response.error == 0) {
+//            $("#dialog_close_btn, #dialog_close").click(function () {
+            window.location.reload();
+//            });
+        }
+
+        layer.msg(response.msg);
+    }
+
+</script>
+</body>
+</html>
