@@ -645,10 +645,10 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     text-align: center;
     padding-top: 5px;
 }
-.floor .p-list .p-name,.might-like .p-list .p-name {
+.floor .p-list .p-name,.might-like .p-list .p-name,.shop-plist .p-list .p-name {
     height: 20px;
 }
-.floor .p-list .p-price,.might-like .p-list .p-price {
+.floor .p-list .p-price,.might-like .p-list .p-price,.shop-plist .p-list .p-price {
     font-size: 12px;
     font-family: Verdana;
     color: #E4393C;
@@ -2109,7 +2109,7 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     color: #ffce28;
 }
 .order-tb .sep-row {
-    height: 15px;
+    height: 10px;
 }
 .order-tb .tr-th {
     background: #f5f5f5;
@@ -2182,9 +2182,6 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
 .order-tb .tr-bd td {
     padding: 14px 0;
 }
-.order-tb tbody td {
-    border: 1px solid #e5e5e5;
-}
 .order-tb .goods-item {
     display: inline-block;
     display: block;
@@ -2215,9 +2212,6 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     text-align: left;
     color: #aaa;
     font-family: verdana;
-}
-.order-tb tbody td {
-    border: 1px solid #e5e5e5;
 }
 .order-tb .amount strong {
     font-family: verdana;
@@ -2382,7 +2376,7 @@ span.ftx-03, span.ftx03 {
 /* 收货地址 结束 */
 
 /*购物车 开始*/
-.cart-inner .cart-title,.confirm-addr .confirm-addr-t,.select-pay-type .pay-type-t,.order-detail .order-title{
+.cart-inner .cart-title,.confirm-addr .confirm-addr-t,.select-pay-type .pay-type-t,.order-detail .order-title,.comment .comment-title {
     height: 44px;
     margin-top: 4px;
     line-height: 44px;
@@ -2392,7 +2386,7 @@ span.ftx-03, span.ftx03 {
     _padding-bottom: 0;
     font-size: 20px;
 }
-.cart-inner .cart-title i,.order-detail .order-title i{
+.cart-inner .cart-title i,.order-detail .order-title i,.comment .comment-title i{
     padding-right: 3px;
 }
 .cart-inner .cart-tips{
@@ -3036,11 +3030,11 @@ q.snPrice i, q.snPrice em {
 /*注册 结束*/
 
 /* 新增收货地址 开始 */
-.addr-item {
+.addr-item ,.form-item{
     margin-top: 10px;
     width: 520px;
 }
-.addr-item dt {
+.addr-item dt ,.form-item dt{
     float: left;
     width: 115px;
     height: 26px;
@@ -3049,16 +3043,16 @@ q.snPrice i, q.snPrice em {
     color: #666;
     text-align: right;
 }
-.addr-item dt em {
+.addr-item dt em ,.form-item dt em{
     font-family: "SimSun";
     color: #f00;
     vertical-align: middle;
 }
-.addr-item dd {
+.addr-item dd ,.form-item dd{
     float: left;
     width: 405px;
 }
-.addr-item .addr-input {
+.addr-item .addr-input ,.form-item input{
     padding: 3px 5px;
     height: 18px;
     line-height: 18px;
@@ -3066,7 +3060,7 @@ q.snPrice i, q.snPrice em {
     border: 1px solid #BBB;
     color: #BBB;
 }
-.addr-item .sele{
+.addr-item .sele,.form-item .sele{
     line-height: 18px;
     border: 1px solid #ccc;
     padding: 3px 5px;
@@ -3078,7 +3072,7 @@ q.snPrice i, q.snPrice em {
     height: 30px;
     line-height: 30px;
 }
-.addr-item .row{
+.addr-item .row,.form-item .row{
     width: 308px;
     margin-top: 10px;
 }
@@ -3193,3 +3187,166 @@ q.snPrice i, q.snPrice em {
 }
 
 /* 物流跟踪 结束 */
+
+/* 订单评价 开始 */
+.comment .form-item dt{
+    width: 80px;
+    _width:85px;
+}
+.comment .operation {
+    margin: 10px 0 0 80px;
+    _margin: 10px 0 0 85px;
+}
+.form-item .i-star{
+    font-size: 16px;
+}
+.form-item .i-star i {
+    padding-right: 2px;
+    line-height: 26px;
+    cursor: pointer;
+    color: #ffce28;
+}
+.form-item .area{
+    width: 400px;
+    height: 100px;
+    padding: 3px 5px;
+    border: 1px solid #BBB;
+    font-size: 12px;
+    color: #BBB;
+    resize: none;
+    overflow: auto;
+}
+/*订单评价 结束*/
+
+/* 余额、积分、佣金通用 开始 */
+.wallet-h{
+    background-color: #f5f5f5;
+}
+.wallet-h .wallet-h-inner{
+    padding: 30px 20px;
+}
+.wallet-h-inner .fl .price{
+    font-size: 18px;
+}
+.wallet-h-inner .operation a{
+    margin-right: 28px;
+    width: 118px;
+    height: 38px;
+    line-height: 38px;
+}
+.wallet-c .order-tb tbody td{
+    border: 0 none;
+}
+/* 余额、积分、佣金通用 结束 */
+
+/*商家店铺 开始*/
+.shop-head{
+    height: 100px;
+    background-color: #fefff3;
+    margin: 8px 0;
+}
+.shop-head .shop-info{
+    padding:5px 10px 5px;
+}
+.shop-head .shop-logo {
+    width: 190px;
+    height: 90px;
+    border-right: 1px solid #dcdcdc;
+}
+.shop-head .shop-logo img{
+    margin: 5px 0;
+    width: 180px;
+    height: 80px;
+}
+.shop-head .shop-info-detail{
+    padding:5px 0 0 20px;
+}
+.shop-head .shop-name{
+    font-size: 18px;
+    color: #333;
+    padding-bottom: 5px;
+}
+.shop-head .items-star{
+    color: #999;
+}
+.shop-head .items-star i{
+    margin-left:-4px;
+    color: #ffce28;
+}
+.shop-plist{
+    width: 998px;
+    margin-top: 30px;
+}
+.shop-plist .p-list li{
+    float: left;
+    width: 155px;
+    height: 160px;
+    padding: 6px 20px 0;
+}
+.shop-plist .p-list li .p-img {
+    height: 100px;
+    margin-bottom: 4px;
+    text-align: center;
+    padding-top: 5px;
+}
+.shop-banner img{
+    width: 998px;
+    height: 310px;
+}
+/*商家店铺 结束*/
+
+/*我的资料 开始*/
+.form-item dd span.no-input{
+    line-height: 26px;
+    font-size: 12px;
+}
+.gender .sex-label input {
+    width: 12px;
+    float: left;
+    margin-top: 7px;
+}
+.gender .sex-label span {
+    float: left;
+    border: 0 none;
+    margin: 5px 20px 0 5px;
+}
+.profile-avatar {
+    float: left;
+    position: relative;
+    width: 110px;
+    height: 110px;
+    border: 5px solid #e3e3e3;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.profile-avatar img {
+    position: relative;
+    top: -5px;
+    left: -5px;
+    display: block;
+    border-radius: 50%;
+}
+.profile-avatar a {
+    position: absolute;
+    font-size: 12px;
+    left: -5px;
+    top: 90px;
+    width: 120px;
+    height: 25px;
+    text-align: center;
+    color: #FFF;
+    z-index: 2;
+}
+.profile-avatar .edit_bg {
+    position: absolute;
+    left: -5px;
+    top: 88px;
+    width: 120px;
+    height: 25px;
+    font-size: 0;
+    opacity: .5;
+    z-index: 1;
+    background: #000;
+    filter: alpha(opacity=50);
+}
+/*我的资料 结束*/

@@ -401,22 +401,25 @@ if('comment' == $act)
     }
 
 
-    $check_order_comment = 'select `is_comment` from '.$db->table('order').' where `order_sn`=\''.$order_sn.'\'';
-    $is_comment = $db->fetchOne($check_order_comment);
-    assign('is_comment', $is_comment);
+    $check_order_comment = 'select o.`is_comment`, o.`business_account`, o.`order_sn`, o.`add_time`, b.`shop_name` from '.$db->table('order').' as o';
+    $check_order_comment .= ' left join '.$db->table('business').' as b on o.business_account = b.business_account';
+    $check_order_comment .= ' where o.`order_sn`=\''.$order_sn.'\' limit 1';
+    $order = $db->fetchRow($check_order_comment);
+    assign('order', $order);
 
-    $get_order_detail = 'select DISTINCT od.`product_name`,od.`product_sn`,p.`img` from '.$db->table('order_detail').' as od '.
+    $get_order_detail = 'select DISTINCT od.`product_name`,od.`product_sn`,p.`img`,p.`id`,od.`product_attributes`,od.`count`,od.product_price, od.integral from '.$db->table('order_detail').' as od '.
         ' join '.$db->table('product').' as p using(`product_sn`) where od.`order_sn`=\''.$order_sn.'\'';
 
     $order_detail = $db->fetchAll($get_order_detail);
 
     foreach($order_detail as $key=>$od)
     {
-        $check_product_comment = 'select `id` from '.$db->table('comment').' where `product_sn`=\''.$od['product_sn'].
-            '\' and `account`=\''.$_SESSION['account'].'\'';
+        $check_product_comment = 'select c.`id` from '.$db->table('comment').' as c';
+        $check_product_comment .= ' left join '.$db->table('order_detail').' as od on c.product_sn = od.product_sn';
+        $check_product_comment .= ' where od.`product_sn`=\''.$od['product_sn'].
+            '\' and c.`account`=\''.$_SESSION['account'].'\' and od.order_sn = \''.$order_sn.'\'';
         $order_detail[$key]['has_comment'] = $db->fetchOne($check_product_comment);
     }
-
     assign('order_sn', $order_sn);
 
     assign('order_detail', $order_detail);

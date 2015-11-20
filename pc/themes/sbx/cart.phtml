@@ -163,7 +163,7 @@
                         </div>
                         <div class="row row-2">
                             <div class="shopSubmit submit00">
-                                <a class="btn-orange fr" title="结算" href="javascript:;" ><em>结算</em></a>
+                                <a class="btn-orange fr" title="结算" href="javascript:check_out();" ><em>结算</em></a>
                             </div>
                             <div class="pro-desc">
                                 <p>
@@ -191,25 +191,40 @@
 <script src="{$template_dir}js/jquery.jqzoom.js" type="text/javascript"></script>
 <script src="{$template_dir}js/jqzoom-base.js" type="text/javascript"></script>
 <script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript" src="{$template_dir}js/layer/layer.js"></script>
+
 <script type="text/javascript">
+    var loading;
     var total_amount = {$total_amount};
     var total_integral = {$total_integral};
     var cart = {$cart_json}
     var cart_weight = {$cart_weight_json};
 
+    $(function() {
+        for( var i in cart ) {
+            if( cart[i].checked ) {
+                cart[i].checked = true;
+            } else {
+                cart[i].checked = false;
+            }
+        }
+    });
+
     //删除购物车
     function delete_cart_item(cid) {
 //        $("#delete_confirm_btn").bind("click", function() { remove_from_cart(cid); });
 //        show_operation_dialog();
-        if( confirm('确定从购物车删除该商品?') ) {
+        layer.confirm('确定从购物车删除该商品?', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
             remove_from_cart(cid);
-        } else {
-            return false;
-        }
+        });
     }
 
     function multi_delete_cart_item() {
-        if( confirm('确定从购物车删除选中的商品?') ) {
+        layer.confirm('确定从购物车删除选中的商品?', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
             var cid_list = new Array();
             $('.check-product').each(function () {
                 if ($(this).is(':checked')) {
@@ -219,13 +234,11 @@
                 }
             });
             if (cid_list.length == 0) {
-                alert('请选择要删除的商品');
+                layer.msg('请选择要删除的商品');
             } else {
                 multi_remove_from_cart(cid_list);
             }
-        } else {
-            return false;
-        }
+        });
     }
 
     function multi_remove_from_cart(cid_list) {
@@ -242,14 +255,15 @@
         list += ']';
 
         var data = { "opera":"multi_delete", "cid_list":list };
+        loading = layer.load(0, { shade: 0.3 });
+
         $.post(url, data, remove_from_cart_handler, "json");
     }
 
     function remove_from_cart(cid) {
         cid = parseInt(cid);
-
         if(isNaN(cid) || cid <= 0) {
-            alert("无效的id");
+            layer.msg("无效的id");
             return false;
         }
         console.info(cid);
@@ -257,25 +271,28 @@
         data = { "opera":"delete", "cid":cid };
 
 //        show_mask();
+        loading = layer.load(0, { shade: 0.3 });
         $.post(url, data, remove_from_cart_handler, "json");
     }
 
     function empty_cart() {
-        if( confirm('确定清空购物车?') ) {
+        layer.confirm('确定清空购物车?', {
+            btn: ['确定','取消'] //按钮
+        }, function() {
             var url = 'cart.php';
             var data = { "opera":"empty_cart" };
+            loading = layer.load(0, { shade: 0.3 });
             $.post(url, data, remove_from_cart_handler, 'json');
-        } else {
-            return false;
-        }
+        });
     }
 
 
     function remove_from_cart_handler(response) {
+        layer.close(loading);
         if(response.error == 0) {
             window.location.reload();
         } else {
-            alert(response.msg);
+            layer.msg(response.msg);
         }
     }
     //更改复选框状态
@@ -287,9 +304,9 @@
         $("input[type='checkbox']").prop('checked', flag);
         for(var id in cart) {
             if( flag ) {
-                cart[id].checked = 1;
+                cart[id].checked = true;
             } else {
-                cart[id].checked = 0;
+                cart[id].checked = false;
             }
         }
         calculate_fee();
@@ -329,7 +346,7 @@
         }
         for( var id in cart ) {
             if( cart[id].p_id == pid ) {
-                cart[id].checked = $('#check-product-'+pid).is(':checked') ? 1 : 0;
+                cart[id].checked = $('#check-product-'+pid).is(':checked') ? true : false;
             }
         }
         calculate_fee();
@@ -455,10 +472,10 @@
             $('#delivery-fee-' + i + ' em').text('0.00');
         }
 
-        $('#product-amount').find('em').text(price_amount);
+        $('#product-amount').find('em').text(price_amount.toFixed(2));
         $("#selected-number em").text(buy_num);
-        $('#total-delivery-fee em').text(total_delivery_fee);
-        $('#pay-amount em').text(price_amount + total_delivery_fee);
+        $('#total-delivery-fee em').text(total_delivery_fee.toFixed(2));
+        $('#pay-amount em').text(price_amount + total_delivery_fee.toFixed(2));
     }
 
     function calculate_delivery_fee(first_weight, next_weight, free, total_weight) {
@@ -497,13 +514,15 @@
         var data = { "opera":"collection", "product_sn":product_sn };
 
 //        show_mask();
+        loading = layer.load(0, { shade: 0.3 });
         $.post(url, data, collection_handler, "json");
     }
 
     function collection_handler(response) {
-//        hide_mask();
+        layer.close(loading);
+
 //        show_message_dialog(response.msg);
-        alert(response.msg);
+        layer.msg(response.msg);
         if(response.error == 0) {
             if(response.status) {
                 $("#collection-"+response.product_sn+" p a").text("取消收藏");
@@ -517,6 +536,44 @@
         }
     }
     //收藏 end ========================================================================
+
+    //结算 start =====================================================================
+    //去结算
+    function check_out() {
+        var url = "checkout.php";
+        var data = { "opera":"checkout", "cart":cart };
+        var buy_num = 0;
+
+        for (var i in cart) {
+            if (cart[i].checked) {
+                buy_num += cart[i].number;
+            }
+        }
+
+        if(buy_num > 0) {
+            loading = layer.load(0, { shade: 0.3 });
+            $.post(url, data, check_out_handler, "json");
+        } else {
+            layer.msg("请选择要购买的产品");
+        }
+    }
+
+    function check_out_handler(response) {
+        console.log(response);
+        layer.close(loading);
+        if(response.error == 0) {
+            window.location.href = "checkout.php";
+        } else {
+            layer.msg(response.msg, function() {
+                if(response.refresh) {
+                    window.location.reload();
+                }
+            });
+
+        }
+    }
+
+    //结算 end =======================================================================
 
 </script>
 </body>

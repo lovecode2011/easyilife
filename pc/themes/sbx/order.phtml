@@ -181,8 +181,8 @@
                                 <a href="javascript:void(0);" class="btn-again btn"><b></b>查看物流</a><br>
                                 <a href="javascript:receive('{$order.order_sn}');" class="btn-again btn"><b></b>确认收货</a><br>
                                 {elseif $order.status eq 7}
-                                <a href="javascript:comment('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
-                                <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>晒单评论</a><br>
+                                <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
+                                <a href="javascript:comment('{$order.order_sn}');" class="btn-again btn"><b></b>晒单评论</a><br>
                                 {else}
                                 <a href="#" class="btn-again btn" style="background: #ffffff;border: 0px;"><b></b>&nbsp;</a><br>
                                 {/if}
@@ -351,13 +351,18 @@
 
     //取消订单 start==============================================
     function cancel_order(order_sn) {
-        if(order_sn != '') {
-            var url = "order.php";
-            var data = { "opera":"cancel", "order_sn":order_sn };
+        layer.confirm('确定要取消该订单?', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            if(order_sn != '') {
+                var url = "order.php";
+                var data = { "opera":"cancel", "order_sn":order_sn };
 
-            //show_mask();
-            $.post(url, data, cancel_order_handler, "json");
-        }
+                //show_mask();
+                $.post(url, data, cancel_order_handler, "json");
+            }
+        });
+
     }
 
     function cancel_order_handler(response) {
@@ -366,19 +371,24 @@
 //            $("#dialog_close_btn, #dialog_close").click(function () {
                 window.location.reload();
 //            });
+        } else {
+            layer.msg(response.msg);
         }
-
-        layer.msg(response.msg);
     }
     //取消订单 end===============================================
     function receive(order_sn) {
-        if(order_sn != '') {
-            var url = "order.php";
-            var data = { "opera":"receive", "order_sn":order_sn };
+        layer.confirm('确认已收货?', {
+            btn: ['确定','取消'] //按钮
+        }, function() {
+            if(order_sn != '') {
+                var url = "order.php";
+                var data = { "opera":"receive", "order_sn":order_sn };
 
-            //show_mask();
-            $.post(url, data, receive_handler, "json");
-        }
+                //show_mask();
+                $.post(url, data, receive_handler, "json");
+            }
+        });
+
     }
 
     function receive_handler(response) {
@@ -393,13 +403,17 @@
     }
 
     function rollback(order_sn) {
-        if(order_sn != '') {
-            var url = "order.php";
-            var data = { "opera":"rollback", "order_sn":order_sn };
+        layer.confirm('确定要申请退单吗?', {
+            btn: ['确定','取消'] //按钮
+        }, function() {
+            if (order_sn != '') {
+                var url = "order.php";
+                var data = { "opera": "rollback", "order_sn": order_sn };
 
-            //show_mask();
-            $.post(url, data, receive_handler, "json");
-        }
+                //show_mask();
+                $.post(url, data, receive_handler, "json");
+            }
+        });
     }
 
     function rollback_handler(response) {
