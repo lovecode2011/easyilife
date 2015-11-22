@@ -67,7 +67,7 @@
                                 <div class="tr-operate">
                                     <span class="order-shop">
                                         <span class="shop-txt">{$order.shop_name}</span>
-                                        <a class="icon" href="shop.php?sn={$order.order_sn}" title="进入店铺">&#xe61b;</a>
+                                        <a class="icon" href="shop.php?id={$order.bid}" title="进入店铺">&#xe61b;</a>
                                     </span>
                                 </div>
                                 <div style="clear: both;"></div>
@@ -78,7 +78,7 @@
                             <td>
                                 <div class="goods-item p-1073757">
                                     <div class="p-img">
-                                        <a href="#" target="_blank">
+                                        <a href="product.php?id={$p.id}" target="_blank">
                                             <img class="" src="{$p.img}" title="{$p.product_name} {$p.product_attributes}" width="60" height="60">
                                         </a>
                                     </div>

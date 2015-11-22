@@ -45,6 +45,7 @@
                 <span class="clr"></span>
             </div>
         </div>
+        {if $product_list}
         <ul class="p-list">
             {foreach from=$product_list item=p}
             <li>
@@ -76,7 +77,6 @@
             {/foreach}
         </ul>
         <div style="clear: both;"></div>
-        {if $total gt $count}
         <div class="pages fr">
             {if $has_prev eq false}
             <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void();"><i class="sign left">&lt;</i>上一页</a>
@@ -118,6 +118,15 @@
                     window.location.href="?keyword={$keyword}&filter={$filter}&page=" + page;
                 }
             </script>
+        </div>
+        {else}
+        <div class="tips-empty">
+            <div class="tips-icon">
+                <span class="icon">&#xe61d;</span>
+            </div>
+            <div class="tips-detail">
+                对不起，找不到相应的产品！
+            </div>
         </div>
         {/if}
         <div style="clear: both;"></div>
@@ -174,12 +183,32 @@
         layer.close(loading);
         if(response.error == 0) {
             layer.msg('已加入购物车');
+            update_mini_cart(response.add_number);
         } else {
             layer.msg(response.msg, function(){
                 if(response.error == 2) {
                     window.location.href='login.php';
                 }
             });
+        }
+    }
+
+    function update_mini_cart(add_number) {
+        //更新数量
+        var temp = $('#mini-cart-number').text();
+        temp = temp.split('（')[1].split('）')[0];
+        temp = parseInt(temp) + parseInt(add_number);
+        console.log(temp);
+        $('#mini-cart-number').text('（' + temp + '）');
+        var url = 'cart.php';
+        var param = { 'opera':'update_cart' };
+        $.post(url, param, update_mini_cart_handler, 'json');
+    }
+
+    function update_mini_cart_handler(response) {
+        if( response.error == 0 ) {
+            $('#mini-cart-list').empty();
+            $('#mini-cart-list').append(response.content);
         }
     }
     //加入购物车 end===============================================

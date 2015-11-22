@@ -1,0 +1,127 @@
+<div class="wallet-c">
+    <div class="order">
+        <div class="order-tabs">
+            <ul>
+                <li {if $status eq 0}class="curr"{/if} id="show-wallet-all">
+                <a href="javascript:{if $status neq 0}get_reward(1, 0){/if};">
+                    <span>收支明细</span>
+                </a>
+                </li>
+                <li {if $status eq 1}class="curr"{/if} id="show-wallet-p">
+                <a href="javascript:{if $status neq 1}get_reward(1, 1){/if};">
+                    <span>领</span>
+                </a>
+                </li>
+                <li {if $status eq -1}class="curr"{/if} id="show-wallet-m">
+                <a href="javascript:{if $status neq -1}get_reward(1, -1){/if};">
+                    <span>花</span>
+                </a>
+                </li>
+            </ul>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="order-list">
+            <table cellpadding="0" cellspacing="0" class="order-tb">
+                <thead>
+                <tr>
+                    <th>来源/用途</th>
+                    <th>佣金变化</th>
+                    <th>日期</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if $member_exchange}
+                {foreach from=$member_exchange item=exchange}
+                <tr class="tr-bd">
+                    <td>{$exchange.remark}</td>
+                    <td class="{if $exchange.reward gt 0}wallet-p{else}wallet-m{/if}">{if $exchange.reward gt 0}+{/if}{sprintf('%.2f', $exchange.reward)}</td>
+                    <td class="date">{date('Y-m-d H:i:s', $exchange.add_time)}</td>
+                </tr>
+                {/foreach}
+                {/if}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{if $member_exchange}
+<div class="pages fr">
+    {if $page eq 1}
+    <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+    <a rel="nofollow" class="cur fl" id="pageFirst" href="javascript:void(0);">1</a>
+    {if $total_page eq 1}
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {else}
+    <a rel="nofollow" class="prev fl" id="prePage" href="javascript:get_reward({$page - 1}, {$status});"><i class="sign left">&lt;</i>上一页</a>
+    <a rel="nofollow" class="fl" id="pageFirst" href="javascript:get_reward(1, {$status});">1</a>
+    {/if}
+    {if $page gt 6}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {if ($page + 2) gt $total_page}
+    {$temp = $total_page}
+    {else}
+    {$temp = $page + 2}
+    {/if}
+    {for $index=($page - 3) to $temp - 1}
+    {if $index eq $page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);">{$index}</a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_reward({$index}, {$status});">{$index}</a>
+    {/if}
+    {/for}
+    {if ($total_page - $page) gt 2}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq $total_page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_reward({$total_page}, {$status})" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_reward({$page + 1}, {$status})">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {elseif $total_page gt 1}
+    {$temp = $page - 2}
+    {if $temp lt 2}
+    {$temp = 2}
+    {/if}
+    {if $temp gt 2}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq 1}
+    {$limit = 5}
+    {else}
+    {$limit = 4}
+    {/if}
+    {if $total_page lt ($page + $limit)}
+    {$end_temp = $total_page}
+    {else}
+    {$end_temp = $page + $limit}
+    {/if}
+    {for $index = $temp to $end_temp - 1}
+    {if $index eq $page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);">{$index}</a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_reward({$index}, {$status});">{$index}</a>
+    {/if}
+    {/for}
+    {if ($total_page - $page) gt 4}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq $total_page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_reward({$total_page}, {$status})" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_reward({$page + 1}, {$status})">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {/if}
+    <div class="fl">
+        <span class="fl">向第</span>
+        <input class="fl" type="text" id="bottomPage">
+        <span class="fl">页</span>
+        <a rel="nofollow" class="pageGo fl" href="#" id="pagesubmit">跳转</a>
+    </div>
+</div>
+{/if}
+<div style="clear: both;"></div>

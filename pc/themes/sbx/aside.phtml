@@ -9,12 +9,21 @@
         <dl>
             <dt><i class="icon p">&#xe611;</i><i class="icon m">&#xe612;</i><a href="#" target="_parent" title="我的资产">我的资产</a></dt>
             <dd><a href="balance.php" target="_parent" title="余额" {if $is_login && $aside_hover eq 'balance.php'}class="hover"{/if}>余额</a></dd>
-            <dd><a href="#" target="_parent" title="佣金">佣金</a></dd>
-            <dd><a href="#" target="_parent" title="积分">积分</a></dd>
-            <dd><a href="#" target="_parent" title="优惠券">优惠券</a></dd>
+            <dd><a href="reward.php" target="_parent" title="佣金" {if $is_login && $aside_hover eq 'reward.php'}class="hover"{/if}>佣金</a></dd>
+            <dd><a href="integral.php" target="_parent" title="积分" {if $is_login && $aside_hover eq 'integral.php'}class="hover"{/if}>积分</a></dd>
+            <dd><a href="javascript: alert('敬请期待');" target="_parent" title="优惠券">优惠券</a></dd>
         </dl>
         <dl>
-            <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的资料">我的资料</a></dt>
+            <dt><i class="icon">&#xe613;</i><a href="profile.php" target="_parent" title="我的资料" {if $is_login && $aside_hover eq 'profile.php'}class="hover"{/if}>我的资料</a></dt>
+        </dl>
+        <dl>
+            <dt><i class="icon">&#xe613;</i><a href="bank.php" target="_parent" title="我的银行卡" {if $is_login && $aside_hover eq 'bank.php'}class="hover"{/if}>我的银行卡</a></dt>
+        </dl>
+        <dl>
+            <dt><i class="icon">&#xe613;</i><a href="recharge.php" target="_parent" title="我要充值" {if $is_login && $aside_hover eq 'recharge.php'}class="hover"{/if}>我要充值</a></dt>
+        </dl>
+        <dl>
+            <dt><i class="icon">&#xe613;</i><a href="withdraw.php" target="_parent" title="我要提现" {if $is_login && $aside_hover eq 'withdraw.php'}class="hover"{/if}>我要提现</a></dt>
         </dl>
         <dl>
             <dt><i class="icon">&#xe613;</i><a href="address.php" target="_parent" title="收货地址" {if $is_login && $aside_hover eq 'address.php'}class="hover"{/if}>收货地址</a></dt>
@@ -23,16 +32,16 @@
             <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的推广">我的推广</a></dt>
         </dl>
         <dl>
-            <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的分销">我的分销</a></dt>
+            <dt><i class="icon">&#xe613;</i><a href="distribution.php" target="_parent" title="我的分销" {if $is_login && $aside_hover eq 'distribution.php'}class="hover"{/if}>我的分销</a></dt>
         </dl>
         <dl>
-            <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我的团队">我的团队</a></dt>
+            <dt><i class="icon">&#xe613;</i><a href="team.php" target="_parent" title="我的团队" {if $is_login && $aside_hover eq 'team.php'}class="hover"{/if}>我的团队</a></dt>
         </dl>
         <dl>
-            <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="我要开店">我要开店</a></dt>
+            <dt><i class="icon">&#xe613;</i><a href="apply.php" target="_parent" title="我要开店" {if $is_login && $aside_hover eq 'team.php'}class="hover"{/if}>我要开店</a></dt>
         </dl>
         <dl>
-            <dt><i class="icon">&#xe613;</i><a href="#" target="_parent" title="投诉维权">投诉维权</a></dt>
+            <dt><i class="icon">&#xe613;</i><a href="javascript:alert('敬请期待')" target="_parent" title="投诉维权">投诉维权</a></dt>
         </dl>
     </div>
 </div>

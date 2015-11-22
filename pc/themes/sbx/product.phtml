@@ -164,7 +164,7 @@
                             <div class="show-info-left">服务</div>
                             <div class="show-info-right">
                                 <span>由"<span>
-                                    <a  href="#">{$product.business.shop_name}</a>
+                                    <a  href="shop.php?id={$product.business.id}">{$product.business.shop_name}</a>
                                 </span>"销售和发货，并提供售后服务</span>
                                 <div style="clear: both;"></div>
                             </div>
@@ -243,7 +243,7 @@
             <div class="show-merchant">
                 <div class="show-merchant-inner">
                     <div class="shop-logo">
-                        <a href="#" >
+                        <a href="shop.php?id={$product.business.id}" >
                             <img src="../{$product.business.shop_logo}" alt="商家logo" title="{$product.business.shop_name}"/>
                         </a>
                     </div>
@@ -252,7 +252,7 @@
                             店铺名称：
                         </dt>
                         <dd>
-                            <a href="#"  title="{$product.business.shop_name}">
+                            <a href="shop.php?id={$product.business.id}"  title="{$product.business.shop_name}">
                                 {$product.business.shop_name}
                             </a>
                         </dd>
@@ -297,7 +297,7 @@
                         </dd>
                     </dl>
                     <div class="shop-btn">
-                        <a href="#"  rel="nofollow">进入店铺</a>
+                        <a href="shop.php?id={$product.business.id}"  rel="nofollow">进入店铺</a>
 <!--                        <a id="shop_collect_btn" href="javascript:;">收藏店铺</a>-->
                     </div>
                     <div style="clear: both;"></div>
@@ -724,14 +724,14 @@
             </div>
             <div class="aside-box-c">
                 <div class="view-all-products">
-                    <a href="#" >查看所有宝贝</a>
+                    <a href="shop.php?id={$product.business.id}" >查看所有宝贝</a>
                 </div>
-                {foreach from=$category_list item=category}
+                {foreach from=$shop_category_list item=category}
                 <dl>
-                    <dt><i class="icon">&#xe612;</i><i class="icon hide">&#xe611;</i><a href="#" >{$category.name}</a></dt>
+                    <dt><i class="icon">&#xe612;</i><i class="icon hide">&#xe611;</i><a href="product_list.php?id={$category.id}" >{$category.name}</a></dt>
                     {if isset($category.children)}
                     {foreach from=$category.children item=child}
-                    <dd><a href="#">{$child.name}</a></dd>
+                    <dd><a href="product_list.php?id={$child.id}">{$child.name}</a></dd>
                     {/foreach}
                     {/if}
                 </dl>
@@ -1337,6 +1337,8 @@
         layer.close(loading);
         if(response.error == 0) {
             layer.msg('已加入购物车');
+            //更新头部购物车
+            update_mini_cart(response.add_number);
         } else {
             layer.msg(response.msg, function() {
                 if(response.error == 2) {
@@ -1346,6 +1348,26 @@
 
         }
     }
+
+    function update_mini_cart(add_number) {
+        //更新数量
+        var temp = $('#mini-cart-number').text();
+        temp = temp.split('（')[1].split('）')[0];
+        temp = parseInt(temp) + parseInt(add_number);
+        console.log(temp);
+        $('#mini-cart-number').text('（' + temp + '）');
+        var url = 'cart.php';
+        var param = { 'opera':'update_cart' };
+        $.post(url, param, update_mini_cart_handler, 'json');
+    }
+
+    function update_mini_cart_handler(response) {
+        if( response.error == 0 ) {
+            $('#mini-cart-list').empty();
+            $('#mini-cart-list').append(response.content);
+        }
+    }
+
     //购物车 end===============================================================
 
     //立即购买 start
@@ -1382,6 +1404,8 @@
 
         }
     }
+
+
     {/literal}
 
 </script>

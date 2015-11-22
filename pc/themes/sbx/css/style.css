@@ -2830,7 +2830,7 @@ q.snPrice i, q.snPrice em {
     text-align: center;
     padding: 6px 14px;
 }
-.select-pay-type li{
+.select-pay-type li,.select-bank li,.select-bank .new-bank{
     webkit-box-sizing: border-box;
     box-sizing: border-box;
     width:140px;
@@ -2847,11 +2847,11 @@ q.snPrice i, q.snPrice em {
     position: relative;
     z-index: 2;
 }
-.select-pay-type li.hover{
+.select-pay-type li.hover,.select-bank li.hover{
     padding: 5px 8px;
     border: 2px solid #ffce28;
 }
-.select-pay-type li ins {
+.select-pay-type li ins,.select-bank li ins {
     z-index: 3;
     position: absolute;
     font-size: 18px;
@@ -2864,7 +2864,7 @@ q.snPrice i, q.snPrice em {
     text-decoration: none;
     display: none;
 }
-.select-pay-type li.hover ins{
+.select-pay-type li.hover ins,.select-bank li.hover ins{
     display: block;
 }
 .confirm-order .cart-list-amount{
@@ -3350,3 +3350,463 @@ q.snPrice i, q.snPrice em {
     filter: alpha(opacity=50);
 }
 /*我的资料 结束*/
+
+/*我的分销 开始*/
+.distribution-h{
+    background-color: #fafafa;
+    margin-bottom: 20px;
+}
+.distribution-h-inner{
+    padding: 12px 0 12px 10px;
+}
+.distribution-h-inner input{
+    margin-right: 5px;
+    vertical-align: -2px;
+}
+.distribution-h-inner a.del-btn{
+    margin-left: 40px;
+}
+.distribution-c li{
+    border-bottom: 1px solid #e7e7e7;
+}
+.distribution-item{
+    height: 120px;
+    margin-top: 20px;
+}
+.distribution-item .check{
+    vertical-align: top;
+    margin-left: 10px;
+    float: left;
+}
+.distribution-item .p-img{
+    margin:0 20px;
+    float: left;
+}
+.distribution-item .p-img img{
+    width: 100px;
+    height: 100px;
+}
+.distribution-item .p-name{
+    width: 400px;
+    height: 100px;
+    float: left;
+    overflow: hidden;
+    _overflow: visible;
+}
+.distribution-item .price{
+    float: left;
+    height: 100px;
+    width: 125px;
+}
+/*我的分销 结束*/
+
+/* 我的团队  开始*/
+.myteam-header{
+    margin-bottom: 30px;
+    background-color: #fafafa;
+}
+.myteam-header .myteam-header-info{
+    padding: 20px 0;
+    height: 70px;
+}
+.myteam-header .myteam-header-info img{
+    padding: 10px;
+    width: 60px;
+    height: 60px;
+    float:left;
+
+}
+.myteam-header .myteam-header-info span{
+    font-size: 16px;
+    padding-top: 10px;
+    display: block;
+}
+.myteam-header .myteam-header-info em,.myteam .team-overview li{
+    font-size: 12px;
+    color: #999;
+}
+.myteam .team-overview li{
+    float: left;
+    margin-right: 10px;
+}
+.myteam .team-overview li i{
+    color: #DD0000;
+    font-style: normal;
+}
+.myteam-list{
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 5px;
+    background-color: #fff;
+}
+.myteam-list .arrow_d b{
+    float: right;
+    margin-right: 15px;
+    color: #ff0000;
+}
+.myteam-list .arrow_d i{
+    float: right;
+    margin-right: 10px;
+    line-height: 48px;
+}
+.myteam-list .arrow_d .icon-u{
+    display: none;
+}
+.myteam-list .title {
+    height: 48px;
+    line-height: 48px;
+    text-indent: 10px;
+    color: #4d525d;
+    background-color: #fff;
+}
+.myteam-list li{
+    border-top:1px solid #ddd;
+    padding:10px 0;
+}
+.myteam-list .head-pic{
+    display: block;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 40px;
+    overflow: hidden;
+    vertical-align: middle;
+    margin: 0 10px;
+    float: left;
+}
+.myteam-list  .head-pic img {
+    width: 40px;
+    height: 40px;
+    display: block;
+    border-radius: 30px;
+}
+.myteam-list .user-name {
+    display: block;
+    color: #333;
+    font-size: 12px;
+    margin-right: 1px;
+}
+.myteam-list .follow-time{
+    font-size: 12px;
+    color: #999;
+}
+/*我的团队 结束*/
+
+/*我要开店 开始*/
+.form-item .upload-img-box{
+    display: inline-block;
+    display: block;
+}
+.form-item .upload-img-box li {
+    position: relative;
+    float: left;
+    width: 60px;
+    height: 60px;
+    border: 1px solid #f0f0f0;
+    margin-right: 10px;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+.form-item .upload-img-box .add-img-btn {
+    float: left;
+    height: 58px;
+    line-height: 58px;
+    width: 58px;
+    margin-right: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+.form-item .upload-img-box .add-img-btn b{
+    line-height: 60px;
+    font-size: 20px;
+    color: #969696;
+}
+/*我要开店 结束*/
+
+/*店铺搜索结果 开始*/
+/* 店铺搜索 */
+.search-shop {
+  margin-top: 10px;
+}
+.search-shop li {
+    width: 50%;
+    overflow: hidden;
+    float: left;
+    position: relative;
+}
+.search-shop li a {
+    display: block;
+    position: relative;
+}
+li.search-shop-li{
+    width: 100%;
+    border: 1px solid #e6e6e6;
+    background: #fff;
+    margin-bottom: 10px;
+}
+.search-shop-li .search-shop-info img{
+    width: 180px;
+    height: 80px;
+    padding: 10px;
+    float: left;
+}
+.search-shop-li .search-shop-detail span{
+    display: block;
+}
+li.search-shop-li div{
+    border: 0 none;
+    padding: 0;
+    margin: 0;
+}
+.search-shop-detail{
+    float: left;
+    padding-top: 10px;
+}
+.search-shop-info a.search-to-shop{
+    float: right;
+    padding: 12px 24px;;
+    font-size: 12px;
+    position: absolute;
+    right: 10px;
+    top: 18px;
+    display: inline-block;
+    border-radius: 4px;
+    line-height: 12px;
+    background: #eee;
+    color: #646464;
+}
+.search-shop-info .search-shop-name{
+    font-size: 20px;
+}
+.search-shop-info .search-shop-comment{
+    color: #999;
+    padding-top:5px;
+}
+.search-shop-info .search-shop-comment em{
+    color: #ff2200;
+    padding-left: 10px;
+}
+.search-shop-product{
+    margin-bottom:10px;
+}
+.search-shop-product li{
+    width: 332px;
+}
+.search-shop-product li a{
+    width: 310px;
+    height: 225px;
+    margin: 0 auto;
+    border: 1px solid #ebebeb;
+}
+.search-shop-product li img{
+    width: 200px!important;
+    height: 200px!important;
+}
+.search-shop-product li span{
+    background-color: #fed528;
+    color: #333;
+    font-size: 16px;
+    padding: 10px 18px;
+    line-height: 22px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+/*店铺搜索结果 结束*/
+
+/*我的推广 开始*/
+.qr-card-con .card-header{
+    position: relative;
+    width: 100%;
+    height: 120px;
+    color: #fff;
+    z-index: 2;
+}
+.qr-card-con .card-header img{
+    position: absolute;
+    z-index: 3;
+    left: 10px;
+    top: 20px;
+    height: 70px;
+    border-radius: 70px;
+    -webkit-box-shadow: 0 1px 0 1px #fff;
+    box-shadow: 0 1px 0 1px #fff;
+}
+.qr-card-con .card-header-con{
+    margin: 28px 10px 0 90px;
+    padding:8px;
+    line-height: 20px;
+    display: inline-block;
+    color: #000000;
+    background-color: #b4eb7c;
+    border-radius: 4px;
+    overflow: initial;
+}
+.qr-card-con .card-header-con span{
+    display: block;
+}
+.qr-card-con .card-header-con .icon{
+    top: 45px;
+    left: 78px;
+    position: absolute;
+    font-size: 20px;
+    color:#b4eb7c;
+}
+.qr-card-con .card-img{
+    width: 200px;
+    margin: 0 auto;
+    padding:20px 0;
+}
+.qr-card-con .card-img img{
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+.card-footer .card-tips{
+    margin:10px auto;
+    background-color: #faf8e9;
+    border: 1px dotted #e60012;
+    border-radius: 6px;
+    width: 60%;
+    padding: 16px;
+}
+.card-footer .card-tips span{
+    display: block;
+    font-size: 12px;
+    line-height: 20px;
+}
+.card-logo{
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    border-radius: 50px;
+    background-color: #ffce28;
+    display: block;
+    line-height: 50px;
+    text-align: center;
+    float: left;
+    left: 77.5%;
+    top: -35px;
+    position: relative;
+}
+/*我的推广 结束*/
+
+/* 收益排行榜 开始 */
+.ranking .ranking-con{
+    margin:auto 10px;
+}
+.ranking-con ul li{
+    padding: 10px 0;
+    border-bottom: 1px solid #eaeaea;
+}
+.ranking-con ul li img{
+    width: 50px;
+    height: 50px;
+    float:left;
+}
+.ranking-con .ranking-detail{
+    float:left;
+    padding-left: 10px;
+}
+.ranking-con .ranking-detail span{
+    display: block;
+    font-size: 12px;
+    color: #999999;
+}
+.ranking-con .ranking-detail span:first-child{
+    font-size: 14px;
+    color: #333;
+    line-height: 28px;
+}
+.ranking-con .ranking-detail span em{
+    color: #ff0000;
+}
+.ranking-con .ranking-num{
+    font-size: 12px;
+    text-align: center;
+    line-height: 20px;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    background-color: #ccc;
+    color: #666;
+    float:right;
+    display: block;
+    margin-top:16px;
+}
+.ranking-con .ranking-list{
+    overflow: hidden;
+}
+.ranking-con .ranking-list i.r123{
+    background-color: #ff0000;
+    color: #fff;
+}
+/* 收益排行榜 结束 */
+
+/* 我要提现 开始 */
+.select-bank li{
+    float: none;
+    width: 320px;
+    margin-bottom: 10px;
+}
+.select-bank .new-bank{
+    border-style: dashed;
+    display: block;
+    width: 320px;
+    float: none;
+}
+.select-bank .new-bank a{
+    color: #ffce28;
+}
+.select-bank .new-bank i{
+    margin-right: 4px;
+    color: #c3c3c3;
+}
+/*我要提现 结束*/
+
+/* 我要充值 开始 */
+.recharge-tips,.recharge-info{
+    background-color: #fafafa;
+    padding: 10px;
+}
+.recharge-tips{
+    margin-bottom: 10px;
+    color: #DD0000;
+    line-height: 20px;
+}
+.recharge-tips i{
+    color: #f08300;
+    padding-right: 10px;
+    font-size: 20px;
+}
+.recharge-info h3{
+    font-size: 16px;
+    font-weight: 600;
+}
+.recharge-info label{
+    display: block;
+    height: 24px;
+    line-height: 24px;
+    margin: 10px 0;
+    width: 100%;
+}
+.recharge-value{
+    margin-top:30px;
+}
+/* 我要充值 结束 */
+
+/*我的银行卡 开始*/
+.bank .address-item,.bank .address-item-add{
+    width: 360px;
+    background: none;
+    border: 3px solid #ccc;
+    border-radius: 4px;
+}
+.bank .address-item-add{
+    border-style: dashed;
+}
+.bank .addr-hd em{
+    margin-left: 20px;
+}
+/*我的银行卡 结束*/

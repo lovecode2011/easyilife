@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>圣宝先官方商城</title>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.phtml"}
+<!-- 顶部面包屑导航开始 -->
+<div class="breadcrumb container">
+    <span>当前位置：</span>
+    <a href="index.php" target="_blank">首页</a><span class="gt">&gt;</span>
+    <a href="home.php" target="_blank">用户中心</a><span class="gt">&gt;</span>
+    <span>我的积分</span>
+</div>
+<!-- 顶部面包屑导航结束 -->
+<!-- 个人中心开始 -->
+<div class="home container">
+    <div class="main">
+        <!--积分 开始-->
+        <div class="wallet">
+            <div class="wallet-h">
+                <div class="wallet-h-inner">
+                    <div class="fl">
+                        <span>可用积分：</span>
+                        <p class="price">￥{sprintf('%.2f', $user_info.integral)}</p>
+                    </div>
+<!--                    <div class="fr">-->
+<!--                        <div class="operation">-->
+<!--                            <a href="javascript:;" class="sure">兑换</a>-->
+<!--                            <div style="clear: both;"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+            <div class="wallet-c">
+                <div class="order">
+                    <div class="order-tabs">
+                        <ul>
+                            <li class="curr" id="show-wallet-all">
+                                <a href="javascript:void(0)">
+                                    <span>收支明细</span>
+                                </a>
+                            </li>
+                            <li id="show-wallet-p">
+                                <a href="javascript:get_integral(1, 1);">
+                                    <span>领</span>
+                                </a>
+                            </li>
+                            <li id="show-wallet-m">
+                                <a href="javascript:get_integral(1, -1);;">
+                                    <span>花</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div class="order-list">
+                        <table cellpadding="0" cellspacing="0" class="order-tb">
+                            <thead>
+                            <tr>
+                                <th>来源/用途</th>
+                                <th>积分变化</th>
+                                <th>日期</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {foreach from=$member_exchange item=exchange key=id}
+                            {if $id eq $page_count}
+                            {break}
+                            {/if}
+                            <tr class="tr-bd">
+                                <td>{$exchange.remark}</td>
+                                <td class="{if $exchange.balance gt 0}wallet-p{else}wallet-m{/if}">{if $exchange.balance gt 0}+{/if}{sprintf('%.2f', $exchange.balance)}</td>
+                                <td class="date">{date('Y-m-d H:i:s', $exchange.add_time)}</td>
+                            </tr>
+                            {/foreach}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="pages fr">
+                <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+                {for $index=1 to $total_page-1}
+                <a rel="nofollow" class="{if $index eq 1}cur{/if} fl" href="javascript:get_integral({$index}, 0);">{$index}</a>
+                {if $index eq 5}
+                {break}
+                {/if}
+                {/for}
+                {if $total_page gt 6}
+                <span class="icon ellipsis fl">&#xe61e;</span>
+                {/if}
+                <a rel="nofollow" class="fl {if $total_page eq 1}cur{/if}" href="javascript:{if $total_page eq 1}void(0);{else}get_integral({$total_page}, 0){/if}" id="pageLast">{$total_page}</a>
+                <a rel="nofollow" class="prev {if $total_page eq 1}disabled{/if} fl" id="nextPage" href="javascript:{if get_integral eq 1}void(0);{else}get_order(2, 0){/if}">下一页<i class="sign right">&gt;</i></a>
+                <div class="fl">
+                    <span class="fl">向第</span>
+                    <input class="fl" type="text" id="bottomPage">
+                    <span class="fl">页</span>
+                    <a rel="nofollow" class="pageGo fl" href="javascript:get_integral_by_input(0)" id="bad-pagesubmit">跳转</a>
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <!--积分 结束-->
+    </div>
+    {include file="aside.phtml"}
+</div>
+<!-- 个人中心结束 -->
+{include file="footer.phtml"}
+<script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript" src="{$template_dir}js/layer/layer.js"></script>
+<script type="text/javascript">
+    var index;
+    var loading;
+    function get_integral_by_input(status) {
+        var page = $('#bottomPage').val();
+        get_integral(page, status);
+    }
+
+    function get_integral(page, status) {
+        var url = 'integral.php';
+        var param = { "opera":'paging', 'page':page, 'status': status };
+        loading = layer.load(0, { shade: 0.3 });
+        $.post(url, param, get_integral_handler, 'json');
+    }
+
+    function get_integral_handler(response) {
+        layer.close(loading);
+        console.log(response);
+        if( response.error == 0 ) {
+            $('.wallet-h').siblings().remove();
+            $('.wallet').append(response.content);
+        } else {
+            layer.msg(response.msg, function() {
+                if( response.error == 2 ) {
+                    window.location.href = 'login.php';
+                }
+            });
+        }
+    }
+
+</script>
+
+</body>
+</html>

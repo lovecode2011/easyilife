@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>圣宝先官方商城</title>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="{$template_dir}images/favicon.ico" type="image/x-icon">
+    <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.phtml"}
+<!-- 商家店铺开始 -->
+<div class="shop container">
+    <!--店铺头部信息 开始-->
+    <div class="shop-head">
+        <div class="shop-info">
+            <div class="shop-logo fl">
+                <a href="#" title="圣宝先自营店" target="_parent">
+                    <img src="{$business.shop_logo}" alt="店铺logo" />
+                </a>
+            </div>
+            <div class="shop-info-detail fl">
+                <h3 class="shop-name">{$business.shop_name}</h3>
+                <label class="items-star" title="店铺评分：{sprintf('%.1f', $business.comment)}分">
+                    店铺评分：
+                    {$i = 5}
+                    {section name=loop loop=$business.comment}
+                    {$i = $i - 1}
+                    <i class="icon">&#xe60e;</i>
+                    {/section}
+                    {section name=loop loop=$i}
+                    <i class="icon" style="color:#ccc;">&#xe60e;</i>
+                    {/section}
+                </label>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+    </div>
+    <!--店铺头部信息 结束-->
+    <!--店铺导航条 开始-->
+    <div class="nav shop-nav">
+        <div class="container">
+            <!-- 侧栏开始 -->
+            <div class="categorys">
+                <div class="dt">
+                    <a href="#">全部商品分类<i class="icon">&#xe606;</i></a>
+                </div>
+                <div class="dd inner">
+                    <div class="dd-inner">
+                        {foreach from=$category_list item=cat name=category_list}
+                        <div class="item">
+                            <h3>
+                                <a class="item-title" target="" href="product_list.php?id={$cat.id}">{$cat.name}</a>
+                            </h3>
+                            <i class="icon">&#xe604;</i>
+                            {if $cat.children}
+                            <div class="sub-item clearfix">
+                                {foreach from=$cat.children item=c}
+                                <a href="product_list.php?id={$c.id}" target="">{$c.name}</a>
+                                {/foreach}
+                            </div>
+                            {/if}
+                        </div>
+                        {/foreach}
+                    </div>
+                </div>
+            </div>
+            <!-- 侧栏结束 -->
+            <!-- 导航条开始 -->
+            <div class="navitems">
+                <ul class="navitems-grounp">
+                    <li>
+                        <a href="shop.php?id={$id}">全部产品</a>
+                    </li>
+                    <li>
+                        <a href="shop.php?id={$id}&act=new">上新宝贝</a>
+                    </li>
+                    <li id="connect-shop">
+                        <a href="javascript:connect_shop();">联系店家</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- 导航条结束 -->
+        </div>
+    </div>
+    <div style="clear: both"></div>
+    <!--店铺导航条 结束-->
+    <!--店铺店招 开始-->
+    <div class="shop-banner">
+        <a href="#" title="店招">
+            <img src="{$business.pc_shop_sign}" alt="店招">
+        </a>
+    </div>
+    <!--店铺店招 结束-->
+    <!--店铺产品列表 开始-->
+    <div class="shop-plist">
+        <div class="inner-con">
+            <ul class="p-list">
+                {foreach from=$product_list item=p}
+                <li>
+                    <div class="p-img">
+                        <a href="product.php?id={$p.id}" title="{$p.name}">
+                            <img width="90" height="90" alt="{$p.name}" src="{$p.img}">
+                        </a>
+                    </div>
+                    <div class="p-name">
+                        <a href="product.php?id={$p.id}" title="{$p.name}">{$p.name}</a>
+                    </div>
+                    <div class="p-price"><span>￥</span>{sprintf('%.2f', $p.price)}</span></div>
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+        <div style="clear: both;"></div>
+        {if $total gt $count}
+        <div class="pages fr">
+            {if $has_prev eq false}
+            <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void();"><i class="sign left">&lt;</i>上一页</a>
+            {else}
+            <a rel="nofollow" class="prev fl" id="prePage" href="?{sprintf($query_string, $page - 1)}"><i class="sign left">&lt;</i>上一页</a>
+            {/if}
+            <a rel="nofollow" class="fl" id="pageFirst" href="?{sprintf($query_string, 1)}">首页</a>
+            {if $has_many_prev}
+            <span class="icon ellipsis fl">&#xe61e;</span>
+            {/if}
+            {foreach from=$show_page item=pageNum}
+            {if $pageNum eq $page}
+            <a rel="nofollow" class="fl cur" href="?{sprintf($query_string, $pageNum)}">{$pageNum}</a>
+            {else}
+            <a rel="nofollow" class="fl" href="?{sprintf($query_string, $pageNum)}">{$pageNum}</a>
+            {/if}
+            {/foreach}
+            <!--            <a rel="nofollow" class="fl" href="#">2</a>-->
+            <!--            <a rel="nofollow" class="fl" href="#">3</a>-->
+            <!--            <a rel="nofollow" class="fl" href="#">4</a>-->
+            {if $has_many_next}
+            <span class="icon ellipsis fl">&#xe61e;</span>
+            {/if}
+            <a rel="nofollow" class="fl" href="?{sprintf($query_string, $totalPage)}" id="pageLast">末页</a>
+            {if $has_next eq false}
+            <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void();">下一页<i class="sign right">&gt;</i></a>
+            {else}
+            <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="?{sprintf($query_string, $page+1)}">下一页<i class="sign right">&gt;</i></a>
+            {/if}
+            <div class="fl">
+                <span class="fl">向第</span>
+                <input class="fl" type="text" id="bottomPage">
+                <span class="fl">页</span>
+                <a rel="nofollow" class="pageGo fl" href="javascript:page_go()" id="pagesubmit">跳转</a>
+            </div>
+            <script type="text/javascript">
+                function page_go() {
+                    var page = $('#bottomPage').val();
+                    var url = '?'+sprintf('{$query_string}', page);
+                    window.location.href=url;
+                }
+            </script>
+        </div>
+        {/if}
+        <div style="clear: both;"></div>
+    </div>
+    <!--店铺产品列表 结束-->
+    <div style="clear: both"></div>
+</div>
+<!-- 商家店铺结束 -->
+{include file="footer.phtml"}
+<script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+<script type="text/javascript" src="{$template_dir}js/layer/layer.js"></script>
+
+<script type="text/javascript">
+    function sprintf() {
+        var arg = arguments,
+            str = arg[0] || '',
+            i, n;
+        for (i = 1, n = arg.length; i < n; i++) {
+            str = str.replace(/%s/, arg[i]);
+        }
+        return str;
+    }
+
+    function connect_shop() {
+        var mobile = '{$business.mobile}';
+        layer.tips('<span style="font-size: 20px"><i class="icon">&#xe600;</i>&nbsp&nbsp'+mobile+'</span>', '#connect-shop', {
+            tips: [1, '#ffce28'],
+            time: 4000
+        });
+    }
+</script>
+</body>
+</html>

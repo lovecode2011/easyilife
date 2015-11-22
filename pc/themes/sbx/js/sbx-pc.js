@@ -160,6 +160,17 @@ $(function(){
         $(this).find(".btn-del").toggle();
     });
 
+    //选择支付方式
+    $(".select-bank li").click(function(){
+        $(".select-bank li").removeClass("hover");
+        $(this).addClass("hover");
+    });
+
+    /* 我的银行卡 */
+    $(".bank .address-item").hover(function(){
+        $(this).find(".addr-con .addr-btn").toggle();
+    });
+
 });
 
 

@@ -401,7 +401,7 @@ if('comment' == $act)
     }
 
 
-    $check_order_comment = 'select o.`is_comment`, o.`business_account`, o.`order_sn`, o.`add_time`, b.`shop_name` from '.$db->table('order').' as o';
+    $check_order_comment = 'select o.`is_comment`, o.`business_account`, o.`order_sn`, o.`add_time`, b.`shop_name`,b.`id` as bid from '.$db->table('order').' as o';
     $check_order_comment .= ' left join '.$db->table('business').' as b on o.business_account = b.business_account';
     $check_order_comment .= ' where o.`order_sn`=\''.$order_sn.'\' limit 1';
     $order = $db->fetchRow($check_order_comment);
@@ -451,7 +451,7 @@ if('detail' == $act)
     }
     $order_sn = $db->escape($order_sn);
 
-    $get_order = 'select o.`remark`,o.`product_amount`,o.`integral_paid`,o.`balance_paid`,o.`reward_paid`,o.`add_time`,o.`delivery_fee`,o.`pay_time`,o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`province`,o.`city`,o.`district`,o.`group`,o.`mobile`,o.`consignee`,o.`address`,o.`integral_amount`,o.`express_sn`,o.`express_id`,o.zipcode from '.$db->table('order').' as o join '.
+    $get_order = 'select o.`remark`,o.`product_amount`,o.`integral_paid`,o.`balance_paid`,o.`reward_paid`,o.`add_time`,o.`delivery_fee`,o.`pay_time`,o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`province`,o.`city`,o.`district`,o.`group`,o.`mobile`,o.`consignee`,o.`address`,o.`integral_amount`,o.`express_sn`,o.`express_id`,o.zipcode,b.`id` as bid from '.$db->table('order').' as o join '.
         $db->table('business').' as b using(`business_account`) where o.`account`=\''.$_SESSION['account'].'\' and o.`order_sn`=\''.$order_sn.'\'';
 
     $order = $db->fetchRow($get_order);
@@ -520,7 +520,7 @@ if( 'paging' == $opera ) {
         $page = $page < 1 ? 1 : $page;
         $offset = $page_count * ( $page - 1 );
 
-        $get_order_list = 'select o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`business_account`,o.`add_time` from '.$db->table('order').' as o join '.
+        $get_order_list = 'select o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`business_account`,o.`add_time`,b.`id` as bid from '.$db->table('order').' as o join '.
             $db->table('business').' as b using(`business_account`) where ';
         $get_order_list .= $where;
 
@@ -603,7 +603,7 @@ if( $act == 'list' ) {
         case 12:$total_page = ceil($complete_total / $page_count);break;
     }
 //    echo $total_page;exit;
-    $get_order_list = 'select o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`business_account`,o.`add_time` from '.$db->table('order').' as o join '.
+    $get_order_list = 'select o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`business_account`,o.`add_time`,b.`id` as bid from '.$db->table('order').' as o join '.
         $db->table('business').' as b using(`business_account`) where o.`account`=\''.$_SESSION['account'].'\'';
     $get_order_list .= $where;
 

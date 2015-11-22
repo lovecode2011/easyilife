@@ -267,20 +267,16 @@
                 layer.close(loading);
                 if(response.error == 0) {
                     layer.msg('已加入购物车');
-
+                    //更新头部购物车
+                    update_mini_cart(response.add_number);
                 } else {
-                    layer.msg(response.msg);
-                    if(response.error == 2) {
-                        $("#dialog_close_btn").click(function(){
+                    layer.msg(response.msg, function() {
+                        if(response.error == 2) {
                             window.location.href = "login.php";
-                        });
+                        }
+                    });
 
-                        $("#dialog_close").click(function(){
-                            window.location.href = "login.php";
-                        });
-                    }
                 }
-                layer.close(index);
             }
 
             {/literal}

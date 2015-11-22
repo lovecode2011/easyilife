@@ -1,0 +1,61 @@
+{if $is_login && $cart_count gt 0}
+<ul class="cart-list" {if count($mini_cart_list) gt 5}style="height: 450px;overflow: scroll;position:relative;"{/if}>
+{foreach from=$mini_cart_list item=cart}
+<li id="mini-cart-{$cart.cid}">
+    <div class="cart-item first" id="mini-cart-{$cart.id}}">
+        <a class="thumb" href="product.php?id={$cart.id}">
+            <img alt="" src="{$cart.img}">
+        </a>
+        <a class="name" href="product.php?id={$cart.id}">{$cart.name} {foreach from=$cart.attributes_str item=attr}{$attr}&nbsp;{/foreach}</a>
+        <span class="price">{sprintf('%.2f', $cart.price)}元 × {$cart.number}</span>
+        <a class="btn-del" href="javascript: delete_mini_cart_item({$cart.cid});"><i class="icon">&#xe61c;</i></a>
+        <div style="clear: both;"></div>
+    </div>
+</li>
+{/foreach}
+</ul>
+<div style="clear: both;"></div>
+<div class="cart-total">
+    <span class="total">共 <em>{$cart_count}</em> 件商品<span class="price"><em>{sprintf('%.2f', $cart_price_amount)}</em>元</span></span>
+    <a href="cart.php" class="btn-cart">去购物车结算</a>
+    <div style="clear: both;"></div>
+</div>
+<script type="text/javascript">
+    var cart_total_number = {if $is_login}{$cart_count}{else}0{/if};
+        var new_cart_number = cart_total_number;
+
+        function delete_mini_cart_item(cid) {
+            if( confirm('确定从购物车删除该商品?') ) {
+                remove_from_mini_cart(cid);
+            } else {
+                return false;
+            }
+        }
+
+        function remove_from_mini_cart(cid) {
+            cid = parseInt(cid);
+
+            if(isNaN(cid) || cid <= 0) {
+                alert("无效的id");
+                return false;
+            }
+            console.info(cid);
+            var url = "cart.php";
+            var data = { "opera":"delete", "cid":cid };
+
+            $.post(url, data, remove_from_mini_cart_handler, "json");
+        }
+
+        function remove_from_mini_cart_handler(response) {
+            if(response.error == 0) {
+                window.location.reload();
+            } else {
+                alert(response.msg);
+            }
+        }
+</script>
+{else}
+<div class="cart-menu-inner">
+    购物车中还没有商品，赶紧选购吧！
+</div>
+{/if}

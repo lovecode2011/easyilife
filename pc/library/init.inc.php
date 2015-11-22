@@ -117,8 +117,10 @@ if( isset($_SESSION['account']) && $_SESSION['account'] ) {
     }
     assign('cart_price_amount', $cart_price_amount);
     assign('mini_cart_list', $cart_list);
-    $aside_hover = $_SERVER['PHP_SELF'];
-    $aside_hover = substr($aside_hover, 1);
-    assign('aside_hover', $aside_hover);
+
 }
 assign('is_login', $is_login);
+
+$aside_hover = $_SERVER['PHP_SELF'];
+$aside_hover = substr($aside_hover, 1);
+assign('aside_hover', $aside_hover);

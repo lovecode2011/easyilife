@@ -778,7 +778,7 @@ if($product)
             }
         }
     }
-    assign('category_list', $target);
+    assign('shop_category_list', $target);
 
     $get_history = 'select p.id,p.name,p.img,if(p.`promote_end`>'.$now.',p.`promote_price`,p.`price`) as price from '.$db->table('history').' as h';
     $get_history .= ' left join '.$db->table('product').' as p on h.product_sn = p.product_sn';

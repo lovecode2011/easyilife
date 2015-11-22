@@ -30,44 +30,6 @@
         </div>
     </div>
 </div>
-<div class="nav">
-    <div class="container">
-        <!-- 侧栏开始 -->
-        <div class="categorys">
-            <div class="dt">
-                <a href="#" target="_blank">全部商品分类<i class="icon">&#xe606;</i></a>
-            </div>
-            <div class="dd inner">
-                <div class="dd-inner">
-                    {foreach from=$category_list item=cat name=category_list}
-                    <div class="item">
-                        <h3>
-                            <a class="item-title" target="" href="product_list.php?id={$cat.id}">{$cat.name}</a>
-                        </h3>
-                        <i class="icon">&#xe604;</i>
-                        {if $cat.children}
-                        <div class="sub-item clearfix">
-                            {foreach from=$cat.children item=c}
-                            <a href="product_list.php?id={$c.id}" target="">{$c.name}</a>
-                            {/foreach}
-                        </div>
-                        {/if}
-                    </div>
-                    {/foreach}
-                </div>
-            </div>
-        </div>
-        <!-- 侧栏结束 -->
-        <!-- 导航条开始 -->
-        <div class="navitems">
-            <ul class="navitems-grounp">
-                {foreach from=$top_nav item=nav}
-                <li>
-                    <a href="{$nav.url}" target="_self">{$nav.name}</a>
-                </li>
-                {/foreach}
-            </ul>
-        </div>
-        <!-- 导航条结束 -->
-    </div>
-</div>
+{if $aside_hover neq 'shop.php'}
+{include file="nav.phtml"}
+{/if}

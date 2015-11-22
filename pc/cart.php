@@ -7,9 +7,48 @@
  */
 include 'library/init.inc.php';
 
-$operation = 'add_to_cart|delete|empty_cart|multi_delete';
+$operation = 'add_to_cart|delete|empty_cart|multi_delete|update_cart';
 
 $opera = check_action($operation, getPOST('opera'));
+
+if( 'update_cart' == $opera ) {
+    $response = array('error'=>1, 'msg'=>'');
+
+    if(!check_cross_domain() && isset($_SESSION['account']) && $_SESSION['account']) {
+        $get_cart_list = 'select c.price, c.integral, c.number, c.attributes, p.id, p.img, p.name, c.id as cid from '.$db->table('cart').' as c ';
+        $get_cart_list .= ' left join '.$db->table('product').' as p on c.product_sn = p.product_sn';
+        $get_cart_list .= ' where c.account = \''.$_SESSION['account'].'\' and c.checked = 1';
+
+        $cart_list = $db->fetchAll($get_cart_list);
+        $cart_price_amount = 0;
+        if( $cart_list ) {
+            foreach( $cart_list as $key => $cart ) {
+                if( empty($cart['attributes']) ) {
+                    $cart_list[$key]['attributes_str'] = array();
+                } else {
+                    $cart_list[$key]['attributes_str'] = json_decode($cart['attributes']);
+                }
+                $cart_price_amount += ($cart['price'] * $cart['number']);
+            }
+        }
+        assign('cart_price_amount', $cart_price_amount);
+        assign('mini_cart_list', $cart_list);
+        $response['error'] = 0;
+        $response['content'] = $smarty->fetch('cart-item.phtml');
+
+    } else {
+        if(empty($_SESSION['account']))
+        {
+            $response['msg'] = '请先登录';
+            $response['error'] = 2;
+        } else {
+            $response['msg'] = '404:参数错误';
+        }
+    }
+
+    echo json_encode($response);
+    exit;
+}
 
 if('delete' == $opera)
 {
@@ -136,6 +175,7 @@ if('add_to_cart' == $opera)
                     {
                         $response['error'] = 0;
                         $response['msg'] = '加入购物车成功';
+                        $response['add_number'] = $buy_number - $cart['number'];
                     } else {
                         $response['msg'] = '001:系统繁忙，请稍后再试';
                     }
@@ -163,6 +203,7 @@ if('add_to_cart' == $opera)
                     {
                         $response['error'] = 0;
                         $response['msg'] = '加入购物车成功';
+                        $response['add_number'] = $buy_number;
                     } else {
                         $response['msg'] = '001:系统繁忙，请稍后再试';
                     }

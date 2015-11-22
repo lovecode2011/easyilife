@@ -5,13 +5,13 @@
         </div>
         <div class="fr">
             <div class="topbar-cart">
-                <a href="cart.php" class="cart-mini"><i class="icon">&#xe601;</i>购物车<span class="cart-num">（{if $is_login}{$cart_count}{else}0{/if}）</span></a>
-                <div class="cart-menu">
+                <a href="cart.php" class="cart-mini"><i class="icon">&#xe601;</i>购物车<span class="cart-num" id="mini-cart-number">（{if $is_login}{$cart_count}{else}0{/if}）</span></a>
+                <div class="cart-menu" id="mini-cart-list">
                     {if $is_login && $cart_count gt 0}
                     <ul class="cart-list" {if count($mini_cart_list) gt 5}style="height: 450px;overflow: scroll;position:relative;"{/if}>
                     {foreach from=$mini_cart_list item=cart}
                     <li id="mini-cart-{$cart.cid}">
-                        <div class="cart-item first">
+                        <div class="cart-item first" id="mini-cart-{$cart.id}}">
                             <a class="thumb" href="product.php?id={$cart.id}">
                                 <img alt="" src="{$cart.img}">
                             </a>
@@ -30,6 +30,9 @@
                         <div style="clear: both;"></div>
                     </div>
                     <script type="text/javascript">
+                        var cart_total_number = {if $is_login}{$cart_count}{else}0{/if};
+                        var new_cart_number = cart_total_number;
+
                         function delete_mini_cart_item(cid) {
                             if( confirm('确定从购物车删除该商品?') ) {
                                 remove_from_mini_cart(cid);
