@@ -683,7 +683,7 @@ $delivery_support = true;
 //把运费计入总金额
 foreach($cart_list as $key=>$cart)
 {
-    if(isset($cart['delivery_list']))
+    if(isset($cart['delivery_list']) && count($cart['delivery_list']))
     {
         $total_delivery_fee += $cart['delivery_list'][0]['delivery_fee'];
         $delivery_list_json[$cart['b_id']][0]['selected'] = 1;

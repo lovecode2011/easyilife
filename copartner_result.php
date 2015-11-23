@@ -9,9 +9,16 @@
 
 include 'library/init.inc.php';
 
+$account = trim(getGET('account'));
+if($account == '')
+{
+    $account = $_SESSION['account'];
+}
 //是否已是合伙人
-$get_level_id = 'select `level_id` from '.$db->table('member').' where account = \''.$_SESSION['account'].'\' limit 1';
+$get_level_id = 'select `level_id` from '.$db->table('member').' where account = \''.$account.'\' limit 1';
 $level_id = $db->fetchOne($get_level_id);
 
+assign('act', 'apply');
+assign('account', $account);
 assign('level', $level_id);
 $smarty->display('copartner.phtml');

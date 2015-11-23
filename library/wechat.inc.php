@@ -245,7 +245,7 @@ function create_prepay($appid, $mch_id, $mch_key, $openid, $total_fee, $body, $d
         'fee_type' => 'CNY',
         'time_start' => date('YmdHis', $now),
         'time_expire' => date('YmdHis', ($now+3600*24*7)),//支付链接7天后无效
-        'notify_url' => 'http://shop.kwanson.com/notify.php',//完成支付后的回调地址
+        'notify_url' => 'http://'.$_SERVER['HTTP_HOST'].'/notify.php',//完成支付后的回调地址
         'trade_type' => 'JSAPI',//交易类型，可选：JSAPI, NATIVE, APP, WAP
         //  'limit_pay' => 'no_credit', //此项将不允许使用信用卡支付
         'body' => $body,

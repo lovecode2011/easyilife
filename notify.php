@@ -7,7 +7,7 @@
  */
 include 'library/init.inc.php';
 
-$mch_key = 'WinsenCeciliaWrhLtx2015KWANSONCC';
+$mch_key = 'CeciliaZhengWinsenPengwrhltx2015';
 //仅对微信支付的异步通知
 $xml = $GLOBALS['HTTP_RAW_POST_DATA'];;
 $log->record($xml);
@@ -28,6 +28,7 @@ if($data)
         $sn = $db->escape($sn);
 
         $pattern = '/R.*/';
+        $copartner_pattern = '/SJ.*/';
         $data->sign = strtolower($data->sign);
 
         if(preg_match($pattern, $sn)) {
@@ -52,9 +53,10 @@ if($data)
                 //充值金额不正确或返回不正确
             }
 
-        } elseif( strpos($data->detail, '合伙人费用') ) {
-            $account = explode('-', $data->detail);
+        } elseif(preg_match($copartner_pattern, $sn)) {
+            $account = explode('-', $sn);
             $account = $account[0];
+            $account = $db->escape($account);
             //支付成功
             if( $config['partner_fee'] * 100 == $data->total_fee  && $data->sign == tenpay_sign($data, $mch_key) ) {
                 //是否已是合伙人
@@ -65,8 +67,15 @@ if($data)
                     $update_member = 'update '.$db->table('member').' set level_id = 1';
                     $update_member .= ' where account = \''.$account.'\' limit 1';
                     $db->update($update_member);
+                    //赠送积分给合伙人
+                    add_memeber_exchange_log($account, 0, 0, $config['level_integral'], 0, 0, $account, '成为合伙人赠送积分');
+
+                    $get_path = 'select `path` from '.$db->table('member').' where `account`=\''.$account.'\'';
+                    $path = $db->fetchOne($get_path);
+
+                    distribution_settle($config['partner_fee'] , $path, $account.'成为合伙人');
                 }
-                distribution_settle($config['partner_fee'] ,0, 0);
+
             } else {
 
             }

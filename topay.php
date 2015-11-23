@@ -13,8 +13,8 @@ $opera = check_action($operation, getPOST('opera'));
 //支付方式变更时生成支付代码
 if('wechat' == $opera)
 {
-    $mch_id = '1259544101';
-    $mch_key = 'WinsenCeciliaWrhLtx2015KWANSONCC';
+    $mch_id = '1269390401';
+    $mch_key = 'CeciliaZhengWinsenPengwrhltx2015';
 
     $response = array('error'=>1, 'msg'=>'');
 

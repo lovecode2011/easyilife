@@ -533,7 +533,7 @@ if($product)
         $product['min'] = intval($left_time/60);
         $left_time = $left_time%60;
         $product['second'] = $left_time;
-    } else {
+    } else if(isset($_SESSION['account'])) {
         //获取产品砍价总额
         $get_product_discount = 'select sum(`reduce`) from '.$db->table('discount').
                                 ' where `product_sn`=\''.$product_sn.'\' and `owner`=\''.$_SESSION['account'].'\'';
@@ -736,17 +736,23 @@ if($product)
     $get_business .= ' where b.`business_account`=\''.$product['business_account'].'\' limit 1';
     $product['business'] = $db->fetchRow($get_business);
 
-    //检查产品的分销状态
-    $get_distribution = 'select `product_sn` from '.$db->table('distribution').
-                        ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=\''.$product_sn.'\'';
-    $distribution_flag = $db->fetchOne($get_distribution) ? true : false;
-    assign('distribution_flag', $distribution_flag);
+    if(isset($_SESSION['account']))
+    {
+        //检查产品的分销状态
+        $get_distribution = 'select `product_sn` from ' . $db->table('distribution') .
+            ' where `account`=\'' . $_SESSION['account'] . '\' and `product_sn`=\'' . $product_sn . '\'';
+        $distribution_flag = $db->fetchOne($get_distribution) ? true : false;
+        assign('distribution_flag', $distribution_flag);
 
-    //检查产品的收藏状态
-    $get_collection = 'select `product_sn` from '.$db->table('collection').
-                      ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=\''.$product_sn.'\'';
-    $collection_flag = $db->fetchOne($get_collection) ? true : false;
-    assign('collection_flag', $collection_flag);
+        //检查产品的收藏状态
+        $get_collection = 'select `product_sn` from ' . $db->table('collection') .
+            ' where `account`=\'' . $_SESSION['account'] . '\' and `product_sn`=\'' . $product_sn . '\'';
+        $collection_flag = $db->fetchOne($get_collection) ? true : false;
+        assign('collection_flag', $collection_flag);
+    } else {
+        assign('collection_flag', false);
+        assign('distribution_flag', false);
+    }
 
     //加入我的足迹
     if(isset($_SESSION['account']) && $_SESSION['account'] != '')
@@ -780,12 +786,17 @@ if($product)
     }
     assign('shop_category_list', $target);
 
-    $get_history = 'select p.id,p.name,p.img,if(p.`promote_end`>'.$now.',p.`promote_price`,p.`price`) as price from '.$db->table('history').' as h';
-    $get_history .= ' left join '.$db->table('product').' as p on h.product_sn = p.product_sn';
-    $get_history .= ' where h.account = \''.$_SESSION['account'].'\'';
-    $get_history .= ' order by h.add_time desc limit 5';
-    $history = $db->fetchAll($get_history);
-    assign('history', $history);
+    if(isset($_SESSION['account']))
+    {
+        $get_history = 'select p.id,p.name,p.img,if(p.`promote_end`>' . $now . ',p.`promote_price`,p.`price`) as price from ' . $db->table('history') . ' as h';
+        $get_history .= ' left join ' . $db->table('product') . ' as p on h.product_sn = p.product_sn';
+        $get_history .= ' where h.account = \'' . $_SESSION['account'] . '\'';
+        $get_history .= ' order by h.add_time desc limit 5';
+        $history = $db->fetchAll($get_history);
+        assign('history', $history);
+    } else {
+        assign('history', null);
+    }
 
     //加入我的足迹
     if(isset($_SESSION['account']) && $_SESSION['account'] != '')

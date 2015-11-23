@@ -22,7 +22,7 @@
         <div class="shop-info">
             <div class="shop-logo fl">
                 <a href="#" title="圣宝先自营店" target="_parent">
-                    <img src="{$business.shop_logo}" alt="店铺logo" />
+                    <img src="{$business.shop_logo|build_url}" alt="店铺logo" />
                 </a>
             </div>
             <div class="shop-info-detail fl">
@@ -94,7 +94,7 @@
     <!--店铺店招 开始-->
     <div class="shop-banner">
         <a href="#" title="店招">
-            <img src="{$business.pc_shop_sign}" alt="店招">
+            <img src="{$business.pc_shop_sign|build_url}" alt="店招">
         </a>
     </div>
     <!--店铺店招 结束-->
@@ -106,7 +106,7 @@
                 <li>
                     <div class="p-img">
                         <a href="product.php?id={$p.id}" title="{$p.name}">
-                            <img width="90" height="90" alt="{$p.name}" src="{$p.img}">
+                            <img width="90" height="90" alt="{$p.name}" src="{$p.img|build_url}">
                         </a>
                     </div>
                     <div class="p-name">

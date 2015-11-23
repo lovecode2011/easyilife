@@ -26,24 +26,25 @@
     <h1><em>合伙人申请</em></h1>
 </header>
 <section class="address">
+    {if $act eq 'apply'}
     <div class="add-address">
         {if $level gt 0}
-        您已是合伙人
+        {$account}已成为合伙人
         {else}
         <form method="post" enctype="multipart/form-data">
-            <label for="partner_fee"><span>合伙人费用:</span>
+            <label for="partner_fee"><span style="width: 30.5%;">合伙人费用:</span>
                 <input type="text" disabled="disabled" id="partner_fee" name="partner_fee" placeholder="{$config.partner_fee}">
             </label>
-            <label for="payment"><span>支付方式:</span>
+            <label for="payment"><span style="width: 30.5%;">支付方式:</span>
                 <select name="payment" id="payment">
                     <option value="">请选择</option>
                     {foreach from=$payment_list item=payment}
                     <option value="{$payment.plugins}">{$payment.name}</option>
                     {/foreach}
-                    <option value="0">微信代付</option>
+                    <option value="wechat_pay">微信代付</option>
                 </select>
             </label>
-            <label for="agree"><span><a href="article.php?id=3">《用户协议》:</a></span>
+            <label for="agree"><span style="width: 30.5%;"><a href="article.php?id=3">《用户协议》:</a></span>
                 <input style="margin-left: 18px" type="checkbox" class="fl c_checkbox" id="agree" name="agree" checked="checked">
             </label>
             <div class="address-btn">
@@ -53,6 +54,11 @@
         </form>
         {/if}
     </div>
+    {/if}
+</section>
+<section class="article" id="qrcode-area" style="display:none;position: fixed;top: 2.2rem;text-align: center;width: 100%;background: rgba(0,0,0,0.5);">
+    <section class="article-con" id="qrcode" style="margin-top: 1rem;">
+    </section>
 </section>
 <div class="cd-popup" role="alert">
     <div class="cd-popup-container" id="message_dialog" style="display: none;">
@@ -89,6 +95,26 @@
         });
     });
 
+    {if $act eq 'pay'}
+    wx.ready(function(){
+        wx.chooseWXPay({
+            timestamp: {$payment.timestamp},
+            nonceStr: "{$payment.nonce_str}",
+            package: 'prepay_id={$payment.prepay_id}',
+            signType: 'MD5',
+            paySign: "{$payment.sign}",
+            success: function (res) {
+                // 支付成功后的回调函数
+                if(res.errMsg == "chooseWXPay:ok") {
+                    window.location.href = "copartner_result.php?account={$payment.account}";
+                } else {
+                    show_message_dialog(res.errMsg+":支付失败");
+                }
+            }
+        });
+    });
+    {/if}
+
     function topay() {
 //        show_message_dialog("等待支付接口申请下来");
     }
@@ -96,7 +122,7 @@
     function show_message_dialog(message) {
         $(".cd-popup").addClass("is-visible");
         $(".progressbar").hide();
-        $("#dialog-message").text(message);
+        $("#dialog-message").html(message);
         $("#message_dialog").show();
     }
 
@@ -111,9 +137,31 @@
             case "wechat":
                 get_prepay_id();
                 break;
+            case "wechat_pay":
+                get_pay_code();
+                break;
             default:
                 show_message_dialog("该支付方式暂无接口支持");
                 break;
+        }
+    }
+
+    function get_pay_code() {
+        var url = 'data_center.php';
+        var data = { "opera":"get_qrcode", "url":"copartner.php?act=pay&account={$smarty.session.account}" };
+
+        show_mask();
+        $.post(url, data, get_pay_code_handler, "json");
+    }
+
+    function get_pay_code_handler(result) {
+        hide_mask();
+        if(result.error == 0) {
+            $("#qrcode").html('<img src="'+result.url+'"/>');
+            $("#qrcode").append('<p style="font-size: 1rem;color: #f1f1f1;margin-top: .5rem;">请用微信扫描二维码支付！</p>');
+            $("#qrcode-area").show();
+        } else {
+            show_message_dialog(result.msg);
         }
     }
 

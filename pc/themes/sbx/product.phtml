@@ -30,14 +30,14 @@
         <div class="pic-info">
             <!-- 商品图片展示 开始 -->
             <div class="pic-show">
-                <div id="preview" class="spec-preview"> <span class="jqzoom"><img width="350" height="350" jqimg="../{$product.img}" src="../{$product.img}" /></span> </div>
+                <div id="preview" class="spec-preview"> <span class="jqzoom"><img width="350" height="350" jqimg="{$product.img|build_url}" src="{$product.img|build_url}" /></span> </div>
                 {if $product.gallery}
                 <!--缩图开始-->
                 <div class="spec-scroll"> <a class="prev">&lt;</a> <a class="next">&gt;</a>
                     <div class="items">
                         <ul>
                             {foreach from=$product.gallery item=gallery}
-                            <li><img alt="{$product.name}" bimg="../{$gallery}" src="../{$gallery}" onmousemove="preview(this);"></li>
+                            <li><img alt="{$product.name}" bimg="{$gallery|build_url}" src="{$gallery|build_url}" onmousemove="preview(this);"></li>
                             {/foreach}
                         </ul>
                     </div>
@@ -60,6 +60,7 @@
                     </div>
                     <div class="sale">
                         <div class="sale-box">
+                            {if $product.integral eq 0}
                             <div class="show-info-left">价格</div>
                             <div class="show-info-right">
                                 <b class="price">
@@ -69,6 +70,17 @@
                                 <span class="icon-bg">返利{$product.reward}元</span>
                                 {/if}
                             </div>
+                            {else}
+                            <div class="show-info-left">积分</div>
+                            <div class="show-info-right">
+                                <b class="price">
+                                    <span><span>{$product.integral}</span></span>
+                                </b>
+                                {if $product.reward > 0}
+                                <span class="icon-bg">返利{$product.reward}元</span>
+                                {/if}
+                            </div>
+                            {/if}
                             <div style="clear: both;"></div>
                         </div>
                         <div class="sale-box">
@@ -244,7 +256,7 @@
                 <div class="show-merchant-inner">
                     <div class="shop-logo">
                         <a href="shop.php?id={$product.business.id}" >
-                            <img src="../{$product.business.shop_logo}" alt="商家logo" title="{$product.business.shop_name}"/>
+                            <img src="{$product.business.shop_logo|build_url}" alt="商家logo" title="{$product.business.shop_name}"/>
                         </a>
                     </div>
                     <dl class="shop-title">
@@ -319,7 +331,7 @@
                     {foreach from=$product_list item=fav}
                     <li>
                         <a href="product.php?id={$fav.id}" >
-                            <img src="{$fav.img}" title="{$fav.name}" alt="{$fav.name}" />
+                            <img src="{$fav.img|build_url}" title="{$fav.name}" alt="{$fav.name}" />
                             <p class="title">
                                 {$fav.name}
                             </p>
@@ -748,7 +760,7 @@
                     <li>
                         <div class="p-img">
                             <a href="product.php?id={$h.id}"  title="{$h.name}">
-                                <img src="{$h.img}" alt="{$h.name}"/>
+                                <img src="{$h.img|build_url}" alt="{$h.name}"/>
                             </a>
                         </div>
                         <div class="p-name">
@@ -760,6 +772,8 @@
                             <strong class="price">￥{$h.price}</strong>
                         </div>
                     </li>
+                    {foreachelse}
+                    没有历史记录
                     {/foreach}
                 </ul>
             </div>

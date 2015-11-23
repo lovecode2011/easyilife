@@ -82,7 +82,7 @@
                             </div>
                             <div class="cart-list-goods">
                                 <a class="pro-img" target="_blank" href="product.php?id={$product.p_id}" title="{$product.name} {$product.attributes}">
-                                    <img src="{$product.img}" alt="{$product.name} {$product.attributes}">
+                                    <img src="{$product.img|build_url}" alt="{$product.name} {$product.attributes}">
                                 </a>
                             <span class="cart-list-goods-txt">
                                 <a target="_blank" href="product.php?id={$product.p_id}" title="{$product.name} {$product.attributes}">{$product.name} {$product.attributes}</a><br>
@@ -444,9 +444,9 @@
                 var temp_integral = cart[i].integral * cart[i].number;
                 temp_integral = Number(temp_integral);
                 if (temp_integral == 0) {
-                    $('#product-price-' + cart[i].p_id + ' em').text(temp_price);
+                    $('#product-price-' + cart[i].p_id + ' em').text(temp_price.toFixed(2));
                 } else {
-                    $('#product-price-' + cart[i].p_id + ' em').text(temp_integral + '积分');
+                    $('#product-price-' + cart[i].p_id + ' em').text(temp_integral.toFixed(2) + '积分');
                 }
                 if( !cart[i].free_delivery ) {
                     cart_weight[cart[i].b_id].weight += (cart[i].weight * cart[i].number);
@@ -465,7 +465,7 @@
                 if( !cart_weight[i].free_delivery ) {
                     cart_delivery_fee = calculate_delivery_fee(cart_weight[i].first_weight, cart_weight[i].next_weight, cart_weight[i].free, cart_weight[i].weight);
                 }
-                $('#delivery-fee-' + i + ' em').text(cart_delivery_fee);
+                $('#delivery-fee-' + i + ' em').text(cart_delivery_fee.toFixed(2));
                 total_delivery_fee += cart_delivery_fee;
             }
         } else {
@@ -475,7 +475,7 @@
         $('#product-amount').find('em').text(price_amount.toFixed(2));
         $("#selected-number em").text(buy_num);
         $('#total-delivery-fee em').text(total_delivery_fee.toFixed(2));
-        $('#pay-amount em').text(price_amount + total_delivery_fee.toFixed(2));
+        $('#pay-amount em').text((price_amount + total_delivery_fee).toFixed(2));
     }
 
     function calculate_delivery_fee(first_weight, next_weight, free, total_weight) {
