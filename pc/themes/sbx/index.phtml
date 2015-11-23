@@ -20,7 +20,7 @@
     <div class="banner" id="b04">
         <ul>
             {foreach from=$cycle_ad item=ad}
-            <li><img src="../{$ad.img}" alt="" width="788" height="328" ></li>
+            <li><img src="../{$ad.img|build_url}" alt="" width="788" height="328" ></li>
             {/foreach}
         </ul>
         <a href="javascript:void(0);" class="unslider-arrow04 prev"><img class="arrow" id="al" src="{$template_dir}images/arrowl.png" alt="prev" width="20" height="35"></a>
@@ -142,7 +142,7 @@
                 <li>
                     <div class="p-img">
                         <a target="_blank" href="product.php?id={$p.id}" title="{$p.name}">
-                            <img width="90" height="90" alt="{$p.name}" src="../{$p.img}">
+                            <img width="90" height="90" alt="{$p.name}" src="../{$p.img|build_url}">
                         </a>
                     </div>
                     <div class="p-name">
@@ -170,7 +170,7 @@
                 <li>
                     <div class="p-img">
                         <a target="_blank" href="product.php?id={$p.id}" title="{$p.name}">
-                            <img width="90" height="90" alt="{$p.name}" src="../{$p.img}">
+                            <img width="90" height="90" alt="{$p.name}" src="../{$p.img|build_url}">
                         </a>
                     </div>
                     <div class="p-name">
@@ -198,7 +198,7 @@
                 <li>
                     <div class="p-img">
                         <a target="_blank" href="product.php?id={$p.id}" title="{$p.name}">
-                            <img width="90" height="90" alt="{$p.name}" src="../{$p.img}">
+                            <img width="90" height="90" alt="{$p.name}" src="../{$p.img|build_url}">
                         </a>
                     </div>
                     <div class="p-name">
@@ -227,6 +227,7 @@
             var fn = this.className.split(' ')[1];
             data04[fn]();
         });
+        $(".inner").show();
     });
 </script>
 

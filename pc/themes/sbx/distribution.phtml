@@ -44,7 +44,7 @@
                                 <input type="checkbox" class="check check-product" data-cid="{$p.id}" id="check-product-{$p.id}" onclick="check_product({$p.id})">
                                 <div class="p-img">
                                     <a target="_blank" href="product.php?id={$p.id}" title="{$p.name}">
-                                        <img alt="{$p.name}" src="{$p.img}">
+                                        <img alt="{$p.name}" src="{$p.img|build_url}">
                                     </a>
                                 </div>
                                 <div class="p-name">

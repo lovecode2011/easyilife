@@ -29,7 +29,7 @@
             <div class="user-photo">
                 <div class="user-photo-inner">
                     <a href="#" target="_blank">
-                        <img src="{if $user_info.headimg neq ""}{$user_info.headimg}{else}{$template_dir}images/wang.jpg{/if}" alt="头像"/>
+                        <img src="{if $user_info.headimg neq ""}{$user_info.headimg|build_url}{else}{$template_dir}images/wang.jpg{/if}" alt="头像"/>
                         <div class="edit-box">
                             <span class="edit">&nbsp;</span>
                             <span class="edita">编辑头像</span>
@@ -120,7 +120,7 @@
                         <li>
                             <div class="p-img">
                                 <a href="product.php?id={$product.id}" title="{$product.name}">
-                                    <img width="90" height="90" alt="{$product.name}" src="{$product.img}">
+                                    <img width="90" height="90" alt="{$product.name}" src="{$product.img|build_url}">
                                 </a>
                             </div>
                             <div class="p-name">

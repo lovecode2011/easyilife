@@ -22,7 +22,7 @@
         <div class="shop-info">
             <div class="shop-logo fl">
                 <a href="#" title="圣宝先自营店" target="_parent">
-                    <img src="{$business.shop_logo}" alt="店铺logo" />
+                    <img src="{$business.shop_logo|build_url}" alt="店铺logo" />
                 </a>
             </div>
             <div class="shop-info-detail fl">
@@ -51,9 +51,26 @@
                 <div class="dt">
                     <a href="#">全部商品分类<i class="icon">&#xe606;</i></a>
                 </div>
-                <div class="dd inner">
-                    <div class="dd-inner">
+                {$category_list_height = 380}
+                {$category_item = 40}
+                <div class="dd inner" >
+                    <div class="dd-inner" >
                         {foreach from=$category_list item=cat name=category_list}
+                        <div class="item">
+                            <h3>
+                                <a class="item-title" target="" href="product_list.php?id={$cat.id}">{$cat.name}</a>
+                            </h3>
+                            <i class="icon">&#xe604;</i>
+                            {if $cat.children}
+                            <div class="sub-item clearfix">
+                                {foreach from=$cat.children item=c}
+                                <a href="product_list.php?id={$c.id}" target="">{$c.name}</a>
+                                {/foreach}
+                            </div>
+                            {/if}
+                        </div>
+                        {/foreach}
+                        {foreach from=$shop_category_list item=cat name=category_list}
                         <div class="item">
                             <h3>
                                 <a class="item-title" target="" href="product_list.php?id={$cat.id}">{$cat.name}</a>
@@ -94,7 +111,7 @@
     <!--店铺店招 开始-->
     <div class="shop-banner">
         <a href="#" title="店招">
-            <img src="{$business.pc_shop_sign}" alt="店招">
+            <img src="{$business.pc_shop_sign|build_url}" alt="店招">
         </a>
     </div>
     <!--店铺店招 结束-->
@@ -106,7 +123,7 @@
                 <li>
                     <div class="p-img">
                         <a href="product.php?id={$p.id}" title="{$p.name}">
-                            <img width="90" height="90" alt="{$p.name}" src="{$p.img}">
+                            <img width="90" height="90" alt="{$p.name}" src="{$p.img|build_url}">
                         </a>
                     </div>
                     <div class="p-name">

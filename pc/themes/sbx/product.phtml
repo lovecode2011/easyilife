@@ -30,14 +30,14 @@
         <div class="pic-info">
             <!-- 商品图片展示 开始 -->
             <div class="pic-show">
-                <div id="preview" class="spec-preview"> <span class="jqzoom"><img width="350" height="350" jqimg="../{$product.img}" src="../{$product.img}" /></span> </div>
+                <div id="preview" class="spec-preview"> <span class="jqzoom"><img width="350" height="350" jqimg="../{$product.img|build_url}" src="../{$product.img|build_url}" /></span> </div>
                 {if $product.gallery}
                 <!--缩图开始-->
                 <div class="spec-scroll"> <a class="prev">&lt;</a> <a class="next">&gt;</a>
                     <div class="items">
                         <ul>
                             {foreach from=$product.gallery item=gallery}
-                            <li><img alt="{$product.name}" bimg="../{$gallery}" src="../{$gallery}" onmousemove="preview(this);"></li>
+                            <li><img alt="{$product.name}" bimg="../{$gallery|build_url}" src="../{$gallery|build_url}" onmousemove="preview(this);"></li>
                             {/foreach}
                         </ul>
                     </div>
@@ -319,7 +319,7 @@
                     {foreach from=$product_list item=fav}
                     <li>
                         <a href="product.php?id={$fav.id}" >
-                            <img src="{$fav.img}" title="{$fav.name}" alt="{$fav.name}" />
+                            <img src="{$fav.img|build_url}" title="{$fav.name}" alt="{$fav.name}" />
                             <p class="title">
                                 {$fav.name}
                             </p>
@@ -396,7 +396,7 @@
                 <div class="pro-comment-items" style="border-top:none;">
                     <div class="items-l fl">
                         <div class="fl-pic">
-                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">
+                            <img class="avatar" src="{if $comment.headimg|build_url}{$comment.headimg|build_url}{else}{$template_dir}images/default-user.png{/if}" alt="">
                         </div>
                         <p class="username">{$comment.nickname}</p>
                     </div>
@@ -424,7 +424,7 @@
                 <div class="pro-comment-items" style="border-top:none;">
                     <div class="items-l fl">
 <!--                        <div class="fl-pic">-->
-<!--                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
+<!--                            <img class="avatar" src="{if $comment.headimg|build_url}{$comment.headimg|build_url}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
 <!--                        </div>-->
                         <p class="username">{$product.business.shop_name}客服：</p>
                     </div>
@@ -478,7 +478,7 @@
                 <div class="pro-comment-items" style="border-top:none;">
                     <div class="items-l fl">
                         <div class="fl-pic">
-                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">
+                            <img class="avatar" src="{if $comment.headimg|build_url}{$comment.headimg|build_url}{else}{$template_dir}images/default-user.png{/if}" alt="">
                         </div>
                         <p class="username">{$comment.nickname}</p>
                     </div>
@@ -503,7 +503,7 @@
                 <div class="pro-comment-items" style="border-top:none;">
                     <div class="items-l fl">
                         <!--                        <div class="fl-pic">-->
-                        <!--                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
+                        <!--                            <img class="avatar" src="{if $comment.headimg|build_url}{$comment.headimg|build_url}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
                         <!--                        </div>-->
                         <p class="username">{$product.business.shop_name}客服：</p>
                     </div>
@@ -557,7 +557,7 @@
                 <div class="pro-comment-items" style="border-top:none;">
                     <div class="items-l fl">
                         <div class="fl-pic">
-                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">
+                            <img class="avatar" src="{if $comment.headimg|build_url}{$comment.headimg|build_url}{else}{$template_dir}images/default-user.png{/if}" alt="">
                         </div>
                         <p class="username">{$comment.nickname}</p>
                     </div>
@@ -585,7 +585,7 @@
                 <div class="pro-comment-items" style="border-top:none;">
                     <div class="items-l fl">
                         <!--                        <div class="fl-pic">-->
-                        <!--                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
+                        <!--                            <img class="avatar" src="{if $comment.headimg|build_url}{$comment.headimg|build_url}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
                         <!--                        </div>-->
                         <p class="username">{$product.business.shop_name}客服：</p>
                     </div>
@@ -639,7 +639,7 @@
                 <div class="pro-comment-items" style="border-top:none;">
                     <div class="items-l fl">
                         <div class="fl-pic">
-                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">
+                            <img class="avatar" src="{if $comment.headimg|build_url}{$comment.headimg|build_url}{else}{$template_dir}images/default-user.png{/if}" alt="">
                         </div>
                         <p class="username">{$comment.nickname}</p>
                     </div>
@@ -667,7 +667,7 @@
                 <div class="pro-comment-items" style="border-top:none;">
                     <div class="items-l fl">
                         <!--                        <div class="fl-pic">-->
-                        <!--                            <img class="avatar" src="{if $comment.headimg}{$comment.headimg}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
+                        <!--                            <img class="avatar" src="{if $comment.headimg|build_url}{$comment.headimg|build_url}{else}{$template_dir}images/default-user.png{/if}" alt="">-->
                         <!--                        </div>-->
                         <p class="username">{$product.business.shop_name}客服：</p>
                     </div>
@@ -748,7 +748,7 @@
                     <li>
                         <div class="p-img">
                             <a href="product.php?id={$h.id}"  title="{$h.name}">
-                                <img src="{$h.img}" alt="{$h.name}"/>
+                                <img src="{$h.img|build_url}" alt="{$h.name}"/>
                             </a>
                         </div>
                         <div class="p-name">

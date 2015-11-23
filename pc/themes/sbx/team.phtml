@@ -30,7 +30,7 @@
         <div class="myteam">
             <div class="myteam-header">
                 <div class="myteam-header-info">
-                    <img src="{$user.headimg}"  alt="{$user.account}" />
+                    <img src="{if $user.headimg neq ""}{$user.headimg|build_url}{else}{$template_dir}images/wang.jpg{/if}"  alt="{$user.account}" />
                     <span>{$user.account}</span>
                     <em>{$level[$user.level_id]}</em>
                     <ul class="team-overview">
@@ -47,7 +47,7 @@
                     {foreach from=$first_member_list item=member}
                     <li>
                     <span class="head-pic">
-                        <img src="{$member.headimg}" alt="{$member.account}">
+                        <img src="{$member.headimg|build_url}" alt="{$member.account}">
                     </span>
                         <span class="user-name">{$member.account}</span>
                         <span class="follow-time">注册时间：{date('Y-m-d H:i:s', $member.add_time)}</span>
@@ -63,7 +63,7 @@
                     {foreach from=$second_member_list item=member}
                     <li>
                     <span class="head-pic">
-                        <img src="{$member.headimg}" alt="{$member.account}">
+                        <img src="{$member.headimg|build_url}" alt="{$member.account}">
                     </span>
                         <span class="user-name">{$member.account}</span>
                         <span class="follow-time">注册时间：{date('Y-m-d H:i:s', $member.add_time)}</span>

@@ -13,7 +13,7 @@
                     <li id="mini-cart-{$cart.cid}">
                         <div class="cart-item first" id="mini-cart-{$cart.id}}">
                             <a class="thumb" href="product.php?id={$cart.id}">
-                                <img alt="" src="{$cart.img}">
+                                <img alt="" src="{$cart.img|build_url}">
                             </a>
                             <a class="name" href="product.php?id={$cart.id}">{$cart.name} {foreach from=$cart.attributes_str item=attr}{$attr}&nbsp;{/foreach}</a>
                             <span class="price">{sprintf('%.2f', $cart.price)}元 × {$cart.number}</span>

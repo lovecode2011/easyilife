@@ -125,7 +125,7 @@
                             </div>
                             <div class="cart-list-goods">
                                 <a class="pro-img" target="_blank" href="product.php?id={$product.p_id}" title="{$product.name} {$product.attributes}">
-                                    <img src="{$product.img}" alt="{$product.name} {$product.attributes}">
+                                    <img src="{$product.img|build_url}" alt="{$product.name} {$product.attributes}">
                                 </a>
                             <span class="cart-list-goods-txt">
                                 <a target="_blank" href="product.php?id={$product.p_id}" title="{$product.name} {$product.attributes}">{$product.name} {$product.attributes}</a><br>

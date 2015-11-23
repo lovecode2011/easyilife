@@ -18,6 +18,7 @@ if('reg' == $opera)
 
     $password = getPOST('password');
     $mobile = getPOST('mobile');
+    $ref = getPOST('ref');
 
     if($mobile == '')
     {
@@ -52,6 +53,7 @@ if('reg' == $opera)
             $response['account'] = $account;
             $_SESSION['account'] = $account;
             $response['msg'] = '注册成功，您的会员卡号为:'.$account.',请牢记';
+            $response['referer'] = $ref;
         } else {
             $response['msg'] = '系统繁忙，请稍后再试';
         }

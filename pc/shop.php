@@ -51,7 +51,7 @@ $query_string = preg_replace('#page=[0-9]+#', 'page=%s', $query_string);
 
 assign('query_string', $query_string);
 
-assign('category_list', $category);
+assign('shop_category_list', $category);
 
 $count = 4;
 $offset = 0;
