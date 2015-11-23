@@ -9,7 +9,6 @@ include 'library/init.inc.php';
 
 $operation = 'collection|distribution|delete_history|delivery_city|delivery_district|empty_history|get_comments|add_to_cart';
 $opera = check_action($operation, getPOST('opera'));
-
 $page_count = 1;    //一页评论的数量，调试多个页面
 //获取评论
 if( 'get_comments' == $opera ) {
@@ -380,6 +379,31 @@ if( 'add_to_cart' == $opera ) {
 
     $product = $db->fetchRow($get_product);
     if($product) {
+
+        //读取配送区域
+        if( $product['free_delivery'] == 1 ) {
+            $product['delivery_fee'] = '免运费';
+        } else {
+            $get_delivery_area = 'select * from '.$db->table('delivery_area');
+            $get_delivery_area .= ' where business_account = \''.$product['business_account'].'\'';
+            $delivery_area = $db->fetchAll($get_delivery_area);
+            $delivery_fee = 65535;
+            if( $delivery_area ) {
+                foreach( $delivery_area as $area ) {
+                    $temp = caculate_delivery_fee($area['first_weight'], $area['next_weight'], $area['free'], $product['weight']);
+                    $delivery_fee = $delivery_fee > $temp ? $temp : $delivery_fee;
+                }
+            }
+            $product['delivery_fee'] = '￥'.$delivery_fee;
+        }
+        //配送省
+        $get_delivery_province = 'select p.id, p.province_name from '.$db->table('delivery_area_mapper').' as m';
+        $get_delivery_province .= ' left join '.$db->table('province').' as p on p.id = m.province';
+        $get_delivery_province .= ' where m.business_account = \''.$product['business_account'].'\'';
+        $delivery_province = $db->fetchAll($get_delivery_province);
+        assign('delivery_province', $delivery_province);
+
+
         $response['product_sn'] = $product['product_sn'];
         $product_sn = $product['product_sn'];
         //如果产品正在促销时间，则将产品价格赋值为促销价格
@@ -456,12 +480,12 @@ if( 'add_to_cart' == $opera ) {
             assign('attributes', $attributes_map);
             assign('attributes_json', json_encode($attributes_map));
             assign('product', $product);
-
-            if (count($inventory) == 1) {
-                $response['content'] = '';
-            } else {
-                $response['content'] = $smarty->fetch($template);
-            }
+            //无需选择配送
+//            if (count($inventory) == 1) {
+//                $response['content'] = '';
+//            } else {
+//                $response['content'] = $smarty->fetch($template);
+//            }
 
         } else {
             $response['content'] = '';
@@ -496,7 +520,13 @@ if( 'add_to_cart' == $opera ) {
             assign('attributes', array());
             assign('attributes_json', '""');
         }
+        assign('product', $product);
         $response['error'] = 0;
+        //需要选择配送
+        $response['content'] = $smarty->fetch($template);
+        if (count($inventory) == 1) {
+            $response['height'] = '300px';
+        }
     } else {
         $response['msg'] = '产品不存在';
     }
@@ -519,6 +549,7 @@ $get_product .= ' where  p.`status`=4 and p.`id`='.$id;
 $product = $db->fetchRow($get_product);
 if($product)
 {
+
     $product_sn = $product['product_sn'];
     //如果产品正在促销时间，则将产品价格赋值为促销价格
     //促销的产品不参与砍价
@@ -533,7 +564,7 @@ if($product)
         $product['min'] = intval($left_time/60);
         $left_time = $left_time%60;
         $product['second'] = $left_time;
-    } else {
+    } else if(isset($_SESSION['account'])) {
         //获取产品砍价总额
         $get_product_discount = 'select sum(`reduce`) from '.$db->table('discount').
                                 ' where `product_sn`=\''.$product_sn.'\' and `owner`=\''.$_SESSION['account'].'\'';
@@ -736,17 +767,23 @@ if($product)
     $get_business .= ' where b.`business_account`=\''.$product['business_account'].'\' limit 1';
     $product['business'] = $db->fetchRow($get_business);
 
-    //检查产品的分销状态
-    $get_distribution = 'select `product_sn` from '.$db->table('distribution').
-                        ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=\''.$product_sn.'\'';
-    $distribution_flag = $db->fetchOne($get_distribution) ? true : false;
-    assign('distribution_flag', $distribution_flag);
+    if(isset($_SESSION['account']))
+    {
+        //检查产品的分销状态
+        $get_distribution = 'select `product_sn` from ' . $db->table('distribution') .
+            ' where `account`=\'' . $_SESSION['account'] . '\' and `product_sn`=\'' . $product_sn . '\'';
+        $distribution_flag = $db->fetchOne($get_distribution) ? true : false;
+        assign('distribution_flag', $distribution_flag);
 
-    //检查产品的收藏状态
-    $get_collection = 'select `product_sn` from '.$db->table('collection').
-                      ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=\''.$product_sn.'\'';
-    $collection_flag = $db->fetchOne($get_collection) ? true : false;
-    assign('collection_flag', $collection_flag);
+        //检查产品的收藏状态
+        $get_collection = 'select `product_sn` from ' . $db->table('collection') .
+            ' where `account`=\'' . $_SESSION['account'] . '\' and `product_sn`=\'' . $product_sn . '\'';
+        $collection_flag = $db->fetchOne($get_collection) ? true : false;
+        assign('collection_flag', $collection_flag);
+    } else {
+        assign('collection_flag', false);
+        assign('distribution_flag', false);
+    }
 
     //加入我的足迹
     if(isset($_SESSION['account']) && $_SESSION['account'] != '')
@@ -780,12 +817,17 @@ if($product)
     }
     assign('shop_category_list', $target);
 
-    $get_history = 'select p.id,p.name,p.img,if(p.`promote_end`>'.$now.',p.`promote_price`,p.`price`) as price from '.$db->table('history').' as h';
-    $get_history .= ' left join '.$db->table('product').' as p on h.product_sn = p.product_sn';
-    $get_history .= ' where h.account = \''.$_SESSION['account'].'\'';
-    $get_history .= ' order by h.add_time desc limit 5';
-    $history = $db->fetchAll($get_history);
-    assign('history', $history);
+    if(isset($_SESSION['account']))
+    {
+        $get_history = 'select p.id,p.name,p.img,if(p.`promote_end`>' . $now . ',p.`promote_price`,p.`price`) as price from ' . $db->table('history') . ' as h';
+        $get_history .= ' left join ' . $db->table('product') . ' as p on h.product_sn = p.product_sn';
+        $get_history .= ' where h.account = \'' . $_SESSION['account'] . '\'';
+        $get_history .= ' order by h.add_time desc limit 5';
+        $history = $db->fetchAll($get_history);
+        assign('history', $history);
+    } else {
+        assign('history', null);
+    }
 
     //加入我的足迹
     if(isset($_SESSION['account']) && $_SESSION['account'] != '')

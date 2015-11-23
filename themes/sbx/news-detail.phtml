@@ -89,12 +89,19 @@
         $("#message_dialog").hide();
     }
 
-    $(function(){
+    window.onload = function(){
         var ele = document.getElementsByClassName("article-con")[0].getElementsByTagName("img");
+        var con_width = document.getElementsByClassName("article-con")[0].offsetWidth;
         for(var i = 0; i < ele.length; i++) {
-            ele[i].style.width = "100%";
+            console.info(i+",width="+ele[i].width);
+            if(ele[i].width > con_width) {
+                ele[i].style.width = "100%";
+                ele[i].removeAttribute("height");
+                ele[i].removeAttribute("width");
+                ele[i].style.height = "";
+            }
         }
-    });
+    }
 </script>
 {if is_weixin()}
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>

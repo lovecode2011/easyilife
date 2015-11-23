@@ -44,7 +44,7 @@
                     </div>
                     <div class="addr-con">
                         <ul>
-                            <li>{$address.province}{$address.city}{$address.district}</li>
+                            <li>{$address.province_name}{$address.city_name}{$address.district_name}{$address.group_name}</li>
                             <li class="addr-detail">{$address.address}</li>
                             <li>{$address.mobile}</li>
                         </ul>
@@ -113,7 +113,7 @@
                     {foreach from=$cart_list item=cart}
                     <!-- 店铺 开始 -->
                     <div class="seller">
-                        <a target="_blank" href="shop.php?id={$cart.bid}">{$cart.shop_name}</a>
+                        <a target="_blank" href="shop.php?id={$cart.b_id}">{$cart.shop_name}</a>
                         <div style="clear: both;"></div>
                     </div>
                     <div class="attice">
@@ -362,7 +362,16 @@
         if(response.error == 0) {
             if(response.count == 1) {
                 if(response.order_status == 1) {
-                    window.location.href = "topay.php";
+                    if( response.order_sn ) {
+                        layer.confirm('未有支付接口，是否模拟支付其中一张订单', {
+                            btn: ['确定', '取消'] //按钮
+                        }, function () {
+                            simulation_pay(response.order_sn);
+                        });
+                    } else {
+                        window.location.href = "order.php";
+                    }
+//                    window.location.href = "topay.php";
                 } else {
                     window.location.href = "order.php";
                 }
@@ -371,6 +380,24 @@
             }
         } else {
             layer.msg(response.msg);
+        }
+    }
+
+    function simulation_pay(order_sn) {
+        var url = 'checkout.php';
+        var param = { "opera": "simulation_pay", "order_sn" : order_sn  };
+        show_mask();
+        $.post(url , param, simulation_pay_handler, 'json');
+    }
+
+    function simulation_pay_handler(response) {
+        hide_mask();
+        if( response.error == 0 ) {
+            layer.msg(response.msg, function() {
+                window.location.href = "order.php";
+            });
+        } else {
+            layer.msg('response.msg');
         }
     }
 

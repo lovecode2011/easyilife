@@ -31,7 +31,7 @@
             <li>
                 <div class="p-img">
                     <a href="product.php?id={$p.id}">
-                        <img width="160" height="160" alt="{$p.name}" src="../{$p.img|build_url}">
+                        <img width="160" height="160" alt="{$p.name}" src="{$p.img|build_url}">
                     </a>
                 </div>
                 <div class="p-name">
@@ -143,10 +143,13 @@
                     title: false,
                     closeBtn: true,
                     shadeClose: true,
-                    area: '500px',
+                    area:  ['500px', '420px'],
                     skin: 'yourclass',
                     content: result.content
                 });
+                if( result.height ) {
+                    $('.yourclass').css('height', result.height);
+                }
             } else {
                 add_to_cart_directly(result.product_sn, result.attributes);
             }

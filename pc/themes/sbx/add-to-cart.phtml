@@ -1,11 +1,104 @@
         <style>
             {literal}
+            .sale { border-bottom: 1px dotted #e3e3e3;padding-top: 40px; width: 100%;}
+            .sale-box{ margin: 10px auto;}
             .buy-area { padding-top: 40px; }
             .buy-box{ margin: 10px auto;}
             .show-info-left {  float: left;  width: 100px; text-align: center; horiz-align: middle}
             .show-info-right { float: left; }
             {/literal}
         </style>
+        <div class="sale">
+            <div class="sale-box">
+                <div class="show-info-left">配送</div>
+                <div class="show-info-right">
+                    <span class="current-city"><em></span>
+                    <div id="sncity" class="fl">
+                        <div class="ui-city"><!-- 显示此处class添加active -->
+                            <a href="javascript:toggle_delivery_area();" class="ui-city-toggle" hidefocus="true">
+                                <em class="address-placement">
+                                    <span id="provinceName">&nbsp;&nbsp;&nbsp;</span>
+                                    <span id="cityName">&nbsp;&nbsp;&nbsp;</span>
+                                    <span id="districtName">&nbsp;&nbsp;&nbsp;</span>
+                                    <!--                                                <span id="provinceName" class="pr" role="190,,,广东">广东</span>-->
+                                    <!--                                                <span id="citybName" class="ct" role="1000041,9041,01,广州">广州</span>-->
+                                    <!--                                                <span id="districtName" class="ds" role=",10274,01,荔湾区">荔湾区</span>-->
+                                </em>
+                                <b class="arr"></b>
+                            </a>
+                            <div class="ui-city-group">
+                                <a class="ui-city-close" href="javascript:close_delivery_area();">
+                                    <i>&gt;</i>
+                                    <i>&lt;</i>
+                                </a>
+                                <div class="ui-city-group-content">
+                                    <ul class="nav-tabs">
+                                        <li id="provinceShow" class="active current" role="">
+                                            <p>
+                                                <a href="javascript:change_province()">省</a><b class="arr"></b>
+                                            </p>
+                                        </li>
+                                        <li id="cityShow" class="active" role="">
+                                            <p>
+                                                <a href="javascript:change_city();">市</a>
+                                                <b class="arr"></b>
+                                            </p>
+                                        </li>
+                                        <li id="districtShow" class="active" role="">
+                                            <p>
+                                                <a href="javascript:change_district();">区</a>
+                                                <b class="arr"></b>
+                                            </p>
+                                        </li>
+                                        <div style="clear: both"></div>
+                                    </ul>
+                                    <div style="clear: both"></div>
+                                    <div class="tab-content">
+                                        <ul class="tab-panel pr-panel active" id="province-list">
+                                            <li>
+                                                {foreach from=$delivery_province item=province}
+                                                            <span>
+                                                                <a href="javascript:select_province({$province.id});" class="" id="province-{$province.id}">
+                                                                    {$province.province_name}
+                                                                </a>
+                                                            </span>
+                                                {/foreach}
+                                            </li>
+                                            <div style="clear: both;"></div>
+                                        </ul>
+                                        <div style="clear: both;"></div>
+                                        <ul class="tab-panel ct-panel" id="city-list">
+                                            <li>
+
+                                            </li>
+                                        </ul>
+                                        <ul class="tab-panel ds-panel" id="district-list">
+                                            <li>
+
+                                            </li>
+                                        </ul>
+                                        <div style="clear: both;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="proinfo-deliver-tip">
+                        <strong>现货</strong>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <div class="sale-box">
+                <div class="show-info-left">运费</div>
+                <div class="show-info-right">
+                    <span>{$product.delivery_fee}</span>
+                    <div style="clear: both;"></div>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
         <div class="buy-area">
             {foreach from=$attributes item=a}
             <div class="buy-box">
@@ -278,6 +371,127 @@
 
                 }
             }
+
+            //配送地址 start===================================================================
+            function toggle_delivery_area() {
+                $('.ui-city').toggleClass('active');
+                if( $('.ui-city-group').is(':visible') ) {
+//            $('#provinceShow').addClass('current');
+                }
+            }
+
+            function select_province(id) {
+                $('#province-list li span .on').removeClass('on');
+                $('#province-' + id).addClass('on');
+                $('#provinceShow p a').text($('#province-' + id).text());
+                $('#province-list').removeClass('active');
+                $('#city-list').addClass('active');
+                $('.current').removeClass('current');
+                $('#cityShow').addClass('current');
+                $('#cityShow a').text('市');
+                $('#districtShow a').text('区');
+                $('#city-list li').empty();
+                $('#district-list li').empty();
+                //ajax获取城市
+                var url = 'product.php';
+                var param = {'opera':'delivery_city', 'product_sn': product_sn, 'id': id};
+                loading = layer.load(0, { shade: 0.3 });
+                $.post(url, param, do_get_city_response, 'json');
+            }
+
+            function do_get_city_response(result) {
+                layer.close(loading);
+                if( result.error == 0 ) {
+                    $('#city-list li').empty();
+                    for( var id in result.data ) {
+                        var temp = '<span>';
+                        temp += '<a href="javascript:select_city('+result.data[id].id+')" id="city-'+result.data[id].id+'">' + result.data[id].city_name + '</a>';
+                        temp += '</span>';
+                        $('#city-list li').append(temp);
+                    }
+                } else {
+                    if( result.msg != '' ) {
+                        layer.msg(result.msg);
+                    }
+                }
+            }
+
+            function select_city(id) {
+                $('#city-list li span .on').removeClass('on');
+                $('#city-' + id).addClass('on');
+                $('#cityShow p a').text($('#city-' + id).text());
+                $('#city-list').removeClass('active');
+                $('#district-list').addClass('active');
+                $('.current').removeClass('current');
+                $('#districtShow').addClass('current');
+                $('#districtShow a').text('区');
+                //ajax获取城市
+                var url = 'product.php';
+                var param = {'opera':'delivery_district', 'product_sn': product_sn, 'id': id};
+                loading = layer.load(0, { shade: 0.3 });
+                $.post(url, param, do_get_district_response, 'json');
+            }
+
+            function do_get_district_response(result) {
+                layer.close(loading);
+                if( result.error == 0 ) {
+                    $('#district-list li').empty();
+                    for( var id in result.data ) {
+                        var temp = '<span>';
+                        temp += '<a href="javascript:select_district('+result.data[id].id+')" id="district-'+result.data[id].id+'">' + result.data[id].district_name + '</a>';
+                        temp += '</span>';
+                        $('#district-list li').append(temp);
+                    }
+                } else {
+                    if( result.msg != '' ) {
+                        layer.msg(result.msg);
+                    }
+                }
+            }
+
+            function select_district(id) {
+                $('#district-list li span .on').removeClass('on');
+                $('#district-' + id).addClass('on');
+                $('#districtShow p a').text($('#district-' + id).text());
+
+                $('#provinceName').empty();
+                $('#provinceName').text($('#province-list li span .on').text());
+                $('#cityName').empty();
+                $('#cityName').text($('#city-list li span .on').text());
+                $('#districtName').empty();
+                $('#districtName').text($('#district-list li span .on').text());
+                close_delivery_area();
+
+            }
+
+            function close_delivery_area() {
+                $('.ui-city').removeClass('active');
+            }
+
+            function change_province() {
+                $('.current').removeClass('current');
+                $('#provinceShow').addClass('current');
+                $('#city-list.active').removeClass('active');
+                $('#district-list.active').removeClass('active');
+                $('#province-list').addClass('active');
+            }
+
+            function change_city() {
+                $('.current').removeClass('current');
+                $('#cityShow').addClass('current');
+                $('#province-list.active').removeClass('active');
+                $('#district-list.active').removeClass('active');
+                $('#city-list').addClass('active');
+            }
+
+            function change_district() {
+                $('.current').removeClass('current');
+                $('#districtShow').addClass('current');
+                $('#province-list.active').removeClass('active');
+                $('#city-list.active').removeClass('active');
+                $('#district-list').addClass('active');
+            }
+            //配送地址 end=========================================================================
 
             {/literal}
         </script>

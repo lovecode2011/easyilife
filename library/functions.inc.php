@@ -739,3 +739,17 @@ function is_email($email) {
     $pattern = "/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i";
     return preg_match($pattern, $email);
 }
+
+function build_url($url) {
+    if( strpos($_SERVER['SERVER_NAME'], 'localhost') ) {  //apache无虚拟主机
+        return '../../'.$url;
+    } elseif( is_numeric(strpos($_SERVER['SCRIPT_NAME'], '/pc')) ) { //手机域名访问pc端
+        return '../'.$url;
+    } else {    //pc端虚拟主机
+        if( $_SERVER['SERVER_NAME'] == 'pc.easyilife.com' ) {
+            return 'http://local.easyilife.com/' . $url;
+        } else {
+            return $url;
+        }
+    }
+}

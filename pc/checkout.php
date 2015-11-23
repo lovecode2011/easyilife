@@ -9,7 +9,7 @@
 
 include 'library/init.inc.php';
 
-$operation = 'checkout|calculate_fee|submit_order';
+$operation = 'checkout|calculate_fee|submit_order|simulation_pay';
 
 $opera = check_action($operation, getPOST('opera'));
 
@@ -285,6 +285,9 @@ if('submit_order' == $opera)
 
             if($order_sn)
             {
+                if( $debug_mode ) {
+                    $response['order_sn'] = $order_sn;
+                }
                 if($status == 4)
                 {
                     $order_data = array('pay_time'=>time());
@@ -537,6 +540,33 @@ if('checkout' == $opera)
     exit;
 }
 
+if( 'simulation_pay' == $opera ) {
+    if(!check_cross_domain() && $debug_mode ) {
+        $order_sn = getPOST('order_sn');
+
+        if( $order_sn == '' ) {
+            $response['msg'] = '参数错误';
+        } else {
+            $order_sn = $db->escape($order_sn);
+            $pay_order = 'update ' . $db->table('order') . ' set status = 3 where account = \'' . $_SESSION['account'] . '\' and order_sn = \'' . $order_sn . '\' and status = 1 limit 1';
+            if ($db->update($pay_order)) {
+                $response['error'] = 0;
+                $response['msg'] = '模拟支付一张订单成功';
+            } else {
+                $response['msg'] = '系统繁忙，请稍后重试';
+            }
+        }
+    } else {
+        if( check_cross_domain() ) {
+            $response['msg'] = '请从本站提交';
+        } else {
+            $response['msg'] = '接口已过期';
+        }
+    }
+    echo json_encode($response);
+    exit;
+}
+
 //检查如果没有默认地址的话，先设置一个
 $check_address_id = 'select `id` from '.$db->table('address').' where `account`=\''.$_SESSION['account'].'\' and `is_default`=1';
 $address_id = $db->fetchOne($check_address_id);
@@ -570,7 +600,7 @@ assign('payment_list', $payment_list);
 
 
 //获取待购买产品
-$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`weight`,c.`business_account` from ('.
+$get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`weight`,c.`business_account`,p.`id` as p_id from ('.
     $db->table('cart').' as c join '.$db->table('product').' as p using(`product_sn`)) join '.$db->table('business').
     ' as b on (c.`business_account`=b.`business_account`) where c.`account`=\''.$_SESSION['account'].'\' and c.`checked`=1 order by c.`business_account`';
 
@@ -630,7 +660,8 @@ foreach($cart_list_tmp as $cart)
         'price' => floatval($cart['price']),
         'integral' => floatval($cart['integral']),
         'name' => $cart['name'],
-        'img' => $cart['img']
+        'img' => $cart['img'],
+        'p_id' => $cart['p_id'],
     );
 
     $total_product_amount += $cart['price'] * $cart['number'];
@@ -683,7 +714,7 @@ $delivery_support = true;
 //把运费计入总金额
 foreach($cart_list as $key=>$cart)
 {
-    if(isset($cart['delivery_list']))
+    if(isset($cart['delivery_list']) && count($cart['delivery_list']))
     {
         $total_delivery_fee += $cart['delivery_list'][0]['delivery_fee'];
         $delivery_list_json[$cart['b_id']][0]['selected'] = 1;
