@@ -58,6 +58,22 @@
                     建议尺寸 380x100像素
                 </p>
                 <p>
+                    <label class="l-title">PC端店招：</label>
+                    <input type="button" class="text-input" id="select-pc-sign" value="请选择店招" style="cursor:pointer">
+                    <input type="hidden" class="" name="pc-sign" id="pc-sign" value="{$business.pc_shop_sign}"/>
+                </p>
+                <p>
+                    <label class="l-title"></label>
+                    {if $business.shop_sign eq ''}
+                    <img id="show-pc-sign" alt="未选择图片" src="../upload/image/no-image.png">
+                    {else}
+                    <img id="show-pc-sign" alt="" width="499" height="155" src="../{$business.pc_shop_sign_src}" />
+                    {/if}
+                    <br/>
+                    <label class="l-title"></label>
+                    建议尺寸 998x310像素
+                </p>
+                <p>
                     <label class="l-title">地址：</label>
                     <select id="province" name="province" class="w150">
                         {foreach from=$province_list item=province}
@@ -117,7 +133,7 @@
         K('#select-image').click(function() {
             editor.loadPlugin('image', function() {
                 editor.plugin.imageDialog({
-                    imageUrl : '{$business.business_account}',
+//                    imageUrl : '{$business.business_account}',
                     clickFn : function(url, title, width, height, border, align) {
                         if( !width ) {
                             width = (width == '') ? '75px' : width + 'px'
@@ -145,7 +161,7 @@
         K('#select-sign').click(function() {
             editor1.loadPlugin('image', function() {
                 editor1.plugin.imageDialog({
-                    imageUrl : '{$business.business_account}',
+//                    imageUrl : '{$business.business_account}',
                     clickFn : function(url, title, width, height, border, align) {
                         if( !width ) {
                             width = (width == '') ? '370px' : width + 'px'
@@ -160,6 +176,34 @@
                         K('#show-sign').css('height', height);
                         K('#show-sign').css('display', 'block');
                         editor1.hideDialog();
+                    }
+                });
+            });
+        });
+
+        var editor2 = K.editor({
+            allowFileManager : true,
+            uploadJson : '../plugins/kindeditor/upload_json.php',
+            fileManagerJson : '../plugins/kindeditor/file_manager_json.php'
+        });
+        K('#select-pc-sign').click(function() {
+            editor2.loadPlugin('image', function() {
+                editor2.plugin.imageDialog({
+//                    imageUrl : '{$business.business_account}',
+                    clickFn : function(url, title, width, height, border, align) {
+                        if( !width ) {
+                            width = (width == '') ? '499px' : width + 'px'
+                        }
+                        if( !height ) {
+                            height = (height == '') ? '155px' : height + 'px'
+                        }
+
+                        K('#pc-sign').val(url.replace("{$smarty.const.BASE_DIR}", ""));
+                        K('#show-pc-sign').attr('src', url);
+                        K('#show-pc-sign').css('width', width);
+                        K('#show-pc-sign').css('height', height);
+                        K('#show-pc-sign').css('display', 'block');
+                        editor2.hideDialog();
                     }
                 });
             });

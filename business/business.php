@@ -26,8 +26,10 @@ if( 'base' == $opera ) {
         exit;
     }
 
+//    var_dump($_POST);exit;
 //    $shop_name = trim(getPOST('shop_name'));
     $shop_sign = trim(getPOST('sign'));
+    $pc_shop_sign = trim(getPOST('pc-sign'));
     $shop_logo = trim(getPOST('img'));
     $address = trim(getPOST('address'));
     $province = intval(getPOST('province'));
@@ -50,6 +52,8 @@ if( 'base' == $opera ) {
     $shop_logo = $db->escape($shop_logo);
 
     $shop_sign = $db->escape($shop_sign);
+
+    $pc_shop_sign = $db->escape($pc_shop_sign);
 
 
     if( '' == $address ) {
@@ -105,6 +109,7 @@ if( 'base' == $opera ) {
         'group' => $group,
         'longitude' => $longitude,
         'latitude' => $latitude,
+        'pc_shop_sign' => $pc_shop_sign,
     );
     $table = 'business';
     $where = 'business_account = \''.$_SESSION['business_account'].'\'';
@@ -351,7 +356,7 @@ if( 'base' == $act ) {
         exit;
     }
 
-    $get_business = 'select `business_account`, `shop_logo`, `shop_sign`, `shop_name`, `address`, `province`, `city`, `district`, `group`, `longitude`, `latitude`';
+    $get_business = 'select `business_account`, `shop_logo`, `shop_sign`,`pc_shop_sign`, `shop_name`, `address`, `province`, `city`, `district`, `group`, `longitude`, `latitude`';
     $get_business .= ' from '.$db->table('business');
     $get_business .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
     $get_business .= ' limit 1';
@@ -365,6 +370,11 @@ if( 'base' == $act ) {
         $business['shop_sign_src'] = $business['shop_sign'];
     } else {
         $business['shop_sign_src'] = $business['shop_sign'];
+    }
+    if( file_exists(realpath('../'.$business['pc_shop_sign'])) ) {
+        $business['pc_shop_sign_src'] = $business['pc_shop_sign'];
+    } else {
+        $business['pc_shop_sign_src'] = $business['pc_shop_sign'];
     }
     if( $business['longitude'] && $business['latitude'] ) {
         $map_init = true;
