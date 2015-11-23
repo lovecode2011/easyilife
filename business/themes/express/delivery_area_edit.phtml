@@ -162,12 +162,20 @@
                     flag--;
                     console.info("flag="+flag);
                 }
+            } else {
+                if(area_mapper[i] != undefined) {
+                    area_mapper[i].checked = 1;
+                }
             }
         } else {
             if (area_mapper_tmp.checked == false) {
                 area_mapper[0].checked = 0;
                 flag--;
                 console.info("flag="+flag);
+            } else {
+                if(area_mapper[0] != undefined) {
+                    area_mapper[0].checked = 1;
+                }
             }
         }
 

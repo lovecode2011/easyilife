@@ -228,6 +228,23 @@ if('area_add' == $opera)
     exit;
 }
 //===============================================================================
+if('delivery_area_delete' == $act)
+{
+    $id = intval(getGET('id'));
+
+    if($id <= 0)
+    {
+        show_system_message('参数错误');
+    }
+
+    if($db->autoDelete('delivery_area', '`business_account`=\''.$_SESSION['business_account'].'\' and `id`='.$id))
+    {
+        show_system_message('删除配送区域成功');
+    } else {
+        show_system_message('系统繁忙，请稍后再试');
+    }
+}
+
 if('delivery_area' == $act)
 {
     $id = intval(getGET('plugin'));

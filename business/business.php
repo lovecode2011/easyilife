@@ -362,7 +362,7 @@ if( 'base' == $act ) {
         $business['shop_logo_src'] = $business['shop_logo'];
     }
     if( file_exists(realpath('../'.$business['shop_sign'])) ) {
-        $business['shop_sign_src'] = '../'.$business['shop_sign'];
+        $business['shop_sign_src'] = $business['shop_sign'];
     } else {
         $business['shop_sign_src'] = $business['shop_sign'];
     }

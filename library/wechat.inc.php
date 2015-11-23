@@ -59,6 +59,8 @@ function get_user_info($code, $appid, $appsecret, $mode = 'base')
     $url = sprintf($url, $appid, $appsecret, $code);
 
     $response = get($url);
+    global $log;
+    $log->record($response);
     $response = json_decode($response);
 
     if(isset($response->errcode))

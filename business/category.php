@@ -190,7 +190,15 @@ if( 'edit' == $opera ) {
     $search_brand = ( $search_brand == 1 ) ? 1 : 0;
 
     if( $parent_id == 0 ) {
-        $path = $id.',';
+        $get_category_id = 'select `category_id` from '.$db->table('business');
+        $get_category_id .= ' where `business_account` = \''.$_SESSION['business_account'].'\' limit 1';
+        $category_id = $db->fetchOne($get_category_id);
+
+        $get_category_path = 'select `path` from '.$db->table('category').' where `id`='.$category_id;
+        $category_path = $db->fetchOne($get_category_path);
+
+        $path = $category_path.$id.',';
+        $parent_id = $category_id;
     } else {
         $get_parent_path = 'select `path` from '.$db->table('category').' where id = '.$parent_id.' limit 1';
         $parent_path = $db->fetchOne($get_parent_path);

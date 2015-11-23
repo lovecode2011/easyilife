@@ -132,6 +132,11 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
             'headimg' => $wechat_user->headimgurl
         );
 
+        if(isset($wechat_user->unionid))
+        {
+            $member_data['unionid'] = $wechat_user->unionid;
+        }
+
         $db->autoUpdate('member', $member_data, '`openid`=\''.$wechat_user->openid.'\'');
         $get_account = 'select `account` from '.$db->table('member').' where `openid`=\''.$wechat_user->openid.'\'';
         $_SESSION['account'] = $db->fetchOne($get_account);
