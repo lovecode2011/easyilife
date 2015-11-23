@@ -30,9 +30,7 @@ $status_str = array(
     11 => '无效订单',
     12 => '已完成'
 );
-$page_count = 1;
-
-
+$page_count = 10;
 
 
 if('' == $act)
@@ -624,6 +622,10 @@ if( $act == 'list' ) {
         }
     }
 
+    //猜你喜欢
+    $get_fav_products = 'select `name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 8';
+    $fav_products = $db->fetchAll($get_fav_products);
+    assign('fav_products', $fav_products);
 
     assign('order_list', $order_list);
 
@@ -636,5 +638,6 @@ if( $act == 'list' ) {
     assign('refund_total', $refund_total);
     assign('complete_total', $complete_total);
 }
+
 
 $smarty->display($template);

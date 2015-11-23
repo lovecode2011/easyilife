@@ -18,7 +18,7 @@
 <!-- 顶部面包屑导航开始 -->
 <div class="breadcrumb container">
     <span>当前位置：</span>
-    <a href="" >全部结果</a><span class="gt">&gt;</span>
+    <a href="?keyword={$keyword}&filter={$filter}&mode={$mode}" >全部结果</a><span class="gt">&gt;</span>
     <span>{$keyword}</span>
 </div>
 <!-- 顶部面包屑导航结束 -->
@@ -37,9 +37,9 @@
                     <a href="?keyword={$keyword}&filter=comment" {if $filter eq 'comment'}class="curr"{/if}>评论数</a>
                 </div>
                 <div class="f-pager">
-                    <span class="fp-text"><b>{$page}</b><em>/</em><i>{$totalPage}</i></span>
-                    <a class="fp-prev {if $has_prev eq false}disabled{/if}" href="{if $has_prev eq false}javascript:;{else}?keyword={$keyword}&page={$page-1}{/if}">&lt;</a>
-                    <a class="fp-next {if $has_next eq false}disabled{/if}" href="{if $has_next eq false}javascript:;{else}?keyword={$keyword}&page={$page+1}{/if}">&gt;</a>
+                    <span class="fp-text"><b>{$page}</b><em>/</em><i>{if $totalPage eq 0}1{else}{$totalPage}{/if}</i></span>
+                    <a class="fp-prev {if $has_prev eq false}disabled{/if}" href="{if $has_prev eq false}javascript:;{else}?keyword={$keyword}&mode={$mode}&page={$page-1}&filter={$filter}{/if}">&lt;</a>
+                    <a class="fp-next {if $has_next eq false}disabled{/if}" href="{if $has_next eq false}javascript:;{else}?keyword={$keyword}&mode={$mode}&page={$page+1}&filter={$filter}{/if}">&gt;</a>
                 </div>
                 <div class="f-result-sum">共<span id="J_resCount" class="num">{$total}</span>件商品</div>
                 <span class="clr"></span>
@@ -81,17 +81,17 @@
             {if $has_prev eq false}
             <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void();"><i class="sign left">&lt;</i>上一页</a>
             {else}
-            <a rel="nofollow" class="prev fl" id="prePage" href="?keyword={$keyword}&filter={$filter}&page={$page-1}"><i class="sign left">&lt;</i>上一页</a>
+            <a rel="nofollow" class="prev fl" id="prePage" href="?keyword={$keyword}&filter={$filter}&mode={$mode}&page={$page-1}"><i class="sign left">&lt;</i>上一页</a>
             {/if}
-            <a rel="nofollow" class="fl" id="pageFirst" href="?keyword={$keyword}&filter={$filter}&page=1">首页</a>
+            <a rel="nofollow" class="fl" id="pageFirst" href="?keyword={$keyword}&filter={$filter}&mode={$mode}&page=1">首页</a>
             {if $has_many_prev}
             <span class="icon ellipsis fl">&#xe61e;</span>
             {/if}
             {foreach from=$show_page item=pageNum}
             {if $pageNum eq $page}
-            <a rel="nofollow" class="fl cur" href="?keyword={$keyword}&filter={$filter}&page={$pageNum}">{$pageNum}</a>
+            <a rel="nofollow" class="fl cur" href="?keyword={$keyword}&filter={$filter}&mode={$mode}&page={$pageNum}">{$pageNum}</a>
             {else}
-            <a rel="nofollow" class="fl" href="?keyword={$keyword}&filter={$filter}&page={$pageNum}">{$pageNum}</a>
+            <a rel="nofollow" class="fl" href="?keyword={$keyword}&filter={$filter}&mode={$mode}&page={$pageNum}">{$pageNum}</a>
             {/if}
             {/foreach}
 <!--            <a rel="nofollow" class="fl" href="#">2</a>-->
@@ -100,11 +100,11 @@
             {if $has_many_next}
             <span class="icon ellipsis fl">&#xe61e;</span>
             {/if}
-            <a rel="nofollow" class="fl" href="?keyword={$keyword}&filter={$filter}&page={$totalPage}" id="pageLast">末页</a>
+            <a rel="nofollow" class="fl" href="?keyword={$keyword}&filter={$filter}&mode={$mode}&page={$totalPage}" id="pageLast">末页</a>
             {if $has_next eq false}
             <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void();">下一页<i class="sign right">&gt;</i></a>
             {else}
-            <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="?keyword={$keyword}&filter={$filter}&page={$page+1}">下一页<i class="sign right">&gt;</i></a>
+            <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="?keyword={$keyword}&filter={$filter}&mode={$mode}&page={$page+1}">下一页<i class="sign right">&gt;</i></a>
             {/if}
             <div class="fl">
                 <span class="fl">向第</span>
@@ -115,7 +115,7 @@
             <script type="text/javascript">
                 function page_go() {
                     var page = $('#bottomPage').val();
-                    window.location.href="?keyword={$keyword}&filter={$filter}&page=" + page;
+                    window.location.href="?keyword={$keyword}&filter={$filter}&mode={$mode}&page=" + page;
                 }
             </script>
         </div>

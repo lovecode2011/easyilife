@@ -7,15 +7,26 @@
         <div class="header-search">
             <form action="search.php" method="get">
             <div class="search-form">
-                <span class="search-select"><span>宝贝</span><em class="icon">&#xe603;</em></span>
+                <span class="search-select"><span id="search-mode">{if isset($mode_name)}{$mode_name}{else}宝贝{/if}</span><em class="icon">&#xe603;</em></span>
+                <input type="hidden" value="{if isset($mode)}{$mode}{else}product{/if}" name="mode" id="search-mode-val"/>
                 <div class="search-select-item">
-                    <a id="search-product">宝贝</a>
-                    <a id="search-shop">店铺</a>
+                    <a id="search-product" href="javascript:select_search_mode('product');">宝贝</a>
+                    <a id="search-shop"  href="javascript:select_search_mode('shop');">店铺</a>
                 </div>
-                <input name="keyword" type="text" class="text" autocomplete="off" placeholder="大家都在搜：圣宝先自营">
+                <input name="keyword" type="text" class="text" autocomplete="off" placeholder="大家都在搜：圣宝先自营" {if isset($keyword)}value="{$keyword}"{/if}>
                 <button class="search-button"><i class="icon">&#xe602;</i></button>
             </div>
             </form>
+            <script type="text/javascript">
+                function select_search_mode(mode) {
+                    if( mode == '' || mode == 'product') {
+                        $('#search-mode').text('宝贝');
+                    } else {
+                        $('#search-mode').text('店铺');
+                    }
+                    $('#search-mode-val').val(mode);
+                }
+            </script>
         </div>
         <div class="hotwords">
             <a href="#" name="hotword" target="_blank">圣宝先</a>

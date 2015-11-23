@@ -11,7 +11,7 @@ $operation = 'sort';
 $opera = getPOST('opera');
 $template = 'search-result.phtml';
 
-$count = 1;
+$count = 12;
 $offset = 0;
 assign('count', $count);
 
@@ -115,54 +115,114 @@ if('sort' == $opera)
 $keyword = getGET('keyword');
 $keyword = $db->escape($keyword);
 
-$get_total = 'select count(*) from '.$db->table('product').' where `status`=4 and `name` like \'%' . $keyword . '%\'';
-$total = $db->fetchOne($get_total);
-$total_page = ceil( $total / $count );
-
-$page = intval(getGET('page'));
-$page = ( $page > $total_page ) ? $total_page : $page;
-$page = ( 0 >= $page ) ? 1 : $page;
-$offset = ($page - 1) * $count;
-create_pager($page, $total_page, $total);
-
-$filter = trim(getGET('filter'));
-$filter = $db->escape($filter);
-$order = '';
-switch( $filter ) {
-    case 'sale':
-        $order .= ' order by sale_count desc';
-        $filter = 'sale';
-        break;
-    case 'price1':
-        $order .= ' order by price desc';
-        $filter = 'price1';
-        break;
-    case 'price2':
-        $order .= ' order by price asc';
-        $filter = 'price2';
-        break;
-    case 'comment':
-        $order .= ' order by comment desc';
-        $filter = 'comment';
-        break;
-    default: $order .= '';break;
+$mode = getGET('mode');
+$mode_list = 'shop|product';
+$mode = check_action($mode_list, $mode);
+if($mode == '')
+{
+    $mode = 'product';
 }
-assign('filter', $filter);
+$mode_name = array(
+    'product' => '宝贝',
+    'shop' => '店铺',
+);
+assign('mode', $mode);
+assign('mode_name', $mode_name[$mode]);
+assign('keyword', $keyword);
+if($mode == 'product') {
 
-$now = time();
-$get_product_list = 'select p.`id`,p.`name`,if(p.`promote_end`>'.$now.',p.`promote_price`,p.`price`) as `price`,p.`img`,p.`product_sn`,(select `account` from '.$db->table('collection').
-                    ' where `account`=\''.$_SESSION['account'].'\' and `product_sn`=p.`product_sn`) as collection '.
-                    ' ,(select count(id) from '.$db->table('comment').' where parent_id = 0 and product_sn = p.product_sn) as comment'.
-                    ' ,(select sum(count) from '.$db->table('order_detail').' where product_sn = p.product_sn) as sale_count'.
-                    ' from ' . $db->table('product').
-                    ' as p where p.`status`=4 and p.`name` like \'%' . $keyword . '%\'';
-$get_product_list .= $order;
-$get_product_list .= ' limit '.$offset.','.$count;
+    $get_total = 'select count(*) from ' . $db->table('product') . ' where `status`=4 and `name` like \'%' . $keyword . '%\'';
+    $total = $db->fetchOne($get_total);
+    $total_page = ceil($total / $count);
+
+    $page = intval(getGET('page'));
+    $page = ($page > $total_page) ? $total_page : $page;
+    $page = (0 >= $page) ? 1 : $page;
+    $offset = ($page - 1) * $count;
+    create_pager($page, $total_page, $total);
+
+    $filter = trim(getGET('filter'));
+    $filter = $db->escape($filter);
+    $order = '';
+    switch ($filter) {
+        case 'sale':
+            $order .= ' order by sale_count desc';
+            $filter = 'sale';
+            break;
+        case 'price1':
+            $order .= ' order by price desc';
+            $filter = 'price1';
+            break;
+        case 'price2':
+            $order .= ' order by price asc';
+            $filter = 'price2';
+            break;
+        case 'comment':
+            $order .= ' order by comment desc';
+            $filter = 'comment';
+            break;
+        default:
+            $order .= '';
+            break;
+    }
+    assign('filter', $filter);
+
+    $now = time();
+    $get_product_list = 'select p.`id`,p.`name`,if(p.`promote_end`>' . $now . ',p.`promote_price`,p.`price`) as `price`,p.`img`,p.`product_sn`,(select `account` from ' . $db->table('collection') .
+        ' where `account`=\'' . $_SESSION['account'] . '\' and `product_sn`=p.`product_sn`) as collection ' .
+        ' ,(select count(id) from ' . $db->table('comment') . ' where parent_id = 0 and product_sn = p.product_sn) as comment' .
+        ' ,(select sum(count) from ' . $db->table('order_detail') . ' where product_sn = p.product_sn) as sale_count' .
+        ' from ' . $db->table('product') .
+        ' as p where p.`status`=4 and p.`name` like \'%' . $keyword . '%\'';
+    $get_product_list .= $order;
+    $get_product_list .= ' limit ' . $offset . ',' . $count;
 //echo $get_product_list;exit;
 
-$product_list = $db->fetchAll($get_product_list);
+    $product_list = $db->fetchAll($get_product_list);
 
-assign('product_list', $product_list);
-assign('keyword', $keyword);
+    assign('product_list', $product_list);
 
-$smarty->display($template);
+    $smarty->display($template);
+} else {
+
+    $get_total = 'select count(*) from ' . $db->table('business') . ' where `status`=2 and `shop_name` like \'%' . $keyword . '%\'';
+    $total = $db->fetchOne($get_total);
+    $total_page = ceil($total / $count);
+
+    $page = intval(getGET('page'));
+    $page = ($page > $total_page) ? $total_page : $page;
+    $page = (0 >= $page) ? 1 : $page;
+    $offset = ($page - 1) * $count;
+    create_pager($page, $total_page, $total);
+
+
+    $filter = trim(getGET('filter'));
+    $filter = $db->escape($filter);
+    $order = '';
+    switch ($filter) {
+        default:
+            $order .= 'order by comment desc';
+            break;
+    }
+    assign('filter', $filter);
+
+    $get_shop_list = 'select `id`, `shop_name`,`comment`,`shop_logo`,`business_account` from '.$db->table('business').' where '.
+        ' `status`=2 and `shop_name` like \'%'.$keyword.'%\'';
+
+    $shop_list = $db->fetchAll($get_shop_list);
+    if($shop_list)
+    {
+        foreach ($shop_list as $key => $s)
+        {
+            $get_product_list = 'select `id`,`img`,`name`,`price` from ' . $db->table('product') .
+                ' where `business_account`=\'' . $s['business_account'] . '\' and `status`=4 order by `star` DESC limit 3';
+            $shop_list[$key]['product_list'] = $db->fetchAll($get_product_list);
+        }
+    }
+    assign('shop_list', $shop_list);
+
+//    assign('filter', json_encode($filter));
+    assign('filter', $filer);
+    $template = 'search-shop.phtml';
+    $smarty->display($template);
+}

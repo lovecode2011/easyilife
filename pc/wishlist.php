@@ -12,7 +12,7 @@ $operation = 'paging';
 $opera = check_action($operation, getPOST('opera'));
 $now = time();
 
-$page_count = 1;
+$page_count = 9;
 assign('page_count', $page_count);
 
 //子查询评论数量
@@ -58,6 +58,11 @@ if( 'paging' == $opera ) {
     echo json_encode($response);
     exit;
 }
+
+//猜你喜欢
+$get_fav_products = 'select `name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 8';
+$fav_products = $db->fetchAll($get_fav_products);
+assign('fav_products', $fav_products);
 
 assign('product_list', $product_list);
 assign('title', '我的收藏');
