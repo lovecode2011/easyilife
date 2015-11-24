@@ -367,6 +367,12 @@ if( 'add_to_cart' == $opera ) {
     if( 0 >= $id ) {
         $response['msg'] = '参数错误';
     }
+
+    if(!isset($_SESSION['account']))
+    {
+        $response['msg'] = '请先登录';
+    }
+
     if( $response['msg'] != '' ) {
         echo json_encode($response);
         exit;
