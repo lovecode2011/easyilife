@@ -132,6 +132,6 @@ if( isset($_SESSION['account']) && $_SESSION['account'] ) {
 
 assign('is_login', $is_login);
 
-$aside_hover = $_SERVER['PHP_SELF'];
-$aside_hover = substr($aside_hover, 1);
+$aside_hover = str_replace(ROOT_PATH.'pc/', '', $_SERVER['SCRIPT_FILENAME']);
+//$aside_hover = substr($aside_hover, 1);
 assign('aside_hover', $aside_hover);
