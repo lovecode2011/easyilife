@@ -44,7 +44,7 @@
                 {foreach from=$shop_list item=shop}
                 <li class="search-shop-li">
                     <div class="search-shop-info">
-                        <img src="{$shop.logo|build_url}" alt="{$shop.shop_name}"/>
+                        <img src="{$shop.shop_logo|build_url}" alt="{$shop.shop_name}"/>
                         <span class="search-shop-detail">
                             <span class="search-shop-name">{$shop.shop_name}</span>
                             <span class="search-shop-comment">店铺评价<em>{sprintf("%.1f", $shop.comment)}分</em></span>

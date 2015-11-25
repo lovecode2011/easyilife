@@ -158,10 +158,13 @@
                     title: false,
                     closeBtn: true,
                     shadeClose: true,
-                    area: '500px',
+                    area:  ['550px', '420px'],
                     skin: 'yourclass',
                     content: result.content
                 });
+                if( result.height ) {
+                    $('.yourclass').css('height', result.height);
+                }
             } else {
                 add_to_cart_directly(result.product_sn, result.attributes);
             }

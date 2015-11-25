@@ -36,7 +36,9 @@ $(function(){
     $(".categorys").hover(function(){
         $(".inner").show();
     },function(){
-        $(".inner").hide();
+        if( !$(this).hasClass('index-categorys') ) {
+            $(".inner").hide();
+        }
     });
 
     /* 搜索结果价格排序 */
