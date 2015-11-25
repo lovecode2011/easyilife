@@ -233,15 +233,16 @@ if($product)
         $inventory_json = array();
         foreach ($inventory as $inventory_tmp)
         {
-            $attribute_obj = json_decode($inventory_tmp['attributes']);
-            foreach ($attribute_obj as $aid => $aval)
+            if($attribute_tmp)
             {
-                if (!isset($attributes_map[$aid]['values']))
-                {
-                    $attributes_map[$aid]['values'] = array();
-                }
+                $attribute_obj = json_decode($inventory_tmp['attributes']);
+                foreach ($attribute_obj as $aid => $aval) {
+                    if (!isset($attributes_map[$aid]['values'])) {
+                        $attributes_map[$aid]['values'] = array();
+                    }
 
-                $attributes_map[$aid]['values'][] = mb_convert_encoding($aval, 'UTF-8');
+                    $attributes_map[$aid]['values'][] = mb_convert_encoding($aval, 'UTF-8');
+                }
             }
 
             $inventory_json[$inventory_tmp['attributes']] = $inventory_tmp['inventory_logic'];
@@ -257,7 +258,10 @@ if($product)
 
         foreach ($attributes_map as $aid => $value)
         {
-            $attributes_map[$aid]['values'] = array_unique($value['values']);
+            if(isset($attributes_map[$aid]['values']))
+            {
+                $attributes_map[$aid]['values'] = array_unique($value['values']);
+            }
         }
 
         if(count($attributes_map) == 1)

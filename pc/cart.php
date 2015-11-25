@@ -299,6 +299,9 @@ $total_number = 0;
 
 $cart_list = array();
 $cart_json = array();
+$check_all = false;
+$cart_weight_json = array();
+
 if($cart_list_tmp)
 {
 
