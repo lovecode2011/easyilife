@@ -118,6 +118,7 @@ if( isset($_SESSION['account']) && $_SESSION['account'] ) {
     assign('cart_price_amount', $cart_price_amount);
     assign('mini_cart_list', $cart_list);
 } else {
+    assign('account', '');
     $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php|index.php|article.php|article_list.php|install.php|integral_product_list.php|';
     $no_login_script .= 'product_list.php|product.php|cart.php|product_list.php|search.php|shop.php';
     $script_name = str_replace(ROOT_PATH.'pc/', '', $_SERVER['SCRIPT_FILENAME']);
