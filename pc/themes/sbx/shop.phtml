@@ -51,9 +51,9 @@
                 <div class="dt">
                     <a href="#">全部商品分类<i class="icon">&#xe606;</i></a>
                 </div>
-                {$category_list_height = 380}
-                {$category_item = 40}
-                <div class="dd inner" >
+                {$category_list_height = 328}
+                {$category_item = 41}
+                <div class="dd inner" style="height: {$category_list_height + $category_item * count($shop_category_list)}px">
                     <div class="dd-inner" >
                         {foreach from=$category_list item=cat name=category_list}
                         <div class="item">
