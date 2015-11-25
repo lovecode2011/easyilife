@@ -261,6 +261,8 @@
     //立即支付 start===========================================
     function pay_now(order_sn) {
         if(order_sn != '') {
+            alert('尚未有接口');
+            return;
             var url = "order.php";
             var data = { "opera":"pay_now", "order_sn":order_sn };
 

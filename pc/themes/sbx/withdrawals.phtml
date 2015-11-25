@@ -58,7 +58,7 @@
                             {foreach from=$bank_list item=bank name=bank_list}
                             <li data-id="{$bank.id}" class="bank-card {if $smarty.foreach.bank_list.first}hover{/if}">
                                 <ins class="icon">&#xe624;</ins>
-                                {$bank.bank}（{$bank.show_name}）借记卡
+                                {$bank.show_name}
                             </li>
                             {/foreach}
                             <div style="clear: both;"></div>
