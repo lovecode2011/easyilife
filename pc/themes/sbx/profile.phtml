@@ -100,12 +100,21 @@
                 </div>
             </div>
             <div class="fl">
+                {if $user_info.openid}
+                <div class="profile-avatar">
+                    <img src="{if $user_info}{$user_info.headimg|build_url}{else}{$template_dir}images/avatar_60x60.jpg{/if}" height="120" width="120">
+<!--                    <a href="javascript:;" name="person_index_info_head01">编辑头像</a>-->
+                    <div class="edit_bg"></div>
+                </div>
+                {else}
                 <div class="profile-avatar">
                     <img src="{$template_dir}images/avatar_60x60.jpg" height="120" width="120">
                     <a href="javascript:;" name="person_index_info_head01">编辑头像</a>
                     <div class="edit_bg"></div>
                 </div>
+                {/if}
             </div>
+
             <div style="clear: both;"></div>
         </div>
         <!--新增收货地址 结束-->

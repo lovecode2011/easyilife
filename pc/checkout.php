@@ -548,7 +548,7 @@ if( 'simulation_pay' == $opera ) {
             $response['msg'] = '参数错误';
         } else {
             $order_sn = $db->escape($order_sn);
-            $pay_order = 'update ' . $db->table('order') . ' set status = 3 where account = \'' . $_SESSION['account'] . '\' and order_sn = \'' . $order_sn . '\' and status = 1 limit 1';
+            $pay_order = 'update ' . $db->table('order') . ' set `pay_time`='.time().',status = 4 where account = \'' . $_SESSION['account'] . '\' and order_sn = \'' . $order_sn . '\' and status = 1 limit 1';
             if ($db->update($pay_order)) {
                 $response['error'] = 0;
                 $response['msg'] = '模拟支付一张订单成功';

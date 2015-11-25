@@ -9,7 +9,7 @@
 
 include 'library/init.inc.php';
 
-$action = 'list|detail|comment|product_comment';
+$action = 'list|detail|comment|product_comment|express_info';
 $act = check_action($action, getGET('act'));
 $operation = 'pay_now|cancel|rollback|receive|comment|product_comment|sort|paging|express_info';
 $opera = check_action($operation, getPOST('opera'));
@@ -554,6 +554,48 @@ if( 'paging' == $opera ) {
     exit;
 }
 
+if('express_info' == $act)
+{
+    $express_state = array(
+        0 => '在途',
+        1 => '揽件',
+        2 => '疑难',
+        3 => '签收',
+        4 => '退签',
+        5 => '派件',
+        6 => '退回'
+    );
+    assign('express_state', $express_state);
+
+    $order_sn = getGET('order_sn');
+
+    if($order_sn == '')
+    {
+        $response['msg'] = '参数错误';
+    } else {
+        $order_sn = $db->escape($order_sn);
+    }
+
+    $get_order_info = 'select * from '.$db->table('order').' where `order_sn`=\''.$order_sn.'\'';
+    $order = $db->fetchRow($get_order_info);
+
+    if($order && $order['status'] == 6)
+    {
+        $get_express_info = 'select `code`,`name` from '.$db->table('express').' where `id`='.$order['express_id'];
+        $express_info = $db->fetchRow($get_express_info);
+        $express_flow = query_express($express_info['code'], $order['express_sn']);
+        $express_flow = json_decode($express_flow, true);
+        assign('express_flow', $express_flow);
+        assign('express_info', $express_info);
+    }
+    assign('order', $order);
+
+    $get_order_detail = 'select p.`img` from '.$db->table('order_detail').' as od join '.$db->table('product').
+        ' as p using(`product_sn`) where od.`order_sn`=\''.$order_sn.'\'';
+    assign('product_img', $db->fetchOne($get_order_detail));
+
+    $template = 'track.phtml';
+}
 
 if( $act == 'list' ) {
     $status = intval(getGET('status'));

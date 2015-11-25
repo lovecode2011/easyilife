@@ -159,7 +159,7 @@
                                 {elseif $order.status eq 4}
                                 <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
                                 {elseif $order.status eq 6}
-                                <a href="javascript:void(0);" class="btn-again btn"><b></b>查看物流</a><br>
+<!--                                <a href="javascript:void(0);" class="btn-again btn"><b></b>查看物流</a><br>-->
                                 <a href="javascript:receive('{$order.order_sn}');" class="btn-again btn"><b></b>确认收货</a><br>
                                 {elseif $order.status eq 7}
                                 <a href="javascript:comment('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>

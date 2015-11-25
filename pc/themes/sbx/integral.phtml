@@ -74,6 +74,7 @@
                                 <th>日期</th>
                             </tr>
                             </thead>
+                            {if $member_exchange}
                             <tbody>
                             {foreach from=$member_exchange item=exchange key=id}
                             {if $id eq $page_count}
@@ -86,10 +87,12 @@
                             </tr>
                             {/foreach}
                             </tbody>
+                            {/if}
                         </table>
                     </div>
                 </div>
             </div>
+            {if $member_exchange}
             <div class="pages fr">
                 <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
                 {for $index=1 to $total_page-1}
@@ -110,6 +113,7 @@
                     <a rel="nofollow" class="pageGo fl" href="javascript:get_integral_by_input(0)" id="bad-pagesubmit">跳转</a>
                 </div>
             </div>
+            {/if}
             <div style="clear: both;"></div>
         </div>
         <!--积分 结束-->

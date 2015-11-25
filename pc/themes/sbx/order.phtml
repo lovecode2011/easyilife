@@ -178,7 +178,7 @@
                                 {elseif $order.status eq 4}
                                 <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
                                 {elseif $order.status eq 6}
-                                <a href="javascript:void(0);" class="btn-again btn"><b></b>查看物流</a><br>
+                                <a href="order.php?act=express_info&order_sn={$order.order_sn}" class="btn-again btn" onclick="show_mask();"><b></b>查看物流</a><br>
                                 <a href="javascript:receive('{$order.order_sn}');" class="btn-again btn"><b></b>确认收货</a><br>
                                 {elseif $order.status eq 7}
                                 <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
@@ -232,7 +232,6 @@
         </div>
         <!--右侧我的订单 结束-->
         {include file="might-like.phtml"}
-        </div>
     </div>
     {include file="aside.phtml"}
 </div>
@@ -245,6 +244,12 @@
 <script type="text/javascript" src="{$template_dir}js/layer/layer.js"></script>
 
 <script type="text/javascript">
+
+    var loading;
+
+    function show_mask() {
+        loading = layer.load(0, { shade: 0.3 });
+    }
 
     function comment(order_sn) {
         if(order_sn != '') {

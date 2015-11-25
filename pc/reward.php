@@ -44,15 +44,11 @@ if( 'paging' == $opera ) {
         $get_member_exchange .= ' limit '.$offset.','.$page_count;
         $member_exchange = $db->fetchAll($get_member_exchange);
 
-        if( $member_exchange ) {
-            $response['error'] = 0;
-            assign('member_exchange', $member_exchange);
-            assign('page', $page);
-            assign('total_page', $total_page);
-            $response['content'] = $smarty->fetch('reward-item.phtml');
-        } else {
-            $response['msg'] = '系统繁忙，请稍后重试';
-        }
+        $response['error'] = 0;
+        assign('member_exchange', $member_exchange);
+        assign('page', $page);
+        assign('total_page', $total_page);
+        $response['content'] = $smarty->fetch('reward-item.phtml');
 
     } else {
         if (empty($_SESSION['account'])) {

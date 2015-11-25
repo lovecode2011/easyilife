@@ -29,7 +29,7 @@
             <div class="user-photo">
                 <div class="user-photo-inner">
                     <a href="#" target="_blank">
-                        <img src="{if $user_info.headimg neq ""}{$user_info.headimg|build_url}{else}{$template_dir}images/wang.jpg{/if}" alt="头像"/>
+                        <img src="{if $user_info.headimg neq ""}{$user_info.headimg|build_url}{else}{$template_dir}images/avatar_60x60.jpg{/if}" alt="头像"/>
                         <div class="edit-box">
                             <span class="edit">&nbsp;</span>
                             <span class="edita">编辑头像</span>
@@ -58,9 +58,9 @@
                     </li>
                     <li>
                         <div class="count-item">
-                            <a href="order.php?status=6" target="_parent" title="待发货">
+                            <a href="order.php?status=6" target="_parent" title="待收货">
                                 <i class="icon">&#xe615;</i>
-                                待发货
+                                待收货
                                 <em>{$order_await_receive}</em>
                             </a>
                         </div>
