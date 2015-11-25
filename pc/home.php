@@ -15,15 +15,15 @@ $user_info = $db->fetchRow($get_user_info);
 assign('user_info', $user_info);
 
 //获取订单数量  待付款  待收货  待评价  退换货
-$get_order_count = 'select count(*) from '.$db->table('order').' where `account`=\''.$_SESSION['account'].'\' and `status`=';
+$get_order_count = 'select count(*) from '.$db->table('order').' where `account`=\''.$_SESSION['account'].'\' and ';
 
-$order_await_pay = $db->fetchOne($get_order_count.'1');
+$order_await_pay = $db->fetchOne($get_order_count.'`status`=1');
 
-$order_await_receive = $db->fetchOne($get_order_count.'6');
+$order_await_receive = $db->fetchOne($get_order_count.'`status`=6');
 
-$order_await_comment = $db->fetchOne($get_order_count.'7');
+$order_await_comment = $db->fetchOne($get_order_count.'`status`=7');
 
-$order_await_refund = $db->fetchOne($get_order_count.'8');
+$order_await_refund = $db->fetchOne($get_order_count.'`status`>8 and `status`<12');
 
 assign('order_await_pay', $order_await_pay);
 assign('order_await_receive', $order_await_receive);
