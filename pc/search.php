@@ -168,9 +168,15 @@ if($mode == 'product') {
     assign('filter', $filter);
 
     $now = time();
-    $get_product_list = 'select p.`id`,p.`name`,if(p.`promote_end`>' . $now . ',p.`promote_price`,p.`price`) as `price`,p.`img`,p.`product_sn`,(select `account` from ' . $db->table('collection') .
-        ' where `account`=\'' . $_SESSION['account'] . '\' and `product_sn`=p.`product_sn`) as collection ' .
-        ' ,(select count(id) from ' . $db->table('comment') . ' where parent_id = 0 and product_sn = p.product_sn) as comment' .
+
+    $get_product_list = 'select p.`id`,p.`name`,if(p.`promote_end`>' . $now . ',p.`promote_price`,p.`price`) as `price`,p.`img`,p.`product_sn`,';
+    if(isset($_SESSION['account']))
+    {
+        $get_product_list .= '(select `account` from ' . $db->table('collection') .' where `account`=\'' . $_SESSION['account'] . '\' and `product_sn`=p.`product_sn`) as collection ';
+    } else {
+        $get_product_list .= '\'\' as collection ';
+    }
+    $get_product_list .= ' ,(select count(id) from ' . $db->table('comment') . ' where parent_id = 0 and product_sn = p.product_sn) as comment' .
         ' ,(select sum(count) from ' . $db->table('order_detail') . ' where product_sn = p.product_sn) as sale_count' .
         ' from ' . $db->table('product') .
         ' as p where p.`status`=4 and p.`name` like \'%' . $keyword . '%\'';
