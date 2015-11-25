@@ -637,10 +637,10 @@ if( $act == 'list' ) {
     switch($status) {
         case 0:$total_page = ceil($all_total / $page_count);break;
         case 1:$total_page = ceil($pay_total / $page_count);break;
-        case 4:$total_page = ceil($receive_total / $page_count);break;
-        case 6:$total_page = ceil($comment_total / $page_count);break;
-        case 8:$total_page = ceil($refund_total / $page_count);break;
+        case 6:$total_page = ceil($receive_total / $page_count);break;
+        case 7:$total_page = ceil($comment_total / $page_count);break;
         case 12:$total_page = ceil($complete_total / $page_count);break;
+        default:$total_page = ceil($refund_total / $page_count);break;
     }
 //    echo $total_page;exit;
     $get_order_list = 'select o.`order_sn`,b.`shop_name`,o.`status`,o.`amount`,o.`business_account`,o.`add_time`,b.`id` as bid from '.$db->table('order').' as o join '.
@@ -648,7 +648,6 @@ if( $act == 'list' ) {
     $get_order_list .= $where;
 
     $get_order_list .= ' order by o.`add_time` DESC limit 0,'.$page_count;
-
 
 
     $order_list = $db->fetchAll($get_order_list);
@@ -664,6 +663,7 @@ if( $act == 'list' ) {
         }
     }
 
+    $now = time();
     //猜你喜欢
     $get_fav_products = 'select `name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 8';
     $fav_products = $db->fetchAll($get_fav_products);

@@ -53,6 +53,7 @@ $get_product_list = 'select p.`product_sn`,p.`name`,if(`promote_end`>'.$now.',`p
 
 $product_list = $db->fetchAll($get_product_list);
 
+$now = time();
 //猜你喜欢
 $get_fav_products = 'select `name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 8';
 $fav_products = $db->fetchAll($get_fav_products);

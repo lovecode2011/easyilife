@@ -9,14 +9,13 @@
 
 include 'library/init.inc.php';
 
-$operation = 'edit|headimg';
-$action = 'view';
+$operation = 'edit|avatar';
+$action = 'view|avatar';
 
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
 
 $act = $act == '' ? 'view' : $act;
-
 
 if( 'edit' == $opera ) {
     $response = array('error'=>1, 'msg'=>'');
@@ -78,6 +77,15 @@ if( 'edit' == $opera ) {
 
     echo json_encode($response);
     exit;
+}
+
+if( 'avatar' == $act ) {
+    $template = 'avatar.phtml';
+
+    $get_user_info = 'select * from '.$db->table('member').' where account = \''.$_SESSION['account'].'\'';
+    $user_info = $db->fetchRow($get_user_info);
+
+    assign('user_info', $user_info);
 }
 
 if( 'view' == $act ) {
