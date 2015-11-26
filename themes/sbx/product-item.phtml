@@ -3,7 +3,7 @@
 <li>
     <a href="product.php?id={$p.id}">
         <img src="{$p.img}" alt="{$p.name}">
-        <span>{$p.name}</span>
+        <span>{$p.name|truncate:7:".."}</span>
         <em>￥{$p.price}</em>
     </a>
 </li>
