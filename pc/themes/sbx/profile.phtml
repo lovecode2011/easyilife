@@ -108,8 +108,8 @@
                 </div>
                 {else}
                 <div class="profile-avatar">
-                    <img src="{$template_dir}images/avatar_60x60.jpg" height="120" width="120">
-                    <a href="javascript:;" name="person_index_info_head01">编辑头像</a>
+                    <img src="{if $user_info.headimg}{$user_info.headimg|build_url}{else}{$template_dir}images/avatar_60x60.jpg{/if}" height="120" width="120">
+                    <a href="?act=avatar" name="person_index_info_head01">编辑头像</a>
                     <div class="edit_bg"></div>
                 </div>
                 {/if}

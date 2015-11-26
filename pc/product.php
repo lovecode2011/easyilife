@@ -845,5 +845,17 @@ if($product)
     redirect('index.php');
 }
 
+$pattern = '#<img src="([^"]*)"#';
+$content = $product['detail'];
+preg_match_all($pattern, $content ,$matches);
+if( $matches ) {
+    foreach ($matches[1] as $match) {
+        $temp = build_url($match);
+        $content = str_replace('"' . $match . '"', '"' . $temp . '"', $content);
+    }
+}
+$product['detail'] = $content;
+
+
 assign('product', $product);
 $smarty->display('product.phtml');

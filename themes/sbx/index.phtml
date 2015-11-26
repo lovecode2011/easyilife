@@ -59,7 +59,11 @@
     <li><a href="article_list.php?id=5"><i class="icon" style="background-color: #54b0e9;">&#xe62e;</i><span>健康管理</span></a></li>
     <li><a href="ads.php"><i class="icon" style="background-color: #76bd3d;">&#xe62d;</i><span>商学院</span></a></li>
     <li><a href="article_list.php?id=7"><i class="icon" style="background-color: #f15a5a;">&#xe630;</i><span>名家护航</span></a></li>
-    <li><a href="#"><i class="icon" style="background-color: #8d85ee;">&#xe62c;</i><span>联系掌门人</span></a></li>
+    {if $parent_mobile}
+    <li><a href="javascript:show_message_dialog('确定播打电话<a href=\'tel://{$parent_mobile}\'>{$parent_mobile}</a>?如有疑问可另联系售后服务热线<a href=\'tel://4006358378\'>4006358378</a>。')"><i class="icon" style="background-color: #8d85ee;">&#xe62c;</i><span>联系掌门人</span></a></li>
+    {else}
+    <li><a href="javascript:show_message_dialog('确认播打售后服务热线<a href=\'tel://4006358378\'>4006358378</a>吗？')"><i class="icon" style="background-color: #8d85ee;">&#xe62c;</i><span>联系掌门人</span></a></li>
+    {/if}
     <li><a href="copartner.php"><i class="icon" style="background-color: #ffb721;">&#xe62f;</i><span>合伙人入口</span></a></li>
     <li><a href="article_list.php?id=8"><i class="icon" style="background-color: #69c0f7;">&#xe606;</i><span>公益联盟</span></a></li><!-- CMS -->
     <li><a href="article_list.php?id=16"><i class="icon" style="background-color: #ffb221;">&#xe605;</i><span>美好人生VIP</span></a></li>
@@ -142,6 +146,19 @@
         <li><a href="user.php"><em class="icon">&#xe604;</em><span>我</span></a></li>
     </ul>
 </section>
+<div class="cd-popup" role="alert">
+    <div class="cd-popup-container" id="message_dialog" style="display: none;">
+        <p id="dialog-message"></p>
+        <ul class="cd-buttons">
+            <li class="cd-signle-button"><a href="javascript:close_message_dialog();" id="dialog_close_btn">确认</a></li>
+        </ul>
+        <a href="javascript:close_message_dialog_cancel();" class="cd-popup-close img-replace" id="dialog_close">X</a>
+    </div>
+
+    <div class="progressbar">
+        <img src="{$template_dir}images/loading.gif"/>
+    </div>
+</div>
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript" src="{$template_dir}js/jquery.lazyload.min.js"></script>
 <script type="text/javascript">
@@ -186,6 +203,25 @@
         if(response.error == 0) {
             $("#fav_list").html(response.content);
         }
+    }
+    function show_message_dialog(message) {
+        $(".cd-popup").addClass("is-visible");
+        $(".progressbar").hide();
+        $("#dialog-message").empty();
+        $("#dialog-message").append(message);
+        $("#message_dialog").show();
+    }
+
+    function close_message_dialog() {
+        $(".cd-popup").removeClass("is-visible");
+        $("#message_dialog").hide();
+        var phone = $('#message_dialog').find('a:eq(0)').text();
+        window.location.href="tel://"+phone;
+    }
+
+    function close_message_dialog_cancel() {
+        $(".cd-popup").removeClass("is-visible");
+        $("#message_dialog").hide();
     }
 </script>
 </body>

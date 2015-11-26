@@ -9,7 +9,7 @@
     <meta name="author" content="www.kwanson.com">
     <meta name="version" content="v.1.0.0">
     <meta http-equiv="Cache-Control" content="no-cache">
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="{$template_dir}images/favicon.ico" type="image/x-icon">
     <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
     <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
 </head>
@@ -21,13 +21,37 @@
     <a href="index.php" target="_blank">首页</a><span class="gt">&gt;</span>
     <a href="home.php" target="_blank">用户中心</a><span class="gt">&gt;</span>
     <a href="profile.php" target="_blank">我的资料</a><span class="gt">&gt;</span>
-    <span>修改资料</span>
+    <span>编辑头像</span>
 </div>
 <!-- 顶部面包屑导航结束 -->
 <!-- 个人中心开始 -->
 <div class="home container">
     <div class="main">
-
+        <form action="profile.php" method="post" enctype="multipart/form-data">
+            <div class="profile">
+                <dl class="form-item">
+                    <dt><em>*</em>头像上传：</dt>
+                    <dd>
+                        <ul class="upload-img-box">
+                            <li class="hide"><img width="80px" height="80px" alt="" src="images/s1.jpg"></li>
+                            <li class="upload-btn"  style="height:80px; width: 80px;">
+                                <div style="background-color: #ffffff;">
+                                    <input value="{$user_info.headimg|build_url}" style="border: 1px solid #ccc; z-index: 0;opacity: 0; position: absolute; cursor: pointer"  class="add-img-btn" title="请上传头像" type="file" name="headimg" id="headimg" onchange="show_pic(this);" accept="image/gif, image/jpeg, image/png"/><b class="icon" style="margin-left: 30px;line-height: 80px;font-size: 20px;color: #969696;">&#xe60d;</b>
+                                </div>
+                            </li>
+                        </ul>
+                    </dd>
+                    <div style="clear: both;"></div>
+                </dl>
+                <div class="operation">
+                    <a href="javascript:submit_avatar();" class="sure">保存</a>
+                    <a href="javascript:history.go(-1);" class="cancel">取消</a>
+                    <input type="hidden" name="opera" value="avatar"/>
+                    <div style="clear: both;"></div>
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+        </form>
     </div>
     {include file="aside.phtml"}
 </div>
@@ -40,7 +64,13 @@
 <script type="text/javascript">
     var mobile = "{$user_info.mobile}";
     var loading;
-
+    {if isset($response)}
+        submit_avatar_handler({$response});
+    {/if}
+    {if isset($user_info.headimg)}
+        $('#headimg').parent().parent().css('background-image', 'url({$user_info.headimg|build_url})');
+        $('#headimg').parent().parent().css('background-size','100% 100%');
+    {/if}
 
     function show_mask() {
         loading = layer.load(0, { shade: 0.3 });
@@ -48,6 +78,66 @@
 
     function hide_mask() {
         layer.close(loading);
+    }
+
+    function submit_avatar() {
+        var headimg = $('#headimg');
+        var msg = '';
+        if(headimg == "") {
+            msg += "-请上传头像<br/>";
+        }
+        if(msg == "") {
+            show_mask();
+            document.forms[1].submit();
+        } else {
+            layer.msg(msg);
+        }
+
+        return false;
+    }
+
+    function submit_avatar_handler(response) {
+        hide_mask();
+
+        if(response.error == 0) {
+            window.location.href = "profile.php"
+        } else {
+            layer.msg(response.msg);
+        }
+    }
+
+    function show_pic(obj)
+    {
+        var picPath = obj.value;
+        var type = picPath.substring(picPath.lastIndexOf(".")+1,picPath.length).toLowerCase();
+
+        if(type != "jpg" && type != "jpep" && type != "gif" && type != "png")
+        {
+            return false;
+        }
+
+        if (window.createObjectURL != undefined)
+        {
+            var img = window.createObjectURL(obj.files[0])
+        }
+        else if (window.URL != undefined) {
+            var img = window.URL.createObjectURL(obj.files[0])
+        }
+        else if (window.webkitURL != undefined)
+        {
+            var img = window.webkitURL.createObjectURL(obj.files[0])
+        }
+
+        var filesize = obj.files[0].size;
+
+        if(filesize > 5 * 1024 * 1024)
+        {
+            console.info('图片不能超过5M');
+            return false;
+        }
+        $(obj).parent().parent().css('background-image','url('+img+')');
+        $(obj).parent().parent().css('background-size','100% 100%');
+        $(obj).next().hide();
     }
 
 </script>
