@@ -13,6 +13,15 @@ $get_user_info = 'select * from '.$db->table('member').' where `account`=\''.$_S
 $user_info = $db->fetchRow($get_user_info);
 assign('user_info', $user_info);
 
+//获取上线联系方式
+if( $user_info && $user_info['parent_id'] ) {
+    $get_parent_mobile = 'select `mobile` from '.$db->table('member').' where id = \''.$user_info['parent_id'].'\'';
+    $parent_mobile = $db->fetchOne($get_parent_mobile);
+} else {
+    $parent_mobile = '';
+}
+assign('parent_mobile', $parent_mobile);
+
 //获取公告
 $get_notice = 'select `id`,`title` from '.$db->table('content').' where `section_id`=1 order by `add_time` DESC limit 5';
 $notice = $db->fetchAll($get_notice);
