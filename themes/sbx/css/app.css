@@ -1033,6 +1033,9 @@ aside span.blue{background-color:#008cd6;}
 }
 .might-like ul li img,.hot-product ul li img{
     width: 100%;
+    height: 100%;
+    max-width: 199px;
+    max-height: 199px;
 }
 .might-like em,.hot-product em{
     display: inline-block;

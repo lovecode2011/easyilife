@@ -19,6 +19,7 @@
 </head>
 <body id="index">
 <!-- 首页头部 -->
+<!--
 <header class="header">
     <div class="logo">
         <a href="#">圣宝先</a>
@@ -39,6 +40,7 @@
         <a href="#"><span class="icon">&#xe600;</span><em>客服</em></a>
     </div>
 </header>
+-->
 <!-- 广告轮播区 -->
 <section id="focus" class="focus">
     <div class="hd">
@@ -92,7 +94,26 @@
 </section>
 {/foreach}
 
-
+<header class="header">
+    <div class="logo">
+        <a href="#">圣宝先</a>
+    </div>
+    <div class="search_box">
+        <a href="#" >
+            <div class="search">
+                <form method="get" action="search.php">
+                    <div class="text_box">
+                        <input id="keyword" name="keyword" type="text" placeholder="搜索商品/店铺" class="keyword text" onkeydown="this.style.color='#404040'" autocomplete="off">
+                    </div>
+                    <input type="submit" value="" class="submit" sbs_name="搜索">
+                </form>
+            </div>
+        </a>
+    </div>
+    <div class="header_service">
+        <a href="#"><span class="icon">&#xe600;</span><em>客服</em></a>
+    </div>
+</header>
 <!-- 猜你喜欢 -->
 <section class="f-section might-like">
     <h3>
@@ -104,7 +125,7 @@
         <li>
             <a href="product.php?id={$p.id}">
                 <img src="{$p.img}" alt="{$p.name}">
-                <span>{$p.name}</span>
+                <span>{$p.name|truncate:7:".."}</span>
                 <em>￥{$p.price}</em>
             </a>
         </li>

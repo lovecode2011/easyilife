@@ -21,15 +21,15 @@ if('sort' == $opera)
         $mode = intval($mode);
     }
 
-    $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from '.$db->table('content');
+    $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from '.$db->table('content').' where `status`<>0 ';
 
     switch($mode)
     {
         case 'all':
-            $get_article_list .= ' where `section_id` in (1,2,3)';
+            $get_article_list .= ' and `section_id` in (1,2,3)';
             break;
         default:
-            $get_article_list .= ' where `section_id`='.$mode;
+            $get_article_list .= ' and `section_id`='.$mode;
             break;
     }
 
@@ -53,7 +53,7 @@ if($id <= 3)
     $section_list = $db->fetchAll($get_section_list);
     assign('section_list', $section_list);
 
-    $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' where `section_id` in (1,2,3) order by `add_time` DESC';
+    $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' where `section_id` in (1,2,3) and `status`<>0 order by `add_time` DESC';
 
     $article_list = $db->fetchAll($get_article_list);
 
@@ -65,12 +65,12 @@ if($id <= 3)
     $get_section_list = 'select `section_name`, `id` from '.$db->table('section').' where `parent_id` = '.$id.' order by `id` asc';
     $section_list = $db->fetchAll($get_section_list);
     if( $section_list ) {
-        $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' where `section_id`='.$section_list[0]['id'].' order by `add_time` DESC';
+        $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' where `section_id`='.$section_list[0]['id'].' and `status`<>0 order by `add_time` DESC';
         $article_list = $db->fetchAll($get_article_list);
 
         assign('width', (100 / count($section_list)));
     } else {
-        $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' where `section_id`='.$id.' order by `add_time` DESC';
+        $get_article_list = 'select `title`,`id`,`add_time`,`description`,`original` from ' . $db->table('content') . ' where `section_id`='.$id.' and `status`<>0 order by `add_time` DESC';
         $article_list = $db->fetchAll($get_article_list);
 
         assign('width', '25');

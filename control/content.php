@@ -292,7 +292,7 @@ if( 'view' == $act ) {
     }
     $keyword = $db->escape(htmlspecialchars(trim($keyword)));
     if( !empty($keyword) ) {
-        $orWhere = ' and a.`title` like \'%'.$keyword.'%\' or a.author like \'%'.$keyword.'%\' or s.section_name like \'%'.$keyword.'%\'';
+        $orWhere = ' and (a.`title` like \'%'.$keyword.'%\' or a.author like \'%'.$keyword.'%\' or s.section_name like \'%'.$keyword.'%\')';
     } else {
         $orWhere = '';
     }
@@ -316,6 +316,7 @@ if( 'view' == $act ) {
     $get_content_list .= ' where a.status = 1'.$orWhere;
     $get_content_list .= ' order by a.order_view asc, a.add_time desc';
     $get_content_list .= ' limit '.$offset.','.$count;
+
     $content_list = $db->fetchAll($get_content_list);
 
     if( $content_list ) {
