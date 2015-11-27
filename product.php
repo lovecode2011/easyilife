@@ -233,7 +233,7 @@ if($product)
         $inventory_json = array();
         foreach ($inventory as $inventory_tmp)
         {
-            if($attribute_tmp)
+            if($inventory_tmp)
             {
                 $attribute_obj = json_decode($inventory_tmp['attributes']);
                 foreach ($attribute_obj as $aid => $aval) {
