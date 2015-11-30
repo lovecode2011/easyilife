@@ -64,7 +64,7 @@
     {else}
     <li><a href="javascript:show_message_dialog('确认拨打售后服务热线<a href=\'tel://4006358378\'>4006358378</a>吗？')"><i class="icon" style="background-color: #8d85ee;">&#xe62c;</i><span>联系掌门人</span></a></li>
     {/if}
-    <li><a href="copartner.php"><i class="icon" style="background-color: #ffb721;">&#xe62f;</i><span>合伙人入口</span></a></li>
+    <li><a href="javascript:show_copartner();"><i class="icon" style="background-color: #ffb721;">&#xe62f;</i><span>合伙人入口</span></a></li>
     <li><a href="article_list.php?id=8"><i class="icon" style="background-color: #69c0f7;">&#xe606;</i><span>公益联盟</span></a></li><!-- CMS -->
     <li><a href="article_list.php?id=16"><i class="icon" style="background-color: #ffb221;">&#xe605;</i><span>美好人生VIP</span></a></li>
     <li><a href="article.php?id=40"><i class="icon" style="background-color: #ff5757;">&#xe631;</i><span>梦想新空间</span></a></li>
@@ -146,7 +146,7 @@
         <li><a href="user.php"><em class="icon">&#xe604;</em><span>我</span></a></li>
     </ul>
 </section>
-<div class="cd-popup" role="alert">
+<div class="cd-popup" role="alert" id="alert-dialog">
     <div class="cd-popup-container" id="message_dialog" style="display: none;">
         <p id="dialog-message"></p>
         <ul class="cd-buttons">
@@ -157,6 +157,33 @@
 
     <div class="progressbar">
         <img src="{$template_dir}images/loading.gif"/>
+    </div>
+</div>
+<style>
+{literal}
+.dialog-content {height: 12rem;}
+.dialog-header {background: #ffce28; height: 1rem; padding-top: 0.8rem;border-radius: .25rem}
+.dialog-body p{text-align: left}
+.dialog-footer {}
+.dialog-footer a {padding: 10px;background-color: #e60012;color: #ffffff}
+{/literal}
+</style>
+<div class="cd-popup" role="alert" id="tip-dialog" style="">
+    <div class="dialog-content cd-popup-container" style="display: block;">
+        <a href="javascript:close_message_dialog_cancel();" class="cd-popup-close img-replace" id="dialog_close">X</a>
+        <div class="dialog-header">
+            <h5>合伙人入口</h5>
+        </div>
+        <div class="dialog-body">
+            <p>
+                点击“精品专区”<br />
+                任选以下精品专区的一款产品确认支付<br />
+                即可成为平台合伙人
+            </p>
+        </div>
+        <div class="dialog-footer">
+            <a href="activity.php?id=4">精品专区</a>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="{$template_dir}js/jquery-1.11.0.min.js"></script>
@@ -205,7 +232,7 @@
         }
     }
     function show_message_dialog(message) {
-        $(".cd-popup").addClass("is-visible");
+        $("#alert-dialog").addClass("is-visible");
         $(".progressbar").hide();
         $("#dialog-message").empty();
         $("#dialog-message").append(message);
@@ -213,7 +240,7 @@
     }
 
     function close_message_dialog() {
-        $(".cd-popup").removeClass("is-visible");
+        $("#alert-dialog").removeClass("is-visible");
         $("#message_dialog").hide();
         var phone = $('#message_dialog').find('a:eq(0)').text();
         window.location.href="tel://"+phone;
@@ -222,7 +249,14 @@
     function close_message_dialog_cancel() {
         $(".cd-popup").removeClass("is-visible");
         $("#message_dialog").hide();
+        $('.dialog-content').hide();
     }
+
+    function show_copartner() {
+        $('#tip-dialog').addClass('is-visible');
+        $('.dialog-content').show();
+    }
+
 </script>
 </body>
 </html>
