@@ -746,8 +746,8 @@ function build_url($url) {
     } elseif( is_numeric(strpos($_SERVER['SCRIPT_NAME'], '/pc')) ) { //手机域名访问pc端
         return '../'.$url;
     } else {    //pc端虚拟主机
-        if( $_SERVER['SERVER_NAME'] == 'pc.easyilife.com' ) {
-            return 'http://local.easyilife.com/' . $url;
+        if( $_SERVER['SERVER_NAME'] == 'sbx.kwanson.com' ) {
+            return 'http://sbx.kwanson.com/' . $url;
         } else {
             return $url;
         }
