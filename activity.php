@@ -98,9 +98,11 @@ $get_product_sn = 'select `product_sn` from '.$db->table('activity_mapper').' wh
 $product_sn_arr = $db->fetchAll($get_product_sn);
 $product_sn_str = '';
 
-foreach($product_sn_arr as $p)
+if($product_sn_arr)
 {
-    $product_sn_str .= '\''.$p['product_sn'].'\',';
+    foreach ($product_sn_arr as $p) {
+        $product_sn_str .= '\'' . $p['product_sn'] . '\',';
+    }
 }
 
 $product_sn_str = substr($product_sn_str, 0, strlen($product_sn_str)-1);
