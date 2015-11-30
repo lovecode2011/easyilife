@@ -28,13 +28,13 @@
         <div class="main">
             <!--注册头部-->
             <div class="login-head">
-                <h3>重置密码</h3>
+                <h3>找回密码</h3>
             </div>
             <div style="clear: both;"></div>
             <!--用户名-->
             <div class="username">
                 <span class="icon">&#xe626;</span>
-                <input class="user" name="phone" value="{substr($mobile, 0, 3)}***{substr($mobile, -4)}" type="text" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码">
+                <input class="user" name="mobile" id="mobile" onblur="verify_mobile();" value="" type="text" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码">
             </div>
             <p class="tips"></p>
             <!--验证码-->
@@ -60,13 +60,14 @@
         <div class="main">
             <!--注册头部-->
             <div class="login-head">
-                <h3>重置密码</h3>
+                <h3>找回密码</h3>
             </div>
             <div style="clear: both;"></div>
             <!--用户名-->
             <div class="username">
                 <span class="icon">&#xe626;</span>
-                <input class="user" name="phone" value="{substr($mobile, 0, 3)}***{substr($mobile, -4)}" type="text" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码">
+                <input class="user" readonly="readonly" name="phone" id="mobile-show" value="" type="hidden" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码">
+
             </div>
             <p class="tips"></p>
             <!--验证码-->
@@ -90,7 +91,7 @@
         <div class="main">
             <!--注册头部-->
             <div class="login-head">
-                <h3>重置密码</h3>
+                <h3>找回密码</h3>
             </div>
             <div style="clear: both;"></div>
             <!--密码-->
@@ -123,7 +124,7 @@
 
     var interval = null;
     var timer = 0;
-    var mobile = "{$mobile}";
+    var mobile = "";
 
     $(function(){
 
@@ -206,8 +207,8 @@
             if( password != confirm ) {
                 layer.msg('两次输入的密码不一致');
             }
-            var url = "password.php";
-            var data = { "opera":"edit", "password":password,'ref':ref };
+            var url = "forgot.php";
+            var data = { "opera":"edit", "password":password,'ref':ref,"mobile":mobile };
 
             show_mask();
             $.post(url, data, set_password_handler, "json");
@@ -286,6 +287,32 @@
             $(".back").click(function(){
                 return true;
             });
+        }
+    }
+
+    function verify_mobile() {
+        var mobile = $("#mobile").val();
+
+        if(mobile == "") {
+            layer.msg("请输入手机号码");
+            return false;
+        }
+
+        var url = "data_center.php";
+        var data = { "opera":"verify_mobile", "mobile":mobile };
+
+        show_mask();
+        $.post(url, data, verify_mobile_handler, "json");
+    }
+
+    function verify_mobile_handler(response) {
+        hide_mask();
+        if(response.error == 0) {
+            $("#mobile-show").val(response.mobile_mask);
+            mobile = response.mobile;
+        } else {
+            layer.msg(response.msg);
+            mobile = "";
         }
     }
 

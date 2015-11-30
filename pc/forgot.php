@@ -16,10 +16,18 @@ if('edit' == $opera)
     $response = array('error'=>1, 'msg'=>'');
 
     $password = getPOST('password');
-    $ref = getPOST('ref');
+    $mobile = getPOST('mobile');
+
     if($password == '')
     {
         $response['msg'] = '请填写新密码';
+    }
+
+    if(!is_mobile($mobile))
+    {
+        $response['msg'] = '手机号码格式不正确';
+    } else {
+        $mobile = $db->escape($mobile);
     }
 
     if(!isset($_SESSION['token']) || $_SESSION['token'] != 'verify message code success.')
@@ -35,17 +43,10 @@ if('edit' == $opera)
             'password' => $password
         );
 
-        if($db->autoUpdate('member', $data, '`account`=\''.$_SESSION['account'].'\''))
+        if($db->autoUpdate('member', $data, '`mobile`=\''.$mobile.'\''))
         {
-            $response['msg'] = '修改密码成功';
+            $response['msg'] = '找回密码成功';
             $response['error'] = 0;
-            if(isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'] ,'login.php') === false)
-            {
-                $response['referer'] = $_SERVER['HTTP_REFERER'];
-            } else {
-                $response['referer'] = 'index.php';
-            }
-            $response['referer'] = $ref;
         } else {
             $response['msg'] = '系统繁忙，请稍后再试';
         }
@@ -56,8 +57,5 @@ if('edit' == $opera)
 }
 
 $_SESSION['token'] = 'can send message.';
-$get_mobile = 'select `mobile` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
-$mobile = $db->fetchOne($get_mobile);
-assign('mobile', $mobile);
 
-$smarty->display('password.phtml');
+$smarty->display('forgot.phtml');
