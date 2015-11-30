@@ -139,6 +139,18 @@ if($data)
                             add_order_content($order['business_account'], $order['account'], $order['mobile'], $sn, $od['product_sn'], $od['product_name'], $virtual_content, 2);
                         }
                     }
+
+                    //如果会员购买了activity=4的产品，则升级
+                    $check_can_levelup = 'select am.`activity_id` from '.$db->table('activity_mapper').' as am left join '.
+                        $db->table('order_detail').' using (`product_sn`) where `order_sn`=\''.$sn.'\' and `activity_id`=4';
+                    if($db->fetchOne($check_can_levelup))
+                    {
+                        $member_data = array(
+                            'level_id' => 1
+                        );
+
+                        $db->autoUpdate('member', $member_data, '`account`=\''.$order['account'].'\'');
+                    }
                 }
             } else {
                 //金额不正确

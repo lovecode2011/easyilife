@@ -353,6 +353,17 @@ if('submit_order' == $opera)
                             //增加商家收入失败
                             $log->record($order_sn.'计入商家收入失败');
                         }
+                        //如果会员购买了activity=4的产品，则升级
+                        $check_can_levelup = 'select am.`activity_id` from '.$db->table('activity_mapper').' as am left join '.
+                                             $db->table('order_detail').' using (`product_sn`) where `order_sn`=\''.$order_sn.'\' and `activity_id`=4';
+                        if($db->fetchOne($check_can_levelup))
+                        {
+                            $member_data = array(
+                                'level_id' => 1
+                            );
+
+                            $db->autoUpdate('member', $member_data, '`account`=\''.$_SESSION['account'].'\'');
+                        }
                     }
                 } else {
                     $db->rollback();
