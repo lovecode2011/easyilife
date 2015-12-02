@@ -93,8 +93,9 @@ if (empty($_FILES) === false) {
 	//检查目录名
 	$dir_name = empty($_GET['dir']) ? 'image' : trim($_GET['dir']);
 	if (empty($ext_arr[$dir_name])) {
-		alert("目录名不正确。");
-	}
+        alert("目录名不正确。");
+    }
+
 	//获得文件扩展名
 	$temp_arr = explode(".", $file_name);
 	$file_ext = array_pop($temp_arr);
@@ -104,6 +105,34 @@ if (empty($_FILES) === false) {
 	if (in_array($file_ext, $ext_arr[$dir_name]) === false) {
 		alert("上传文件扩展名是不允许的扩展名。\n只允许" . implode(",", $ext_arr[$dir_name]) . "格式。");
 	}
+
+    //检查图片像素
+    $im = null;
+    switch($file_ext) {
+        case 'jpg':
+            $im = imagecreatefromjpeg($tmp_name);
+            break;
+        case 'jpeg':
+            $im = imagecreatefromjpeg($tmp_name);
+            break;
+        case 'png':
+            $im = imagecreatefrompng($tmp_name);
+            break;
+        case 'gif':
+            $im = imagecreatefromgif($tmp_name);
+            break;
+        default:
+            $im = imagecreatefromjpeg($tmp_name);
+            break;
+    }
+    $pic_width = imagesx($im);
+    $pic_height = imagesy($im);
+    imagedestroy($im);
+    if( $pic_width < intval($_GET['width']) && $pic_height < intval($_GET['height']) ) {
+        alert("为保证用户体验，请使用建议尺寸的图片!");
+    }
+
+
 	//创建文件夹
 	if ($dir_name !== '') {
 		$save_path .= $dir_name . "/";

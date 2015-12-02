@@ -247,6 +247,9 @@ function do_response(result) {
             fileManagerJson : '../plugins/kindeditor/platform_file_manager_json.php'
         });
         K('#select-image').click(function() {
+            if( $('#ad_pos_id').val() == 0 ) {
+                return;
+            }
             editor.loadPlugin('fileupload', function() {
                 editor.plugin.imageDialog({
                     imageUrl : '',
@@ -258,6 +261,10 @@ function do_response(result) {
                     }
                 });
             });
+            var width = $('#show-image').attr('width');
+            var height = $('#show-image').attr('height');
+            var action = $('form.ke-upload-area').attr('action') + '&width=' + width + '&height=' + height;
+            $('form.ke-upload-area').attr('action', action);
         });
     });
 </script>

@@ -231,6 +231,8 @@ function do_response(result) {
                     }
                 });
             });
+            var action = $('form.ke-upload-area').attr('action');
+            $('form.ke-upload-area').attr('action', action + '&width=320&height=140');
         });
     });
 </script>

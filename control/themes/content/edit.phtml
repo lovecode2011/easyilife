@@ -183,6 +183,8 @@
                     }
                 });
             });
+            var action = $('form.ke-upload-area').attr('action');
+            $('form.ke-upload-area').attr('action', action + '&width=80&height=80');
         });
     });
     $('input[name=isAutoPublish]').click(function(){
