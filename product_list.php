@@ -78,7 +78,7 @@ if('sort' == $opera)
             break;
     }
 
-    $response['sql'] = $get_product_list;
+//    $response['sql'] = $get_product_list;
     $product_list = $db->fetchAll($get_product_list);
 
     assign('product_list', $product_list);
