@@ -25,6 +25,26 @@
 <!-- 全部产品开始 -->
 <div class="product-all container">
     <div class="con">
+        <div class="filter">
+            <div class="f-line top">
+                <div class="f-sort">
+                    <a href="?id={$id}" {if $filter eq ''}class="curr"{/if}>综合排序</a>
+                    <a href="?id={$id}&filter=sale" {if $filter eq 'sale'}class="curr"{/if}>销量</a>
+                    <a href="?id={$id}&filter={if $filter eq 'price1'}price2{else}price1{/if}" {if $filter eq 'price1' || $filter eq 'price2'}class="curr"{/if}>价格
+                    <i class="icon down" {if $filter eq 'price1'}style="display: inline"{/if}>&#xe607;</i>
+                    <i class="icon up" {if $filter eq 'price2'}style="display: inline"{/if}>&#xe608;</i>
+                    </a>
+                    <a href="?id={$id}&filter=comment" {if $filter eq 'comment'}class="curr"{/if}>评论数</a>
+                </div>
+                <div class="f-pager">
+                    <span class="fp-text"><b>{$page}</b><em>/</em><i>{if $totalPage eq 0}1{else}{$totalPage}{/if}</i></span>
+                    <a class="fp-prev {if $has_prev eq false}disabled{/if}" href="{if $has_prev eq false}javascript:;{else}?id={$id}&mode={$mode}&page={$page-1}&filter={$filter}{/if}">&lt;</a>
+                    <a class="fp-next {if $has_next eq false}disabled{/if}" href="{if $has_next eq false}javascript:;{else}?id={$id}&mode={$mode}&page={$page+1}&filter={$filter}{/if}">&gt;</a>
+                </div>
+                <div class="f-result-sum">共<span id="J_resCount" class="num">{$total}</span>件商品</div>
+                <span class="clr"></span>
+            </div>
+        </div>
         {if $product_list}
         <ul class="p-list">
             {foreach from=$product_list item=p}
@@ -105,7 +125,7 @@
                 <span class="icon">&#xe61d;</span>
             </div>
             <div class="tips-detail">
-                对不起，该分类下暂无产品！
+                对不起，<em>"{$category_name}"</em>下暂无产品！
             </div>
         </div>
         {/if}

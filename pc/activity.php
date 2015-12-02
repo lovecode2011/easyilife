@@ -38,29 +38,18 @@ if('sort' == $opera)
     if(isset($filter['id']) && $filter['id'] > 0)
     {
         $id = intval($filter['id']);
-        $get_category_path = 'select `path` from '.$db->table('category').' where `id`='.$id;
-        $path = $db->fetchOne($get_category_path);
-
-        $get_category_ids = 'select `id` from '.$db->table('category').' where `path` like \''.$path.'%\' and `id` not in ('.$path.'0)';
-        $category_ids = $db->fetchAll($get_category_ids);
-        $category_ids_tmp = array();
-        $category_ids_str = '';
-        if($category_ids)
+        $get_product_sn = 'select `product_sn` from '.$db->table('activity_mapper').' where `activity_id`='.$id;
+        $product_sn_arr = $db->fetchAll($get_product_sn);
+        $product_sn_str = '';
+        if($product_sn_arr)
         {
-            foreach ($category_ids as $key => $val)
-            {
-                $category_ids_tmp[] = $val['id'];
+            foreach ($product_sn_arr as $p) {
+                $product_sn_str .= '\'' . $p['product_sn'] . '\',';
             }
-            $category_ids_str = implode(',', $category_ids_tmp);
         }
 
-        if($category_ids_str == '')
-        {
-            $category_ids_str = $id;
-        } else {
-            $category_ids_str .= ','.$id;
-        }
-        $get_product_list .= ' and `category_id` in ('.$category_ids_str.') and `status`=4';
+        $product_sn_str = substr($product_sn_str, 0, strlen($product_sn_str)-1);
+        $get_product_list .= ' and `category_id` in ('.$product_sn_str.') and `status`=4';
     }
 
     switch($mode)
@@ -133,37 +122,28 @@ switch ($filter) {
 }
 assign('filter', $filter);
 
-$get_category_name = 'select `name` from '.$db->table('category').' where `id`='.$id;
-assign('category_name', $db->fetchOne($get_category_name));
+$get_activity_name = 'select `name` from '.$db->table('activity').' where `id`='.$id;
+$activity_name = $db->fetchOne($get_activity_name);
+assign('category_name', $activity_name);
 
-$get_category_path = 'select `path` from '.$db->table('category').' where `id`='.$id;
-$path = $db->fetchOne($get_category_path);
+$get_product_sn = 'select `product_sn` from '.$db->table('activity_mapper').' where `activity_id`='.$id;
+$product_sn_arr = $db->fetchAll($get_product_sn);
+$product_sn_str = '';
 
-$get_category_ids = 'select `id` from '.$db->table('category').' where `path` like \''.$path.'%\' and `id` not in ('.$path.'0)';
-$category_ids = $db->fetchAll($get_category_ids);
-$category_ids_tmp = array();
-$category_ids_str = '';
-if($category_ids)
+if($product_sn_arr)
 {
-    foreach ($category_ids as $key => $val)
-    {
-        $category_ids_tmp[] = $val['id'];
+    foreach ($product_sn_arr as $p) {
+        $product_sn_str .= '\'' . $p['product_sn'] . '\',';
     }
-    $category_ids_str = implode(',', $category_ids_tmp);
 }
 
-if($category_ids_str == '')
-{
-    $category_ids_str = $id;
-} else {
-    $category_ids_str .= ','.$id;
-}
+$product_sn_str = substr($product_sn_str, 0, strlen($product_sn_str)-1);
 
 $count = 12;
 $offset = 0;
 assign('count', $count);
 
-$get_total = 'select count(*) from '.$db->table('product').' where `status`=4 and `category_id` in ('.$category_ids_str.')';
+$get_total = 'select count(*) from '.$db->table('product').' where `status`=4 and `product_sn` in ('.$product_sn_str.')';
 $total = $db->fetchOne($get_total);
 $total_page = ceil( $total / $count );
 
@@ -186,11 +166,10 @@ if(isset($_SESSION['account']))
 }
 
 $now = time();
-$get_product_list = 'select p.`product_sn`,p.`name`,p.`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,'.$sub_select_collection.','.$sub_select_comment.' from '.$db->table('product').'as p where `status`=4 and `category_id` in ('.$category_ids_str.')';
+$get_product_list = 'select p.`product_sn`,p.`name`,p.`id`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,'.$sub_select_collection.','.$sub_select_comment.' from '.$db->table('product').'as p where `status`=4 and `product_sn` in ('.$product_sn_str.')';
 $get_product_list .= $order;
 $get_product_list .= ' limit '.$offset.','.$count;
 $product_list = $db->fetchAll($get_product_list);
-
 //assign('state', $state);
 assign('product_list', $product_list);
 assign('id', $id);

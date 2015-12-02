@@ -42,6 +42,7 @@
 </section>
 <!-- 内容开始 -->
 <section class="product-list" id="article-list">
+    {if $article_list}
     <ul>
         {foreach from=$article_list item=article}
         <li>
@@ -55,6 +56,14 @@
         </li>
         {/foreach}
     </ul>
+    {else}
+    <section class="empty">
+        <div class="empty-con" style="font-size: 30px">
+            <span class="icon">&#xe624;</span>
+            <span class="empty-tips">暂无相应的软文!</span>
+        </div>
+    </section>
+    {/if}
 </section>
 <div class="cd-popup" role="alert">
     <div class="cd-popup-container" id="message_dialog" style="display: none;">

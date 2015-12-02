@@ -408,14 +408,13 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     background: #ffdf28;
     margin-top: 2px;
 }
-.nav .categorys .inner{
-    display: none;
-}
-.shop-nav .categorys .dd3{
+.shop-nav .categorys .dd{
     height: auto;
     padding-bottom: 8px;
 }
-
+.nav .categorys .inner{
+    display: none;
+}
 .categorys .dd-inner .item {
     border-left: 1px solid #ffdf58;
     position: relative;

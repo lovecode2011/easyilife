@@ -120,7 +120,7 @@ if( isset($_SESSION['account']) && $_SESSION['account'] ) {
 } else {
     assign('account', '');
     $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php|index.php|article.php|article_list.php|install.php|integral_product_list.php|';
-    $no_login_script .= 'product_list.php|product.php|cart.php|product_list.php|search.php|shop.php';
+    $no_login_script .= 'product_list.php|product.php|cart.php|product_list.php|search.php|shop.php|partner.php';
     $script_name = str_replace(ROOT_PATH.'pc/', '', $_SERVER['SCRIPT_FILENAME']);
     $flag = check_action($no_login_script, $script_name);
     if($flag == '')
