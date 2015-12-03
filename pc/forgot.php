@@ -47,6 +47,7 @@ if('edit' == $opera)
         {
             $response['msg'] = '找回密码成功';
             $response['error'] = 0;
+            unset($_SESSION['token']);
         } else {
             $response['msg'] = '系统繁忙，请稍后再试';
         }

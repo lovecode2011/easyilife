@@ -46,6 +46,7 @@ if('edit' == $opera)
                 $response['referer'] = 'index.php';
             }
             $response['referer'] = $ref;
+            unset($_SESSION['token']);
         } else {
             $response['msg'] = '系统繁忙，请稍后再试';
         }

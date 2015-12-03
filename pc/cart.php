@@ -316,6 +316,7 @@ if($cart_list_tmp)
                 'business_account' => $cart['business_account'],
                 'delivery_fee' => 0,
                 'weight' => 0,
+                'free_delivery' => true,
             );
         }
         //店铺选中
@@ -386,7 +387,7 @@ if($cart_list_tmp)
             'free_delivery' => $cart['free_delivery'],
         );
         $cart_json[$cart['id']]['free_delivery'] = ($cart['free_delivery'] == 1 || $cart['is_virtual'] == 1) ? true : false;
-
+        $cart_list[$cart['b_id']]['free_delivery'] = $cart_list[$cart['b_id']]['free_delivery'] && ($cart['free_delivery'] == 1 || $cart['is_virtual'] == 1) ? true : false;
         if ($cart['checked'])
         {
             $total_amount += $cart['price'] * $cart['number'];
@@ -421,8 +422,11 @@ if($cart_list_tmp)
         $cart_weight_json[$cart['b_id']]['first_weight'] = $area['first_weight'];
         $cart_weight_json[$cart['b_id']]['next_weight'] = $area['next_weight'];
         $cart_weight_json[$cart['b_id']]['free'] = $area['free'];
-
-        $cart_list[$key]['delivery_fee'] = caculate_delivery_fee($area['first_weight'], $area['next_weight'], $area['free'], $cart['weight']);
+        if( $cart['free_delivery'] ) {
+            $cart_list[$key]['delivery_fee'] = 0;
+        } else {
+            $cart_list[$key]['delivery_fee'] = caculate_delivery_fee($area['first_weight'], $area['next_weight'], $area['free'], $cart['weight']);
+        }
         $total_delivery_fee += $cart_list[$key]['delivery_fee'];
     }
 }

@@ -698,15 +698,17 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     font-size: 16px;
 }
 .article-list ul {
-    padding: 15px 10px 20px;
 }
 .article-list li {
-    padding: 3px 0;
+    padding: 3px 10px;
     height: 24px;
     line-height: 24px;
     overflow: hidden;
     zoom: 1;
     border-bottom: 1px dotted #ddd;
+}
+.article-list li:last-child{
+    border-bottom: 0 none;
 }
 .article-list li:nth-child(even){
     background:#f4f4f4;
@@ -733,6 +735,27 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     height: 10px;
     overflow: hidden;
     margin-top: 11px;
+}
+
+/* 营销推广 */
+.home .article-list li{
+    height: 48px;
+    padding: 12px 10px;
+}
+.article-list-pic{
+    border: 1px solid #CCC;
+}
+.article-list-pic img {
+    display: block;
+    width: 42px;
+    height: 42px;
+}
+.home .article-list li:nth-child(even){
+    background-color: #fff;
+}
+.home .article-list .istop{
+    color: #DD0000;
+    font-size: 12px;
 }
 /* 文章内容CSS */
 .article-inner{
@@ -2407,7 +2430,6 @@ span.ftx-03, span.ftx03 {
     float: right;
     white-space: nowrap;
     line-height: 24px;
-    font-family: simsun;
 }
  .cart-box-title {
      width: 998px;
@@ -3081,7 +3103,9 @@ q.snPrice i, q.snPrice em {
     margin-top: 10px;
 }
 .addr-item label {
-    font: 400 12px/22px "SimSun";
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 22px;
     color: #666;
 }
 .addr-item .check {

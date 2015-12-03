@@ -28,13 +28,18 @@
         <div class="main">
             <!--注册头部-->
             <div class="login-head">
-                <h3>重置密码</h3>
+                <h3></h3>
             </div>
             <div style="clear: both;"></div>
             <!--用户名-->
             <div class="username">
                 <span class="icon">&#xe626;</span>
-                <input class="user" name="phone" value="{substr($mobile, 0, 3)}***{substr($mobile, -4)}" type="text" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码">
+                <input class="user" readonly="readonly" name="phone" value="{substr($mobile, 0, 3)}***{substr($mobile, -4)}" type="text" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码">
+            </div>
+            <!--密码-->
+            <div class="password" id="password_div" style="margin-top: 32px;">
+                <span class="icon">&#xe625;</span>
+                <input class="pass" name="password" id="password" type="password" title="请输入登陆密码" placeholder="请输入登陆密码" maxlength="20" autocomplete="off">
             </div>
             <p class="tips"></p>
             <!--验证码-->
@@ -60,13 +65,13 @@
         <div class="main">
             <!--注册头部-->
             <div class="login-head">
-                <h3>重置密码</h3>
+                <h3>更改手机号码</h3>
             </div>
             <div style="clear: both;"></div>
             <!--用户名-->
             <div class="username">
                 <span class="icon">&#xe626;</span>
-                <input class="user" name="phone" value="{substr($mobile, 0, 3)}***{substr($mobile, -4)}" type="text" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码">
+                <input class="user" name="mobile" id="mobile" value="" onblur="verify_mobile();" type="text" autocomplete="off" maxlength="11" title="请输入手机号码" placeholder="手机号码">
             </div>
             <p class="tips"></p>
             <!--验证码-->
@@ -82,32 +87,7 @@
             <div style="clear: both;"></div>
             <!--登陆-->
             <p class="btn">
-                <input type="button" value="下一步" id="verify_message_code" class="next-step" data-step="3">
-            </p>
-        </div>
-    </form>
-    <form action="" method="POST" id="step-3" style="display: none">
-        <div class="main">
-            <!--注册头部-->
-            <div class="login-head">
-                <h3>重置密码</h3>
-            </div>
-            <div style="clear: both;"></div>
-            <!--密码-->
-            <div class="password" id="password_div" style="margin-top: 32px;">
-                <span class="icon">&#xe625;</span>
-                <input class="pass" name="password" id="password" type="password" title="请设置新的密码" placeholder="请设置新的密码" maxlength="20" autocomplete="off">
-            </div>
-            <p class="tips"></p>
-            <!--确认密码-->
-            <div class="password" id="confirm_password_div">
-                <span class="icon">&#xe625;</span>
-                <input class="pass" name="confirm-password" id="confirm-password" type="password" title="请再次输入新密码" placeholder="请再次输入新密码" maxlength="20" autocomplete="off">
-            </div>
-            <p class="tips"></p>
-            <!--登陆-->
-            <p class="btn">
-                <input type="button" value="提&nbsp;交" id="set_password">&nbsp;
+                <input type="button" value="提&nbsp;交" id="set_mobile">&nbsp;
             </p>
         </div>
     </form>
@@ -123,20 +103,16 @@
 
     var interval = null;
     var timer = 0;
-    var mobile = "{$mobile}";
+    var mobile = '';
 
     $(function(){
 
         $('#verify_pic_code').click(function() {
             verify_pic_code();
-        })
-
-        $("#verify_message_code").click(function(){
-            verify_message_code();
         });
 
-        $("#set_password").click(function(){
-            set_password();
+        $("#set_mobile").click(function(){
+            set_mobile();
         });
     });
 
@@ -146,14 +122,14 @@
 
     function verify_pic_code() {
         var code = $("#pic_code").val();
-
+        var password = $("#password").val();
         if(code == "") {
             layer.msg("请输入图形验证码");
             return false;
         }
 
-        var url = "data_center.php";
-        var data = { "opera":"verify_pic_code", "code":code };
+        var url = "mobile.php";
+        var data = { "opera":"verify", 'password':password, "code":code };
 
         show_mask();
         $.post(url, data, verify_pic_code_handler, "json");
@@ -163,59 +139,33 @@
         hide_mask();
         if(response.error == 0) {
             step(2);
-            get_message_code();
+//            get_message_code();
         } else {
             layer.msg(response.msg);
         }
     }
 
+    function set_mobile() {
 
-    function verify_message_code() {
-        var code = $("#verify").val();
-
-        if(code == "") {
-            layer.msg("请输入验证码");
-            return false;
-        }
-
-        var url = "data_center.php";
-        var data = { "opera":"verify_message_code", "code":code, "mobile": mobile };
-
-        show_mask();
-        $.post(url, data, verify_message_code_handler, "json");
-    }
-
-    function verify_message_code_handler(response) {
-        hide_mask();
-        if(response.error == 0) {
-            step(3);
-        } else {
-            layer.msg(response.msg);
-        }
-    }
-
-    function set_password() {
-        var password = $("#password").val();
-        var confirm = $('#confirm-password').val();
-        var ref = document.referrer;
-
-        if(password == "") {
-            layer.msg("请输入新密码");
+        if(mobile == "") {
+            layer.msg("请输入新手机号码");
             return false;
         } else {
-            if( password != confirm ) {
-                layer.msg('两次输入的密码不一致');
+            var code = $("#verify").val();
+
+            if(code == "") {
+                layer.msg("请输入验证码");
                 return false;
             }
-            var url = "password.php";
-            var data = { "opera":"edit", "password":password,'ref':ref };
-
+            var ref = document.referrer;
+            var url = "mobile.php";
+            var data = { "opera":"edit", "mobile":mobile,"code":code,'ref':ref };
             show_mask();
-            $.post(url, data, set_password_handler, "json");
+            $.post(url, data, set_mobile_handler, "json");
         }
     }
 
-    function set_password_handler(response) {
+    function set_mobile_handler(response) {
         hide_mask();
         if(response.error == 0) {
             layer.msg(response.msg, function() {
@@ -232,6 +182,10 @@
     }
 
     function get_message_code() {
+        if( mobile == '' ) {
+            layer.msg('请输入新手机号码');
+            return false;
+        }
         if(timer == 0) {
             var url = "data_center.php";
             var data = { "opera":"get_message_code", "mobile": mobile };
@@ -259,6 +213,31 @@
                 $("#get-message-code").html("<em>重新获取</em><i id='timer'>"+timer+"</i>");
                 interval = setInterval(trick, 1000);
             }
+        }
+    }
+
+    function verify_mobile() {
+        var mobile = $("#mobile").val();
+
+        if(mobile == "") {
+            layer.msg("请输入手机号码");
+            return false;
+        }
+
+        var url = "data_center.php";
+        var data = { "opera":"verify_mobile", "mobile":mobile };
+
+        show_mask();
+        $.post(url, data, verify_mobile_handler, "json");
+    }
+
+    function verify_mobile_handler(response) {
+        hide_mask();
+        if(response.error == 0) {
+            mobile = response.mobile;
+        } else {
+            layer.msg(response.msg);
+            mobile = "";
         }
     }
 

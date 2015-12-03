@@ -38,7 +38,7 @@ if($opera == 'get_qrcode')
                 {
                     $loader->includeClass('Qrcode');
 
-                    $save_file = 'upload/qrcode/'.$member_id.'.png';
+                    $save_file = '../upload/qrcode/'.$member_id.'.png';
                     if(QRcode::png($get_url_response->url, $save_file, QR_ECLEVEL_M, 6))
                     {
                         $response['error'] = 0;

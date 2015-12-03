@@ -54,6 +54,7 @@ if('reg' == $opera)
             $_SESSION['account'] = $account;
             $response['msg'] = '注册成功，您的会员卡号为:'.$account.',请牢记';
             $response['referer'] = $ref;
+            unset($_SESSION['token']);
         } else {
             $response['msg'] = '系统繁忙，请稍后再试';
         }
@@ -61,6 +62,9 @@ if('reg' == $opera)
 
     echo json_encode($response);
     exit;
+}
+if( $is_login ) {
+    redirect('index.php');
 }
 $_SESSION['token'] = 'can send message.';
 $smarty->display('register.phtml');

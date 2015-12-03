@@ -1,0 +1,104 @@
+{if $article_list}
+<div class="article-list-inner article-all">
+    <h5>{$section.section_name}</h5>
+    <ul>
+        {foreach from=$article_list item=article key=id}
+        <li>
+            <div class="article-list-pic">
+                <a href="article.php?id={$article.id}" title="{$article.title}">
+                    <img src="{$article.original|build_url}" alt="{$article.title}"/>
+                </a>
+            </div>
+            <div>
+                <em class="istop">{if $article.order_view eq 0}[置顶]{/if}</em>
+                <a href="article.php?id={$article.id}" title="{$article.title}">{$article.title}</a>
+            </div>
+            <span>{$article.last_modify}</span>
+            <div class="line"></div>
+        </li>
+        {/foreach}
+    </ul>
+</div>
+<div class="pages fr">
+    {if $page eq 1}
+    <a rel="nofollow" class="prev disabled fl" id="prePage" href="javascript:void(0);"><i class="sign left">&lt;</i>上一页</a>
+    <a rel="nofollow" class="cur fl" id="pageFirst" href="javascript:void(0);">1</a>
+    {if $total_page eq 1}
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {else}
+    <a rel="nofollow" class="prev fl" id="prePage" href="javascript:get_promotion({$page - 1});"><i class="sign left">&lt;</i>上一页</a>
+    <a rel="nofollow" class="fl" id="pageFirst" href="javascript:get_promotion(1);">1</a>
+    {/if}
+    {if $page gt 6}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {if ($page + 2) gt $total_page}
+    {$temp = $total_page}
+    {else}
+    {$temp = $page + 2}
+    {/if}
+    {for $index=($page - 3) to $temp - 1}
+    {if $index eq $page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);">{$index}</a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_promotion({$index});">{$index}</a>
+    {/if}
+    {/for}
+    {if ($total_page - $page) gt 2}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq $total_page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_promotion({$total_page})" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_promotion({$page + 1})">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {elseif $total_page gt 1}
+    {$temp = $page - 2}
+    {if $temp lt 2}
+    {$temp = 2}
+    {/if}
+    {if $temp gt 2}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq 1}
+    {$limit = 5}
+    {else}
+    {$limit = 4}
+    {/if}
+    {if $total_page lt ($page + $limit)}
+    {$end_temp = $total_page}
+    {else}
+    {$end_temp = $page + $limit}
+    {/if}
+    {for $index = $temp to $end_temp - 1}
+    {if $index eq $page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);">{$index}</a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_promotion({$index});">{$index}</a>
+    {/if}
+    {/for}
+    {if ($total_page - $page) gt 4}
+    <span class="icon ellipsis fl">&#xe61e;</span>
+    {/if}
+    {if $page eq $total_page}
+    <a rel="nofollow" class="fl cur" href="javascript:void(0);" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next disabled fl" title="下一页" href="javascript:void(0);">下一页<i class="sign right">&gt;</i></a>
+    {else}
+    <a rel="nofollow" class="fl" href="javascript:get_promotion({$total_page})" id="pageLast">{$total_page}</a>
+    <a rel="nofollow" id="nextPage" class="next fl" title="下一页" href="javascript:get_promotion({$page + 1})">下一页<i class="sign right">&gt;</i></a>
+    {/if}
+    {/if}
+    <div class="fl">
+        <span class="fl">向第</span>
+        <input class="fl" type="text" id="bottomPage">
+        <span class="fl">页</span>
+        <a rel="nofollow" class="pageGo fl" href="#" id="pagesubmit">跳转</a>
+    </div>
+</div>
+{else}
+<div class="article-list-inner article-all">
+    <h5>{$section.section_name}</h5>
+</div>
+{/if}

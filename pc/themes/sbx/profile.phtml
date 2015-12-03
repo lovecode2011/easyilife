@@ -60,7 +60,8 @@
                 <dl class="form-item">
                     <dt>手机号码：</dt>
                     <dd>
-                        <input type="text" name="mobile" id="mobile" placeholder="手机号码" class="fl" maxlength="11" value="{$user_info.mobile}" onblur="verify_mobile();"/>
+<!--                        <input type="text" name="mobile" id="mobile" placeholder="手机号码" class="fl" maxlength="11" value="{$user_info.mobile}" onblur="verify_mobile();"/>-->
+                        <span class="no-input"><a href="mobile.php">更改手机,{substr($user_info.mobile,0,3)}***{substr($user_info.mobile,-4)}</a></span>
                         <p></p>
                     </dd>
                     <div style="clear: both;"></div>
