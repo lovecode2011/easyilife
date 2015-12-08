@@ -23,7 +23,7 @@ if( $user_info && $user_info['parent_id'] ) {
 assign('parent_mobile', $parent_mobile);
 
 //获取公告
-$get_notice = 'select `id`,`title` from '.$db->table('content').' where `section_id`=1 order by `add_time` DESC limit 5';
+$get_notice = 'select `id`,`title` from '.$db->table('content').' where `section_id`=1 and `status`=1 order by `add_time` DESC limit 5';
 $notice = $db->fetchAll($get_notice);
 assign('notice', $notice);
 
