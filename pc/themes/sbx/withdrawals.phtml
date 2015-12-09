@@ -223,8 +223,8 @@
         {/if}
 
         {if $no_privicy}
-            layer.msg("请先升级为合伙人", function() {
-                window.location.href = "javascript:void(0)";
+            layer.msg("请先升级为合伙人",{ shift: -1 }, function() {
+                history.go(-1);
 
             });
         {/if}

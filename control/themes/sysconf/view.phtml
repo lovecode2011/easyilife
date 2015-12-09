@@ -14,7 +14,7 @@
     <div class="sysconf-main">
         <ul class="tabs">
             <li class="active"><a href="#tab1">基本配置</a></li>
-<!--            <li><a href="#tab2">公众号</a></li>-->
+            <li><a href="#tab2">网站设置</a></li>
 <!--            <li><a href="#tab3">主题</a></li>-->
         </ul>
         <div class="tab_container">
@@ -116,7 +116,7 @@
                     </thead>
                     <tbody>
                     {foreach from=$sysconf item=conf}
-                    {if $conf.group eq 'wechat'}
+                    {if $conf.group eq 'data'}
                     <form id="sysconfForm" name="sysconfForm" method="post">
                         <tr>
                             <td>{$conf.name}</td>

@@ -48,7 +48,7 @@ $history_count = $db->fetchOne($get_history_count);
 assign('history_count', intval($history_count));
 
 //获取猜你喜欢
-$get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 3';
+$get_fav_products = 'select `name`,`price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 8';
 $fav_products = $db->fetchAll($get_fav_products);
 assign('fav_products', $fav_products);
 

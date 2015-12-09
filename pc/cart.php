@@ -425,7 +425,8 @@ if($cart_list_tmp)
         if( $cart['free_delivery'] ) {
             $cart_list[$key]['delivery_fee'] = 0;
         } else {
-            $cart_list[$key]['delivery_fee'] = caculate_delivery_fee($area['first_weight'], $area['next_weight'], $area['free'], $cart['weight']);
+//            $cart_list[$key]['delivery_fee'] = caculate_delivery_fee($area['first_weight'], $area['next_weight'], $area['free'], $cart['weight']);
+            $cart_list[$key]['delivery_fee'] = $delivery_fee;
         }
         $total_delivery_fee += $cart_list[$key]['delivery_fee'];
     }
