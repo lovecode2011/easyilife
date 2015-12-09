@@ -831,6 +831,46 @@ $sql[] = 'create table if not exists '.$db->table('wx_response').' (
     PRIMARY KEY (`id`)
 ) default charset=utf8;';
 
+$table[] = '微社区';
+$sql[] = 'create table if not exists '.$db->table('forum').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `content` text,
+    `add_time` int not null,
+    `img` text,
+    `up_count` int not null default \'0\',
+    `share_count` int not null default \'0\',
+    `topic_id` int not null,
+    `status` int not null default \'0\',
+    `is_top` tinyint(1) not null default \'0\'
+) default charset=utf8;';
+
+$table[] = '微社区点赞';
+$sql[] = 'create table if not exists '.$db->table('forum_up').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `add_time` int not null,
+    `forum_id` int not null
+) default charset=utf8;';
+
+$table[] = '微社区评论';
+$sql[] = 'create table if not exists '.$db->table('forum_comment').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `comment` varchar(255) not null,
+    `forum_id` bigint not null,
+    `add_time` int not null,
+    `status` int not null default \'0\'
+) default charset=utf8;';
+
+$table[] = '微社区板块';
+$sql[] = 'create table if not exists '.$db->table('topic').' (
+    `id` bigint not null auto_increment primary key,
+    `name` varchar(255) not null,
+    `img` varchar(255),
+    `order_view` int not null default \'50\'
+) default charset=utf8;';
+
 echo '创建数据库表:<br/>';
 foreach($table as $key=>$name)
 {

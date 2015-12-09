@@ -141,6 +141,29 @@ $purview = array(
         'pur_content_del',
     ),
 
+    //微社区板块
+    'pur_topic' => array(
+        'pur_topic_view',
+        'pur_topic_add',
+        'pur_topic_edit',
+        'pur_topic_del',
+    ),
+
+    //微社区帖子
+    'pur_forum' => array(
+        'pur_forum_view',
+        'pur_forum_add',
+        'pur_forum_edit',
+        'pur_forum_del',
+    ),
+
+    //微社区评论
+    'pur_forum_comment' => array(
+        'pur_forum_comment_view',
+        'pur_forum_comment_edit',
+        'pur_forum_comment_del',
+    ),
+
     //广告位置
     'pur_adpos' => array(
         'pur_adpos_view',
@@ -320,6 +343,23 @@ $L_purview = array(
     'pur_content_edit' => '编辑资讯',
     'pur_content_del' => '删除资讯',
 
+    'pur_topic' => '微社区板块管理',
+    'pur_topic_view' => '查看板块',
+    'pur_topic_add' => '添加板块',
+    'pur_topic_edit' => '编辑板块',
+    'pur_topic_del' => '删除板块',
+
+    'pur_forum' => '微社区帖子管理',
+    'pur_forum_view' => '查看帖子',
+    'pur_forum_add' => '添加帖子',
+    'pur_forum_edit' => '编辑帖子',
+    'pur_forum_del' => '删除帖子',
+
+    'pur_forum_comment' => '微社区评论管理',
+    'pur_forum_comment_view' => '查看评论',
+    'pur_forum_comment_edit' => '编辑评论',
+    'pur_forum_comment_del' => '删除评论',
+
     'pur_statistics' => '站点统计',
     'pur_statistics_view' => '查看统计',
 
@@ -374,6 +414,9 @@ $menus = array(
     'pur_statistics' => array('url' => 'statistics.php', 'title' => '查看统计', 'parent' => 'menu_site'),
     'pur_section' => array('url' => 'section.php', 'title' => '栏目管理', 'parent' => 'menu_cms'),
     'pur_content' => array('url' => 'content.php', 'title' => '资讯管理', 'parent' => 'menu_cms'),
+    'pur_topic' => array('url' => 'topic.php', 'title' => '微社区板块管理', 'parent' => 'menu_forum'),
+    'pur_forum' => array('url' => 'forum.php', 'title' => '微社区帖子管理', 'parent' => 'menu_forum'),
+    'pur_forum_comment' => array('url' => 'forum_comment.php', 'title' => '微社区评论管理', 'parent' => 'menu_forum'),
     'pur_order' => array('url' => 'order.php', 'title' => '订单管理', 'parent' => 'menu_order'),
     'pur_virtual_order' => array('url' => 'virtual_order.php', 'title' => '消费券管理', 'parent' => 'menu_order'),
     'pur_nav' => array('url' => 'nav.php', 'title' => 'PC端导航栏', 'parent' => 'menu_site'),
@@ -395,5 +438,6 @@ $topMenus = array(
     'menu_self' => array('title' => '个人信息', 'icon' => '&#xe602;'),
     'menu_stastics' => array('title' => '站点统计', 'icon' => '&#xe603;'),
     'menu_cms' => array('title' => '资讯管理', 'icon' => '&#xe600;'),
+    'menu_forum' => array('title' => '微社区管理', 'icon' => '&#xe600;'),
     'menu_wechat' => array('title' => '微信管理', 'icon' => '&#xe601;'),
 );
