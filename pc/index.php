@@ -14,7 +14,7 @@ $top_nav = $db->fetchAll($get_top_nav);
 assign('top_nav', $top_nav);
 
 //获取公告
-$get_notice = 'select `id`,`title`,`add_time` from '.$db->table('content').' where `section_id`=1 order by `add_time` DESC limit 5';
+$get_notice = 'select `id`,`title`,`add_time` from '.$db->table('content').' where `section_id`=1 and `status`=1 order by `add_time` DESC limit 5';
 $notice = $db->fetchAll($get_notice);
 assign('notice', $notice);
 

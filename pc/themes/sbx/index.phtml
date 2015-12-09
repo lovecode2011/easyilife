@@ -146,7 +146,7 @@
                         </a>
                     </div>
                     <div class="p-name">
-                        <a target="" href="product.php?id={$p.id}" title="{$p.name}">{$p.name}</a>
+                        <a target="" href="product.php?id={$p.id}" title="{$p.name}">{$p.name|truncate:10:".."}</a>
                     </div>
                     <div class="p-price"><span>￥</span><span>{$p.price}</span></div>
                 </li>
@@ -174,7 +174,7 @@
                         </a>
                     </div>
                     <div class="p-name">
-                        <a target="" href="product.php?id={$p.id}" title="{$p.name}">{$p.name}</a>
+                        <a target="" href="product.php?id={$p.id}" title="{$p.name}">{$p.name|truncate:10:".."}</a>
                     </div>
                     <div class="p-price"><span>￥</span><span>{$p.price}</span></div>
                 </li>
@@ -202,7 +202,7 @@
                         </a>
                     </div>
                     <div class="p-name">
-                        <a target="" href="product.php?id={$p.id}" title="{$p.name}">{$p.name}</a>
+                        <a target="" href="product.php?id={$p.id}" title="{$p.name}">{$p.name|truncate:10:".."}</a>
                     </div>
                     <div class="p-price"><span>￥</span><span>{$p.price}</span></div>
                 </li>
