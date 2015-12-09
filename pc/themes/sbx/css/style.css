@@ -737,8 +737,8 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     margin-top: 11px;
 }
 
-/* 营销推广 */
-.home .article-list li{
+/* 营销推广 健康管理 */
+.home .article-list li,.health .article-list li{
     height: 48px;
     padding: 12px 10px;
 }
@@ -750,12 +750,15 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     width: 42px;
     height: 42px;
 }
-.home .article-list li:nth-child(even){
+.home .article-list li:nth-child(even),.health .article-list li:nth-child(even){
     background-color: #fff;
 }
 .home .article-list .istop{
     color: #DD0000;
     font-size: 12px;
+}
+.health .article-list-inner{
+    display: none;
 }
 /* 文章内容CSS */
 .article-inner{
@@ -1577,20 +1580,26 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     _position: relative;
     _z-index: 2;
 }
-.product-detail .tab-area{
+.product-detail .tab-area,.health .tab-area{
     position: relative;
     z-index: 1;
     top: 0;
     background-color: #fff;
     width: 760px;
 }
-.product-detail .tab-area .tab{
+.health .tab-area{
+    width: 100%;
+}
+.health .article-list-inner{
+    border-top:0 none;
+}
+.product-detail .tab-area .tab,.health .tab-area .tab{
     position: relative;
     z-index: 4;
     height: 31px;
     border-bottom: 3px solid #ffce28;
 }
-.product-detail .tab-area .tab a {
+.product-detail .tab-area .tab a ,.health .tab-area .tab a{
     background-color: #f7f7f7;
     border-right: 1px solid #fff;
     color: #3e2916;
@@ -1603,7 +1612,7 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{backg
     position: relative;
     z-index: 3;
 }
-.product-detail .tab-area .tab .on {
+.product-detail .tab-area .tab .on ,.health .tab-area .tab .on{
     background-color: #ffce28;
     border-color: #ffce28;
     cursor: default;

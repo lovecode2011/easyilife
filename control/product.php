@@ -54,6 +54,10 @@ if( 'activity' == $opera ) {
             );
         }
     }
+    if( empty($activity_id_arr) ) {
+        show_system_message('活动设置成功', array(array('link' => 'product.php', 'alt' => '产品管理')));
+        exit;
+    }
 
     if( $db->autoInsert('activity_mapper', $activity_id_arr) ) {
         show_system_message('活动设置成功', array(array('link' => 'product.php', 'alt' => '产品管理')));

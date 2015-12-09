@@ -107,32 +107,7 @@
             </div>
             <div style="clear: both;"></div>
         </div>
-        <div class="might-like">
-            <div class="might-like-inner">
-                <div class="inner-head">
-                    <h3 class="fl">根据浏览，猜你喜欢</h3>
-                    <span class="fr" id="change-fav"><i class="icon">&#xe618;</i>换一组</span>
-                    <div style="clear: both;"></div>
-                </div>
-                <div class="inner-con">
-                    <ul class="p-list" id="fav-list">
-                        {foreach from=$fav_products item=product}
-                        <li>
-                            <div class="p-img">
-                                <a href="product.php?id={$product.id}" title="{$product.name}">
-                                    <img width="90" height="90" alt="{$product.name}" src="{$product.img|build_url}">
-                                </a>
-                            </div>
-                            <div class="p-name">
-                                <a href="product.php?id={$product.id}" title="{$product.name}">{$product.name}</a>
-                            </div>
-                            <div class="p-price"><span>￥</span><span>{sprintf('%.2f', $product.price)}</span></div>
-                        </li>
-                        {/foreach}
-                    </ul>
-                </div>
-            </div>
-        </div>
+        {include file="might-like.phtml"}
     </div>
     {include file="aside.phtml"}
 </div>

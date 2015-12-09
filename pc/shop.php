@@ -53,7 +53,7 @@ assign('query_string', $query_string);
 
 assign('shop_category_list', $category);
 
-$count = 4;
+$count = 10;
 $offset = 0;
 assign('count', $count);
 

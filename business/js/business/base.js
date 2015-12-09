@@ -101,11 +101,14 @@ $(function() {
         var cities = data_cities[province_id];
         $('#city').empty();
         var temp = '';
+        var city_id = 0;
         for(var i = 0; i < cities.length; i++) {
+            if( i == 0 ) {
+                city_id = cities[i].id;
+            }
             temp += '<option value="' + cities[i].id + '">' + cities[i].city_name + '</option>';
         }
         $('#city').append(temp);
-        var city_id = $(this).val();
         var districts = data_districts[city_id];
 
         var city = $('#city').children(':selected').text();

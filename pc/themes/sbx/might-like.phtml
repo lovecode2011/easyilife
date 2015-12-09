@@ -15,7 +15,7 @@
                         </a>
                     </div>
                     <div class="p-name">
-                        <a href="product.php?id={$p.id}" title="{$p.name}">{$p.name}</a>
+                        <a href="product.php?id={$p.id}" title="{$p.name}">{if mb_strlen($p.name) > 10}{mb_substr($p.name, 0, 10)}...{else}{$p.name}{/if}</a>
                     </div>
                     <div class="p-price"><span>￥</span>{sprintf('%.2f', $p.price)}</div>
                 </li>
