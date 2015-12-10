@@ -13,7 +13,17 @@
             <fieldset>
                 <p>
                     <label class="l-title">会员编号：</label>
-                    <input class="text-input w300" type="text" id="articleCatName" name="articleCatName" placeholder="请输入资讯分类名称" maxlength="32" value="{$section.account}" readonly="true"/>
+                    <input class="text-input w300" type="text" id="articleCatName" name="articleCatName" placeholder="帖子标题" maxlength="32" value="{$section.account}" readonly="true"/>
+                </p>
+                <p>
+                    <label class="l-title">状态：</label>
+                    <em>
+                        {if $section.status eq 0}未审核{else}{if $section.status eq 1}审核通过{else}不通过{/if}{/if}
+                    </em>
+                </p>
+                <p>
+                    <label class="l-title">标题：</label>
+                    <input class="text-input w300" type="text" id="articleCatName" name="articleCatName" placeholder="帖子标题" maxlength="32" value="{$section.title}" readonly="true"/>
                 </p>
                 <p>
                     <label class="l-title">内容：</label>
@@ -21,7 +31,7 @@
                 </p>
                 <p>
                     <label class="l-title">赠送积分：</label>
-                    <input class="text-input w300" type="text" id="integarl" name="integral" placeholder="请输入赠送积分" maxlength="32" value="0"/>
+                    <input class="text-input w300" type="text" id="integarl" name="integral" placeholder="请输入赠送积分" maxlength="32" value="{$section.integral}"/>
                 </p>
                 <p>
                     <label class="l-title"></label>
@@ -39,7 +49,7 @@
 <script type="text/javascript">
 function refund() {
     var form = $("form");
-    $("#status").val(0);
+    $("#status").val(-1);
     form.submit();
 }
 </script>

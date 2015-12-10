@@ -54,10 +54,10 @@
                 <td>{$content.account}</td>
                 <td>{$content.content|truncate}</td>
                 <td>{$content.topic_name}</td>
-                <td>{if $content.status eq 0}未审核{else}审核通过{/if}</td>
+                <td>{if $content.status eq 0}未审核{else}{if $content.status eq 1}审核通过{else}不通过{/if}{/if}</td>
                 <td>{$content.add_time}</td>
                 <td class="text-right">
-                    <a href="?act=edit&id={$content.id}">审核</a> 
+                    <a href="?act=edit&id={$content.id}">审核</a>
                     | <a href="?act=top&id={$content.id}">{if $content.is_top}取消置顶{else}设为置顶{/if}</a>
                     | <a onclick="javascript:if(confirm('确认要删除？')) return true; else return false;" href="?act=delete&id={$content.id}">删除</a>
                 </td>

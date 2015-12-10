@@ -3446,7 +3446,7 @@ li.search-shop-li div{
 }
 .forum-topic-icon
 {
-    color: #039646;
+    color: rgba(255, 206, 40, 1);
     line-height: 38px;
     font-size: 16px;
 }
@@ -3495,8 +3495,8 @@ li.search-shop-li div{
 .post-forum-btn, .post-forum-cancel-btn
 {
     height: 24px;
-    background-color: #8ec46c;
-    border: 1px solid #8ec46c;
+    background-color: rgba(255, 206, 40, 1);
+    border: 1px solid rgba(255, 206, 40, 1);
     line-height: 24px;
     padding: 0 8px;
     display: inline-block;

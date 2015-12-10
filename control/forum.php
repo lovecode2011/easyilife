@@ -77,7 +77,7 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    $get_section = 'select * from `'.DB_PREFIX.'topic` where `id`='.$id.' limit 1';
+    $get_section = 'select * from `'.DB_PREFIX.'forum` where `id`='.$id.' limit 1';
     $section = $db->fetchRow($get_section);
 
     if( empty($section) ) {
@@ -94,7 +94,8 @@ if( 'edit' == $opera ) {
     }
 
     $data = array(
-        'status' => $status
+        'status' => $status,
+        'integral' => $integral
     );
 
     $where = 'id = '.$id;
@@ -117,7 +118,8 @@ if( 'edit' == $opera ) {
 
     if( $transaction ) {
         $db->commit();
-        show_system_message('帖子审核成功', array());
+        $links = array('alt'=>'帖子列表', 'link'=>'forum.php');
+        show_system_message('帖子审核成功', array($links));
         exit;
     } else {
         $db->rollback();
