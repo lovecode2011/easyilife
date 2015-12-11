@@ -50,12 +50,14 @@ switch(strtolower($data->MsgType))
         {
             if(1 == $rule['match_mode'])//精确匹配
             {
+                $log->record('match rule '.$rule['rule'].':'.$data->Content);
                 if($rule['rule'] == $data->Content)
                 {
                     $response_id = $rule['response_id'];
                     break;
                 }
             } else {//正则匹配
+                $log->record('mass match rule '.$rule['rule'].':'.$data->Content);
                 if(preg_match('/'.$rule['rule'].'/', $data->Content))
                 {
                     $response_id = $rule['response_id'];

@@ -1,0 +1,346 @@
+[2015-12-11 10:59:25] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:27] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:29] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:31] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:33] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:34] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:35] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:36] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:38] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:40] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:42] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:44] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:46] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:48] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:50] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:52] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:54] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:56] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 10:59:58] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:00] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:02] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:04] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:06] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:08] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:10] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:12] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:14] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:16] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:18] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:20] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:22] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:24] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:26] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:28] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:30] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:32] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:34] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:36] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:53] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:54] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:56] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:00:58] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:01:00] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:01:02] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:01:04] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:01:06] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:01:12] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:01:14] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:01:16] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:01:18] select s.`id` as `shake_id`,m.`headimg` as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=0
+[2015-12-11 11:06:05] select s.`id` as `shake_id`,(if m.`headimg`<>'',m.`headimg`,'themes/sbx/images/wang.jpg') as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=1
+[2015-12-11 11:06:07] select s.`id` as `shake_id`,(if m.`headimg`<>'',m.`headimg`,'themes/sbx/images/wang.jpg') as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=1
+[2015-12-11 11:06:09] select s.`id` as `shake_id`,(if m.`headimg`<>'',m.`headimg`,'themes/sbx/images/wang.jpg') as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=1
+[2015-12-11 11:06:11] select s.`id` as `shake_id`,(if m.`headimg`<>'',m.`headimg`,'themes/sbx/images/wang.jpg') as `avatar`,m.`sex` as `sex`,m.`id` as `id`,s.`progress`,m.`nickname` as `nick_name` from `sbx_shake` as s left join `sbx_member` as m using(`account`) where `cycle`=1
+[2015-12-11 11:29:38] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:39] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:40] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:41] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:42] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:43] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:44] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:45] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:46] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:47] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:49] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:50] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:51] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:52] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:53] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:54] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:55] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:56] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:57] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:58] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:29:59] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:00] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:01] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:02] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:03] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:04] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:05] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:06] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:07] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:08] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:09] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:10] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:11] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:13] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:15] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:17] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 11:30:19] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 12:02:32] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 16:58:00] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 16:58:19] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:08:40] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:09:14] update `sbx_cycle` set `status`='1' where `id`=1  
+[2015-12-11 17:09:15] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:24] update `sbx_cycle` set `status`='1' where `id`=  
+[2015-12-11 17:11:25] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:26] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:27] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:28] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:29] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:30] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:31] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:52] update `sbx_cycle` set `status`='1' where `id`=1  
+[2015-12-11 17:11:53] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:54] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:55] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:56] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:57] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:58] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:11:59] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:01] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:03] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:05] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:07] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:09] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:11] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:12] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:13] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:14] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:15] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:16] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:17] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:18] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:19] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:21] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:23] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:25] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:27] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:29] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:31] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:33] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:35] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:37] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:39] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:41] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:42] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:43] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:44] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:45] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:47] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:49] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:51] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:53] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:55] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:56] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:57] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:58] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:12:59] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:00] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:01] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:02] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:03] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:04] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:05] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:06] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:07] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:09] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:10] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:11] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:12] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:13] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:14] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:15] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:16] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:17] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:18] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:20] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:22] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:24] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:26] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:28] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:30] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:32] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:34] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:36] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:38] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:40] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:42] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:44] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:46] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:48] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:50] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:51] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:52] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:53] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:54] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:55] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:56] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:57] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:58] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:13:59] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:14:00] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:14:01] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:14:02] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:14:03] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:14:04] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:14:06] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:01] update `sbx_cycle` set `status`='1' where `id`=  
+[2015-12-11 17:15:02] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:03] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:04] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:24] update `sbx_cycle` set `status`='1' where `id`=1  
+[2015-12-11 17:15:25] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:26] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:27] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:28] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:29] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:30] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:31] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:32] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:33] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:15:34] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:37:30] update `sbx_cycle` set `status`='1' where `id`=1  
+[2015-12-11 17:37:31] update `sbx_cycle` set `end_time`='1449826651',`status`='2' where `id`=1  
+[2015-12-11 17:37:31] update `sbx_shake` set `goal`='1' where `account`='Array'  
+[2015-12-11 17:37:31] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('Array','1','1449826651','1')
+[2015-12-11 17:37:31] update `sbx_shake` set `goal`='2' where `account`='Array'  
+[2015-12-11 17:37:31] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('Array','2','1449826651','1')
+[2015-12-11 17:37:31] update `sbx_shake` set `goal`='3' where `account`='Array'  
+[2015-12-11 17:37:31] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('Array','3','1449826651','1')
+[2015-12-11 17:37:31] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:39:20] update `sbx_cycle` set `status`='1' where `id`=2  
+[2015-12-11 17:39:21] update `sbx_cycle` set `end_time`='1449826761',`status`='2' where `id`=2  
+[2015-12-11 17:39:21] update `sbx_shake` set `goal`='1' where `account`='SJ000000'  
+[2015-12-11 17:39:21] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('SJ000000','1','1449826761','2')
+[2015-12-11 17:39:21] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 17:53:42] insert into `sbx_cycle` (`scene_id`,`serial`,`status`,`add_time`) values ('2','2','0','1449827622')
+[2015-12-11 18:27:32] update `sbx_cycle` set `status`='1' where `id`=3  
+[2015-12-11 18:27:33] update `sbx_cycle` set `end_time`='1449829653',`status`='2' where `id`=3  
+[2015-12-11 18:27:33] update `sbx_shake` set `goal`='1' where `account`='SJ000486'  
+[2015-12-11 18:27:33] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('SJ000486','1','1449829653','3')
+[2015-12-11 18:27:33] update `sbx_shake` set `goal`='2' where `account`='SJ000448'  
+[2015-12-11 18:27:33] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('SJ000448','2','1449829653','3')
+[2015-12-11 18:27:33] update `sbx_shake` set `goal`='3' where `account`='SJ000001'  
+[2015-12-11 18:27:33] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('SJ000001','3','1449829653','3')
+[2015-12-11 18:27:33] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:02] insert into `sbx_cycle` (`scene_id`,`serial`,`status`,`add_time`) values ('2','3','0','1449829682')
+[2015-12-11 18:28:48] update `sbx_cycle` set `status`='1' where `id`=4  
+[2015-12-11 18:28:49] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:50] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:51] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:52] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:53] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:54] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:55] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:56] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:57] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:58] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:28:59] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:29:00] update `sbx_cycle` set `end_time`='1449829740',`status`='2' where `id`=4  
+[2015-12-11 18:29:00] update `sbx_shake` set `goal`='1' where `account`='SJ000000'  
+[2015-12-11 18:29:00] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('SJ000000','1','1449829740','4')
+[2015-12-11 18:29:00] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:29:09] insert into `sbx_cycle` (`scene_id`,`serial`,`status`,`add_time`) values ('2','4','0','1449829749')
+[2015-12-11 18:30:51] update `sbx_cycle` set `status`='1' where `id`=5  
+[2015-12-11 18:30:52] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:30:53] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:30:54] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:30:55] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:30:57] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:30:58] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:30:59] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:00] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:01] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:02] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:03] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:04] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:05] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:06] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:07] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:08] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:09] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:10] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:11] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:12] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:13] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:14] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:16] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:28] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:29] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:31] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:36] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:37] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:38] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:39] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:41] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:42] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:43] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:44] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:45] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:46] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:47] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:48] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:49] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:50] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:51] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:52] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:53] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:54] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:55] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:56] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:57] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:58] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:31:59] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:00] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:01] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:02] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:03] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:04] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:05] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:06] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:07] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:08] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:10] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:11] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:12] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:13] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:14] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:15] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:16] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:17] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:18] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:19] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:32:20] update `sbx_cycle` set `end_time`='1449829940',`status`='2' where `id`=5  
+[2015-12-11 18:32:20] update `sbx_shake` set `goal`='1' where `account`='SJ000000'  
+[2015-12-11 18:32:20] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('SJ000000','1','1449829940','5')
+[2015-12-11 18:32:20] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:33:27] update `sbx_cycle` set `status`='1' where `id`=6  
+[2015-12-11 18:33:28] update `sbx_cycle` set `end_time`='1449830008',`status`='2' where `id`=6  
+[2015-12-11 18:33:28] update `sbx_shake` set `goal`='1' where `account`='SJ000000'  
+[2015-12-11 18:33:28] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('SJ000000','1','1449830008','6')
+[2015-12-11 18:33:28] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:35:21] insert into `sbx_cycle` (`scene_id`,`serial`,`status`,`add_time`) values ('2','6','0','1449830121')
+[2015-12-11 18:35:40] update `sbx_cycle` set `status`='1' where `id`=7  
+[2015-12-11 18:35:41] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:35:42] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:35:44] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:35:45] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:35:46] update `sbx_shake` set `progress`='0' where 1  
+[2015-12-11 18:35:47] update `sbx_cycle` set `end_time`='1449830147',`status`='2' where `id`=7  
+[2015-12-11 18:35:47] update `sbx_shake` set `goal`='1' where `account`='SJ000000'  
+[2015-12-11 18:35:47] insert into `sbx_cycle_reward` (`account`,`position`,`add_time`,`cycle_id`) values ('SJ000000','1','1449830147','7')
+[2015-12-11 18:35:47] update `sbx_shake` set `progress`='0' where 1  

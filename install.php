@@ -871,6 +871,46 @@ $sql[] = 'create table if not exists '.$db->table('topic').' (
     `order_view` int not null default \'50\'
 ) default charset=utf8;';
 
+$table[] = '微现场';
+$sql[] = 'create table if not exists '.$db->table('scene').' (
+    `id` bigint not null auto_increment primary key,
+    `name` varchar(255) not null,
+    `allow_repeat` tinyint(1) not null default \'0\',
+    `add_time` int not null,
+    `cycle` int not null default \'1\'
+) default charset=utf8;';
+
+$table[] = '轮数';
+$sql[] = 'create table if not exists '.$db->table('cycle').' (
+    `id` bigint not null auto_increment primary key,
+    `scene_id` int not null,
+    `serial` int not null,
+    `status` int not null default \'0\',
+    `add_time` int not null,
+    `end_time` int
+) default charset=utf8;';
+
+$table[] = '获奖记录';
+$sql[] = 'create table if not exists '.$db->table('cycle_reward').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null,
+    `position` int not null,
+    `add_time` int not null,
+    `cycle_id` int not null
+) default charset=utf8;';
+
+$table[] = '摇一摇';
+$sql[] = 'create table if not exists '.$db->table('shake').' (
+    `id` bigint not null auto_increment primary key,
+    `account` varchar(255) not null unique,
+    `progress` int not null default \'0\',
+    `goal` int not null default \'0\',
+    `total` int not null default \'0\',
+    `end_time` varchar(255),
+    `add_time` int,
+    `cycle` int not null
+) default charset=utf8;';
+
 echo '创建数据库表:<br/>';
 foreach($table as $key=>$name)
 {

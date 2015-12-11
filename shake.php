@@ -1,92 +1,112 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>摇一摇</title>
-<style>
-<!--
-body
-{
-    background: #333;
-}
-.shake-icon
-{
-    display: block;
-    margin: 120px auto;
-    width: 50%;
-}
-.shake-icon img
-{
-    width: 100%;
-}
-.shake-icon p
-{
-    color: #fff;
-    text-align: center;
-    font-size: 1rem;
-    line-height: 1.6rem;
-}
--->
-</style>
-</head>
-<body onload="init()">
-    <div class="shake-icon">
-        <img src="css/images/shake.png"/>
-        <p id="notice">用力摇一摇你的手机</p>
-    </div>
-</body>
-<script type="text/javascript">
-var SHAKE_THRESHOLD = 1000;
-var last_update = 0;
-var x = y = z = last_x = last_y = last_z = 0;
-var slogan = [
-    "再大力！",
-    "再大力，再大力！",
-    "快点摇啊，别停！",
-    "快点摇，快点摇！",
-    "看灰机~"
-];
+<?php
+include 'library/init.inc.php';
 
-function get_slogan() {
-    var size = slogan.length;
+$operation = 'shake';
+$opera = check_action($operation, getPOST('opera'));
 
-    var i = Math.random()*size;
-    i = parseInt(i);
+if('shake' == $opera)
+{
+    $response = array('error' => 1, 'msg' => '');
 
-    if(slogan[i] == undefined) {
-        i = size - 1;
+    $progress = intval(getPOST('progress'));
+    $cycle = intval(getPOST('cycle'));
+
+    if($progress <= 0)
+    {
+        $progress = 1;
     }
 
-    return slogan[i];
-}
-
-function init() {
-    if (window.DeviceMotionEvent) {
-        window.addEventListener('devicemotion', deviceMotionHandler, false);
-    } else {
-        alert('您的手机不支持摇一摇功能');
+    if($cycle <= 0)
+    {
+        $response['msg'] = '参数错误';
     }
-}
 
-function deviceMotionHandler(eventData) {
-    var acceleration = eventData.accelerationIncludingGravity;
-    var curTime = new Date().getTime();
-    if ((curTime - last_update) > 100) {
-        var diffTime = curTime - last_update;
-        last_update = curTime;
-        x = acceleration.x;
-        y = acceleration.y;
-        z = acceleration.z;
-        var speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
-        if (speed > SHAKE_THRESHOLD) {
-            //shaking
-            document.getElementById("notice").innerHTML = get_slogan();
+    if($response['msg'] == '')
+    {
+        $get_cycle_status = 'select `status` from '.$db->table('cycle').' where `id`='.$cycle;
+        $status = $db->fetchOne($get_cycle_status);
+
+        $get_shake = 'select `id`,`total`,`progress` from '.$db->table('shake').' where `account`=\''.$_SESSION['account'].'\'';
+        $shake = $db->fetchRow($get_shake);
+
+        if($shake && $status == 1)
+        {
+            $goal = false;
+
+            if($shake['total'] < 100) {
+                if ($shake['total'] + $progress >= 100) {
+                    $progress = 100 - $shake['total'];
+                    $goal = true;
+                }
+
+                $shake_data = array(
+                    'total' => $shake['total'] + $progress,
+                    'progress' => $shake['progress'] + $progress,
+                    'cycle' => $cycle
+                );
+
+                if ($goal) {
+                    $shake_data['end_time'] = microtime();
+                }
+
+                if ($db->autoUpdate('shake', $shake_data, '`account`=\'' . $_SESSION['account'] . '\'')) {
+                    $response['error'] = 0;
+                } else {
+                    $response['msg'] = '系统繁忙,请稍后再试';
+                }
+            } else {
+                $response['msg'] = '到终点了';
+            }
+        } else {
+            $response['msg'] = '游戏尚未开始';
         }
-        last_x = x;
-        last_y = y;
-        last_z = z;
+    }
+
+    echo json_encode($response);
+    exit;
+}
+
+//检查是否有报名中的活动
+$get_cycle_id = 'select `id` from '.$db->table('cycle').' where `status`<2';
+$cycle_id = $db->fetchOne($get_cycle_id);
+
+if($cycle_id)
+{
+    $get_shake = 'select * from '.$db->table('shake').' where `account`=\''.$_SESSION['account'].'\'';
+    $shake = $db->fetchRow($get_shake);
+
+    if(!$shake)
+    {
+        $cycle_data = array(
+            'account' => $_SESSION['account'],
+            'cycle' =>$cycle_id,
+            'add_time' => time(),
+            'end_time' => '999999'
+        );
+
+        $db->autoInsert('shake', array($cycle_data));
+    } else {
+        //检查如果没有获奖或系统允许重复参与
+        $get_scene_id = 'select `scene_id` from '.$db->table('cycle').' where `id`='.$cycle_id;
+        $scene_id = $db->fetchOne($get_scene_id);
+
+        $get_allow_repeat = 'select `allow_repeat` from '.$db->table('scene').' where `id`='.$scene_id;
+        $allow_repeat = $db->fetchOne($get_allow_repeat);
+
+        if($allow_repeat || $shake['goal'] == 0)
+        {
+            $cycle_data = array(
+                'add_time' => time(),
+                'cycle' => $cycle_id,
+                'end_time' => '999999999'
+            );
+
+            $db->autoUpdate('shake', $cycle_data, '`id`='.$shake['id']);
+        } else {
+            assign('notice', '您已获奖,不能再次参与本次活动');
+        }
     }
 }
-</script>
-</html>
+
+assign('cycle', intval($cycle_id));
+$smarty->display('shake.phtml');

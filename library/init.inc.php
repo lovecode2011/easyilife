@@ -102,6 +102,8 @@ if(!isset($_SESSION['account']))
     $_SESSION['account'] = '';
 }
 
+//$_SESSION['account'] = 'SJ000000';
+
 $code = getGET('code');
 $state = getGET('state');
 //微信获取和同步用户信息

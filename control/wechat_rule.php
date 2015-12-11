@@ -242,11 +242,14 @@ if('add' == $opera)
 
     if(count($response['errmsg']) == 0)
     {
-        $content_arr = array($content['wap_content']);
-        $title_arr = array($content['title']);
-        $description_arr = array($content['description']);
-        $picUrl_arr = array('http://'.$_SERVER['HTTP_HOST'].'/'.BASE_DIR.'/'.$content['original']);
-        $url_arr = array('http://'.$_SERVER['HTTP_HOST'].'/'.BASE_DIR.'/article.php?id='.$content['id']);
+        if($content)
+        {
+            $content_arr = array($content['wap_content']);
+            $title_arr = array($content['title']);
+            $description_arr = array($content['description']);
+            $picUrl_arr = array('http://' . $_SERVER['HTTP_HOST'] . '/' . BASE_DIR . '/' . $content['original']);
+            $url_arr = array('http://' . $_SERVER['HTTP_HOST'] . '/' . BASE_DIR . '/article.php?id=' . $content['id']);
+        }
 
         $db->begin();
         if( $msgType == 'text' ) {
@@ -371,7 +374,23 @@ if( 'add' == $act ) {
     $get_content_list = 'select `title`, `id` from '.$db->table('content').' where status = 1 order by id desc';
     $content_list = $db->fetchAll($get_content_list);
     assign('content_list', $content_list);
+}
 
+if('delete' == $act) {
+    $id = intval(getGET('id'));
+
+    if($id <= 0)
+    {
+        show_system_message('参数错误');
+    }
+
+    $get_response_id = 'select `response_id` from '.$db->table('wx_rule').' where `id`='.$id;
+    $response_id = $db->fetchOne($get_response_id);
+
+    $db->autoDelete('wx_rule', '`id`='.$id);
+    $db->autoDelete('wx_response', '`id`='.$response_id);
+
+    show_system_message('删除回复规则成功');
 }
 
 $template .= $act.'.phtml';

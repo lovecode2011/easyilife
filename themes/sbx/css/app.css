@@ -3558,3 +3558,25 @@ li.search-shop-li div{
 {
     border-color: #2f9833;
 }
+
+/** 微现场 **/
+.shake-icon
+{
+    display: block;
+    width: 50%;
+    margin: 0px auto;
+}
+
+.shake-icon img
+{
+    width: 100%;
+}
+
+.shake-icon p
+{
+    color: #fff;
+    text-align: center;
+    margin-top: .8rem;
+    font-size: .8rem;
+    line-height:1.4rem;
+}
