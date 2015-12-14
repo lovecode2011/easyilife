@@ -32,7 +32,11 @@
             <li id="index_all" class="on" style="width: {$width}%"><a href="javascript:sort('{$all}');">全部</a></li>
             {/if}
             {foreach from=$section_list item=section}
+            {if $section.id neq 15}
             <li id="index_{$section.id}" style="width: {$width}%"><a href="javascript:sort('{$section.id}');">{$section.section_name}</a></li>
+            {else}
+            <li id="index_{$section.id}" style="width: {$width}%"><a href="forum.php">{$section.section_name}</a></li>
+            {/if}
             {/foreach}
         </ul>
     </nav>

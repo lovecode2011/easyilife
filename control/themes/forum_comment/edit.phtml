@@ -16,6 +16,12 @@
                     <input class="text-input w300" type="text" id="articleCatName" name="articleCatName" placeholder="请输入资讯分类名称" maxlength="32" value="{$section.account}" readonly="true"/>
                 </p>
                 <p>
+                    <label class="l-title">状态：</label>
+                    <em>
+                        {if $section.status eq 0}未审核{else}{if $section.status eq 1}审核通过{else}不通过{/if}{/if}
+                    </em>
+                </p>
+                <p>
                     <label class="l-title">内容：</label>
                     <textarea readonly="true" class="w300" rows="10">{$section.comment}</textarea>
                 </p>
@@ -35,7 +41,7 @@
 <script type="text/javascript">
 function refund() {
     var form = $("form");
-    $("#status").val(0);
+    $("#status").val(-1);
     form.submit();
 }
 </script>

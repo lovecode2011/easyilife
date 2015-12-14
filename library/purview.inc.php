@@ -164,6 +164,15 @@ $purview = array(
         'pur_forum_comment_del',
     ),
 
+    //微现场
+    'pur_scene' => array(
+        'pur_scene_add',
+        'pur_scene_view',
+        'pur_scene_edit',
+        'pur_scene_del',
+        'pur_scene_detail',
+    ),
+
     //广告位置
     'pur_adpos' => array(
         'pur_adpos_view',
@@ -360,6 +369,13 @@ $L_purview = array(
     'pur_forum_comment_edit' => '编辑评论',
     'pur_forum_comment_del' => '删除评论',
 
+    'pur_scene' => '微现场管理',
+    'pur_scene_add'=>'添加场景',
+    'pur_scene_view'=>'查看场景',
+    'pur_scene_edit'=>'编辑场景',
+    'pur_scene_del'=>'删除场景',
+    'pur_scene_detail'=>'进入场景',
+
     'pur_statistics' => '站点统计',
     'pur_statistics_view' => '查看统计',
 
@@ -424,6 +440,7 @@ $menus = array(
     'pur_wechat_kf' => array('url' => 'wechat_kf.php', 'title' => '客服管理', 'parent' => 'menu_wechat'),
     'pur_wechat_rule' => array('url' => 'wechat_rule.php', 'title' => '回复规则管理', 'parent' => 'menu_wechat'),
     'pur_activity' => array('url' => 'activity.php', 'title' => '活动管理', 'parent' => 'menu_site'),
+    'pur_scene' => array('url' => 'shake.php', 'title' => '微现场管理', 'parent' => 'menu_scene'),
 );
 
 global $topMenus;
@@ -439,5 +456,6 @@ $topMenus = array(
     'menu_stastics' => array('title' => '站点统计', 'icon' => '&#xe603;'),
     'menu_cms' => array('title' => '资讯管理', 'icon' => '&#xe600;'),
     'menu_forum' => array('title' => '微社区管理', 'icon' => '&#xe600;'),
+    'menu_scene' => array('title' => '微现场管理', 'icon' => '&#xe600;'),
     'menu_wechat' => array('title' => '微信管理', 'icon' => '&#xe601;'),
 );

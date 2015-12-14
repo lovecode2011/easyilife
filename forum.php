@@ -3,7 +3,7 @@ include 'library/init.inc.php';
 
 $act = !empty($_GET['act']) ? $_GET['act'] : 'view';
 $opera = !empty($_POST['opera']) ? $_POST['opera'] : '';
-$back_act = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'index.php';
+$back_act = isset($_SERVER['HTTP_REFERER']) ? 'javascript:window.history.go(-1);' : 'index.php';
 
 $template = 'forum.phtml';
 if('up' == $opera)
@@ -49,20 +49,28 @@ if('up' == $opera)
 if('topic' == $opera)
 {
     $content = isset($_POST['content']) ? addslashes($_POST['content']) : '';
+    $title = isset($_POST['title']) ? addslashes($_POST['title']) : '';
     $type = isset($_POST['type']) ? addslashes($_POST['type']) : 'topic';
     $response = array('error'=>1);
 
+    if($title == '')
+    {
+        $response['msg'] = '标题不能为空<br/>';
+    } else {
+        $title = $db->escape($title);
+    }
+
     if($content == '')
     {
-        $response['msg'] = '话题内容不能为空';
+        $response['msg'] .= '话题内容不能为空';
     } else {
         $content = $db->escape($content);
     }
 
     if(!isset($response['msg']))
     {
-        $addTopic = 'insert into '.$db->table('forum').' (account, content, add_time, topic_id) values (\''.
-                    $_SESSION['account'].'\',\''.$content.'\','.time().',\''.$type.'\')';
+        $addTopic = 'insert into '.$db->table('forum').' (account, content, add_time, topic_id, title) values (\''.
+                    $_SESSION['account'].'\',\''.$content.'\','.time().',\''.$type.'\', \''.$title.'\')';
         if($db->query($addTopic))
         {
             $response['error'] = 0;
@@ -190,6 +198,7 @@ if($act == 'list')
     }
 
     $smarty->assign('forums', $forums);
+    assign('id', $id);
 
     $get_topic_name = 'select name from '.$db->table('topic').' where `id`='.$id;
     $smarty->assign('page_title', $db->fetchOne($get_topic_name));
@@ -258,12 +267,16 @@ if('detail' == $act)
 
 if('post' == $act)
 {
+    $id = intval(getGET('id'));
+
     $smarty->assign('page_title', '发表新话题');
     $template = 'forum_post.phtml';
 
     $get_topic = 'select `id`,`name` from '.$db->table('topic');
     $topic = $db->fetchAll($get_topic);
     assign('topic', $topic);
+
+    assign('topic_id', $id);
 }
 
 if('view' == $act)
@@ -276,5 +289,5 @@ if('view' == $act)
     $template = 'forum_topic.phtml';
 }
 
-$smarty->assign('back_act', 'javascript:window.history.go(-1);');
+$smarty->assign('back_act', $back_act);
 $smarty->display($template);

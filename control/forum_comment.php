@@ -110,7 +110,8 @@ if( 'edit' == $opera ) {
     
     if( $transaction ) {
         $db->commit();
-        show_system_message('评论审核成功', array());
+        $link = array('alt'=>'评论列表', 'link'=>'forum_comment.php');
+        show_system_message('评论审核成功', array($link));
         exit;
     } else {
         $db->rollback();

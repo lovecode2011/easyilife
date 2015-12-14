@@ -73,7 +73,6 @@
 </div>
 <div id="mask"></div>
 {include file="comment_footer.lbi"}
-{literal}
 <script type="text/javascript">
 var comment_id = 0;
 window.onload = function() {
@@ -81,8 +80,9 @@ window.onload = function() {
     $("#post").bind("click", post);
 }
 function topic() {
-    window.location.href = 'forum.php?act=post';
+    window.location.href = 'forum.php?act=post&id={$id}';
 }
+{literal}
 function showMask() {
     var mask = document.getElementById("mask");
     var screenWidth = document.body.scrollWidth;

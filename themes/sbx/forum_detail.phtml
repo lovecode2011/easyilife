@@ -12,8 +12,8 @@
 </head>
 <body style="padding-bottom: 0;background: #ddd; font-size: 16px;">
 <header class="header">
-    <a href="javascript:history.back();" class="back"></a>
-    <h1><em>{$page_title}</em></h1>
+    <a href="{$back_act}" class="back"></a>
+    <h1><em>{$forums.0.title|truncate}</em></h1>
 </header>
 <section style="padding: 10px 5px 50px; background: #ddd;">
     {foreach from=$forums item=forum}
@@ -40,7 +40,7 @@
             <a href="javascript:up({$forum.id});" id="forum-up-{$forum.id}" class="forum-up" {if $forum.up}style="background-position:-290px -33px;"{/if}>
                     <span id="forum-up-count-{$forum.id}">{if $forum.up_count}{$forum.up_count}{else}赞{/if}</span>
             </a>
-            <a href="forum.php?act=detail&id={$forum.id}" class="forum-share"></a>
+            <a href="javascript:show_share();" class="forum-share"></a>
             <a href="javascript:comment({$forum.id});" id="forum-comment-{$forum.id}" class="forum-comment">
                 <span id="forum-comment-count-{$forum.id}">{$forum.comment_count}</span>
             </a>
@@ -62,6 +62,9 @@
     </div>
     {/foreach}
 </section>
+<div id="mcover" onclick="document.getElementById('mcover').style.display='';" style="display: block;">
+    <img src="{$template_dir}images/guide.png">
+</div>
 <div id="comment">
     <div class="post-forum-content-wr">
         <textarea class="post-forum-content" id="post-comment" placeholder="回点啥呗..."></textarea>
@@ -81,7 +84,13 @@ var comment_id = 0;
 window.onload = function() {
     $("#cancel").bind("click", cancel);
     $("#post").bind("click", post);
+    show_share();
 }
+
+function show_share() {
+    document.getElementById("mcover").style.display = "block";
+}
+
 function topic() {
     window.location.href = 'forum.php?act=post';
 }

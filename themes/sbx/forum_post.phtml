@@ -13,14 +13,15 @@
 <body style="padding-bottom: 0; font-size: 16px;">
 <section style="padding-bottom: 0">
     <div class="post-forum-toolbar">
+        <input type="text" maxlength="16" class="post-forum-content" onkeyup="check_title_length();" placeholder="请填写标题" name="title" style="width: 70%;line-height: 20px;padding: 2px 5px;"/>
         <input type="button" class="input-btn post-forum-btn" name="post" value="发送"/>
     </div>
     <div class="post-forum-content-wr">
         <textarea class="post-forum-content" placeholder="说两句呗..." name="content"></textarea>
     </div>
-    <div class="post-forum-bottom-nav">
+    <div class="post-forum-bottom-nav" style="display: none">
         选择发布板块：
-        <input type="hidden" name="type" value="{$topic.0.id}"/>
+        <input type="hidden" name="type" value="{$topic_id}"/>
         {foreach from=$topic name=topic item=t}
         <div class="input-radio {if $smarty.foreach.topic.first}input-radio-checked{/if}" id="{$t.id}">{$t.name}</div>
         {/foreach}
@@ -48,15 +49,16 @@ function selectType(type) {
 function postTopic() {
     var topic = document.getElementsByName("content")[0].value;
     var type = document.getElementsByName("type")[0].value;
-    $.post('forum.php', {'opera':'topic','content':topic, 'type':type}, postTopicHandler, 'json');
+    var title = document.getElementsByName("title")[0].value;
+    $.post('forum.php', {'opera':'topic','content':topic, 'type':type, 'title':title}, postTopicHandler, 'json');
 }
 
 function postTopicHandler(result) {
     if(result.error) {
         info(result.msg);
     } else {
-        info('新话题发布成功，稍后将跳转到社区首页');
-        setInterval(function() {window.location.href = 'forum.php';}, 3000);
+        info('新话题发布成功，请等待审核<br/>稍后将跳转到板块页面');
+        setInterval(function() {window.history.back();}, 3000);
     }
 }
 
@@ -74,6 +76,27 @@ function info(msg) {
     e.fadeOut(3000);
     o = e;
     sid = setInterval(function() {o.remove(); clearInterval(sid); }, 3000);
+}
+
+function check_title_length() {
+    var title = document.getElementsByName("title")[0].value;
+
+    if(countLength(title) > 16) {
+        info('标题不要超过16个汉字,否则将无法正常显示');
+    }
+}
+
+function countLength(str) {
+    var length = 0;
+    for(var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        if((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+            length += 0.5;
+        } else {
+            length += 1;
+        }
+    }
+    return length;
 }
 </script>
 {/literal}
