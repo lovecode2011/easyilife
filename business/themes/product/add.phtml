@@ -29,10 +29,19 @@
                     <input class="text-input w300" type="text" id="name" name="name" placeholder="请输入产品名称">
                 </p>
                 <p class="clear">
-                    <label class="l-title">产品分类：</label>
+                    <label class="l-title">产品系统分类：</label>
                     <select name="category" class="w150">
                         <option value="0">|--请选择--|</option>
                         {foreach from=$category_list item=category}
+                        <option value="{$category.id}">{$category.name}</option>
+                        {/foreach}
+                    </select>
+                </p>
+                <p class="clear">
+                    <label class="l-title">产品店铺分类：</label>
+                    <select name="shop_category" class="w150">
+                        <option value="0">|--请选择--|</option>
+                        {foreach from=$shop_category_list item=category}
                         <option value="{$category.id}">{$category.name}</option>
                         {/foreach}
                     </select>
@@ -94,7 +103,7 @@
                 </p>
                 <p>
                     <label class="l-title">产品详情：</label>
-                    <textarea name="detail"></textarea>
+                    <textarea name="detail" id="detail"></textarea>
                 </p>
                 <p class="price">
                     <label class="l-title">促销价：</label>
@@ -183,7 +192,7 @@
 <script type="text/javascript" src="../plugins/kindeditor/kindeditor-all-min.js"></script>
 <script type="text/javascript">
     KindEditor.ready(function(K) {
-        var editor1 = K.create("textarea[name='detail']", {
+        var editor1 = K.create("#detail", {
             height: '400px',
             width: '80%',
             cssPath: '../plugins/kindeditor/plugins/code/prettify.css',
@@ -200,6 +209,9 @@
                     self.sync();
                     K('form[name=productAddForm]')[0].submit();
                 });
+            },
+            afterBlur: function(){
+                this.sync()
             }
         });
         var editor = K.editor({

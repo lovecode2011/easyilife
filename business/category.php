@@ -249,12 +249,20 @@ if( 'view' == $act ) {
         exit;
     }
 
+    $get_business_category = 'select `category_id` from '.$db->table('business');
+    $get_business_category .= ' where business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $business_category = $db->fetchOne($get_business_category);
+
+    $get_prefix_path = 'select `path` from '.$db->table('category').' where `id` = \''.$business_category.'\'';
+    $prefix_path = $db->fetchOne($get_prefix_path);
+
     $get_category_list = 'select * from '.$db->table('category');
     $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_category_list .= ' order by `path` ASC';
     $category_list = $db->fetchAll($get_category_list);
     if( $category_list ) {
         foreach ($category_list as $key => $category) {
+            $category['path'] = str_replace($prefix_path, '', $category['path']);
             $count = count(explode(',', $category['path']));
             if ($count > 1) {
                 $temp = '|--' . $category['name'];
@@ -278,11 +286,20 @@ if( 'add' == $act ) {
         exit;
     }
 
-    $get_category_list = 'select `id`, `name`, `path` from '.$db->table('category');
-    $get_category_list .= ' where `business_account` = \''.$_SESSION['business_account'].'\' order by `path` ASC';
+    $get_business_category = 'select `category_id` from '.$db->table('business');
+    $get_business_category .= ' where business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $business_category = $db->fetchOne($get_business_category);
+
+    $get_prefix_path = 'select `path` from '.$db->table('category').' where `id` = \''.$business_category.'\'';
+    $prefix_path = $db->fetchOne($get_prefix_path);
+
+    $get_category_list = 'select * from '.$db->table('category');
+    $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_category_list .= ' order by `path` ASC';
     $category_list = $db->fetchAll($get_category_list);
     if( $category_list ) {
         foreach ($category_list as $key => $category) {
+            $category['path'] = str_replace($prefix_path, '', $category['path']);
             $count = count(explode(',', $category['path']));
             if ($count > 1) {
                 $temp = '|--' . $category['name'];
@@ -323,6 +340,13 @@ if( 'edit' == $act ) {
 
     assign('category', $category);
 
+    $get_business_category = 'select `category_id` from '.$db->table('business');
+    $get_business_category .= ' where business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $business_category = $db->fetchOne($get_business_category);
+
+    $get_prefix_path = 'select `path` from '.$db->table('category').' where `id` = \''.$business_category.'\'';
+    $prefix_path = $db->fetchOne($get_prefix_path);
+
     $get_category_list = 'select * from '.$db->table('category');
     $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\' and id <> \''.$id.'\' and path not like \''.$category['path'].'%\'';
 
@@ -331,6 +355,7 @@ if( 'edit' == $act ) {
     if( $category_list ) {
         foreach ($category_list as $key => $value) {
             if( false === strpos($value['path'], $category['path']) ) {
+                $value['path'] = str_replace($prefix_path, '', $value['path']);
                 $count = count(explode(',', $value['path']));
                 if ($count > 1) {
                     $temp = '|--' . $value['name'];

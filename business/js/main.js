@@ -471,6 +471,11 @@ $(document).ready(function() {
                 number: true,
                 min: 1
             },
+            shop_category: {
+                required: true,
+                number: true,
+                min: 1
+            },
             brand: {
                 required: true,
                 number: true,
@@ -511,9 +516,14 @@ $(document).ready(function() {
                 min: $.validator.format("返利不能小于{0}.")
             },
             category: {
-                required: '请选择产品分类',
-                number: '请选择产品分类',
-                min: $.validator.format("请选择产品分类")
+                required: '请选择产品系统分类',
+                number: '请选择产品系统分类',
+                min: $.validator.format("请选择产品系统分类")
+            },
+            shop_category: {
+                required: '请选择产品店铺分类',
+                number: '请选择产品店铺分类',
+                min: $.validator.format("请选择产品店铺分类")
             },
             brand: {
                 required: '请选择产品品牌',

@@ -406,7 +406,7 @@ if( 'exam' == $act ) {
     assign('attributes', json_encode($product_attributes));
 
     $get_category_list = 'select * from '.$db->table('category');
-    $get_category_list .= ' where business_account = \''.$product['business_account'].'\'';
+    $get_category_list .= ' where business_account = \'\' and parent_id <> 0';
     $get_category_list .= ' order by `path` ASC';
     $category_list = $db->fetchAll($get_category_list);
     if( $category_list ) {
@@ -425,6 +425,33 @@ if( 'exam' == $act ) {
         }
     }
     assign('category_list', $category_list);
+
+    $get_business_category = 'select `category_id` from '.$db->table('business');
+    $get_business_category .= ' where business_account = \''.$product['business_account'].'\' limit 1';
+    $business_category = $db->fetchOne($get_business_category);
+    $get_prefix_path = 'select `path` from '.$db->table('category').' where `id` = \''.$business_category.'\'';
+    $prefix_path = $db->fetchOne($get_prefix_path);
+
+    $get_shop_category_list = 'select * from '.$db->table('category');
+    $get_shop_category_list .= ' where business_account = \''.$product['business_account'].'\'';
+    $get_shop_category_list .= ' order by `path` ASC';
+    $shop_category_list = $db->fetchAll($get_shop_category_list);
+    if( $shop_category_list ) {
+        foreach ($shop_category_list as $key => $category) {
+            $category['path'] = str_replace($prefix_path, '', $category['path']);
+            $count = count(explode(',', $category['path']));
+            if ($count > 1) {
+                $temp = '|--' . $category['name'];
+                while ($count--) {
+                    $temp = '&nbsp;&nbsp;' . $temp;
+                }
+
+                $category['name'] = $temp;
+            }
+            $shop_category_list[$key] = $category;
+        }
+    }
+    assign('shop_category_list', $shop_category_list);
 
     $get_product_type_list = 'select  * from '.$db->table('product_type').' where 1 order by id asc';
     $product_type_list = $db->fetchAll($get_product_type_list);

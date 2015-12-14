@@ -498,6 +498,7 @@ $sql[] = 'create table if not exists '.$db->table('product').' (
     `detail` text,
     `business_account` varchar(255) not null,
     `category_id` int not null,
+    `shop_category_id` int not null,
     `product_type_id` int not null,
     `status` int not null default \'0\',
     `prev_status` int not null default \'0\',

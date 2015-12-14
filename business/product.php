@@ -29,6 +29,7 @@ if( 'add' == $opera ) {
     $status = intval(getPOST('status'));
     $name = trim(getPOST('name'));
     $category = intval(getPOST('category'));
+    $shop_category = intval(getPOST('shop_category'));
     $product_type = intval(getPOST('type'));
     $brand = intval(getPOST('brand'));
     $price = floatval(getPOST('price'));
@@ -66,7 +67,7 @@ if( 'add' == $opera ) {
     }
     $name = $db->escape($name);
 
-    if( 0 >= $category ) {
+    if( 0 >= $category || 0 >= $shop_category ) {
         show_system_message('产品分类参数错误', array());
         exit;
     }
@@ -152,10 +153,17 @@ if( 'add' == $opera ) {
         exit;
     }
 
-    $check_category = 'select * from '.$db->table('category').' where id = '.$category.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $check_category = 'select * from '.$db->table('category').' where id = '.$category.' and business_account = \'\' limit 1';
     $category_exists = $db->fetchRow($check_category);
     if( !$category_exists ) {
-        show_system_message('不存在的产品分类', array());
+        show_system_message('不存在的产品系统分类', array());
+        exit;
+    }
+
+    $check_category = 'select * from '.$db->table('category').' where id = '.$shop_category.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $category_exists = $db->fetchRow($check_category);
+    if( !$category_exists ) {
+        show_system_message('不存在的产品店铺分类', array());
         exit;
     }
 
@@ -200,6 +208,7 @@ if( 'add' == $opera ) {
         'detail' => $detail,
         'business_account' => $_SESSION['business_account'],
         'category_id' => $category,
+        'shop_category_id' => $shop_category,
         'product_type_id' => $product_type,
         'status' => $status,
         'promote_price' => $promote_price,
@@ -298,6 +307,7 @@ if( 'edit' == $opera ) {
     $product_sn = trim(getPOST('product_sn'));
     $name = trim(getPOST('name'));
     $category = intval(getPOST('category'));
+    $shop_category = intval(getPOST('shop_category'));
     $product_type = intval(getPOST('type'));
     $brand = intval(getPOST('brand'));
     $price = floatval(getPOST('price'));
@@ -326,7 +336,7 @@ if( 'edit' == $opera ) {
     }
     $name = $db->escape($name);
 
-    if( 0 >= $category ) {
+    if( 0 >= $category || 0 >= $shop_category ) {
         show_system_message('产品分类参数错误', array());
         exit;
     }
@@ -404,10 +414,17 @@ if( 'edit' == $opera ) {
 
     $free_delivering = ( 1 == $free_delivering ) ? 1 : 0;
 
-    $check_category = 'select * from '.$db->table('category').' where id = '.$category.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $check_category = 'select * from '.$db->table('category').' where id = '.$category.' and business_account = \'\' limit 1';
     $category_exists = $db->fetchRow($check_category);
     if( !$category_exists ) {
-        show_system_message('不存在的产品分类', array());
+        show_system_message('不存在的产品系统分类', array());
+        exit;
+    }
+
+    $check_category = 'select * from '.$db->table('category').' where id = '.$shop_category.' and business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $category_exists = $db->fetchRow($check_category);
+    if( !$category_exists ) {
+        show_system_message('不存在的产品店铺分类', array());
         exit;
     }
 
@@ -447,6 +464,7 @@ if( 'edit' == $opera ) {
         'desc' => $desc,
         'detail' => $detail,
         'category_id' => $category,
+        'shop_category_id' => $shop_category,
 //        'product_type_id' => $product_type,
         'promote_price' => $promote_price,
         'promote_begin' => $promote_begin,
@@ -867,7 +885,9 @@ if( 'view' == $act ) {
 
     $offset = ($page - 1) * $count;
 
-    $get_product_list = 'select a.*, b.name as category_name from '.$db->table('product').' as a';
+    $sub_query = ' ,(select name from '.$db->table('category').' as c where c.id = a.shop_category_id) as shop_category_name';
+
+    $get_product_list = 'select a.*, b.name as category_name'.$sub_query.' from '.$db->table('product').' as a';
     $get_product_list .= ' left join '.$db->table('category').' as b on a.category_id = b.id';
     $get_product_list .= ' where a.business_account = \''.$_SESSION['business_account'].'\'';
     $get_product_list .= $and_where;
@@ -911,7 +931,7 @@ if( 'add' == $act ) {
         exit;
     }
     $get_category_list = 'select * from '.$db->table('category');
-    $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_category_list .= ' where business_account = \'\' and parent_id <> 0';
     $get_category_list .= ' order by `path` ASC';
     $category_list = $db->fetchAll($get_category_list);
     if( $category_list ) {
@@ -930,6 +950,33 @@ if( 'add' == $act ) {
         }
     }
     assign('category_list', $category_list);
+
+    $get_business_category = 'select `category_id` from '.$db->table('business');
+    $get_business_category .= ' where business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $business_category = $db->fetchOne($get_business_category);
+    $get_prefix_path = 'select `path` from '.$db->table('category').' where `id` = \''.$business_category.'\'';
+    $prefix_path = $db->fetchOne($get_prefix_path);
+
+    $get_shop_category_list = 'select * from '.$db->table('category');
+    $get_shop_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_shop_category_list .= ' order by `path` ASC';
+    $shop_category_list = $db->fetchAll($get_shop_category_list);
+    if( $shop_category_list ) {
+        foreach ($shop_category_list as $key => $category) {
+            $category['path'] = str_replace($prefix_path, '', $category['path']);
+            $count = count(explode(',', $category['path']));
+            if ($count > 1) {
+                $temp = '|--' . $category['name'];
+                while ($count--) {
+                    $temp = '&nbsp;&nbsp;' . $temp;
+                }
+
+                $category['name'] = $temp;
+            }
+            $shop_category_list[$key] = $category;
+        }
+    }
+    assign('shop_category_list', $shop_category_list);
 
     $get_product_type_list = 'select  * from '.$db->table('product_type').' where 1 order by id asc';
     $product_type_list = $db->fetchAll($get_product_type_list);
@@ -1112,7 +1159,7 @@ if( 'edit' == $act ) {
     assign('attributes', json_encode($product_attributes));
 
     $get_category_list = 'select * from '.$db->table('category');
-    $get_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_category_list .= ' where business_account = \'\' and parent_id <> 0';
     $get_category_list .= ' order by `path` ASC';
     $category_list = $db->fetchAll($get_category_list);
     if( $category_list ) {
@@ -1131,6 +1178,33 @@ if( 'edit' == $act ) {
         }
     }
     assign('category_list', $category_list);
+
+    $get_business_category = 'select `category_id` from '.$db->table('business');
+    $get_business_category .= ' where business_account = \''.$_SESSION['business_account'].'\' limit 1';
+    $business_category = $db->fetchOne($get_business_category);
+    $get_prefix_path = 'select `path` from '.$db->table('category').' where `id` = \''.$business_category.'\'';
+    $prefix_path = $db->fetchOne($get_prefix_path);
+
+    $get_shop_category_list = 'select * from '.$db->table('category');
+    $get_shop_category_list .= ' where business_account = \''.$_SESSION['business_account'].'\'';
+    $get_shop_category_list .= ' order by `path` ASC';
+    $shop_category_list = $db->fetchAll($get_shop_category_list);
+    if( $shop_category_list ) {
+        foreach ($shop_category_list as $key => $category) {
+            $category['path'] = str_replace($prefix_path, '', $category['path']);
+            $count = count(explode(',', $category['path']));
+            if ($count > 1) {
+                $temp = '|--' . $category['name'];
+                while ($count--) {
+                    $temp = '&nbsp;&nbsp;' . $temp;
+                }
+
+                $category['name'] = $temp;
+            }
+            $shop_category_list[$key] = $category;
+        }
+    }
+    assign('shop_category_list', $shop_category_list);
 
     $get_product_type_list = 'select  * from '.$db->table('product_type').' where 1 order by id asc';
     $product_type_list = $db->fetchAll($get_product_type_list);

@@ -34,11 +34,19 @@
                     <input disabled="disabled" class="text-input w300" type="text" id="name" name="name" placeholder="请输入产品名称" minlength="5" value="{$product.name}">
                 </p>
                 <p class="clear">
-                    <label class="l-title">产品分类：</label>
+                    <label class="l-title">产品系统分类：</label>
                     {foreach from=$category_list item=category}
                         {if $category.id eq $product.category_id}
                     <input value="{$category.name}" disabled="disabled" class="text-input w300" type="text" id="category" name="category" placeholder="">
                         {/if}
+                    {/foreach}
+                </p>
+                <p class="clear">
+                    <label class="l-title">产品店铺分类：</label>
+                    {foreach from=$shop_category_list item=category}
+                    {if $category.id eq $product.shop_category_id}
+                    <input value="{$category.name}" disabled="disabled" class="text-input w300" type="text" id="category" name="category" placeholder="">
+                    {/if}
                     {/foreach}
                 </p>
                 <p class="clear">

@@ -106,33 +106,6 @@ if (empty($_FILES) === false) {
 		alert("上传文件扩展名是不允许的扩展名。\n只允许" . implode(",", $ext_arr[$dir_name]) . "格式。");
 	}
 
-    //检查图片像素
-    $im = null;
-    switch($file_ext) {
-        case 'jpg':
-            $im = imagecreatefromjpeg($tmp_name);
-            break;
-        case 'jpeg':
-            $im = imagecreatefromjpeg($tmp_name);
-            break;
-        case 'png':
-            $im = imagecreatefrompng($tmp_name);
-            break;
-        case 'gif':
-            $im = imagecreatefromgif($tmp_name);
-            break;
-        default:
-            $im = imagecreatefromjpeg($tmp_name);
-            break;
-    }
-    $pic_width = imagesx($im);
-    $pic_height = imagesy($im);
-    imagedestroy($im);
-    if( $pic_width < intval($_GET['width']) && $pic_height < intval($_GET['height']) ) {
-        alert("为保证用户体验，请使用建议尺寸的图片!");
-    }
-
-
 	//创建文件夹
 	if ($dir_name !== '') {
 		$save_path .= $dir_name . "/";
@@ -160,9 +133,11 @@ if (empty($_FILES) === false) {
 		alert("上传文件失败。");
 	}
 	@chmod($file_path, 0644);
-
-    create_thumb($file_path, $file_ext);
-	$file_url = $save_url . $new_file_name;
+    if( $_GET['thumb'] ) {
+        create_thumb($file_path, $file_ext);
+    }
+    $file_url = $save_url . $new_file_name;
+    $file_url = resize(realpath($file_path), $file_ext, $file_url);
 
 	header('Content-type: text/html; charset=UTF-8');
 	$json = new Services_JSON();
@@ -176,6 +151,173 @@ function alert($msg) {
 	echo $json->encode(array('error' => 1, 'message' => $msg));
 	exit;
 }
+
+function resize($filename, $type, $file_url) {
+
+    $php_path = dirname(__FILE__) . '/';
+    $php_url = dirname($_SERVER['PHP_SELF']) . '/';
+
+    //文件保存目录路径
+    $save_path = $php_path . '../../upload/';
+    //文件保存目录URL
+    $save_url = $php_url . '../../upload/';
+
+    //upload下保存图片的目录
+    $dir_name = 'image';
+
+    //检查图片像素
+    $im = null;
+    switch($type) {
+        case 'jpg':
+            $im = imagecreatefromjpeg($filename);
+            break;
+        case 'jpeg':
+            $im = imagecreatefromjpeg($filename);
+            break;
+        case 'png':
+            $im = imagecreatefrompng($filename);
+            break;
+        case 'gif':
+            $im = imagecreatefromgif($filename);
+            break;
+        default:
+            $im = imagecreatefromjpeg($filename);
+            break;
+    }
+    $pic_width = imagesx($im);
+    $pic_height = imagesy($im);
+    $limit_width = intval($_GET['width']);
+    $limit_height = intval($_GET['height']);
+    if( 0 >= $limit_width && 0 >= $limit_height ) {
+        return $file_url;
+    }
+
+    //合并空白图片补白
+    if( $pic_width < $limit_width && $pic_height < $limit_height ) {
+
+        $new_im = imagecreate($limit_width, $limit_height);
+        //设置图像的背景颜色，白色
+        imagecolorallocate($new_im, 255, 255, 255);
+        //计算起始坐标
+        $x = ( $limit_width - $pic_width ) / 2;
+        $y = ( $limit_height - $pic_height) / 2;
+        //合并补白
+        imagecopy($new_im, $im,$x, $y, 0, 0, $pic_width, $pic_height);
+        alert('1、合并空白图片补白');
+    } else {
+        //计算缩略图的宽和高
+        if( ($limit_width && $pic_width > $limit_width) || ($limit_height && $pic_height > $limit_height) ) {
+            //需要缩放宽度
+            if( $limit_width && $pic_width > $limit_width ) {
+                $width_ratio = $limit_width/$pic_width;
+                $resize_width_tag = true;
+            }
+            //需要缩放高度
+            if( $limit_height && $pic_height>$limit_height ) {
+                $height_ratio = $limit_height/$pic_height;
+                $resize_height_tag = true;
+            }
+            //宽度高度都要缩放，计算真正的缩放比
+            if( $resize_width_tag && $resize_height_tag ) {
+                if( $width_ratio < $height_ratio ) {
+                    $ratio = $width_ratio;
+                }
+                else {
+                    $ratio = $height_ratio;
+                }
+            }
+            //按宽度缩放比缩放
+            if( $resize_width_tag && !$resize_height_tag ) {
+                $ratio = $width_ratio;
+            }
+            //按高度缩放比缩放
+            if( $resize_height_tag && !$resize_width_tag ) {
+                $ratio = $height_ratio;
+            }
+
+            //缩略图的宽度和高度
+            $new_width = $pic_width * $ratio;
+            $new_height = $pic_height * $ratio;
+
+            if( function_exists("imagecopyresampled") ) {
+                $new_im = imagecreatetruecolor($new_width,$new_height);
+                imagecopyresampled($new_im,$im,0,0,0,0,$new_width,$new_height,$pic_width,$pic_height);
+            } else {
+                $new_im = imagecreate($new_width,$new_height);
+                imagecopyresized($new_im,$im,0,0,0,0,$new_width,$new_height,$pic_width,$pic_height);
+            }
+            //宽度补白或者高度补白
+            if( $new_width < $limit_width || $new_height < $limit_height ) {
+                $temp_img = imagecreate($limit_width, $limit_height);
+                //设置图像的背景颜色，白色
+                imagecolorallocate($temp_img, 255, 255, 255);
+                //计算起始坐标
+                $x = ( $limit_width - $new_width ) / 2;
+                $y = ( $limit_height - $new_height) / 2;
+                //合并补白
+                imagecopy($temp_img, $new_im, $x, $y, 0, 0, $new_width, $new_height);
+                imagedestroy($new_im);
+                $new_im = $temp_img;
+//                alert('2、宽度补白或者高度补白');
+            }
+        } else {
+            $new_im = $im;
+        }
+    }
+    //创建文件夹
+    if ($dir_name !== '') {
+        $save_path .= $dir_name . "/";
+        $save_url .= $dir_name . "/";
+        if (!file_exists($save_path)) {
+            mkdir($save_path);
+        }
+
+        $save_path .= $_SESSION['business_account'] .'/';
+        $save_url .= $_SESSION['business_account'] . '/';
+        if (!file_exists($save_path)) {
+            mkdir($save_path);
+        }
+    }
+    $ymd = date("Ymd");
+    $save_path .= $ymd . "/";
+    $save_url .= $ymd . "/";
+    if ( !file_exists($save_path) ) {
+        mkdir($save_path);
+    }
+
+    $temp = explode('/', $filename);
+    $temp_length = count($temp);
+
+    $file_path = $save_path . $temp[$temp_length - 1];
+
+    //写入缩略图文件
+    switch($type) {
+        case 'jpg':
+            $result = imagejpeg($new_im, $file_path);
+            break;
+        case 'jpeg':
+            $result = imagejpeg($new_im, $file_path);
+            break;
+        case 'png':
+            $result = imagepng($new_im, $file_path);
+            break;
+        case 'gif':
+            $result = imagegif($new_im, $file_path);
+            break;
+        default:
+            $result = imagejpeg($new_im, $file_path);
+            break;
+    }
+    imagedestroy($im);
+    imagedestroy($new_im);
+    if( !$result ) {
+        alert('图片缩放发生错误，请联系管理员');
+    }
+//    @unlink($filename);
+    return $save_url . $temp[$temp_length - 1];
+
+}
+
 
 function create_thumb($filename, $type, $max_width = 100, $max_height = 75) {
 
@@ -303,7 +445,7 @@ function create_thumb($filename, $type, $max_width = 100, $max_height = 75) {
             break;
     }
     if( !$result ) {
-        alert('生成缩略图发生错误');
+        alert('生成缩略图发生错误, 请联系管理员');
     }
     return $save_url . $temp[$temp_length - 1];
 }
