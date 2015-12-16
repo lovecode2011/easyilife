@@ -259,11 +259,27 @@ if('verify_pic_code' == $opera)
 
 if('get_fav' == $opera)
 {
-    $get_fav_products = 'select `name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit 6';
+    $now = time();
+    $page = intval(getPOST('page'));
+    $page = ( $page <= 0 ) ? 1 : $page;
+    $page_count = intval(getPOST('count'));
+    $page_count = $page_count <= 0 ? 3 : $page_count;
+    $offset = ($page - 1) * $page_count;
+
+    $get_total = 'select count(*) from '.$db->table('product').' where status = 4';
+    $total = $db->fetchOne($get_total);
+    $total_page = ceil($total / $page_count);
+    if( $page > $total_page ) {
+        echo json_encode($response);
+        exit;
+    }
+
+    $get_fav_products = 'select `name`,if(`promote_end`>'.$now.',`promote_price`,`price`) as `price`,`img`,`id` from '.$db->table('product').' where `status`=4 order by `add_time` DESC limit '.$offset.','.$page_count;
     $fav_products = $db->fetchAll($get_fav_products);
     assign('product_list', $fav_products);
 
     $response['error'] = 0;
+    $response['page'] = $page + 1;
     $response['content'] = $smarty->fetch('product-item.phtml');
 }
 

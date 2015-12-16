@@ -193,17 +193,21 @@ function resize($filename, $type, $file_url) {
     }
 
     //合并空白图片补白
-    if( $pic_width < $limit_width && $pic_height < $limit_height ) {
+    if( $pic_width <= $limit_width || $pic_height <= $limit_height ) {
+
+        //计算起始坐标
+        $x = ( $limit_width - $pic_width ) / 2;
+        $y = ( $limit_height - $pic_height) / 2;
+        if( $x == 0 && $y == 0 ) {
+            return $file_url;
+        }
 
         $new_im = imagecreate($limit_width, $limit_height);
         //设置图像的背景颜色，白色
         imagecolorallocate($new_im, 255, 255, 255);
-        //计算起始坐标
-        $x = ( $limit_width - $pic_width ) / 2;
-        $y = ( $limit_height - $pic_height) / 2;
+
         //合并补白
         imagecopy($new_im, $im,$x, $y, 0, 0, $pic_width, $pic_height);
-        alert('1、合并空白图片补白');
     } else {
         //计算缩略图的宽和高
         if( ($limit_width && $pic_width > $limit_width) || ($limit_height && $pic_height > $limit_height) ) {
@@ -258,7 +262,7 @@ function resize($filename, $type, $file_url) {
                 imagecopy($temp_img, $new_im, $x, $y, 0, 0, $new_width, $new_height);
                 imagedestroy($new_im);
                 $new_im = $temp_img;
-//                alert('2、宽度补白或者高度补白');
+
             }
         } else {
             $new_im = $im;

@@ -934,9 +934,13 @@ if( 'add' == $act ) {
     $get_category_list .= ' where business_account = \'\' and parent_id <> 0';
     $get_category_list .= ' order by `path` ASC';
     $category_list = $db->fetchAll($get_category_list);
+    $target_category_list = array();
     if( $category_list ) {
         foreach ($category_list as $key => $category) {
             $count = count(explode(',', $category['path']));
+            if( $count != 4 ) {
+                continue;
+            }
             if ($count > 2) {
                 $temp = '|--' . $category['name'];
                 $count = 1;
@@ -945,11 +949,11 @@ if( 'add' == $act ) {
                 }
 
                 $category['name'] = $temp;
-                $category_list[$key] = $category;
+                $target_category_list[$key] = $category;
             }
         }
     }
-    assign('category_list', $category_list);
+    assign('category_list', $target_category_list);
 
     $get_business_category = 'select `category_id` from '.$db->table('business');
     $get_business_category .= ' where business_account = \''.$_SESSION['business_account'].'\' limit 1';
@@ -1162,9 +1166,13 @@ if( 'edit' == $act ) {
     $get_category_list .= ' where business_account = \'\' and parent_id <> 0';
     $get_category_list .= ' order by `path` ASC';
     $category_list = $db->fetchAll($get_category_list);
+    $target_category_list = array();
     if( $category_list ) {
         foreach ($category_list as $key => $category) {
             $count = count(explode(',', $category['path']));
+            if( $count != 4 ) {
+                continue;
+            }
             if ($count > 2) {
                 $temp = '|--' . $category['name'];
                 $count = 1;
@@ -1173,11 +1181,11 @@ if( 'edit' == $act ) {
                 }
 
                 $category['name'] = $temp;
-                $category_list[$key] = $category;
+                $target_category_list[$key] = $category;
             }
         }
     }
-    assign('category_list', $category_list);
+    assign('category_list', $target_category_list);
 
     $get_business_category = 'select `category_id` from '.$db->table('business');
     $get_business_category .= ' where business_account = \''.$_SESSION['business_account'].'\' limit 1';

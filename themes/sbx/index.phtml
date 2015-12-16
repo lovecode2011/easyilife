@@ -220,15 +220,17 @@
     }
 </script>
 <script type="text/javascript">
+    var page = 2;
     function change_fav() {
         var url = "data_center.php";
-        var data = { "opera":"get_fav" };
+        var data = { "opera":"get_fav", "page" : page, "count": 30 };
         $.post(url, data, change_fav_handler, "json");
     }
 
     function change_fav_handler(response) {
         if(response.error == 0) {
             $("#fav_list").html(response.content);
+            page = response.page;
         }
     }
     function show_message_dialog(message) {

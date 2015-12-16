@@ -35,19 +35,29 @@
                 </p>
                 <p class="clear">
                     <label class="l-title">产品系统分类：</label>
+                    {$flag = true}
                     {foreach from=$category_list item=category}
                         {if $category.id eq $product.category_id}
                     <input value="{$category.name}" disabled="disabled" class="text-input w300" type="text" id="category" name="category" placeholder="">
+                        {$flag = false}
                         {/if}
                     {/foreach}
+                    {if $flag}
+                    <input value="|--没有选择系统分类" disabled="disabled" class="text-input w300" type="text" id="category" name="category" placeholder="">
+                    {/if}
                 </p>
                 <p class="clear">
                     <label class="l-title">产品店铺分类：</label>
+                    {$flag = true}
                     {foreach from=$shop_category_list item=category}
                     {if $category.id eq $product.shop_category_id}
-                    <input value="{$category.name}" disabled="disabled" class="text-input w300" type="text" id="category" name="category" placeholder="">
+                    <input value="{$category.name}" disabled="disabled" class="text-input w300" type="text" id="shop_category" name="shop_category" placeholder="">
+                    {$flag = false}
                     {/if}
                     {/foreach}
+                    {if $flag}
+                    <input value="|--没有选择店铺分类" disabled="disabled" class="text-input w300" type="text" id="shop_category" name="shop_category" placeholder="">
+                    {/if}
                 </p>
                 <p class="clear">
                     <label class="l-title">产品类型：</label>
