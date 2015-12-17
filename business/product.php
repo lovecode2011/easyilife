@@ -31,7 +31,7 @@ if( 'add' == $opera ) {
     $category = intval(getPOST('category'));
     $shop_category = intval(getPOST('shop_category'));
     $product_type = intval(getPOST('type'));
-    $brand = intval(getPOST('brand'));
+    $brand = trim(getPOST('brand'));
     $price = floatval(getPOST('price'));
     $integral = intval(getPOST('integral'));
     $shop_price = floatval(getPOST('shop_price'));
@@ -77,9 +77,31 @@ if( 'add' == $opera ) {
         exit;
     }
 
-    if( 0 >= $brand ) {
+    if( $brand == '' ) {
         show_system_message('品牌参数错误', array());
         exit;
+    } else {
+        $brand = $db->escape($brand);
+        //检查是否存在,如果存在,则读取id,否则插入记录
+        $get_brand_id = 'select `id` from '.$db->table('brand').' where `name`=\''.$brand.'\'';
+        $brand_id = $db->fetchOne($get_brand_id);
+
+        if($brand_id)
+        {
+            $brand = $brand_id;
+        } else {
+            $brand_data = array(
+                'name' => $brand,
+                'img' => ''
+            );
+
+            if($db->autoInsert('brand', array($brand_data)))
+            {
+                $brand = $db->get_last_id();
+            } else {
+                show_system_message('系统繁忙,请稍后再试');
+            }
+        }
     }
 
     if( 0 > $price ) {
@@ -309,7 +331,7 @@ if( 'edit' == $opera ) {
     $category = intval(getPOST('category'));
     $shop_category = intval(getPOST('shop_category'));
     $product_type = intval(getPOST('type'));
-    $brand = intval(getPOST('brand'));
+    $brand = trim(getPOST('brand'));
     $price = floatval(getPOST('price'));
     $shop_price = floatval(getPOST('shop_price'));
     $lowest_price = floatval(getPOST('lowest_price'));
@@ -346,9 +368,31 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    if( 0 >= $brand ) {
+    if( $brand == '' ) {
         show_system_message('品牌参数错误', array());
         exit;
+    } else {
+        $brand = $db->escape($brand);
+        //检查是否存在,如果存在,则读取id,否则插入记录
+        $get_brand_id = 'select `id` from '.$db->table('brand').' where `name`=\''.$brand.'\'';
+        $brand_id = $db->fetchOne($get_brand_id);
+
+        if($brand_id)
+        {
+            $brand = $brand_id;
+        } else {
+            $brand_data = array(
+                'name' => $brand,
+                'img' => ''
+            );
+
+            if($db->autoInsert('brand', array($brand_data)))
+            {
+                $brand = $db->get_last_id();
+            } else {
+                show_system_message('系统繁忙,请稍后再试');
+            }
+        }
     }
 
     if( 0 > $price ) {

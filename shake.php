@@ -26,7 +26,7 @@ if('shake' == $opera)
         $get_cycle_status = 'select `status` from '.$db->table('cycle').' where `id`='.$cycle;
         $status = $db->fetchOne($get_cycle_status);
 
-        $get_shake = 'select `id`,`total`,`progress` from '.$db->table('shake').' where `account`=\''.$_SESSION['account'].'\'';
+        $get_shake = 'select `id`,`total`,`progress`,`goal` from '.$db->table('shake').' where `account`=\''.$_SESSION['account'].'\'';
         $shake = $db->fetchRow($get_shake);
 
         if($shake && $status == 1)
@@ -58,7 +58,23 @@ if('shake' == $opera)
                 $response['msg'] = '到终点了';
             }
         } else {
-            $response['msg'] = '游戏尚未开始';
+            if($status == 2)
+            {
+                $response['msg'] = '活动已经结束,请看大屏幕排名';
+            } else {
+                //检查如果没有获奖或系统允许重复参与
+                $get_scene_id = 'select `scene_id` from ' . $db->table('cycle') . ' where `id`=' . $cycle_id;
+                $scene_id = $db->fetchOne($get_scene_id);
+
+                $get_allow_repeat = 'select `allow_repeat` from ' . $db->table('scene') . ' where `id`=' . $scene_id;
+                $allow_repeat = $db->fetchOne($get_allow_repeat);
+
+                if (!$allow_repeat && $shake['goal']) {
+                    $response['msg'] = '您已获奖,不能再次参与本活动';
+                } else {
+                    $response['msg'] = '游戏尚未开始';
+                }
+            }
         }
     }
 
@@ -67,11 +83,12 @@ if('shake' == $opera)
 }
 
 //检查是否有报名中的活动
-$get_cycle_id = 'select `id` from '.$db->table('cycle').' where `status`<2';
-$cycle_id = $db->fetchOne($get_cycle_id);
+$get_cycle = 'select `id`,`status` from '.$db->table('cycle').' where `actived`=1';
+$cycle = $db->fetchRow($get_cycle);
 
-if($cycle_id)
+if($cycle)
 {
+    $cycle_id = $cycle['id'];
     $get_shake = 'select * from '.$db->table('shake').' where `account`=\''.$_SESSION['account'].'\'';
     $shake = $db->fetchRow($get_shake);
 
@@ -86,26 +103,32 @@ if($cycle_id)
 
         $db->autoInsert('shake', array($cycle_data));
     } else {
-        //检查如果没有获奖或系统允许重复参与
-        $get_scene_id = 'select `scene_id` from '.$db->table('cycle').' where `id`='.$cycle_id;
-        $scene_id = $db->fetchOne($get_scene_id);
-
-        $get_allow_repeat = 'select `allow_repeat` from '.$db->table('scene').' where `id`='.$scene_id;
-        $allow_repeat = $db->fetchOne($get_allow_repeat);
-
-        if($allow_repeat || $shake['goal'] == 0)
+        if($cycle['status'] == 2)
         {
-            $cycle_data = array(
-                'add_time' => time(),
-                'cycle' => $cycle_id,
-                'end_time' => '999999999'
-            );
-
-            $db->autoUpdate('shake', $cycle_data, '`id`='.$shake['id']);
+            assign('notice', '活动已结束,请看大屏幕排名');
         } else {
-            assign('notice', '您已获奖,不能再次参与本次活动');
+            //检查如果没有获奖或系统允许重复参与
+            $get_scene_id = 'select `scene_id` from ' . $db->table('cycle') . ' where `id`=' . $cycle_id;
+            $scene_id = $db->fetchOne($get_scene_id);
+
+            $get_allow_repeat = 'select `allow_repeat` from ' . $db->table('scene') . ' where `id`=' . $scene_id;
+            $allow_repeat = $db->fetchOne($get_allow_repeat);
+
+            if ($allow_repeat || $shake['goal'] == 0) {
+                $cycle_data = array(
+                    'add_time' => time(),
+                    'cycle' => $cycle_id,
+                    'end_time' => '999999999'
+                );
+
+                $db->autoUpdate('shake', $cycle_data, '`id`=' . $shake['id']);
+            } else {
+                assign('notice', '您已获奖,不能再次参与本次活动');
+            }
         }
     }
+} else {
+    assign('notice', '不在活动时间');
 }
 
 assign('cycle', intval($cycle_id));

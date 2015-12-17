@@ -64,12 +64,13 @@
 <!--                </p>-->
                 <p class="clear">
                     <label class="l-title">品牌：</label>
-                    <select name="brand" class="w150">
-                        <option value="0">|--请选择--|</option>
-                        {foreach from=$brand_list item=brand}
-                        <option value="{$brand.id}" {if $brand.id eq $product.brand_id}selected="selected"{/if}>{$brand.name}</option>
-                        {/foreach}
-                    </select>
+                    {$brand_name=""}
+                    {foreach from=$brand_list item=brand}
+                    {if $brand.id eq $product.brand_id}
+                    {$brand_name=$brand.name}
+                    {/if}
+                    {/foreach}
+                    <input class="text-input w150" type="text" id="brand" name="brand" value="{$brand_name}" placeholder="请输入产品品牌">
                 </p>
 <!--                <p>-->
 <!--                    <label class="l-title">库存：</label>-->
