@@ -31,7 +31,9 @@ if( 'add' == $opera ) {
     $category = intval(getPOST('category'));
     $shop_category = intval(getPOST('shop_category'));
     $product_type = intval(getPOST('type'));
-    $brand = intval(getPOST('brand'));
+    //品牌输入字符串
+    $brand = trim(getPOST('brand'));
+//    $brand = intval(getPOST('brand'));
     $price = floatval(getPOST('price'));
     $integral = intval(getPOST('integral'));
     $shop_price = floatval(getPOST('shop_price'));
@@ -77,8 +79,12 @@ if( 'add' == $opera ) {
         exit;
     }
 
-    if( 0 >= $brand ) {
-        show_system_message('品牌参数错误', array());
+//    if( 0 >= $brand ) {
+//        show_system_message('品牌参数错误', array());
+//        exit;
+//    }
+    if( '' == $brand ) {
+        show_system_message('请输入品牌', array());
         exit;
     }
 
@@ -178,11 +184,26 @@ if( 'add' == $opera ) {
         }
     }
 
-    $check_brand = 'select * from '.$db->table('brand').' where id = '.$brand.' limit 1';
+//    $check_brand = 'select * from '.$db->table('brand').' where id = '.$brand.' limit 1';
+//    $brand_exists = $db->fetchRow($check_brand);
+//    if( !$brand_exists ) {
+//        show_system_message('不存在的品牌', array());
+//        exit;
+//    }
+
+    $brand = $db->escape($brand);
+    $check_brand = 'select * from '.$db->table('brand').' where name = \''.$brand.'\' limit 1';
     $brand_exists = $db->fetchRow($check_brand);
-    if( !$brand_exists ) {
-        show_system_message('不存在的品牌', array());
-        exit;
+    if( $brand_exists ) {
+        $brand = $brand_exists['id'];
+    } else {
+        $data = array(
+            'name' => $brand,
+            'img' => '',
+            'desc' => $brand,
+        );
+        $db->autoInsert('brand', array($data));
+        $brand = $db->get_last_id();
     }
 
     if( 0 >= $integral ) {
@@ -309,7 +330,9 @@ if( 'edit' == $opera ) {
     $category = intval(getPOST('category'));
     $shop_category = intval(getPOST('shop_category'));
     $product_type = intval(getPOST('type'));
-    $brand = intval(getPOST('brand'));
+//    $brand = intval(getPOST('brand'));
+    $brand = trim(getPOST('brand'));
+
     $price = floatval(getPOST('price'));
     $shop_price = floatval(getPOST('shop_price'));
     $lowest_price = floatval(getPOST('lowest_price'));
@@ -346,8 +369,12 @@ if( 'edit' == $opera ) {
         exit;
     }
 
-    if( 0 >= $brand ) {
-        show_system_message('品牌参数错误', array());
+//    if( 0 >= $brand ) {
+//        show_system_message('品牌参数错误', array());
+//        exit;
+//    }
+    if( '' == $brand ) {
+        show_system_message('请输入品牌', array());
         exit;
     }
 
@@ -439,11 +466,25 @@ if( 'edit' == $opera ) {
         }
     }
 
-    $check_brand = 'select * from '.$db->table('brand').' where id = '.$brand.' limit 1';
+//    $check_brand = 'select * from '.$db->table('brand').' where id = '.$brand.' limit 1';
+//    $brand_exists = $db->fetchRow($check_brand);
+//    if( !$brand_exists ) {
+//        show_system_message('不存在的品牌', array());
+//        exit;
+//    }
+    $brand = $db->escape($brand);
+    $check_brand = 'select * from '.$db->table('brand').' where name = \''.$brand.'\' limit 1';
     $brand_exists = $db->fetchRow($check_brand);
-    if( !$brand_exists ) {
-        show_system_message('不存在的品牌', array());
-        exit;
+    if( $brand_exists ) {
+        $brand = $brand_exists['id'];
+    } else {
+        $data = array(
+            'name' => $brand,
+            'img' => '',
+            'desc' => $brand,
+        );
+        $db->autoInsert('brand', array($data));
+        $brand = $db->get_last_id();
     }
 
     if( 0 >= $integral ) {
@@ -1112,7 +1153,8 @@ if( 'edit' == $act ) {
     }
     $product_sn = $db->escape($product_sn);
 
-    $get_product = 'select a.* from '.$db->table('product').' as a';
+    $get_product = 'select a.*, b.name as brand_name from '.$db->table('product').' as a';
+    $get_product .= ' left join '.$db->table('brand').' as b on a.brand_id = b.id';
     $get_product .= ' where business_account = \''.$_SESSION['business_account'].'\'';
     $get_product .= ' and is_virtual = 0';  //实体产品
     $get_product .= ' and a.product_sn = \''.$product_sn.'\' and status <> 2 limit 1';
