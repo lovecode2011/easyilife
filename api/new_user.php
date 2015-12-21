@@ -29,7 +29,16 @@ if($scene_id > 0)
     }
 }
 
+$openid = $db->escape($openid);
 $get_user = 'select `id` from '.$db->table('member').' where `openid`=\''.$openid.'\'';
+
+$access_token = get_access_token($config['appid'], $config['appsecret']);
+$all_info = get_user_wechat_info($access_token, $openid);
+if(isset($all_info->unionid))
+{
+    $unionid = $db->escape($all_info->unionid);
+    $get_user = 'select `id` from '.$db->table('member').' where `unionid`=\''.$unionid.'\'';
+}
 
 $uid = $db->fetchOne($get_user);
 if(!$uid && register_member($openid, $parent_id))

@@ -121,9 +121,32 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
 
         if(!$account)
         {
-            //如果用户不存在，则直接新注册用户
-            $log->record("register new member");
-            register_member($_SESSION['openid'], $_SESSION['parent_id']);
+            //检查用户的unionid
+            $access_token = get_access_token($config['appid'], $config['appsecret']);
+
+            $all_info = get_user_wechat_info($access_token, $wechat_user->openid);
+
+            if(isset($all_info->unionid))
+            {
+                $get_account = 'select `account` from '.$db->table('member').' where `unionid`=\''.$db->escape($all_info->unionid).'\'';
+                $account = $db->fetchOne($get_account);
+
+                if($account)
+                {
+                    $member_data = array(
+                        'openid' => $_SESSION['openid']
+                    );
+
+                    $db->autoUpdate('member', $member_data,'`account`=\''.$account.'\'');
+                }
+            }
+
+            if(!$account)
+            {
+                //如果用户不存在，则直接新注册用户
+                $log->record("register new member");
+                register_member($_SESSION['openid'], $_SESSION['parent_id']);
+            }
         }
 
         $member_data = array(

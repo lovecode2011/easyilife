@@ -37,11 +37,17 @@ function get_user_wechat_info($access_token, $openid)
     $user_info = json_decode($user_info);
     $data = array(
         'nickname' => $user_info->nickname,
-        'headimg' => $user_info->headimgurl,
-        'unionid' => $user_info->unionid
+        'headimg' => $user_info->headimgurl
     );
 
-    return $db->autoUpdate('member', $data, '`openid`=\''.$openid.'\'');
+    if(isset($user_info->unionid))
+    {
+        $data['unionid'] = $user_info->unionid;
+    }
+
+    $db->autoUpdate('member', $data, '`openid`=\''.$openid.'\'');
+
+    return $user_info;
 }
 
  //获取用户信息

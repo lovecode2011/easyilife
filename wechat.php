@@ -2,7 +2,7 @@
 include('library/init.inc.php');
 
 //接收信息
-$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+$xml = isset($GLOBALS['HTTP_RAW_POST_DATA']) ? $GLOBALS['HTTP_RAW_POST_DATA']:'';
 $log->record_array($_GET);
 $log->record($xml);
 $data = simplexml_load_string($xml);
@@ -28,15 +28,18 @@ if(isset($data->ToUserName))
     }
 }
 
-$openid = $data->FromUserName;
+$openid = isset($data->FromUserName) ? $data->FromUserName:'';
 $openid = $db->escape($openid);
 
-$public_account = $data->ToUserName;
-$public_account = $db->escape($data->ToUserName);
+$public_account = isset($data->ToUserName) ? $data->ToUserName:'';
+$public_account = $db->escape($public_account);
 //处理请求信息
 $response_id = 0;
 $response = '';
-
+if(!isset($data->MsgType))
+{
+    $data->MsgType = '';
+}
 switch(strtolower($data->MsgType))
 {
 //文本消息

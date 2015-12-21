@@ -366,7 +366,8 @@ function register_mobile($mobile, $password, $parent_id = 0)
         'account' => get_account(),
         'openid' => $openid,
         'add_time' => time(),
-        'parent_id' => $parent_id
+        'parent_id' => $parent_id,
+        'sex' => 'N'
     );
 
     if($db->autoInsert('member', array($member_data)))
