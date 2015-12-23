@@ -256,8 +256,10 @@ if('detail' == $act)
 
     $cycle_id = $db->fetchOne($get_cycle);
 
+    $db->autoUpdate('cycle', array('actived'=>0));
     if(!$cycle_id)
     {
+
         $get_cycle_count = 'select count(*) from '.$db->table('cycle').' where `scene_id`='.$scene_id;
 
         $count = $db->fetchOne($get_cycle_count);
@@ -268,7 +270,8 @@ if('detail' == $act)
             'scene_id' => $scene_id,
             'serial' => $count,
             'status' => 0,
-            'add_time' => time()
+            'add_time' => time(),
+            'actived' => 1
         );
 
         if(!$db->autoInsert('cycle', array($cycle_data)))
@@ -277,6 +280,8 @@ if('detail' == $act)
         } else {
             $cycle_id = $db->get_last_id();
         }
+    } else {
+        $db->autoUpdate('cycle', array('actived'=>1), '`id`='.$cycle_id);
     }
 
     $_SESSION['cycle_id'] = $cycle_id;

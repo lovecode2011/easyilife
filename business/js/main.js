@@ -477,9 +477,7 @@ $(document).ready(function() {
                 min: 1
             },
             brand: {
-                required: true,
-                number: true,
-                min: 1
+                required: true
             },
             weight: {
                 required: true,
@@ -526,9 +524,7 @@ $(document).ready(function() {
                 min: $.validator.format("请选择产品店铺分类")
             },
             brand: {
-                required: '请选择产品品牌',
-                number: '请选择产品品牌',
-                min: $.validator.format("请选择产品品牌")
+                required: '请输入产品品牌'
             },
             weight: {
                 required: '请输入产品重量',
