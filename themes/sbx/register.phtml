@@ -244,7 +244,7 @@
             $("#reget").removeClass("new");
             $("#reget").html("<em>重新获取</em><i id='timer'>"+timer+"</i>");
             interval = setInterval(trick, 1000);
-            show_message_dialog("当前没有短信接口,请输入验证码："+response.code);
+            show_message_dialog("验证码已发送");
         } else {
             show_message_dialog(response.msg);
             if(response.timer != undefined) {
