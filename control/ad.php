@@ -249,6 +249,7 @@ if('view' == $act) {
 
     $page = intval(getGET('page'));
     $page_count = 10;
+    assign('count', $page_count);
 
     $get_total = 'select count(*) from '.$db->table('ad').' where business_account = \'\''. $and_where;
     $total = $db->fetchOne($get_total);
@@ -259,7 +260,7 @@ if('view' == $act) {
     $offset = ($page - 1) * $page_count;
     create_pager($page, $total_page, $total);
 
-    $get_ad_list = 'select * from ' . $db->table('ad') . ' where business_account = \'\''.$and_where;
+    $get_ad_list = 'select * from ' . $db->table('ad') . ' where business_account = \'\''.$and_where.' limit '.$offset.','.$page_count;
     $ad_list = $db->fetchAll($get_ad_list);
     if ($ad_list) {
         foreach ($ad_list as $key => $ad) {
