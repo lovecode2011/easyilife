@@ -197,7 +197,7 @@ if('get_message_code' == $opera)
             $response['timer'] = $message_code['expire'] - time();
             $_SESSION['mobile_code'] = $message_code['code'];
         } else {
-            if(sendSMS($mobile, $mobile_code))
+            if(sendSMS($mobile, '您的手机验证码为:'.$mobile_code))
             {
                 //验证码发送成功
                 if($message_code)
@@ -212,7 +212,7 @@ if('get_message_code' == $opera)
                         $response['error'] = 0;
                         $response['timer'] = 60;
                         $_SESSION['mobile_code'] = $mobile_code;
-                        $response['code'] = $mobile_code;
+                        $response['code'] = '';
                         $_SESSION['token'] = 'send message code success.';
                     } else {
                         $response['msg'] = '001:参数错误';

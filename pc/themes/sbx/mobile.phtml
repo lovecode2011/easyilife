@@ -203,7 +203,6 @@
             $('#get-message-code').attr('href', 'javascript:void(0)');
             $("#get-message-code").html("<em>重新获取</em><i id='timer'>"+timer+"</i>");
             interval = setInterval(trick, 1000);
-            layer.msg("当前没有短信接口,请输入验证码："+response.code);
         } else {
             layer.msg(response.msg);
             if(response.timer != undefined) {
