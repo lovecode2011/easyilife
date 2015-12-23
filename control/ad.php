@@ -240,7 +240,27 @@ if('view' == $act) {
         exit;
     }
 
-    $get_ad_list = 'select * from ' . $db->table('ad') . ' where business_account = \'\'';
+    $pos = intval(getGET('pos'));
+    $and_where = '';
+    if( $pos > 0 ) {
+        $and_where = ' and ad_pos_id = '.$pos;
+    }
+    assign('pos', $pos);
+
+    $page = intval(getGET('page'));
+    $page_count = 10;
+    assign('count', $page_count);
+
+    $get_total = 'select count(*) from '.$db->table('ad').' where business_account = \'\''. $and_where;
+    $total = $db->fetchOne($get_total);
+
+    $total_page = ceil($total / $page_count);
+    $page = $page >= $total_page ? $total_page : $page;
+    $page = $page <= 0 ? 1 : $page;
+    $offset = ($page - 1) * $page_count;
+    create_pager($page, $total_page, $total);
+
+    $get_ad_list = 'select * from ' . $db->table('ad') . ' where business_account = \'\''.$and_where.' limit '.$offset.','.$page_count;
     $ad_list = $db->fetchAll($get_ad_list);
     if ($ad_list) {
         foreach ($ad_list as $key => $ad) {

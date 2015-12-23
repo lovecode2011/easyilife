@@ -766,8 +766,9 @@ function build_url($url) {
     } elseif( is_numeric(strpos($_SERVER['SCRIPT_NAME'], '/pc')) ) { //手机域名访问pc端
         return '../'.$url;
     } else {    //pc端虚拟主机
-        if( $_SERVER['SERVER_NAME'] == 'sbx.kwanson.com' ) {
-            return 'http://sbx.kwanson.com/' . $url;
+        if( $_SERVER['SERVER_NAME'] == 'www.sbx3721.com' ) {
+//            return 'http://sbx.kwanson.com/' . $url;
+            return 'http://m.sbx3721.com/'.$url;
         } else {
             return $url;
         }
