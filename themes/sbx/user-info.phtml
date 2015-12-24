@@ -38,7 +38,7 @@
                 <option value="F" {if $user.sex eq "F"}selected="selected"{/if}>女</option>
             </select>
         </label>
-        <label><span>邮箱:</span><input name="email" id="email" type="email" value="{$user.email}" placeholder="请输入邮箱"></label>
+        <label><span>身份证:</span><input name="identity" id="identity" type="text" value="{$user.identity}" placeholder="请输入身份证号码"></label>
         <div class="info-btn">
             <a class="btn" href="javascript:;" onclick="edit_profile();">确认修改</a>
         </div>
@@ -99,7 +99,7 @@
 
     function edit_profile() {
         var sex = $("#sex").val();
-        var email = $("#email").val();
+        var identity = $("#identity").val();
 
         var msg = "";
 
@@ -111,15 +111,11 @@
             msg += "-请选择性别<br/>";
         }
 
-        if(email == "") {
-            msg += "-请填写邮箱<br/>";
-        }
-
         if(msg != "") {
             show_message_dialog(msg);
         } else {
             var url = "profile.php";
-            var data = { "opera":"edit", "email":email, "sex":sex, "mobile":mobile };
+            var data = { "opera":"edit", "identity":identity, "sex":sex, "mobile":mobile };
 
             show_mask();
             $.post(url, data, edit_profile_handler, "json");

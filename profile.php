@@ -18,6 +18,7 @@ if('edit' == $opera)
     $email = getPOST('email');
     $sex = getPOST('sex');
     $mobile = getPOST('mobile');
+    $identity = trim(getPOST('identity'));
 
     if(!is_mobile($mobile))
     {
@@ -33,15 +34,24 @@ if('edit' == $opera)
         }
     }
 
-    if($email == '')
-    {
-        $response['msg'] .= '-请填写邮箱地址<br/>';
+//    if($email == '')
+//    {
+//        $response['msg'] .= '-请填写邮箱地址<br/>';
+//    } else {
+//        if(filter_var($email, FILTER_VALIDATE_EMAIL))
+//        {
+//            $email = $db->escape($email);
+//        } else {
+//            $response['msg'] .= '-邮箱格式不正确<br/>';
+//        }
+//    }
+    if( $identity == '' ) {
+        $identity = '';
     } else {
-        if(filter_var($email, FILTER_VALIDATE_EMAIL))
-        {
-            $email = $db->escape($email);
+        if( check_identity_num($identity) ) {
+            $identity = $db->escape($identity);
         } else {
-            $response['msg'] .= '-邮箱格式不正确<br/>';
+            $response['msg'] = '-身份证格式不正确<br />';
         }
     }
 
@@ -56,9 +66,10 @@ if('edit' == $opera)
     if($response['msg'] == '')
     {
         $member_data = array(
-            'email' => $email,
+//            'email' => $email,
             'sex' => $sex,
-            'mobile' => $mobile
+            'mobile' => $mobile,
+            'identity' => $identity,
         );
 
         if($db->autoUpdate('member', $member_data, '`account`=\''.$_SESSION['account'].'\''))
@@ -81,7 +92,7 @@ $level = array(
 );
 assign('level', $level);
 
-$get_user_info = 'select `level_id`,`nickname`,`mobile`,`account`,`sex`,`email` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
+$get_user_info = 'select `level_id`,`nickname`,`mobile`,`account`,`sex`,`email`, `identity` from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
 $user = $db->fetchRow($get_user_info);
 assign('user', $user);
 
