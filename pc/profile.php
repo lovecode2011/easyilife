@@ -22,7 +22,7 @@ if( 'edit' == $opera ) {
     $response = array('error'=>1, 'msg'=>'');
 
     if( !check_cross_domain() && isset($_SESSION['account']) ) {
-        $email = getPOST('email');
+        $identity = getPOST('identity');
         $sex = getPOST('sex');
         $mobile = getPOST('mobile');
 
@@ -38,28 +38,42 @@ if( 'edit' == $opera ) {
             }
         }
 
-        if ($email == '') {
-            $response['msg'] .= '-请填写邮箱地址<br/>';
+        //    if($email == '')
+//    {
+//        $response['msg'] .= '-请填写邮箱地址<br/>';
+//    } else {
+//        if(filter_var($email, FILTER_VALIDATE_EMAIL))
+//        {
+//            $email = $db->escape($email);
+//        } else {
+//            $response['msg'] .= '-邮箱格式不正确<br/>';
+//        }
+//    }
+        if( $identity == '' ) {
+            $identity = '';
         } else {
-            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $email = $db->escape($email);
+            if( check_identity_num($identity) ) {
+                $identity = $db->escape($identity);
             } else {
-                $response['msg'] .= '-邮箱格式不正确<br/>';
+                $response['msg'] .= '-身份证格式不正确<br />';
             }
         }
 
         $sex_list = 'N|F|M';
         $sex = check_action($sex_list, $sex);
 
-        if ($sex == '') {
+        if($sex == '')
+        {
             $sex = 'N';
         }
 
-        if ($response['msg'] == '') {
+        if($response['msg'] == '')
+        {
             $member_data = array(
-                'email' => $email,
+//            'email' => $email,
                 'sex' => $sex,
-                'mobile' => $mobile
+                'mobile' => $mobile,
+                'identity' => $identity,
             );
 
             if ($db->autoUpdate('member', $member_data, '`account`=\'' . $_SESSION['account'] . '\'')) {

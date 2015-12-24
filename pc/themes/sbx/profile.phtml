@@ -87,9 +87,9 @@
                     <div style="clear: both;"></div>
                 </dl>
                 <dl class="form-item">
-                    <dt>邮箱：</dt>
+                    <dt>身份证：</dt>
                     <dd>
-                        <input type="text" name="email" id="email" placeholder="请输入邮箱" class="fl" value="{$user_info.email}"/>
+                        <input type="text" name="identity" id="identity" placeholder="请输入身份证号码" class="fl" value="{$user_info.identity}"/>
                         <p></p>
                     </dd>
                     <div style="clear: both;"></div>
@@ -165,7 +165,7 @@
                 sex = $(this).val();
             }
         });
-        var email = $("#email").val();
+        var identity = $("#identity").val();
 
         var msg = "";
 
@@ -177,16 +177,12 @@
             msg += "-请选择性别<br/>";
         }
 
-        if(email == "") {
-            msg += "-请填写邮箱<br/>";
-        }
 
         if(msg != "") {
             layer.msg(msg);
         } else {
             var url = "profile.php";
-            var data = { "opera":"edit", "email":email, "sex":sex, "mobile":mobile };
-            console.log(data);
+            var data = { "opera":"edit", "identity":identity, "sex":sex, "mobile":mobile };
             show_mask();
             $.post(url, data, edit_profile_handler, "json");
         }
