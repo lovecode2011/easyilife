@@ -75,7 +75,10 @@
                 <td>{$product.category_name}</td>
                 <td>{$product.shop_price}</td>
                 <td>{$product.price}</td>
-                <td>{$config.domain}product.php?id={$product.id}</td>
+                <td>
+                    手机：{$config.domain}product.php?id={$product.id}<br />
+                    PC：{$config.pc_domain}product.php?id={$product.id}
+                </td>
                 <td>{$product.activity_list}</td>
                 <td>{$product.status_str}</td>
                 <td>{$product.order_view}</td>

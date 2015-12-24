@@ -61,7 +61,10 @@
                     {/if}
                 </td>
 -->
-                <td>http://sbx.kwanson.com/article.php?id={$content.id}</td>
+                <td>
+                    手机：{$config.domain}article.php?id={$content.id}<br />
+                    PC：{$config.pc_domain}article.php?id={$content.id}
+                </td>
                 <td>{$content.section_name}</td>
                 <td>{$content.author}</td>
                 <td>{$content.add_time}</td>
