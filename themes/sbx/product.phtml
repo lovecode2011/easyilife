@@ -45,7 +45,7 @@
         <b>￥<span id="main_price">{sprintf("%.2f", $product.price)}</span></b>
         {/if}
         <aside>
-            <span class="blue"><em class="icon">&#xe614;</em>返利{ceil($product.reward/2.5)}元</span>
+            <span class="blue"><em class="icon">&#xe614;</em>返利{$product.reward}元</span>
         </aside>
         {if isset($product.promote_left) and $product.promote_left gt 0}
         <p class="promote">
