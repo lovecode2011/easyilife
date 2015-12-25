@@ -442,7 +442,7 @@ function register_mobile($mobile, $password, $parent_id = 0)
         foreach($account_arr as $account_tail)
         {
             $c = strlen($account_tail);
-            while($c < 6)
+            while($c < 10)
             {
                 $account_tail = '0'.$account_tail;
                 $c++;

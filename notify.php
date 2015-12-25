@@ -121,6 +121,8 @@ if($data)
                     $order_detail = $db->fetchAll($get_order_detail);
                     foreach($order_detail as $od)
                     {
+                        //状态变为已发货
+                        $delivery = false;
                         //扣减库存
                         consume_inventory($od['product_sn'], $od['attributes'], $od['count']);
                         //如果是虚拟产品，则生成预约券
@@ -137,7 +139,15 @@ if($data)
                             }
 
                             add_order_content($order['business_account'], $order['account'], $order['mobile'], $sn, $od['product_sn'], $od['product_name'], $virtual_content, 2);
+                        } else{
+                            $delivery = true;
                         }
+                    }
+                    if( $delivery ) {
+                        $order_data = array(
+                            'status' => 4,
+                        );
+                        $db->autoUpdate('order', $order_data, '`order_sn`=\''.$sn.'\' and `status`<>4');
                     }
 
                     //如果会员购买了activity=4的产品，则升级
