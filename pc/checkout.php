@@ -548,12 +548,91 @@ if( 'simulation_pay' == $opera ) {
             $response['msg'] = '参数错误';
         } else {
             $order_sn = $db->escape($order_sn);
+            /*
             $pay_order = 'update ' . $db->table('order') . ' set `pay_time`='.time().',status = 4 where account = \'' . $_SESSION['account'] . '\' and order_sn = \'' . $order_sn . '\' and status = 1 limit 1';
             if ($db->update($pay_order)) {
                 $response['error'] = 0;
                 $response['msg'] = '模拟支付一张订单成功';
             } else {
                 $response['msg'] = '系统繁忙，请稍后重试';
+            }
+            */
+            $response['error'] = 0;
+            $get_order = 'select * from '.$db->table('order').' where `order_sn`=\''.$order_sn.'\' and `status`=1';
+            $order = $db->fetchRow($get_order);
+
+            if($order)
+            {
+                require_once("alipay/alipay.config.php");
+                require_once("alipay/lib/alipay_submit.class.php");
+
+                /**************************请求参数**************************/
+
+                //支付类型
+                $payment_type = "1";
+                //必填，不能修改
+                //服务器异步通知页面路径
+                $notify_url = "http://".$_SERVER['HTTP_HOST']."/alipay/notify_url.php";
+                //需http://格式的完整路径，不能加?id=123这类自定义参数
+
+                //页面跳转同步通知页面路径
+                $return_url = "http://".$_SERVER['HTTP_HOST']."/payresult.php";
+                //需http://格式的完整路径，不能加?id=123这类自定义参数，不能写成http://localhost/
+
+                //商户订单号
+                $out_trade_no = $order['order_sn'];
+                //商户网站订单系统中唯一订单号，必填
+
+                //订单名称
+                $subject = $order['order_sn'];
+                //必填
+
+                //付款金额
+                $total_fee = $order['amount'];
+                //必填
+
+                //订单描述
+
+                $body = $config['site_name'].'订单'.$order['order_sn'].'收款';
+                //商品展示地址
+                $show_url = "http://".$_SERVER['HTTP_HOST'];
+                //需以http://开头的完整路径，例如：http://www.商户网址.com/myorder.html
+
+                //防钓鱼时间戳
+                $anti_phishing_key = "";
+                //若要使用请调用类文件submit中的query_timestamp函数
+
+                //客户端的IP地址
+                $exter_invoke_ip = "";
+                //非局域网的外网IP地址，如：221.0.0.1
+
+
+                /************************************************************/
+
+                //构造要请求的参数数组，无需改动
+                $parameter = array(
+                    "service" => "create_direct_pay_by_user",
+                    "partner" => trim($alipay_config['partner']),
+                    "seller_email" => trim($alipay_config['seller_email']),
+                    "payment_type"	=> $payment_type,
+                    "notify_url"	=> $notify_url,
+                    "return_url"	=> $return_url,
+                    "out_trade_no"	=> $out_trade_no,
+                    "subject"	=> $subject,
+                    "total_fee"	=> $total_fee,
+                    "body"	=> $body,
+                    "show_url"	=> $show_url,
+                    "anti_phishing_key"	=> $anti_phishing_key,
+                    "exter_invoke_ip"	=> $exter_invoke_ip,
+                    "_input_charset"	=> trim(strtolower($alipay_config['input_charset']))
+                );
+
+                //建立请求
+                $alipaySubmit = new AlipaySubmit($alipay_config);
+                $response['msg'] = '';
+                $response['content'] = $alipaySubmit->buildRequestForm($parameter,"get", "确认");
+            } else {
+                $response['msg'] = '订单不存在或已支付';
             }
         }
     } else {
@@ -594,10 +673,9 @@ assign('address_list', $address_list);
 $address_info = $address_list[0];
 
 //获取支付方式
-$get_payment_list = 'select * from '.$db->table('payment').' where 1';
+$get_payment_list = 'select * from '.$db->table('payment').' where `support_mobile`=0';
 $payment_list = $db->fetchAll($get_payment_list);
 assign('payment_list', $payment_list);
-
 
 //获取待购买产品
 $get_cart_list = 'select c.`checked`,p.`img`,p.`product_type_id`,c.`id`,c.`attributes`,c.`product_sn`,c.`price`,c.`integral`,c.`number`,b.`shop_name`,b.`id` as b_id,p.`name`,p.`weight`,c.`business_account`,p.`id` as p_id from ('.

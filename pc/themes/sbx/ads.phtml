@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <title>圣宝先官方商城</title>
+    <meta name="keywords" content=" " />
+    <meta name="description" content=" " />
+    <meta name="author" content="www.kwanson.com">
+    <meta name="version" content="v.1.0.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="shortcut icon" href="{$template_dir}images/favicon.ico" type="image/x-icon">
+    <link href="{$template_dir}css/style.css" rel="stylesheet" type="text/css" />
+    <link href="{$template_dir}css/fonts.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{include file="header.phtml"}
+<!-- 顶部面包屑导航开始 -->
+<div class="breadcrumb container">
+    <span>当前位置：</span>
+    <a href="index.php" target="_blank">首页</a><span class="gt">&gt;</span>
+    <span>{$title}</span>
+</div>
+<!-- 顶部面包屑导航结束 -->
+<!-- 文章列表开始 -->
+<div class="container">
+    <div>
+        <ul>
+            {foreach from=$ad_list item=ad}
+            <li>
+                <a href="{$ad.url}" style="padding: 0;">
+                    <dl style="padding-right: 0;">
+                        <dt style="height: auto;"><img src="{$ad.img|build_url}" width="100%"/></dt>
+                    </dl>
+                </a>
+            </li>
+            {/foreach}
+        </ul>
+        <div style="clear: both;"></div>
+    </div>
+</div>
+<!-- 文章列表结束 -->
+{include file="footer.phtml"}
+
+<script src="{$template_dir}js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="{$template_dir}js/sbx-pc.js"></script>
+
+</body>
+</html>

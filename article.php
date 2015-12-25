@@ -30,7 +30,7 @@ if($get_url_response->error == 0)
 {
     assign('recommend_url', $get_url_response->url);
 } else {
-    assign('recommend_url', 'article.php?id='.$id);
+    assign('recommend_url', 'http://'.$_SERVER['HTTP_HOST'].'/article.php?id='.$id);
 }
 
 //若是推广，生成关注二维码

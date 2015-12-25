@@ -363,7 +363,7 @@
             if(response.count == 1) {
                 if(response.order_status == 1) {
                     if( response.order_sn ) {
-                        layer.confirm('未有支付接口，是否模拟支付其中一张订单', {
+                        layer.confirm('马上支付?', {
                             btn: ['确定', '取消'] //按钮
                         }, function () {
                             simulation_pay(response.order_sn);
@@ -393,11 +393,14 @@
     function simulation_pay_handler(response) {
         hide_mask();
         if( response.error == 0 ) {
+            /*
             layer.msg(response.msg, function() {
                 window.location.href = "order.php";
             });
+            */
+            $("body").append(response.content);
         } else {
-            layer.msg('response.msg');
+            layer.msg(response.msg);
         }
     }
 
