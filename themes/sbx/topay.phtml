@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>圣宝先移动商城</title>
+    <title>{$config.site_name}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="application-name" content="圣宝先移动商城">
+    <meta name="application-name" content="{$config.site_name}">
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="author" content="www.kwanson.com">
@@ -63,6 +63,7 @@
 {if is_weixin()}
 <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
 {/if}
+<script type="text/javascript" src="{$template_dir}js/ap.js"></script>
 <script type="text/javascript">
     var global_result = null;
 
@@ -95,9 +96,40 @@
             case "wechat":
                 get_prepay_id();
                 break;
+            case "alipay":
+                ger_pay_link();
+                break;
             default:
                 show_message_dialog("该支付方式暂无接口支持");
                 break;
+        }
+    }
+
+    function ger_pay_link() {
+        var data = { "opera":"alipay" };
+        var url = "topay.php";
+
+        show_mask();
+        $.post(url, data, ger_pay_link_handler, "json");
+    }
+
+    function ger_pay_link_handler(result) {
+        hide_mask();
+        if(result.error == 0) {
+            $("body").append(result.content);
+            var queryParam = '';
+            Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
+                if(ele.name === 'req_data') {
+                    queryParam += ele.name + "=" + ele.value + '&';
+                } else {
+                    queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
+                }
+            });
+            var gotoUrl = document.querySelector("#alipaysubmit").getAttribute('action') + '?' + queryParam;
+
+            _AP.pay(gotoUrl);
+        } else {
+            show_message_dialog(result.msg);
         }
     }
 
