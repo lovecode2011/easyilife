@@ -31,23 +31,26 @@
                 <div class="recharge-tips">
                     <i class="icon"></i>充值金额将充入到余额款项中，余额可用于购物，加盟等费用抵用，充值的款项将无法退回。
                 </div>
-                <div class="recharge-info">
-                    <h3><i class="icon" style="margin-right: 4px;"></i>充值到平台</h3>
-                    <label><span>所属银行：</span>中国工商银行</label>
-                    <label><span>平台账号：</span>44444*******5555</label>
-                    <label><span>账户名称：</span>圣宝先</label>
-                </div>
+<!--                <div class="recharge-info">-->
+<!--                    <h3><i class="icon" style="margin-right: 4px;"></i>充值到平台</h3>-->
+<!--                    <label><span>所属银行：</span>中国工商银行</label>-->
+<!--                    <label><span>平台账号：</span>44444*******5555</label>-->
+<!--                    <label><span>账户名称：</span>圣宝先</label>-->
+<!--                </div>-->
+                <form id="recharge-form" action="recharge.php" method="post">
                 <dl class="form-item recharge-value">
                     <dt><em>*</em>充值金额：</dt>
                     <dd>
-                        <input type="text" placeholder="请填写金额（元）" class="fl" maxlength="11">
+                        <input name="amount" id="amount" type="text" placeholder="请填写金额（元）" class="fl" maxlength="11">
                     </dd>
                     <div style="clear: both;"></div>
                 </dl>
                 <div class="operation">
-                    <a href="javascript:;" class="sure">确认</a>
+                    <a href="javascript:do_submit();" class="sure">确认</a>
+                    <input type="hidden" id="opera" name="opera" value="alipay"/>
                     <div style="clear: both;"></div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -60,7 +63,43 @@
 <script type="text/javascript" src="{$template_dir}js/layer/layer.js"></script>
 
 <script type="text/javascript">
+    function do_submit(){
+        var amount = $('#amount').val();
+        amount = parseFloat(amount);
+        if( isNaN(amount) || 0 >= amount ) {
+            if( isNaN(amount) ) {
+                var msg = '请填写要充值的金额';
+            } else {
+                var msg = '充值金额必须大于0';
+            }
+            layer.msg(msg, {
+                time: 0, //20s后自动关闭
+                btn: ['确定']
+            });
+            return;
+        }
+        amount = amount.toFixed(2);
+        layer.confirm('确定充值金额'+ amount + '？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            var url = 'recharge.php';
+            var param = { "opera": "alipay", "amount": amount };
+            $.post(url, param, do_submit_handler, 'json');
+        }, function() {
 
+        });
+    }
+
+    function do_submit_handler(result) {
+        if( result.error == 0 ) {
+            $("body").append(result.content);
+        } else {
+            layer.msg(result.msg, {
+                time: 0, //20s后自动关闭
+                btn: ['确定']
+            });
+        }
+    }
 </script>
 
 </body>

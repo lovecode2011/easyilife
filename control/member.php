@@ -151,11 +151,20 @@ if( 'view' == $act ) {
 
             if($value['sex'] == '' || $value['sex'] == 'N')
             {
-                $member_list[$key]['sex'] = '保密';
-            } else {
-                $member_list[$key]['sex'] = ($value['sex'] == 'M') ? '男' : '女';
+                $member_list[$key]['sex_str'] = '保密';
+            } elseif( $value['sex'] == 'M' ) {
+                $member_list[$key]['sex_str'] =  '男';
+            } elseif( $value['sex'] == 'F' ) {
+                $member_list[$key]['sex_str'] =  '女';
+            } elseif( $value['sex'] == '0' ) {
+                $member_list[$key]['sex_str'] = '保密';
+            } elseif( $value['sex'] == '1' ) {
+                $member_list[$key]['sex_str'] =  '男';
+            } elseif( $value['sex'] == '2' ) {
+                $member_list[$key]['sex_str'] =  '女';
             }
             $member_list[$key]['level_str'] = $level_str[$value['level_id']];
+            $member_list[$key]['sex'] = $member_list[$key]['sex_str'];
         }
     }
     assign('member_list', $member_list);
@@ -274,20 +283,20 @@ if( 'network' == $act ) {
     $data = array();
     if( !empty($grand) ) {
         $data = array(
-            'name' => '二级推荐人-'.$grand['account'],
+            'name' => '二级推荐人-'.$grand['account'].'-'.$grand['nickname'],
             'account' => $grand['account'],
             'parentId' => $grand['parent_id'],
             'isParent' => true,
             'open' => true,
         );
         $data['children'] = array(array(
-            'name' => '一级推荐人-'.$parent['account'],
+            'name' => '一级推荐人-'.$parent['account'].'-'.$parent['nickname'],
             'account' => $parent['account'],
             'parentId' => $parent['parent_id'],
             'isParent' => true,
             'open' => true,
             'children' => array(array(
-                'name' => $member['account'],
+                'name' => $member['account'].'-'.$member['nickname'],
                 'account' => $member['account'],
                 'parentId' => $member['parent_id'],
                 'isParent' => true,
@@ -295,13 +304,13 @@ if( 'network' == $act ) {
         ));
     } else if( !empty($parent) ) {
         $data = array(
-            'name' => '一级推荐人-'.$parent['account'],
+            'name' => '一级推荐人-'.$parent['account'].'-'.$parent['nickname'],
             'account' => $parent['account'],
             'parentId' => $parent['parent_id'],
             'isParent' => true,
             'open' => true,
             'children' => array(array(
-                'name' => $member['account'],
+                'name' => $member['account'].'-'.$member['nickname'],
                 'account' => $member['account'],
                 'parentId' => $member['parent_id'],
                 'isParent' => true,
@@ -309,7 +318,7 @@ if( 'network' == $act ) {
         );
     } else {
         $data = array(
-            'name' => $member['account'],
+            'name' => $member['account'].'-'.$member['nickname'],
             'account' => $member['account'],
             'parentId' => $member['parent_id'],
             'isParent' => true,
