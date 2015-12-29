@@ -42,11 +42,11 @@ if( 'get_children' == $opera ) {
             exit;
         } else {
             $current = $db->escape($current);
-            $get_member = 'select id, account, parent_id as parentId from '.$db->table('member');
+            $get_member = 'select id, account, parent_id, nickname as parentId from '.$db->table('member');
             $get_member .= ' where account = \''.$current.'\' limit 1';
             $member = $db->fetchRow($get_member);
             if( $member ) {
-                $member['name'] = $member['account'];
+                $member['name'] = $member['account'].'-'.$member['nickname'];
                 $member['isParent'] = true;
                 echo json_encode(array(
                     'error' => 0,
@@ -76,13 +76,13 @@ if( 'get_children' == $opera ) {
         exit;
     }
 
-    $get_children = 'select id,account,parent_id as parentId from '.$db->table('member');
+    $get_children = 'select id,account,parent_id as parentId,nickname from '.$db->table('member');
     $get_children .= ' where parent_id = '.$account['id'];
 
     $children = $db->fetchAll($get_children);
     if( $children ) {
         foreach( $children as $key => $value ) {
-            $children[$key]['name'] = $value['account'];
+            $children[$key]['name'] = $value['account'].'-'.$value['nickname'];
             $children[$key]['isParent'] = true;
         }
 

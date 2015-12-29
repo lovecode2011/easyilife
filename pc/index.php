@@ -24,7 +24,7 @@ $cycle_ad = $db->fetchAll($get_cycle_ad);
 assign('cycle_ad', $cycle_ad);
 
 //获取展示广告
-$get_perform_ad = 'select `img`,`url`,`alt` from '.$db->table('ad').' where `ad_pos_id`=2 order by `order_view`';
+$get_perform_ad = 'select `img`,`url`,`alt` from '.$db->table('ad').' where `ad_pos_id`=21 order by `order_view`';
 $perform_ad = $db->fetchAll($get_perform_ad);
 assign('perform_ad', $perform_ad);
 
