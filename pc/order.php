@@ -233,6 +233,22 @@ if('receive' == $opera)
 
                     $db->autoUpdate('trade', $trade_status, '`id`='.$trade['id']);
                 }
+
+                //读取佣金,将佣金发放到用户账户里
+                $get_member_rewards = 'select `id`,`remark`,`integral`,`account`,`reward` from '.$db->table('member_reward').' where `status`=0 and `assoc`=\''.$order_sn.'\'';
+                $member_rewards = $db->fetchAll($get_member_rewards);
+                if($member_rewards) {
+                    foreach ($member_rewards as $reward) {
+                        if (add_memeber_exchange_log($reward['account'], 0, $reward['reward'], $reward['integral'], -1 * $reward['integral'], -1 * $reward['reward'], $_SESSION['account'], $order_sn . '奖金发放')) {
+                            $reward_status = array(
+                                'status' => 1,
+                                'solve_time' => time()
+                            );
+
+                            $db->autoUpdate('member_reward', $reward_status, '`id`=' . $reward['id']);
+                        }
+                    }
+                }
                 $response['error'] = 0;
                 $response['msg'] = '确认收货成功';
             } else {

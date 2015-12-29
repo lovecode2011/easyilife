@@ -49,7 +49,7 @@ function add_history($account, $product_sn)
  * @param string $remark
  * @return bool
  */
-function  add_member_reward($account, $reward, $integral = 0.0, $remark = '')
+function  add_member_reward($account, $reward, $integral = 0.0, $assoc, $remark = '')
 {
     global $db;
 
@@ -59,6 +59,7 @@ function  add_member_reward($account, $reward, $integral = 0.0, $remark = '')
         'integral' => $integral,
         'remark' => $remark,
         'settle_time' => time(),
+        'assoc' => $assoc,
         'status' => 0
     );
 

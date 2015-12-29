@@ -288,7 +288,7 @@ if('submit_order' == $opera)
                     $order_data = array('pay_time'=>time());
 
                     $db->autoUpdate('order', $order_data, '`order_sn`=\''.$order_sn.'\'');
-                    add_order_log($order_sn, $_SESSION['account'], 3, "使用余额/佣金/积分支付");
+                    add_order_log($order_sn, $_SESSION['account'], 4, "使用余额/佣金/积分支付");
                 }
 
                 if($cart['balance_paid'] || $cart['reward_paid'] || $cart['integral_paid'])
@@ -335,6 +335,7 @@ if('submit_order' == $opera)
                     //订单结算
                     if($status == 4)
                     {
+                        $log->record('计算三级分销');
                         //计算三级分销
                         $log->record('计算分销奖金:'.$cart['total_reward']);
                         distribution_settle($cart['total_reward'], $user_info['path'], $order_sn);

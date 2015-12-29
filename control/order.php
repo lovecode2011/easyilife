@@ -14,15 +14,44 @@ $template = 'order/';
 assign('subTitle', '订单管理');
 
 $action = 'view|detail';
-$operation = '';
+$operation = 'express_info';
 
 $act = check_action($action, getGET('act'));
 $act = ( $act == '' ) ? 'view' : $act;
 
 $opera = check_action($operation, getPOST('opera'));
 //===========================================================================
+if('express_info' == $opera)
+{
+    $order_sn = getPOST('order_sn');
 
+    $response = array('error'=>1, 'msg'=>'');
 
+    if($order_sn == '')
+    {
+        $response['msg'] = '参数错误';
+    } else {
+        $order_sn = $db->escape($order_sn);
+    }
+
+    $get_order_info = 'select `express_id`,`status`,`express_sn` from '.$db->table('order').' where `order_sn`=\''.$order_sn.'\'';
+    $order = $db->fetchRow($get_order_info);
+
+    if($order && $order['status'] == 6)
+    {
+        $get_express_code = 'select `code` from '.$db->table('express').' where `id`='.$order['express_id'];
+        $express_info = query_express($db->fetchOne($get_express_code   ), $order['express_sn']);
+        $express_info = json_decode($express_info, true);
+        assign('order_info', $express_info);
+        $response['error'] = 0;
+        $response['msg'] = $smarty->fetch('public/express_info.phtml');
+    } else {
+        $response['msg'] = '当前没有任何信息';
+    }
+
+    echo json_encode($response);
+    exit;
+}
 //===========================================================================
 
 if( 'view' == $act ) {

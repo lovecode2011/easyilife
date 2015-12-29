@@ -238,7 +238,9 @@ function distribution_settle($reward, $path, $order_sn = '')
 {
     global $db;
     global $config;
+    global $log;
 
+    $log->record('结算开始');
     $ids_arr = explode(',', $path);
     array_pop($ids_arr);
 
@@ -258,7 +260,7 @@ function distribution_settle($reward, $path, $order_sn = '')
     if($member['level_id'] > 0 && $refund)
     {
         add_memeber_exchange_log($member['account'], 0, 0, 0, 0, $refund, 'settle', $order_sn . '合伙人返利');
-        add_member_reward($member['account'], $refund, 0, $order_sn);
+        add_member_reward($member['account'], $refund, 0, $order_sn, $order_sn);
         $refund = 0;
     }
 

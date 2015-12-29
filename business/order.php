@@ -14,7 +14,7 @@ business_base_init();
 $template = 'order/';
 
 $action = 'view|deliver|prepare|agree|refund|delete|detail|export|pay|preview';
-$operation = 'deliver';
+$operation = 'deliver|express_info';
 
 $act = check_action($action, getGET('act'));
 $opera = check_action($operation, getPOST('opera'));
