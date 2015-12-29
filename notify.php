@@ -100,7 +100,7 @@ if($data)
                     'pay_time' => time()
                 );
 
-                $flag = $db->autoUpdate('order', $order_data, '`order_sn`=\''.$sn.'\' and `status`<>3');
+                $flag = $db->autoUpdate('order', $order_data, '`order_sn`=\''.$sn.'\' and `status`<3');
                 if($flag && $db->get_affect_rows())
                 {
                     $log->record($sn.'支付成功');
