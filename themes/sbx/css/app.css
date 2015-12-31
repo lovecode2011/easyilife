@@ -2864,6 +2864,7 @@ nav.ol_select_bar ul a.hover li {
 }
 
 /* 会员推广名片 */
+/*
 .qr-card-con .card-header{
     position: relative;
     width: 100%;
@@ -2939,6 +2940,38 @@ nav.ol_select_bar ul a.hover li {
     left: 77.5%;
     top: -1.85rem;
     position: relative;
+}
+*/
+.qr-card{
+    background: #fffea1;
+}
+.qr-card-con{
+    background: url('../images/qr_bg.jpg') no-repeat top center scroll;
+    background-size: 18rem 24rem;
+    width: 16rem;
+    height: 24rem;
+}
+.qr-header{
+    margin: .5rem .5rem;
+}
+.qr-header img{
+    width: 2.5rem;
+    height: 2.5rem;
+}
+.qr-name{
+    font-size: .7rem;
+    color: #f9960a;
+    padding: 1rem 0 0 1.5rem;
+}
+.qr-card-con .card-img{
+    width: 3.8rem;
+    margin: 0 auto;
+    padding:1rem 0;
+}
+.qr-card-con .card-img img{
+    width: 3.8rem;
+    height: 3.8rem;
+    margin: 15.25rem auto 0;
 }
 
 /* 发表评论页 */

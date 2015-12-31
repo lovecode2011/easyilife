@@ -38,16 +38,18 @@ function get_user_wechat_info($access_token, $openid)
 
     if($user_info)
     {
-        $data = array(
-            'nickname' => $user_info->nickname,
-            'headimg' => $user_info->headimgurl
-        );
+        if(isset($user_info->nickname)) {
+            $data = array(
+                'nickname' => $user_info->nickname,
+                'headimg' => $user_info->headimgurl
+            );
 
-        if (isset($user_info->unionid)) {
-            $data['unionid'] = $user_info->unionid;
+            if (isset($user_info->unionid)) {
+                $data['unionid'] = $user_info->unionid;
+            }
+
+            $db->autoUpdate('member', $data, '`openid`=\'' . $openid . '\'');
         }
-
-        $db->autoUpdate('member', $data, '`openid`=\'' . $openid . '\'');
     }
 
     return $user_info;

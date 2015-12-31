@@ -23,28 +23,14 @@
     <h1><em>会员推广名片</em></h1>
 </header>
 <!-- 推广名片页面 -->
-<section class="qr-card">
+<section style="margin-top:-.5rem;">
     <section class="qr-card-con">
-        <div class="card-header">
-            <img src="{if $user_info.headimg neq ""}{$user_info.headimg}{else}{$template_dir}images/wang.jpg{/if}" alt="{$user_info.nickname}"/>
-            <div class="card-header-con">
-                <span class="icon">&#xe637;</span>
-                <span>我是{$user_info.nickname}，</span>
-                <span>关注健康、关注养生都在<em style="color: #e60012;font-size: .8rem;">圣宝先</em>！</span>
-            </div>
+        <div class="qr-header">
+            <img src="{if $user_info.headimg neq ""}{$user_info.headimg}{else}{$template_dir}images/wang.jpg{/if}" />
+            <span class="qr-name">{$user_info.nickname}，</span>
         </div>
         <div class="card-img">
             <img src="{if $qrcode}{$qrcode}{else}{$template_dir}images/qrcode.jpg{/if}" alt="推广二维码"/>
-        </div>
-        <div class="card-footer">
-            <div class="card-tips">
-                <span>长按此图，识别二维码，添加关注。</span>
-                <span>怪我会读心咯！</span>
-                <span>总能找到你最喜欢的平台。</span>
-            </div>
-            <div class="card-logo">
-                圣宝先
-            </div>
         </div>
     </section>
 </section>
