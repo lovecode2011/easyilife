@@ -35,6 +35,8 @@
 {if $qrcode}
 <section>
     <section class="qr-card-con">
+        <img src="{if $qrcode}{$qrcode}{else}{$template_dir}images/qrcode.jpg{/if}" alt="推广二维码" width="100%"/>
+        <!--
         <div class="qr-header">
             <img src="{if $user_info.headimg neq ""}{$user_info.headimg}{else}{$template_dir}images/wang.jpg{/if}" />
             <span class="qr-name">{$user_info.nickname}，</span>
@@ -42,6 +44,7 @@
         <div class="card-img">
             <img src="{if $qrcode}{$qrcode}{else}{$template_dir}images/qrcode.jpg{/if}" alt="推广二维码"/>
         </div>
+        -->
     </section>
 </section>
 <!--

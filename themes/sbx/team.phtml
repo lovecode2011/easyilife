@@ -47,7 +47,7 @@
                         <div class="myteam-header-info">
                             <img src="{if $member.headimg neq ""}{$member.headimg}{else}{$template_dir}images/wang.jpg{/if}" alt="{$member.nickname}" />
                             <span>{$member.nickname}</span>
-                            <em>{$member.account}</em>
+                            <em>关注时间:{date('Y-m-d H:i:s', $member['add_time'])}{*$member.account*}</em>
                         </div>
                     </div>
                 </section>
@@ -68,7 +68,7 @@
                         <div class="myteam-header-info">
                             <img src="{if $member.headimg neq ""}{$member.headimg}{else}{$template_dir}images/wang.jpg{/if}" alt="{$member.nickname}" />
                             <span>{$member.nickname}</span>
-                            <em>{$member.account}</em>
+                            <em>关注时间:{date('Y-m-d H:i:s', $member['add_time'])}{*$member.account*}</em>
                         </div>
                     </div>
                 </section>

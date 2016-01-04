@@ -149,6 +149,11 @@ function get_qrcode($openid, $access_token)
     if(isset($response->errcode))
     {
         $log->record('get qrcode fail:'.$response->errcode.':'.$response->errmsg);
+        $sysconf_data = array(
+            'value' => 0
+        );
+        $db->autoUpdate('sysconf', $sysconf_data, '`key`=\'expired\'');
+        return get_qrcode($openid, $access_token);
         return false;
     } else {
         $data = array(

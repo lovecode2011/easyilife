@@ -834,3 +834,43 @@ function idcard_checksum18($idcard){
         return true;
     }
 }
+
+function image_merge($source, $dest, $qrcode_file, $text, $dest_file)
+{
+    $src = imagecreatefromjpeg($source);
+    $dest = imagecreatefromjpeg($dest);
+    $qrcode = imagecreatefromjpeg($qrcode_file);
+
+    list($width, $height) = getimagesize($source);
+    $image_p = imagecreatetruecolor(130, 130);
+    imagecopyresampled($image_p, $src, 0, 0, 0, 0, 130, 130, $width, $height);
+    $src = $image_p;
+
+    list($qwidth, $qheight) = getimagesize($qrcode_file);
+    $image_qp = imagecreatetruecolor(185, 185);
+    imagecopyresampled($image_qp, $qrcode, 0, 0, 0, 0, 185, 185, $qwidth, $qheight);
+    $qrcode = $image_qp;
+
+    if($text != '')
+    {
+        // Allocate colors
+        $font_color = imagecolorallocate($dest, 249, 150, 10);
+
+        // Write the font to the image
+        imagefttext($dest, 22, 0, 270, 70, $font_color, '../library/font/Yahei.ttf', $text);
+    }
+
+    imagecopymerge($dest, $src, 48,18,0,0,130,130,100);
+    imagedestroy($src);
+
+    imagecopymerge($dest, $qrcode, 270,856,0,0,185,185,100);
+    imagedestroy($qrcode);
+
+    if(imagepng($dest, $dest_file))
+    {
+        return $dest_file;
+        imagedestroy($dest);
+    }
+
+    imagedestroy($dest);
+}
