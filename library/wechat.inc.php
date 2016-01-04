@@ -118,7 +118,7 @@ function get_qrcode($openid, $access_token)
         return $qrcode;
     }
 
-    $update_user = 'update '.$db->table('member').' set `scene_id`=0 where `expired`>'.time();
+    $update_user = 'update '.$db->table('member').' set `scene_id`=0 where `expired`<'.time();
     $db->update($update_user);
 
     $scene_arr = range(1, 100000);
@@ -126,7 +126,7 @@ function get_qrcode($openid, $access_token)
     $scene_id = 0;
     foreach($scene_arr as $id)
     {
-        $check_scene_id = 'select count(*) from '.$db->table('member').' where `scene_id`='.$id.' and `expired`<'.time();
+        $check_scene_id = 'select count(*) from '.$db->table('member').' where `scene_id`='.$id.' and `expired`>'.time();
         $log->record($check_scene_id);
 
         if(!$db->fetchOne($check_scene_id))

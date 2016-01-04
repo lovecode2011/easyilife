@@ -65,6 +65,15 @@
                     </div>
                     <div class="sale">
                         <div class="sale-box">
+                            <div class="show-info-left">市场价</div>
+                            <div class="show-info-right">
+                                <b class="price" style="font-size: 18px;font-weight: normal;color: #9D9D9D;text-decoration: line-through;">
+                                    <span>¥<span>{$product.shop_price}</span></span>
+                                </b>
+                                {if $product.reward > 0}
+                                <span class="icon-bg">返利{$product.reward}元</span>
+                                {/if}
+                            </div>
                             {if $product.integral eq 0}
                             <div class="show-info-left">价格</div>
                             <div class="show-info-right">
