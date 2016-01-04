@@ -113,7 +113,8 @@ if('add' == $opera)
 
         if($group <= 0)
         {
-            $response['msg'] .= "-请选择商圈\n";
+            //$response['msg'] .= "-请选择商圈\n";
+            $group = 0;
         }
 
         if($address == '')
@@ -225,7 +226,8 @@ if('edit' == $opera)
 
         if($group <= 0)
         {
-            $response['msg'] .= "-请选择商圈\n";
+//            $response['msg'] .= "-请选择商圈\n";
+            $group = 0;
         }
 
         if($address == '')
@@ -482,23 +484,24 @@ if('add' == $act)
 
 if('list' == $act)
 {
-    $get_address_list = 'select a.`is_default`,p.`province_name`,c.`city_name`,d.`district_name`,g.`group_name`,a.`address`,a.`consignee`,'.
+    $get_address_list = 'select a.`is_default`,p.`province_name`,c.`city_name`,d.`district_name`,(select `group_name` from sbx_group where id = a.group) as `group_name`,a.`address`,a.`consignee`,'.
         'a.`mobile`,a.`zipcode`,a.`id` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
-        $db->table('city').' as c, '.$db->table('district').' as d, '.$db->table('group').' as g where '.
-        'a.`province`=p.`id` and a.`city`=c.`id` and a.`district`=d.`id` and a.`group`=g.`id` '.
+        $db->table('city').' as c, '.$db->table('district').' as d where '.
+        'a.`province`=p.`id` and a.`city`=c.`id` and a.`district`=d.`id` '.
         ' and a.`account`=\''.$_SESSION['account'].'\' order by `is_default` DESC';
-
     $address_list = $db->fetchAll($get_address_list);
 
     if($address_list)
     {
         foreach ($address_list as $key => $address)
         {
-            $address_list[$key]['detail_address'] = $address['province_name'] . ' ' . $address['city_name'] . ' ' . $address['district_name'] . ' ' .
-                $address['group_name'] . ' ' . $address['address'];
+            $address_list[$key]['detail_address'] = $address['province_name'] . ' ' . $address['city_name'] . ' ' . $address['district_name'] . ' ';
+            if( $address['group_name'] ) {
+                $address_list[$key]['detail_address'] .= $address['group_name'] . ' ';
+            }
+            $address_list[$key]['detail_address'] .=  $address['address'];
         }
     }
-
     assign('address_list', $address_list);
 }
 

@@ -12,7 +12,7 @@ back_base_init();
 $template = 'content/';
 assign('subTitle', '内容管理');
 
-$action = 'edit|add|view|delete|cycle|revoke|remove';
+$action = 'edit|add|view|delete|cycle|revoke|remove|empty';
 $operation = 'edit|add';
 
 $act = check_action($action, getGET('act'));
@@ -577,6 +577,21 @@ if( 'remove' == $act ) {
     }
 }
 
+//清空回收站
+if( 'empty' == $act ) {
+    if( !check_purview('pur_content_del', $_SESSION['purview']) ) {
+        show_system_message('权限不足', array());
+        exit;
+    }
+    $empty_trash = 'delete from '.$db->table('content').' where status = 0';
+    if( $db->delete($empty_trash) ) {
+        show_system_message('回收站已被清空', $links);
+        exit;
+    } else {
+        show_system_message('系统繁忙，请稍后再试', array());
+        exit;
+    }
+}
 
 $template .= $act.'.phtml';
 $smarty->display($template);

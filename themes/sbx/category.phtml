@@ -44,7 +44,11 @@
                     {foreach from=$category_2_list item=cat key=parent_id}
                     <div id="cate_lev2_div_{$parent_id}" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
                         <a href="#" class="banImg" name="cate_lev2_banner_0" title="">
+                            {if $category_list[$parent_id].icon eq '' }
                             <img class="cate_banner_img" src="{$template_dir}images/bg_pic.png" data-src="http://img63.ddimg.cn/upload_img/00087/hw/886x315_gr_0901.jpg">
+                            {else}
+                            <img class="cate_banner_img" src="{$category_list[$parent_id].icon}" data-src="{$category_list[$parent_id].icon}">
+                            {/if}
                         </a>
                         {foreach from=$cat item=c name=cat}
                         <h3>{$c.name}</h3>

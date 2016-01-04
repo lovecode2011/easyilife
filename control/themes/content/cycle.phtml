@@ -7,8 +7,10 @@
     <div class="content-title">
         <h5 class="pull-left">回收站</h5>
         <div class="pull-right">
+            {if $contentList}
+            <a class="btn btn-primary" href="javascript:empty_trash()">清空回收站</a>&nbsp;
+            {/if}
             <a class="btn btn-primary" href="content.php">返回</a>&nbsp;
-            <!--            <a class="btn btn-primary" href="?act=cycle">回收站</a>-->
         </div>
         <div class="clear"></div>
     </div>
@@ -124,6 +126,15 @@
     </div>
 </div>
 <!-- END content -->
+<script type="text/javascript">
+    function empty_trash() {
+        if( confirm('确定要清空回收站吗？') ) {
+            window.location.href = 'content.php?act=empty';
+        } else {
+            return false;
+        }
+    }
+</script>
 {include file="library/footer.lbi"}
 </body>
 </html>

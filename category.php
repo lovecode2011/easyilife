@@ -60,6 +60,7 @@ if($flag)
 {
     $get_category_list = 'select * from '.$db->table('category').' where `business_account`=\'\' and `parent_id`=0';
     $category_list = $db->fetchAll($get_category_list);
+    $target_category_list = array();
 
     $category_2_list = array();
     foreach($category_list as $cat)
@@ -78,9 +79,10 @@ if($flag)
         }
 
         $category_2_list[$cat['id']] = $children;
+        $target_category_list[$cat['id']] = $cat;
     }
 
-    assign('category_list', $category_list);
+    assign('category_list', $target_category_list);
     assign('category_2_list', $category_2_list);
 }
 

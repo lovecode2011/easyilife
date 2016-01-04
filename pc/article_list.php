@@ -96,6 +96,7 @@ if($id <= 4)
         $title = $section['section_name'];
         assign('sub_section_id_on', $sub_section_id_on);
     }
+    $title = $section['section_name'];
     $page_count = 10;
     $get_total = 'select count(*) from '.$db->table('content').$article_where;
     $total = $db->fetchOne($get_total);

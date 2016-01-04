@@ -410,7 +410,7 @@ if( 'delete' == $act ) {
         exit;
     }
 
-    $get_content = 'select `id` from '.$db->table('content').' where section_id = '.$id;
+    $get_content = 'select `id` from '.$db->table('content').' where section_id = '.$id.' and status = 1';
     $content = $db->fetchRow($get_content);
     if( $content ) {
         show_system_message('当前栏目下有资讯，请先删除或移走资讯', array());
@@ -424,6 +424,8 @@ if( 'delete' == $act ) {
 
     $delete_section = 'delete from `'.DB_PREFIX.'section` where `id`='.$id.' limit 1';
     if($db->delete($delete_section)) {
+        $delete_content = 'delete from '.$db->table('content').' where status = 0 and section_id = '.$id;
+        $db->delete($delete_content);
         show_system_message('删除栏目成功', array());
         exit;
     } else {
