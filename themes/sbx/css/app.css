@@ -436,9 +436,14 @@ a.payBtn {
 .focus .bd li a{ -webkit-tap-highlight-color:rgba(0, 0, 0, 0); /* 取消链接高亮 */  }
 /* 商品名称 */
 .product-detail{border-top:1px solid #ddd;border-bottom:1px solid #ddd;margin-bottom:.25rem;background-color:#fff;padding-top:.5rem;position:relative;}
-.product-detail .left{margin-right:3.5rem;margin-left:.5rem;min-height:2rem;overflow:hidden;white-space:nowrap;}
+.product-detail .left{margin-right:3.5rem;margin-left:.5rem;min-height:2rem;overflow:hidden;white-space:nowrap;
+    font-size: .6rem;
+    color: #a4a4a4;
+    padding-bottom: .5rem;
+    line-height: 1.4rem;
+}
 .product-detail .left b{color:#fe435d;font-size:1rem;line-height:1rem;margin-right:.25rem;}
-.product-detail .right{position:absolute;right:0;top:.5rem;z-index:2;}
+.product-detail .right{position:absolute;right:0;top:1.5rem;z-index:2;}
 .product-detail .right ul{overflow:hidden;}
 .product-detail .right ul li{width:3rem;height:2rem;float:left;-webkit-box-sizing:border-box;box-sizing:border-box;}
 .product-detail .right ul li:first-child{border-left:1px solid #959595;}
@@ -2952,16 +2957,19 @@ nav.ol_select_bar ul a.hover li {
     height: 24rem;
 }
 .qr-header{
-    margin: .5rem .5rem;
+    margin: .5rem .8rem;
 }
 .qr-header img{
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 3rem;
+    height: 3rem;
 }
 .qr-name{
     font-size: .7rem;
     color: #f9960a;
-    padding: 1rem 0 0 1.5rem;
+    padding: 0.2rem 0 0 1.8rem;
+    margin-top: 10px;
+    display: inline-block;
+    vertical-align: top;
 }
 .qr-card-con .card-img{
     width: 3.8rem;
@@ -2971,7 +2979,7 @@ nav.ol_select_bar ul a.hover li {
 .qr-card-con .card-img img{
     width: 3.8rem;
     height: 3.8rem;
-    margin: 15.25rem auto 0;
+    margin: 12.85rem auto 0;
 }
 
 /* 发表评论页 */
