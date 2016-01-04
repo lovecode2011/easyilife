@@ -39,11 +39,14 @@
 <section class="product-detail">
     <article>{$product.name}</article>
     <div class="left">
+        <div style="display: inline-block">
+            市场价: <b style="text-decoration: line-through; color: #a4a4a4; font-size: .8rem">￥{sprintf("%.2f", $product.shop_price)}</b><br/>
         {if $product.integral gt 0}
-        <b><span id="main_price">{sprintf("%.2f", $product.integral)}积分</span></b>
+         <b><span id="main_price">{sprintf("%.2f", $product.integral)}积分</span></b>
         {else}
-        <b>￥<span id="main_price">{sprintf("%.2f", $product.price)}</span></b>
+            零售价:<b>￥<span id="main_price">{sprintf("%.2f", $product.price)}</span></b>
         {/if}
+        </div>
         <aside>
             <span class="blue"><em class="icon">&#xe614;</em>返利{$product.reward}元</span>
         </aside>

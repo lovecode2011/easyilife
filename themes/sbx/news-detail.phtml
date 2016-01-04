@@ -33,6 +33,21 @@
     </section>
 </section>
 {if $qrcode}
+<section>
+    <section class="qr-card-con">
+        <img src="{if $qrcode}{$qrcode}{else}{$template_dir}images/qrcode.jpg{/if}" alt="推广二维码" width="100%"/>
+        <!--
+        <div class="qr-header">
+            <img src="{if $user_info.headimg neq ""}{$user_info.headimg}{else}{$template_dir}images/wang.jpg{/if}" />
+            <span class="qr-name">{$user_info.nickname}，</span>
+        </div>
+        <div class="card-img">
+            <img src="{if $qrcode}{$qrcode}{else}{$template_dir}images/qrcode.jpg{/if}" alt="推广二维码"/>
+        </div>
+        -->
+    </section>
+</section>
+<!--
 <section class="qr-card">
     <section class="qr-card-con">
         <div class="card-header">
@@ -58,6 +73,7 @@
         </div>
     </section>
 </section>
+-->
 {/if}
 <div class="cd-popup" role="alert">
     <div class="cd-popup-container" id="message_dialog" style="display: none;">

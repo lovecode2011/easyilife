@@ -86,5 +86,10 @@ if( 'list' == $act ) {
     $get_article_list .= ' and `status` <> 0 order by `last_modify` desc';
     $article_list = $db->fetchAll($get_article_list);
     assign('article_list', $article_list);
+
+    $get_user_info = 'select * from '.$db->table('member').' where `account`=\''.$_SESSION['account'].'\'';
+    $user_info = $db->fetchRow($get_user_info);
+
+    assign('user_info', $user_info);
 }
 $smarty->display('recommend.phtml');

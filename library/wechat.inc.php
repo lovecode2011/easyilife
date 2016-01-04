@@ -38,16 +38,18 @@ function get_user_wechat_info($access_token, $openid)
 
     if($user_info)
     {
-        $data = array(
-            'nickname' => $user_info->nickname,
-            'headimg' => $user_info->headimgurl
-        );
+        if(isset($user_info->nickname)) {
+            $data = array(
+                'nickname' => $user_info->nickname,
+                'headimg' => $user_info->headimgurl
+            );
 
-        if (isset($user_info->unionid)) {
-            $data['unionid'] = $user_info->unionid;
+            if (isset($user_info->unionid)) {
+                $data['unionid'] = $user_info->unionid;
+            }
+
+            $db->autoUpdate('member', $data, '`openid`=\'' . $openid . '\'');
         }
-
-        $db->autoUpdate('member', $data, '`openid`=\'' . $openid . '\'');
     }
 
     return $user_info;
@@ -116,7 +118,7 @@ function get_qrcode($openid, $access_token)
         return $qrcode;
     }
 
-    $update_user = 'update '.$db->table('member').' set `scene_id`=0 where `expired`>'.time();
+    $update_user = 'update '.$db->table('member').' set `scene_id`=0 where `expired`<'.time();
     $db->update($update_user);
 
     $scene_arr = range(1, 100000);
@@ -124,7 +126,7 @@ function get_qrcode($openid, $access_token)
     $scene_id = 0;
     foreach($scene_arr as $id)
     {
-        $check_scene_id = 'select count(*) from '.$db->table('member').' where `scene_id`='.$id.' and `expired`<'.time();
+        $check_scene_id = 'select count(*) from '.$db->table('member').' where `scene_id`='.$id.' and `expired`>'.time();
         $log->record($check_scene_id);
 
         if(!$db->fetchOne($check_scene_id))
@@ -147,6 +149,11 @@ function get_qrcode($openid, $access_token)
     if(isset($response->errcode))
     {
         $log->record('get qrcode fail:'.$response->errcode.':'.$response->errmsg);
+        $sysconf_data = array(
+            'value' => 0
+        );
+        $db->autoUpdate('sysconf', $sysconf_data, '`key`=\'expired\'');
+        return get_qrcode($openid, $access_token);
         return false;
     } else {
         $data = array(

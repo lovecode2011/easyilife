@@ -24,7 +24,7 @@
                 </p>
                 <p>
                     <label class="l-title">父级分类：</label>
-                    <select name="parent_id" class="w150">
+                    <select name="parent_id" class="w150" onchange="change_tips(this.value);">
                         <option value="0">顶级分类</option>
                         {foreach from=$category_list item=category}
                         <option value="{$category.id}">{$category.name}</option>
@@ -35,7 +35,7 @@
                     <label class="l-title">图片：</label>
                     <input type="hidden" name="img" id="img" placeholder="">
                     <img class="select-image" alt="" src="../upload/image/no-image.png" height="120px">&nbsp;
-                    建议尺寸，120x120像素
+                    建议尺寸，<span id="tips">280x100</span>像素
                 </p>
                 <p>
                     <label class="l-title"></label>
@@ -54,6 +54,14 @@
 <link rel="stylesheet" type="text/css" href="../plugins/kindeditor/themes/default/default.css"/>
 <script type="text/javascript" src="../plugins/kindeditor/kindeditor-all-min.js"></script>
 <script type="text/javascript">
+    function change_tips(id) {
+        if(id == 0) {
+            $("#tips").text("280x100");
+        } else {
+            $("#tips").text("120x120");
+        }
+    }
+
     KindEditor.ready(function(K) {
         var editor = K.editor({
             allowFileManager: true,

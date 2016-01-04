@@ -116,7 +116,7 @@ if($verify_result) {//验证成功
             $sn = $db->escape($sn);
 
             //产品订单
-            $get_order_info = 'select `amount`,`account`,`business_account`,`product_amount`,`mobile`,`delivery_fee` from '.$db->table('order').' where `order_sn`=\''.$sn.'\'';
+            $get_order_info = 'select * from '.$db->table('order').' where `order_sn`=\''.$sn.'\'';
 
             $order = $db->fetchRow($get_order_info);
 
