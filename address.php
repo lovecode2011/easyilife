@@ -309,11 +309,11 @@ if('get_info' == $opera)
 
     if(!check_cross_domain())
     {
-        $get_address_detail = 'select p.`province_name`,c.`city_name`,d.`district_name`,g.`group_name`,a.`address`,a.`consignee`,'.
-                              'a.`mobile`,a.`zipcode`,a.`id` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
-                              $db->table('city').' as c, '.$db->table('district').' as d, '.$db->table('group').' as g where '.
-                              'a.`province`=p.`id` and a.`city`=c.`id` and a.`district`=d.`id` and a.`group`=g.`id` and a.`id`='.$id.
-                              ' and a.`account`=\''.$_SESSION['account'].'\'';
+        $get_address_detail = 'select a.`is_default`,p.`province_name`,c.`city_name`,d.`district_name`,(select `group_name` from sbx_group where id = a.group) as `group_name`,a.`address`,a.`consignee`,'.
+            'a.`mobile`,a.`zipcode`,a.`id`,a.`province`,a.`city`,a.`district`,a.`group` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
+            $db->table('city').' as c, '.$db->table('district').' as d where '.
+            'a.`province`=p.`id` and a.`city`=c.`id` and a.`district`=d.`id` '.
+            ' and a.`account`=\''.$_SESSION['account'].'\' and a.id = '.$address_id;
 
         $address_info = $db->fetchRow($get_address_detail);
 
@@ -341,11 +341,11 @@ if('select' == $act)
 {
     $template = 'select-address.phtml';
 
-    $get_address_list = 'select a.`is_default`,p.`province_name`,c.`city_name`,d.`district_name`,g.`group_name`,a.`address`,a.`consignee`,'.
-                        'a.`mobile`,a.`zipcode`,a.`id` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
-                        $db->table('city').' as c, '.$db->table('district').' as d, '.$db->table('group').' as g where '.
-                        'a.`province`=p.`id` and a.`city`=c.`id` and a.`district`=d.`id` and a.`group`=g.`id` '.
-                        ' and a.`account`=\''.$_SESSION['account'].'\'';
+    $get_address_list = 'select a.`is_default`,p.`province_name`,c.`city_name`,d.`district_name`,(select `group_name` from sbx_group where id = a.group) as `group_name`,a.`address`,a.`consignee`,'.
+        'a.`mobile`,a.`zipcode`,a.`id` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
+        $db->table('city').' as c, '.$db->table('district').' as d where '.
+        'a.`province`=p.`id` and a.`city`=c.`id` and a.`district`=d.`id` '.
+        ' and a.`account`=\''.$_SESSION['account'].'\' order by `is_default` DESC';
 
     $address_list = $db->fetchAll($get_address_list);
 
