@@ -103,7 +103,7 @@
                 <div class="operate">
                     {if $order.status eq 1}
                     <a href="javascript:pay_now('{$order.order_sn}');" class="btn-again btn"><b></b>立即支付</a><br>
-                    <a href="javascript:cancel_order('{$order.order_sn}');" class="btn-again btn"><b></b>取消订单</a><br>
+<!--                    <a href="javascript:cancel_order('{$order.order_sn}');" class="btn-again btn"><b></b>取消订单</a><br>-->
                     {elseif $order.status eq 4}
                     <a href="javascript:rollback('{$order.order_sn}');" class="btn-again btn"><b></b>申请退单</a><br>
                     {elseif $order.status eq 6}

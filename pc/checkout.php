@@ -663,11 +663,16 @@ if(!isset($_SESSION['address_id']) || $_SESSION['address_id'] <= 0)
     $address_id = $_SESSION['address_id'];
 }
 
-$get_address_detail = 'select p.`province_name`,c.`city_name`,d.`district_name`,g.`group_name`,a.`address`,a.`consignee`,'.
-    'a.`province`,a.`city`,a.`district`,a.`group`,'.
-    'a.`mobile`,a.`zipcode`,a.`id`,a.`is_default` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
-    $db->table('city').' as c, '.$db->table('district').' as d, '.$db->table('group').' as g where '.
-    'a.`province`=p.`id` and a.`city`=c.`id` and a.`district`=d.`id` and a.`group`=g.`id` and `account`=\''.$_SESSION['account'].'\' order by a.is_default desc, a.id desc';
+//$get_address_detail = 'select p.`province_name`,c.`city_name`,d.`district_name`,g.`group_name`,a.`address`,a.`consignee`,'.
+//    'a.`province`,a.`city`,a.`district`,a.`group`,'.
+//    'a.`mobile`,a.`zipcode`,a.`id`,a.`is_default` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
+//    $db->table('city').' as c, '.$db->table('district').' as d, '.$db->table('group').' as g where '.
+//    'a.`province`=p.`id` and a.`city`=c.`id` and a.`district`=d.`id` and a.`group`=g.`id` and `account`=\''.$_SESSION['account'].'\' order by a.is_default desc, a.id desc';
+$get_address_detail = 'select a.`is_default`,p.`province_name`,c.`city_name`,d.`district_name`,(select `group_name` from sbx_group where id = a.group) as `group_name`,a.`address`,a.`consignee`,'.
+    'a.`mobile`,a.`zipcode`,a.`id`,a.`province`,a.`city`,a.`district`,a.`group` from '.$db->table('address').' as a, '.$db->table('province').' as p, '.
+    $db->table('city').' as c, '.$db->table('district').' as d where '.
+    'a.`province`=p.`id` and a.`city`=c.`id` and a.`district`=d.`id` '.
+    ' and a.`account`=\''.$_SESSION['account'].'\' and a.id='.$address_id;
 $address_list = $db->fetchAll($get_address_detail);
 assign('address_list', $address_list);
 $address_info = $address_list[0];
@@ -833,7 +838,6 @@ foreach($cart_list as $key=>$cart)
         }
     }
 }
-
 if(!$delivery_support)
 {
     if(count($cart_list) == 0)

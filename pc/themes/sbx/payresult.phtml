@@ -26,14 +26,15 @@
     <div class="order-detail">
         <div class="order-info">
             <div class="order-title">
-                <h3><i class="icon">&#xe61a;</i>支付成功，请等待后台确认</h3>
+                <h3><i class="icon">&#xe61a;</i>{$pay_title}</h3>
             </div>
             <!--产品详情 开始-->
             <div class="order-order">
                 <span>订单编号：{$order.order_sn}</span>
                 <span>买家留言：{$order.remark}</span>
-                <span>支付时间：{date('Y-m-d H:i:s', $order.pay_time)}</span>
+                <span>支付时间：{$notify_time}</span>
             </div>
+            {if $order_detail}
             <div class="order-list">
                 <table cellpadding="0" cellspacing="0" class="order-tb">
                     <thead>
@@ -67,7 +68,7 @@
                         <td>
                             <div class="goods-item p-1073757">
                                 <div class="p-img">
-                                    <a href="#">
+                                    <a href="product.php?id={$product.id}">
                                         <img class="" src="{$product.img|build_url}" title="{$product.product_name} {$product.product_attributes}" width="60" height="60">
                                     </a>
                                 </div>
@@ -94,6 +95,7 @@
                     </tbody>
                 </table>
             </div>
+            {/if}
             <!-- 产品详情 结束 -->
         </div>
     </div>

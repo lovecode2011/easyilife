@@ -326,18 +326,16 @@ if('cancel' == $opera)
             $db->begin();
             //回退库存
             //回退积分/佣金/余额
-            //删除订单
-            if($db->autoDelete('order', '`order_sn`=\''.$order_sn.'\''))
+            //改变订单状态
+            $data = array(
+                'status' => 11,
+            );
+            if($db->autoUpdate('order', $data, '`order_sn`=\''.$order_sn.'\''))
             {
-                if($db->autoDelete('order_detail', '`order_sn`=\''.$order_sn.'\''))
-                {
-                    $response['error'] = 0;
-                    $response['msg'] = '订单取消成功';
-                    $db->commit();
-                } else {
-                    $db->rollback();
-                    $response['msg'] = '002:取消订单失败';
-                }
+                $response['error'] = 0;
+                $response['msg'] = '订单取消成功';
+                $db->commit();
+
             } else {
                 $response['msg'] = '001:取消订单失败';
                 $db->rollback();

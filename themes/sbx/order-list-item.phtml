@@ -56,11 +56,11 @@
                 <a href="javascript:receive('{$order.order_sn}');" class="orange_hollow">确认收货</a>
                 {/if}
                 {if $order.status eq 4}
-                <a href="javascript:cancel_order('{$order.order_sn}');">取消订单</a>
+                <a href="javascript:rollback('{$order.order_sn}');">取消订单</a>
                 {/if}
                 {if $order.status eq 1}
                 <a href="javascript:pay_now('{$order.order_sn}');" class="orange_hollow">立即支付</a>
-                <a href="javascript:cancel_order('{$order.order_sn}');">取消订单</a>
+<!--                <a href="javascript:cancel_order('{$order.order_sn}');">取消订单</a>-->
                 {/if}
             </div>
         </div>

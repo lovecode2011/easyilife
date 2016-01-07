@@ -37,16 +37,16 @@
                 <div class="addr-inner">
                     <ins class="icon">&#xe624;</ins>
                     <div class="addr-hd">
-                        <span class="name">{$address.consignee}</span>
+                        <span class="name" id="consignee">{$address.consignee}</span>
                         {if $address.is_default}
                         <em>默认地址</em>
                         {/if}
                     </div>
                     <div class="addr-con">
                         <ul>
-                            <li>{$address.province_name}{$address.city_name}{$address.district_name}{$address.group_name}</li>
-                            <li class="addr-detail">{$address.address}</li>
-                            <li>{$address.mobile}</li>
+                            <li id="address1">{$address.province_name}{$address.city_name}{$address.district_name}{$address.group_name}</li>
+                            <li class="addr-detail" id="address2">{$address.address}</li>
+                            <li id="mobile">{$address.mobile}</li>
                         </ul>
                     </div>
                 </div>
@@ -281,13 +281,13 @@
             //如果部分商品不支持配送，则提示用户
             layer.msg("部分商品不支持您所在地区的配送或服务，系统已自动为您剔除");
             {if $target neq ""}
-//        $("#dialog_close_btn").click(function(){
-//            window.location.href = "{$target}";
-//        });
-//
-//        $("#dialog_close").click(function(){
-//            window.location.href = "{$target}";
-//        });
+        $("#dialog_close_btn").click(function(){
+            window.location.href = "{$target}";
+        });
+
+        $("#dialog_close").click(function(){
+            window.location.href = "{$target}";
+        });
             {/if}
         {/if}
     });
@@ -367,7 +367,9 @@
                             btn: ['确定', '取消'] //按钮
                         }, function () {
                             simulation_pay(response.order_sn);
-                        });
+                        }), function() {
+                            window.location.herf = 'cart.php';
+                        }
                     } else {
                         window.location.href = "order.php";
                     }
