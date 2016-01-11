@@ -9,7 +9,26 @@ include 'library/init.inc.php';
 
 $mch_key = 'CeciliaZhengWinsenPengwrhltx2015';
 //仅对微信支付的异步通知
-$xml = $GLOBALS['HTTP_RAW_POST_DATA'];;
+//$xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+$xml=<<<XML
+<xml><appid><![CDATA[wx81e8ce31ddb9082b]]></appid>
+<bank_type><![CDATA[ICBC_DEBIT]]></bank_type>
+<cash_fee><![CDATA[1990]]></cash_fee>
+<fee_type><![CDATA[CNY]]></fee_type>
+<is_subscribe><![CDATA[Y]]></is_subscribe>
+<mch_id><![CDATA[1286316801]]></mch_id>
+<nonce_str><![CDATA[mGkoN1xEpyJVh2H3z4d2sUUWBlnmXpGz]]></nonce_str>
+<openid><![CDATA[oYCOEv7DOXxrzIrPVv1EMHkHMHqI]]></openid>
+<out_trade_no><![CDATA[14521001043332]]></out_trade_no>
+<result_code><![CDATA[SUCCESS]]></result_code>
+<return_code><![CDATA[SUCCESS]]></return_code>
+<sign><![CDATA[6E58569038391D9D12E91A93703307BE]]></sign>
+<time_end><![CDATA[20160107010834]]></time_end>
+<total_fee>1990</total_fee>
+<trade_type><![CDATA[JSAPI]]></trade_type>
+<transaction_id><![CDATA[1001500710201601072550163055]]></transaction_id>
+</xml>
+XML;
 $log->record($xml);
 $data = simplexml_load_string($xml);
 $success_response =<<<XML
@@ -90,6 +109,14 @@ if($data)
             $order = $db->fetchRow($get_order_info);
 
             add_order_log($sn, $order['account'], 3, "在线支付");
+            $log->record_array($order);
+
+            $log->record(($order['amount']*100).'=='.$data->total_fee.','.$data->sign.'=='.tenpay_sign($data, $mch_key));
+            $amount_equal = $order['amount'] == $data->total_fee/100 ? 'true' : 'false';
+            $log->record('amount_equal='.$amount_equal);
+
+            $sign_equal = $data->sign == tenpay_sign($data, $mch_key) ? 'true' : 'false';
+            $log->record('sign_equal='.$sign_equal);
 
             if($order && $order['amount'] == $data->total_fee/100 && $data->sign == tenpay_sign($data, $mch_key))
             {

@@ -22,7 +22,8 @@ $user_info = $db->fetchRow($get_user_info);
 $get_withdraw_await = 'select sum(`amount`+`fee`) from '.$db->table('withdraw').' where `account`=\''.$_SESSION['account'].'\'';
 $withdraw_await = $db->fetchOne($get_withdraw_await);
 
-$withdraw_await = $user_info['balance'] + $user_info['reward'] - $withdraw_await;
+//$withdraw_await = $user_info['balance'] + $user_info['reward'] - $withdraw_await;
+$withdraw_await = $user_info['reward'] - $withdraw_await;
 
 if('cancel' == $opera)
 {
@@ -87,7 +88,7 @@ if('add' == $opera)
         {
             $response['msg'] .= '-请填写提现金额<br/>';
         } else {
-            $total_amount = $amount +$config['fee_rate'] * $amount;
+            $total_amount = $amount + $config['fee_rate'] * $amount;
 
             if($withdraw_await < $total_amount)
             {

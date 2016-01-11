@@ -26,7 +26,7 @@ assign('order_await_receive', $order_await_receive);
 assign('order_await_comment', $order_await_comment);
 
 //获取消费总额
-$get_order_sum = 'select sum(`amount`) from '.$db->table('order').' where `account`=\''.$_SESSION['account'].'\'';
+$get_order_sum = 'select sum(`amount`) from '.$db->table('order').' where `status`>2 and `status`<>11 and `account`=\''.$_SESSION['account'].'\'';
 $order_sum = $db->fetchOne($get_order_sum);
 $order_sum = floatval($order_sum);
 $order_sum = sprintf("%.2f", $order_sum);

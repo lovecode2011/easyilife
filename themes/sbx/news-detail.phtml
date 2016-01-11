@@ -22,16 +22,6 @@
     <a href="javascript:history.back();" class="back"></a>
     <h1><em>{$section_name}</em></h1>
 </header>
-<!-- 资讯页面 -->
-<section class="article">
-    <section class="article-con">
-        <h1>{$article.title}</h1>
-        <span class="article-time">{date('Y-m-d H:i:s', $article.add_time)}</span>
-        <div>
-            {$article.wap_content}
-        </div>
-    </section>
-</section>
 {if $qrcode}
 <section>
     <section class="qr-card-con">
@@ -75,6 +65,16 @@
 </section>
 -->
 {/if}
+<!-- 资讯页面 -->
+<section class="article">
+    <section class="article-con">
+        <h1>{$article.title}</h1>
+        <span class="article-time">{date('Y-m-d H:i:s', $article.add_time)}</span>
+        <div>
+            {$article.wap_content}
+        </div>
+    </section>
+</section>
 <div class="cd-popup" role="alert">
     <div class="cd-popup-container" id="message_dialog" style="display: none;">
         <p id="dialog-message"></p>
@@ -235,7 +235,7 @@
         });
     });
     wx.error(function(res){
-        alert(res);
+        show_message_dialog("页面还没加载完噢,先不要分享哈!");
     });
 </script>
 {/if}

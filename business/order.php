@@ -696,10 +696,11 @@ if( 'export' == $act ) {
     $offset = ( $page - 1 ) * $count;
     $total_page = ceil( $total / $count );
 
-    $get_order_list = 'select a.*, p.province_name, city.city_name, d.district_name, g.group_name from '.$db->table('order').' as a';
+    $get_order_list = 'select a.*, e.name as express_name, p.province_name, city.city_name, d.district_name, g.group_name from '.$db->table('order').' as a';
     $get_order_list .= ' left join '.$db->table('province').' as p on a.province = p.id';
     $get_order_list .= ' left join '.$db->table('city').' as city on a.city = city.id';
     $get_order_list .= ' left join '.$db->table('district').' as d on a.district = d.id';
+    $get_order_list .= ' left join '.$db->table('express').' as e on a.express_id = e.id';
     $get_order_list .= ' left join '.$db->table('group').' as g on a.group = g.id';
 
     $get_order_list .= ' where `business_account` = \''.$_SESSION['business_account'].'\'';
@@ -771,7 +772,8 @@ if( 'export' == $act ) {
         $order['self_delivery_str'] = $order['self_delivery'] == 0 ? '否' : '是';
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '订单编号');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B'.$i.':C'.$i);
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B'.$i, $order['order_sn']);
+        $objPHPExcel->setActiveSheetIndex(0)->getStyle('B'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValueExplicit('B'.$i, $order['order_sn'], PHPExcel_Cell_DataType::TYPE_STRING);
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('D'.$i, '订单状态');
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('E'.$i.':F'.$i);
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$i, $order['status_str']);
@@ -796,7 +798,7 @@ if( 'export' == $act ) {
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I'.$i.':L'.$i);
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$i, '备注');
 
-        $get_order_detail = 'select * from '.$db->table('order_detail').' where order_sn = \''.$order_sn.'\'';
+        $get_order_detail = 'select * from '.$db->table('order_detail').' where order_sn = \''.$order['order_sn'].'\'';
         $order_detail = $db->fetchAll($get_order_detail);
 
         if( $order_detail ) {
@@ -807,7 +809,9 @@ if( 'export' == $act ) {
                 $objPHPExcel->setActiveSheetIndex(0)->mergeCells('B' . $i . ':D' . $i);
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('B' . $i, $detail['product_name']);
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('F' . $i, $detail['count']);
-                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $i, $detail['product_price']);
+                $objPHPExcel->setActiveSheetIndex(0)->getStyle('G'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+                $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G' . $i, sprintf('%.2f', $detail['product_price']));
+                $objPHPExcel->setActiveSheetIndex(0)->getStyle('H'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H' . $i, $product_amount);
                 $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I' . $i . ':L' . $i);
                 $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I' . $i, $order['remark']);
@@ -816,13 +820,15 @@ if( 'export' == $act ) {
         $i++;
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$i.':F'.$i);
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '订单运费');
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['delivery_fee']);
+        $objPHPExcel->setActiveSheetIndex(0)->getStyle('H'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, sprintf('%.2f', $order['delivery_fee']));
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I'.$i.':L'.$i);
 
         $i++;
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$i.':F'.$i);
         $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '订单总额');
-        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['order_amount']);
+        $objPHPExcel->setActiveSheetIndex(0)->getStyle('H'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+        $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, sprintf('%.2f', $order['product_amount'] + $order['delivery_fee']));
         $objPHPExcel->setActiveSheetIndex(0)->mergeCells('I'.$i.':L'.$i);
 
         if( 0 == $order['self_delivery'] ) {
@@ -839,7 +845,8 @@ if( 'export' == $act ) {
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('E'.$i, $order['express_name']);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '快递编号');
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H'.$i.':I'.$i);
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['express_sn']);
+            $objPHPExcel->setActiveSheetIndex(0)->getStyle('H'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValueExplicit('H'.$i, $order['express_sn'], PHPExcel_Cell_DataType::TYPE_STRING);
 
             $i++;
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells('A'.$i.':F'.$i);
@@ -866,7 +873,7 @@ if( 'export' == $act ) {
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells('G'.$i.':G'.($i+1));
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '地址');
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells('H'.$i.':L'.($i+1));
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['address']);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('H'.$i, $order['province_name'].$order['city_name'].$order['district_name'].$order['group_name'].$order['address']);
 
             $i += 2;
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('A'.$i, '区号');
@@ -874,9 +881,11 @@ if( 'export' == $act ) {
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells('D'.$i.':F'.$i);
 
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, '区号');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, $order['zipcode']);
+            $objPHPExcel->setActiveSheetIndex(0)->getStyle('H'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValueExplicit('H'.$i, $order['zipcode'], PHPExcel_Cell_DataType::TYPE_STRING);
             $objPHPExcel->setActiveSheetIndex(0)->setCellValue('I'.$i, '联系号码');
-            $objPHPExcel->setActiveSheetIndex(0)->setCellValue('G'.$i, $order['mobile']);
+            $objPHPExcel->setActiveSheetIndex(0)->getStyle('J'.$i)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+            $objPHPExcel->setActiveSheetIndex(0)->setCellValueExplicit('J'.$i, $order['mobile'], PHPExcel_Cell_DataType::TYPE_STRING);
             $objPHPExcel->setActiveSheetIndex(0)->mergeCells('J'.$i.':L'.$i);
         }
         //设置填充的样式和背景色

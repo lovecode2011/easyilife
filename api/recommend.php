@@ -21,7 +21,7 @@ $user_info = $db->fetchRow($get_user_info);
 
 assign('user_info', $user_info);
 
-$img_qrcode = ROOT_PATH . 'upload/recommend/' . $user_info['scene_id'] . '.png';
+$img_qrcode = ROOT_PATH . 'upload/recommend/' . $user_info['id'] . '.png';
 
 if($user_info['expired'] <= time())
 {

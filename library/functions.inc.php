@@ -857,7 +857,7 @@ function image_merge($source, $dest, $qrcode_file, $text, $dest_file)
         $font_color = imagecolorallocate($dest, 249, 150, 10);
 
         // Write the font to the image
-        imagefttext($dest, 22, 0, 270, 70, $font_color, '../library/font/Yahei.ttf', $text);
+        imagefttext($dest, 22, 0, 270, 70, $font_color, ROOT_PATH.'library/font/Yahei.ttf', $text);
     }
 
     imagecopymerge($dest, $src, 48,18,0,0,130,130,100);

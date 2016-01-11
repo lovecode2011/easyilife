@@ -33,7 +33,7 @@ class Logs
         if(!$this->debug) return;
 
         $message = '';
-        if(is_array($array))
+        if(is_array($array) || is_object($array))
         {
             $message = $this->array_to_string($array);
         } else {

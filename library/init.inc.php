@@ -146,6 +146,15 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
                 //如果用户不存在，则直接新注册用户
                 $log->record("register new member");
                 register_member($_SESSION['openid'], $_SESSION['parent_id']);
+                $get_parent_account = 'select `account` from '.$db->table('member').' where `id`='.$_SESSION['parent_id'];
+                $parent_account = $db->fetchOne($get_account);
+
+                if($config['recommend_integral'] > 0 && add_recommend_integral($parent_account, $config['recommend_integral'], '推荐新用户奖励'))
+                {
+                    $log->record('add recommend integral success:'.$account.' increment '.$config['recommend_integral']);
+                } else {
+                    $log->record('add recommend integral fail:'.$account.' increment '.$config['recommend_integral']);
+                }
             }
         }
 
@@ -174,7 +183,7 @@ if($_SESSION['openid'] == '' && $code != '' && $state == 2048 && is_weixin())
 if($_SESSION['openid'] == '' && $_SESSION['account'] == '')
 {
     $no_login_script = 'code.php|login.php|register.php|forgot.php|data_center.php|index.php|article.php|article_list.php|install.php|integral_product_list.php|';
-    $no_login_script .= 'category.php|product.php|cart.php|product_list.php|search.php|shop.php|distribution_shop.php|notify.php|wechat.php';
+    $no_login_script .= 'category.php|product.php|cart.php|product_list.php|search.php|shop.php|distribution_shop.php|notify.php|wechat.php|notify_url.php';
     $script_name = str_replace(ROOT_PATH, '', $_SERVER['SCRIPT_FILENAME']);
 
     $flag = check_action($no_login_script, $script_name);

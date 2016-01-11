@@ -16,7 +16,7 @@ $act = check_action($action, getGET('act'));
 
 $act = ($act == '') ? 'list' : $act;
 $opera = check_action($operation, getPOST('opera'));
-$id = 14;
+$id = 17;
 
 if( 'sort' == $opera ) {
     $response = array('error'=>1, 'msg'=>'');

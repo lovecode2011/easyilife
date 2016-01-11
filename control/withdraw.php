@@ -74,7 +74,7 @@ if( 'delete' == $opera ) {
     if( $withdraw['status'] == 0 ) {
         if( $type == 0 ) {
             $update_member = 'update ' . $db->table('member') . ' set';
-            $update_member .= ' `balance` = `balance` + ' . ($withdraw['amount'] + $withdraw['fee']);
+            $update_member .= ' `reward` = `reward` + ' . ($withdraw['amount'] + $withdraw['fee']);
             $update_member .= ' where account = \'' . $withdraw['account'] . '\'';
             $update_member .= ' limit 1';
             if (!$db->update($update_member)) {
@@ -82,7 +82,7 @@ if( 'delete' == $opera ) {
             }
         } else {
             $update_business = 'update ' . $db->table('business') . ' set';
-            $update_business .= ' `balance` = `balance` + ' . ($withdraw['amount'] + $withdraw['fee']);
+            $update_business .= ' `reward` = `reward` + ' . ($withdraw['amount'] + $withdraw['fee']);
             $update_business .= ' where business_account = \'' . $withdraw['business_account'] . '\'';
             $update_business .= ' limit 1';
             if (!$db->update($update_business)) {
@@ -359,7 +359,7 @@ if( 'edit' == $act ) {
         $db->autoInsert($table.'_log', array($data));
 
         //添加账户明细记录
-        add_memeber_exchange_log($withdraw['account'], -$withdraw['amount'], 0, 0, 0, 0, $_SESSION['account'], '提现到帐');
+        add_memeber_exchange_log($withdraw['account'], 0, -1*($withdraw['amount'] + $withdraw['fee']), 0, 0, 0, $_SESSION['account'], '提现到帐');
 
         show_system_message('操作成功', array());
         exit;

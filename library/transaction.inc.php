@@ -318,6 +318,7 @@ function distribution_settle($reward, $path, $order_sn = '')
             }
         }
     }
+    $log->record('结算结束');
 
     return true;
 }

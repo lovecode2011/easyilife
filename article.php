@@ -42,7 +42,7 @@ if( $member_id > 0 )
     $user_info = $db->fetchRow($get_user_info);
     assign('user_info', $user_info);
 
-    $img_qrcode = 'upload/recommend/' . $user_info['scene_id'] . '.png';
+    $img_qrcode = 'upload/recommend/' . $user_info['id'] . '.png';
 
     if($user_info['expired'] <= time())
     {
@@ -58,7 +58,7 @@ if( $member_id > 0 )
         }
 
         $source = $user_info['headimg'];
-        $dest = '../themes/' . $config['themes'] . '/images/qr_bg.jpg';
+        $dest = 'themes/' . $config['themes'] . '/images/qr_bg.jpg';
 
         $img_qrcode = image_merge($source, $dest, $qrcode, $user_info['nickname'], $img_qrcode);
     }
